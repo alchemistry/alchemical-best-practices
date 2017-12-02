@@ -3,3 +3,5 @@
 *.bbl
 *.tar.gz
 .DS_Store
+*.out
+*.tdo
