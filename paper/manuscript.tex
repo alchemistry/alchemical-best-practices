@@ -21,30 +21,39 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-
+\usepackage[colorinlistoftodos]{todonotes}
 \newcommand{\versionnumber}{0.1}  % you should update the minor version number in preprints and major version number of submissions.
-\newcommand{\githubrepository}{\url{https://github.com/michellab/best_practice_afec}  %this should be the main github repository for this article
+\newcommand{\githubrepository}{\url{https://github.com/michellab/best_practice_afec}}  %this should be the main github repository for this article
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{Best Practices for Alchemical Free Energy Calculations : v\versionnumber}
 
-\author[1*]{Firstname Middlename Surname}
-\author[1,2\authfn{1}\authfn{3}]{Firstname Middlename Familyname}
-\author[2\authfn{1}\authfn{4}]{Firstname Initials Surname}
-\author[2*]{Firstname Surname}
-\affil[1]{Institution 1}
-\affil[2]{Institution 2}
+\author[1*]{John D. Chodera}
+\author[2*]{Antonia S. J. S. Mey}
+\author[2*]{Julien Michel}
+\author[3*]{David L. Mobley}
+\author[4*]{Conor Parks}
+\author[5*]{Julia E. Rice}
+\author[6*]{Michael Shirts}
+\affil[1]{Computational and Systems Biology Program, Memorial Sloan Kettering Cancer Center, New York NY 10065}
+\affil[2]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine}
+\affil[3]{EaStCHEM School of Chemistry, David Brewster road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
+\affil[4]{I don't know my affiliation}
+\affil[5]{I don't know my affiliation}
 
-\corr{email1@example.com}{FMS}  % Correspondence emails.  FMS and FS are the appropriate authors initials.
-\corr{email2@example.com}{FS}
+
+\corr{john.chodera@choderalab.org}{JDC}
+\corr{dmobley@mobleylab.org}{DLM}
+\corr{antonia.mey@ed.ac.uk}{ASJSM}
+\corr{info@julienmichel.net}{JM}
+\corr{ddd@yyy}{CP}
+\corr{fff@ddd}{MS}
 
 \contrib[\authfn{1}]{These authors contributed equally to this work}
 \contrib[\authfn{2}]{These authors also contributed equally to this work}
 
-\presentadd[\authfn{3}]{Department, Institute, Country}
-\presentadd[\authfn{4}]{Department, Institute, Country}
 
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
 
@@ -58,6 +67,7 @@
 \maketitle
 
 \begin{abstract}
+\todo[inline, color={green!20}]{ASJSM: @Volunteer write abstract}
 This particular document provides a skeleton illustrating key sections for a Best Practices document. Please see the sample \texttt{sample-document.tex} in \url{github.com/livecomsjournal/article_templates/templates} for additional information on and examples of using the LiveCoMS LaTeX class.
 Here we also assume familiarity with LaTeX and knowledge of how to include figures, tables, etc.; if you want examples, see the sample just referenced.
 
@@ -70,25 +80,59 @@ Please note that your abstract, plus the authorship material following it, must 
 
 
 
+\todototoc
+\listoftodos
 
+%%%%%%%%%%%%%%%%%%%%
+%              Introduction                  %
+%%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
+\label{sec:intro}
+\todo[inline, color={green!20}]{ASJSM: @Volunteer write Intro}
+Meeting Members: 
+David Mobley, Conor Parks, Samarjeet, Julia Rice, Toni Mey, John Chodera, Michael Shirts
+[please add your name if you have contributed to the document!]
+(Original Members: John Chodera, Conor Parks, Heather Mayes)
+People to Invite: Clara Christ (drug discovery expertise), Hannes Loeffler (FESetup expertise)
 
-Here you would explain what problem you are tackling and briefly motivate your work.
 
-In this particular template, we have removed most of the usage examples which occur in \texttt{sample-document.tex} to provide a minimal template you can modify; however, we retain a couple of examples illustrating more unusual features of our templates/article class, such as the checklists, and information on algorithms and pseudocode.
-
+%%%%%%%%%%%%%%%%%%%%
+%              Prerequesites                %
+%%%%%%%%%%%%%%%%%%%%
 \section{Prerequisites}
-
+\label{sec:pre}
 Here you would identify prerequisites/background knowledge that are assumed by your work and your checklist which you view as critical, ideally giving links to good sources on these topics.
 Checklists are normally focused on errors made by users with training and experience in molecular simulations, so you can assume a basic familiarity with the fundamentals of molecular simulations.
 
-\section{Checklist}
-Here we use a full-page checklist with multiple sections, so it will appear on a separate page of the sample PDF.
-Other checklist formats are possible, as shown in the sample \texttt{sample-document.tex} in \url{github.com/livecomsjournal/article_templates/templates}.
+\section{Scope and Goals}
+\label{sec:scope}
+\begin{itemize}
+\item Preparation (focused on aspects unique to alchemical free energies), execution, and analysis of:
+\begin{itemize}
+\item Transfer free energies (hydration free energies, partition coefficients, etc.)
+\item Binding free energies
+\end{itemize}
+\item Not in scope:
+\begin{itemize}
+\item Advanced ligand binding topics such as:
+\item Covalent inhibition
+\item Association which is not 1:1
+\item Endpoint free energy methods
+\item PMF binding free energy methods
+\item Force field choice: Should be a separate document (review)
+\end{itemize}
+\end{itemize}
 
-Your checklist should include a succinct list of steps that people should follow when carrying out the task in question.
-This is provided to ensure certain basic standards are followed and common but critical major errors are avoided.
-Note that a checklist is not intended to cover \emph{all} important steps, but rather focus on the most common reasons for failure or incorrect results, or issues which are particularly crucial.
+\textbf{Goals:}
+\begin{itemize}
+\item Checklist and background for new practitioners of relative and absolute alchemical free energy calculations: What should you pay attention to in setting up and running calculations in common codes and why.
+\item Provide guidance to authors as to what should be reported about their protocols in a Methods section, either conforming to standard or reporting where they did not conform and why. Useful to reviewers as well.
+\end{itemize}
+
+\section{Checklist}
+\label{sec:checklist}
+\todo[inline, color={green!20}]{ASJSM: @Volunteer This needs to be revised and expanded, some initial thoughts were just thrown in.}
+An attempt at identifying most important checklist items. 
 
 
 % This provides a checklist which
@@ -99,17 +143,40 @@ Note that a checklist is not intended to cover \emph{all} important steps, but r
 % can easily print it without also printing other material from your manuscript. However, other styles of checklist are also possible (below).
 \begin{Checklists*}[p!]
 
-\begin{checklist}{First list}
-\textbf{You can easily make full width checklists that take a whole page}
+\begin{checklist}{Step 0 -- Know what you want to simulate }
+\textbf{What are the first questions that need addressing before setting up a molecular dynamics simulation}\\
+Extensive explanation for the checklist questions can be found in section~\ref{sec:step0}.
 \begin{itemize}
-\item Items in your checklist can and should reference sections where the cited issues are discussed in detail, such as Section~\ref{sec:reference_this}
-\item Also remember
+\item Can I get the required accuracy with the simulation I want to carry out
+\item 
 \item And finally
 \end{itemize}
 \end{checklist}
 
-\begin{checklist}{Second list}
-\textbf{This is some further description.}
+\begin{checklist}{Simulation preparation}
+\textbf{How do I get started setting up an alchemical free energy calculation}
+Extensive explanation for the checklist questions can be found in section~\ref{sec:step1}.
+\begin{itemize}
+\item Have I followed the Best practices for biomolecular simulation set up?
+\item In a relative simulation, will I run into problems with clashing geometries in the ligand transformation or crystal waters?
+\end{itemize}
+\end{checklist}
+\end{Checklists*}
+
+\begin{Checklists*}[p!]
+\begin{checklist}{Absolute simulations}
+\textbf{What are the main things I need to consider for an absolute alchemical free energy calculation?}
+Extensive explanation for the checklist questions can be found in section~\ref{sec:step2}.
+\begin{itemize}
+\item Topology
+\item Restraints
+\item Standard state handling
+\end{itemize}
+\end{checklist}
+
+\begin{checklist}{Relative simulations}
+\textbf{What are the main things I need to consider for an relative alchemical free energy calculation?}
+Extensive explanation for the checklist questions can be found in section~\ref{sec:step2}.
 \begin{itemize}
 \item First thing
 \item Also remember
@@ -117,60 +184,204 @@ Note that a checklist is not intended to cover \emph{all} important steps, but r
 \end{itemize}
 \end{checklist}
 
-\begin{checklist}{Third list}
-\textbf{This is some further description.}
+\begin{checklist}{Analysis}
+\textbf{This is all about analysis of the simulation}
+Extensive explanation for the checklist questions can be found in section~\ref{sec:step4}.
 \begin{itemize}
-\item First thing
-\item Also remember
-\item And finally
-\end{itemize}
-\end{checklist}
-
-\begin{checklist}{Fourth list}
-\textbf{This is some further description.}
-\begin{itemize}
-\item First thing
-\item Also remember
-\item And finally
+\item Are my simulations converged enough?
+\item Am I using the right analysis techniques?
 \end{itemize}
 \end{checklist}
 
 \end{Checklists*}
+\clearpage
+
+\section{Step 0 -- What can be expected from alchemical simulations?}
+\label{sec:step0}
+\begin{itemize}
+\item What level of accuracy you can expect? 
+\item What timescales and how many transformations can you address given available computational resources? 
+\item Can you even hope to tackle the problem you are attempting? 
+\end{itemize}
+
+\section{Step 1 -- Simulation prerequesites}
+\label{sec:step1}
+\begin{enumerate}
+\item Generate geometry of initial state: Reference biomolecular simulation preparation best practices
+\item Relative: Generate geometry of final state (Mey)
+\begin{itemize}
+\item e.g. ligand ideally shouldn’t clash with receptor, etc.; satisfy constraints that might be imposed by protocol such as overlapping atoms, etc.
+\item reference biomolecular preparation setup practices for placing ligand into binding site, but elaborate on constraints that must be considered for relative free energy calculations
+\end{itemize}
+\end{enumerate}
+
+\section{Step 2 -- Simulation protocol selection}
+\label{sec:step2}
+\begin{enumerate}
+\item Relative: Select a topology and produce an atom mapping for transformation (Mobley)
+\begin{itemize}
+\item Watching out for constraints to bonds for hydrogen: these cannot be allowed to change without including Jacobian terms
+\item Share atoms between initial and final ligands if possible, otherwise colocalize pair of compounds and exclude their interactions with one another
+\item Ring breaking/forming: Special are is needed; cite references
+\item Tools: enlist Hannes Loeffler (developer of FESetup)?
+\item Clarify terminology: Dual-topology, single-topology, etc.
+\end{itemize}
+
+\item Absolute: Identify \textbf{restraints and standard state handling}
+\begin{itemize}
+\item Practical use of Boresch restraints/other forms of restraints. How to choose atoms involved. etc. (e.g. see Heinzelmann/Gilson BRD4 work; Chodera also has stuff to add)
+\item Levi Naden: Problems with analytical approximation to standard-state correction for Boresch restraints
+\item Harmonic and flat-bottom restraints
+\item Clarify terminology: Double decoupling, etc. See Feature Box below.
+\end{itemize}
+\item Identify whether \textbf{net charge is changing }and how this will be handled:
+Issues that still need to be resolved: Charge corrections vs alchemically modify counterions
+
+\item Select an \textbf{alchemical pathway}
+\begin{enumerate}
+\item Choice of alchemical Hamiltonian
+	\begin{itemize}
+	\item Softcore potentials are always recommended, but might not ALWAYS be necessary, e.g.:
+	\item Pure changes in parameters of atoms that don’t insert/delete atoms (turn into dummies/from dummies)
+	\item If roughly isosteric (e.g. lambda dynamics work from C. Brooks)
+	\end{itemize}
+\item Choice of discrete alchemical protocol (Shirts, Mey, Chodera)
+	\begin{itemize}
+	\item Many options: Adaptive scheme, Chebyshev polynomials, linear spacing, “choose your next lambda from data at this lambda”, optimal thermodynamic length approaches (separately: Shirts, Sivak, Huafeng Xu).
+	\item Levi Naden had paper with lambda protocol which worked for all cases -- methane solvation, host-guest (including disappearing host)
+	\end{itemize}
+\item Relative
+Three-stage protocol (discharge unique initial atoms, transform LJ, charge unique final atoms) vs softcore electrostatics/LJ
+
+\item Absolute
+	\begin{itemize}
+	\item Select a \textbf{common alchemically-eliminated end state}
+	\item Decoupled vs annihilated for electrostatics and LJ
+	\item Sequential electrostatics and LJ versus simultaneous (recommend sequential)
+
+\end{itemize}
+\item Concerns:
+Part of AMBER still can’t run at endpoints (lambda = 0 or 1); SANDER cannot but PMEMD can.
+
+\end{enumerate}
+
+\item Determine whether you need to \textbf{handle multiple binding modes}: (Mobley)
+\begin{itemize}
+\item In absolute: Confine-and-release, BLUES
+\item In relative (ugh!!)
+\end{itemize}
+\item Determine \textbf{stopping conditions}
+Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
+
+
+\item Select which \textbf{data should be saved and with which frequency}
+\begin{itemize}
+\item What data to save: dU/dlambda, Delta E’s between neighbor for BAR, between further for MBAR, …
+\item BAR captures most of info with well-optimized lambda protocol, but MBAR when perhaps not, except when there are way too many lambda values.
+\item Recommend against solely relying on TI when possible 
+\item Recommend cross-comparing methods (TI (spline, trapezoid, etc.), BAR, MBAR) as diagnosis of trouble
+\end{itemize}
+
+\end{enumerate}
+
+\section{Step 3 -- Overview of available analysis techniques}
+\label{sec:step3}
+\begin{enumerate}
+\item Detecting boundary between equilibrated and production regions (Chodera: \url{http://dx.doi.org/10.1021/acs.jctc.5b00784})
+\item Decorrelating samples for analysis
+\begin{itemize}
+\item Subsample different lambdas based on correlation times
+\item Ensure all simulations at least 50x correlation time
+\end{itemize}
+\item Examining output data for common problems with discussions of what exactly to plot or look at; examples of typical curves for dV/dlambda and free energy versus lambda, for example
+\begin{itemize}
+\item Make sure ligand doesn’t tumble out of binding site (Mey has observed this)
+\item Significant discrepancies between different free energy estimators (TI, BAR, MBAR)
+\item Poor replica mixing (for replica-exchange)
+\item Correlation time as a function of lambda as it would be expected to be a smooth
+\item Dependence on initial conformation
+\item Torsional analysis: Is it stuck in specific states? Only very rarely transitions?
+\item More “usual suspects”
+\end{itemize}
+\item Estimators for free energies
+\begin{itemize}
+\item MBAR recommended if all energy differences are available
+\item BAR just as good for highly optimized lambda values
+\item TI should be roughly concordant, but quadrature error hard to quantify
+\item Other variants useful in special circumstances (e.g. Z. Tan stochastic version)
+\end{itemize}
+\item Computing and reporting uncertainties on free energies
+correlated bootstrap v. timeseries analysis
+\item Other considerations for many transformations
+Cycle closure error
 
 
 
+\end{enumerate}
 
+%%%%%%%%%%%%%%%%%%%%
+%              Terminology                  %
+%%%%%%%%%%%%%%%%%%%%
+\section{Terminology and abbreviations}
+\label{sec:tem-abbrev}
+\begin{itemize}
+\item Feature Box covering major technical terms and abbreviations
+\item Examples:
+\begin{itemize}
+\item EXP, BAR, MBAR
+\item Double decoupling, single-topology, dual-topology, hybrid-topology, coupled-topology
+\item FEP (free energy peturbation), alchemical, AFE (alchemical free energy)
+\end{itemize}
+\end{itemize}
+%%%%%%%%%%%%%%%%%%%%
+%                Software                    %
+%%%%%%%%%%%%%%%%%%%%
+\section{Available software -- a summary}
+\label{sec:software}
+\begin{itemize}
+\item Commercial:
+   \begin{itemize}
+    \item FEP+
+    \end{itemize}
+\item Free or low-cost for academics / commercial for industry:
+	\begin{itemize}
+	\item CHARMM / DOMDEC / CHARMM-OPENMM
+	\item TIES and AMBER FEW? (Peter Coveney)
+	\item AMBER / PMEMD
+	\end{itemize}
+\item Free (libre) open source:
+	\begin{itemize}
+	\item SIRE
+	\item YANK
+	\item gromacs 
+	\item pmx for mutations
+	\end{itemize}
+\item Setup tools
+	\begin{itemize}
+	\item FESetup: AMBER, gromacs, Sire
+	\item Lomap/Lomap2 : Relative alchemical transformation graph planning
+	\end{itemize}
+\item Analysis tools:
+	\begin{itemize}
+	\item Free Energy Workflows: Sire-specific free energy map analysis using weighted path averages
+	\url{https://github.com/michellab/freenrgworkflows}
+	\item Alchemlyb: Multipackage free energy analysis
+	\url{https://github.com/alchemistry/alchemlyb}
+	\item pymbar: MBAR implementation, but have to roll your own analysis wrapper
+	\url{https://github.com/choderalab/pymbar}
+	\end{itemize}
+\end{itemize}
 
-\section{Rationale}
+\section{Online resources}
+\begin{itemize}
+\item \url{http://www.ks.uiuc.edu/Training/Workshop/Urbana_2010A/lectures/TCBG-2010.pdf}
+\item Basic Ingredients of Free Energy Calculations: A Review (\url{DOI: 10.1002/jcc.21450})
+\item Good Practices in Free-Energy Calculations (\url{DOI: 10.1021/jp102971x})
+\item Alchemical Free Energy Methods for Drug Discovery: Progress and Challenges (\url{doi: 10.1016/j.sbi.2011.01.011})
+\item Alchemistry wiki: \url{http://www.alchemistry.org/wiki/Best_Practices}
+\end{itemize}
 
-Your Rationale section, or sections, can follow or precede your checklist (we expect that often, following the checklist will be preferable) and provide the necessary rationale for the checklist, and act as more complete \emph{best practices} description.
-This should include 1) significant detail as to the possible alternative ways to accomplish a given task, 2) description of advantages and disadvantages of the various approaches, and 3) significant literature documentation about reasons for choices.
-
-\subsection{Algorithms and Pseudocode}
-\label{sec:reference_this}
-
-The \texttt{algpseudocode} and \texttt{algorithms} packages is loaded by the document class. \ALG{euclid} was taken directly from the package documentation. (Please do not load \texttt{algorithm2e}; it's not compatible with \texttt{algpseudocde} nor \texttt{algorithms}!)
-
-\begin{algorithm}
-\caption{Euclid's algorithm}\label{alg:euclid}
-\begin{algorithmic}%[1]  %% uncomment to enable line numbers
-\Procedure{Euclid}{$a,b$}\Comment{The g.c.d. of a and b}
-   \State $r\gets a\bmod b$
-   \While{$r\not=0$}\Comment{We have the answer if r is 0}
-      \State $a\gets b$
-      \State $b\gets r$
-      \State $r\gets a\bmod b$
-   \EndWhile\label{euclidendwhile}
-   \State \textbf{return} $b$\Comment{The gcd is b}
-\EndProcedure
-\end{algorithmic}
-\end{algorithm}
-
-
-
-
-
-\section{Author Contributions}
+\section*{Author Contributions}
 %%%%%%%%%%%%%%%%
 % This section mustt describe the actual contributions of
 % author. Since this is an electronic-only journal, there is
@@ -189,7 +400,7 @@ The \texttt{algpseudocode} and \texttt{algorithms} packages is loaded by the doc
 For a more detailed description of author contributions,
 see the GitHub issue tracking and changelog at \githubrepository.
 
-\section{Other Contributions}
+\section*{Other Contributions}
 %%%%%%%%%%%%%%%
 % You should include all people who have filed issues that were
 % accepted into the paper, or that upon discussion altered what was in the paper.
@@ -204,14 +415,14 @@ see the GitHub issue tracking and changelog at \githubrepository.
 % We suggest you preserve this comment:
 For a more detailed description of contributions from the community and others, see the GitHub issue tracking and changelog at \githubrepository.
 
-\section{Potentially Conflicting Interests}
+\section*{Potentially Conflicting Interests}
 %%%%%%%
 %Declare any potentially competing interests, financial or otherwise
 %%%%%%%
 
 Declare any potentially conflicting interests here, whether or not they pose an actual conflict in your view.
 
-\section{Funding Information}
+\section*{Funding Information}
 %%%%%%%
 % Authors should acknowledge funding sources here. Reference specific grants.
 %%%%%%%
