@@ -37,11 +37,15 @@
 \author[4*]{Conor Parks}
 \author[5*]{Julia E. Rice}
 \author[6*]{Michael Shirts}
+\author[7*]{Bryce Allen}
+\author[1]{Levi N. Naden}
+\author[1,9]{Andrea Rizzi}
 \affil[1]{Computational and Systems Biology Program, Memorial Sloan Kettering Cancer Center, New York NY 10065}
 \affil[2]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine}
 \affil[3]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
 \affil[4]{I don't know my affiliation}
 \affil[5]{I don't know my affiliation}
+\affil[8]{Tri-Institutional Training Program in Computational Biology and Medicine, New York, NY, USA}
 
 
 \corr{john.chodera@choderalab.org}{JDC}
@@ -270,6 +274,7 @@ At present the most general solution to this problem is simply to avoid the use 
 
 \subsubsection{Absolute free energy calculations must handle the standard state and use restraints}
 
+\todo[inline, color={red!40}]{AR, LNN: complete absolute free energy simulation protocol}
 
 Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular nonbonded interactions. 
 This non-interacting state can then be shifted between environments (from the protein to water, or from one solution to another) without changing its free energy, and then interactions can be restored.
@@ -332,6 +337,10 @@ We are not yet aware of a careful comparison of charge corrections versus other 
 
 \subsubsection{The alchemical pathway is quite important}
 
+\todo[inline, color={red!40}]{LNN: write common principles alchemical path choice}
+\todo[inline, color={red!40}]{AR: write absolute-specific section on  alchemical path choice}
+\todo[inline, color={red!40}]{BA: write relative-specific section on  alchemical path choice}
+
 Both absolute and relative calculations must choose an alchemical pathway connecting initial and final states, which is in principle arbitrary but in practice affects the efficiency of the calculations considerably.
 Some choices are particularly crucial -- for example, transformations involving insertions or deletions of atoms should employ soft-core potentials for Lennard-Jones or other hard-core interactions [refs].
 Other issues, such as whether absolute calculations retain intramolecular nonbonded interactions or remove these interactions, may be less critical and differ among studies in the literature [refs].
@@ -374,6 +383,7 @@ Part of AMBER still can’t run at endpoints (lambda = 0 or 1); SANDER cannot bu
 \item In absolute: Confine-and-release, BLUES
 \item In relative (ugh!!)
 \end{itemize}
+\todo[inline, color={red!40}]{LNN, BR: write stopping condition section}
 \item Determine \textbf{stopping conditions}
 Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 
@@ -390,6 +400,7 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 
 \section{Step 3 -- Overview of available analysis techniques}
 \label{sec:step3}
+\todo[inline, color={red!40}]{JDC, BR: uncertainty estimation section}
 \begin{enumerate}
 \item Detecting boundary between equilibrated and production regions (Chodera: \url{http://dx.doi.org/10.1021/acs.jctc.5b00784})
 \item Decorrelating samples for analysis
