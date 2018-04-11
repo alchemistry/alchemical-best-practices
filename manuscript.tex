@@ -37,7 +37,7 @@
 \author[4*]{Conor Parks}
 \author[5*]{Julia E. Rice}
 \author[6*]{Michael Shirts}
-\author[7*]{Bryce Allen}
+\author[7]{Bryce K. Allen}
 \author[1]{Levi N. Naden}
 \author[1,9]{Andrea Rizzi}
 \affil[1]{Computational and Systems Biology Program, Memorial Sloan Kettering Cancer Center, New York NY 10065}
@@ -45,6 +45,7 @@
 \affil[3]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
 \affil[4]{I don't know my affiliation}
 \affil[5]{I don't know my affiliation}
+\affil[7]{Silicon Therapeutics, Boston, MA, USA}
 \affil[8]{Tri-Institutional Training Program in Computational Biology and Medicine, New York, NY, USA}
 
 
@@ -93,7 +94,7 @@ Please note that your abstract, plus the authorship material following it, must 
 \section{Introduction}
 \label{sec:intro}
 \todo[inline, color={green!20}]{ASJSM: @Volunteer write Intro}
-Meeting Members: 
+Meeting Members:
 David Mobley, Conor Parks, Samarjeet, Julia Rice, Toni Mey, John Chodera, Michael Shirts
 [please add your name if you have contributed to the document!]
 (Original Members: John Chodera, Conor Parks, Heather Mayes)
@@ -109,8 +110,8 @@ People to Invite: Clara Christ (drug discovery expertise), Hannes Loeffler (FESe
 %Checklists are normally focused on errors made by users with training and experience in molecular simulations, so you can assume a basic familiarity with the fundamentals of molecular simulations.
 
 Before proceeding with this document, you are assumed to have a basic familiarity with the principles of molecular simulations, molecular dynamics simulations, statistical mechanics and thermodynamics, and so on.
-This document focuses on aspects specific to alchemical free energy calculations, which remain an advanced topic within the molecular simulations area. 
-Thus, if you are a beginner in the area of molecular simulations, not all background you need will be covered within the scope of this document. 
+This document focuses on aspects specific to alchemical free energy calculations, which remain an advanced topic within the molecular simulations area.
+Thus, if you are a beginner in the area of molecular simulations, not all background you need will be covered within the scope of this document.
 For example, we assume that you are able to set up and conduct a successful equilibrium molecular dynamics simulation of a particular thermodynamic state of a system interest as a prerequisite for this document.
 
 \section{Scope and Goals}
@@ -139,7 +140,7 @@ Additionally, the choice of force field (for protein, ligand, ions, cosolvents, 
 \section{Checklist}
 \label{sec:checklist}
 \todo[inline, color={green!20}]{ASJSM: @Volunteer This needs to be revised and expanded, some initial thoughts were just thrown in.}
-An attempt at identifying most important checklist items. 
+An attempt at identifying most important checklist items.
 
 
 % This provides a checklist which
@@ -155,7 +156,7 @@ An attempt at identifying most important checklist items.
 Extensive explanation for the checklist questions can be found in section~\ref{sec:step0}.
 \begin{itemize}
 \item Can I get the required accuracy with the simulation I want to carry out
-\item 
+\item
 \item And finally
 \end{itemize}
 \end{checklist}
@@ -206,9 +207,9 @@ Extensive explanation for the checklist questions can be found in section~\ref{s
 \section{Step 0 -- What can be expected from alchemical simulations?}
 \label{sec:step0}
 \begin{itemize}
-\item What level of accuracy you can expect? 
-\item What timescales and how many transformations can you address given available computational resources? 
-\item Can you even hope to tackle the problem you are attempting? 
+\item What level of accuracy you can expect?
+\item What timescales and how many transformations can you address given available computational resources?
+\item Can you even hope to tackle the problem you are attempting?
 \end{itemize}
 
 \section{Step 1 -- Simulation prerequesites}
@@ -253,12 +254,12 @@ Specifically, with a single topology approach in mind, atom types are allowed to
 Some tools automate this process; for example, LOMAP can take a set of ligands and generate proposed pairings of molecules which are scored by their MCSS similarity and other properties [refs].
 Schr\"{o}dinger's FEP+ planning tool is based on a version of LOMAP [ref].
 
-MCSS searches can be relatively time consuming, so if scoring a library of ligands to identify promising pairs for relative calculations is the goal, it can be helpful to use faster approaches such as shape similarity to perform an initial scoring and then use MCSS only to identify final mappings for relative calculations. 
+MCSS searches can be relatively time consuming, so if scoring a library of ligands to identify promising pairs for relative calculations is the goal, it can be helpful to use faster approaches such as shape similarity to perform an initial scoring and then use MCSS only to identify final mappings for relative calculations.
 
 The MCSS approach, though relatively standard, takes into account only topological similarity.
 It is possible that changes in binding mode could actually require a different choice of mapping, so in some cases mappings may need to be planned differently depending on 3D positioning of atoms in space [ref; does Cournia paper address this?].
 
-Single topology relative calculations, and calculations based on substructure searches, only work if in fact the ligands share a common substructure. 
+Single topology relative calculations, and calculations based on substructure searches, only work if in fact the ligands share a common substructure.
 If no common substructure is shared, then essentially one ends up needing sophisticated dual or hybrid topology free energy calculations, where one would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
 To our knowledge no general pipeline for such calculations yet exists and this would likely remain a research problem.
 
@@ -276,7 +277,7 @@ At present the most general solution to this problem is simply to avoid the use 
 
 \todo[inline, color={red!40}]{AR, LNN: complete absolute free energy simulation protocol}
 
-Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular nonbonded interactions. 
+Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular nonbonded interactions.
 This non-interacting state can then be shifted between environments (from the protein to water, or from one solution to another) without changing its free energy, and then interactions can be restored.
 
 Absolute free energy calculations are typically done with respect to a specific reference state or reference concentration.
@@ -284,11 +285,11 @@ For solvation free energy calculations this is typically straightforward to hand
 So typically in such cases no special care is required to ensure the correct standard state, as long as the \emph{experimental} data being analyzed uses the same standard state and if it does not, a simple entropic correction is needed.
 
 However, for binding the situation is much more complex and requires special care.
-Experimental absolute binding free energies are reported relative to a specific reference state -- a 1 M standard state -- which must also be used in calculations. 
+Experimental absolute binding free energies are reported relative to a specific reference state -- a 1 M standard state -- which must also be used in calculations.
 In practice this has implications for how the calculations are done, as the reference concentration must enter the thermodynamic cycle employed.
 
 
-Typically, to deal with both practical sampling issues and the standard state issue, restraints are employed in absolute binding free energy calculations to keep the ligand in a well defined volume as its interactions with the system are removed [ref Gilson 1997 BPJ]. 
+Typically, to deal with both practical sampling issues and the standard state issue, restraints are employed in absolute binding free energy calculations to keep the ligand in a well defined volume as its interactions with the system are removed [ref Gilson 1997 BPJ].
 This solves two problems.
 First, if the ligand were not kept in a well-defined region, as its interactions were removed it might wander the system, perhaps quite slowly, and only inadequately sample the noninteracting or weakly interacting state -- yet adequate sampling of these states might be required for convergence.
 So for practical purposes, the use of restraints can dramatically improve sampling as interactions are weakened and removed.
@@ -319,7 +320,7 @@ The choice is likely especially important with Boresch-style restraints, where s
 
 \subsubsection{Changes in net charge can be challenging/problematic.}
 
-If the net charge of the system will change as the alchemical calculation progresses, this can pose major challenges. 
+If the net charge of the system will change as the alchemical calculation progresses, this can pose major challenges.
 Specifically, finite-size effects can introduce profound artifacts into computed binding free energies [refs], in part because typical schemes for long-range electrostatics (including PME and reaction field) do not handle free energy contributions from such changes effectively or as they would be handled in a hypothetical macroscopic bulk solution [refs].
 
 There are two main potential solutions to avoid artifacts due to changes in net charge: Correcting for the introduced artifacts, or avoiding changing the net charge.
@@ -352,13 +353,13 @@ We have less experience with dual topology calculations but expect that similar 
 
 A key additional consideration in choosing the alchemical pathway is the choice of spacing of intermediate states.
 The spacing depends to some extent on the choice of analysis method, though states should essentially be spaced equidistant in the relevant thermodynamic length [ref].
-For BAR/MBAR techniques this means that spacings should typically be equal in [what, variance? ref]. 
+For BAR/MBAR techniques this means that spacings should typically be equal in [what, variance? ref].
 Some schemes to adaptively optimize the spacing of intermediate states based on initial exploratory simulations have been proposed [refs].
 
 \begin{enumerate}
 \item Choice of discrete alchemical protocol (Shirts, Mey, Chodera)
 	%\begin{itemize}
-	%\item Many options: Adaptive scheme, Chebyshev polynomials, linear spacing, ``choose your next lambda from data at this lambda'' Äù, optimal thermodynamic length approaches (separately: Shirts, Sivak, Huafeng Xu).
+	%\item Many options: Adaptive scheme, Chebyshev polynomials, linear spacing, ``choose your next lambda from data at this lambda'' ÔøΩÔøΩ, optimal thermodynamic length approaches (separately: Shirts, Sivak, Huafeng Xu).
 	%\item Levi Naden had paper with lambda protocol which worked for all cases -- methane solvation, host-guest (including disappearing host)
 	%\end{itemize}
 \item Relative
@@ -383,7 +384,7 @@ Part of AMBER still can‚Äôt run at endpoints (lambda = 0 or 1); SANDER cannot bu
 \item In absolute: Confine-and-release, BLUES
 \item In relative (ugh!!)
 \end{itemize}
-\todo[inline, color={red!40}]{LNN, BR: write stopping condition section}
+\todo[inline, color={red!40}]{LNN, BA: write stopping condition section}
 \item Determine \textbf{stopping conditions}
 Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 
@@ -392,7 +393,7 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 \begin{itemize}
 \item What data to save: dU/dlambda, Delta E‚Äôs between neighbor for BAR, between further for MBAR, ‚Ä¶
 \item BAR captures most of info with well-optimized lambda protocol, but MBAR when perhaps not, except when there are way too many lambda values.
-\item Recommend against solely relying on TI when possible 
+\item Recommend against solely relying on TI when possible
 \item Recommend cross-comparing methods (TI (spline, trapezoid, etc.), BAR, MBAR) as diagnosis of trouble
 \end{itemize}
 
@@ -400,7 +401,7 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 
 \section{Step 3 -- Overview of available analysis techniques}
 \label{sec:step3}
-\todo[inline, color={red!40}]{JDC, BR: uncertainty estimation section}
+\todo[inline, color={red!40}]{JDC, BA: uncertainty estimation section}
 \begin{enumerate}
 \item Detecting boundary between equilibrated and production regions (Chodera: \url{http://dx.doi.org/10.1021/acs.jctc.5b00784})
 \item Decorrelating samples for analysis
@@ -427,6 +428,21 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 \end{itemize}
 \item Computing and reporting uncertainties on free energies
 correlated bootstrap v. timeseries analysis
+\begin{itemize}
+\item Quantifying standard error in dG estimate
+\item Varience in dG estimate using multiple methods (TI, DEXP, IEXP, BAR, MBAR, GDEL, etc.)
+\item Agreement in dG estimate when repeating calculations with different parameters (random seeds, initial configurations, forcefield, etc.)
+\item Calculating differences in free energy change as a function of time
+\begin{itemize}
+	\item Starting from beginning or end of simulation
+	\item Significance of differences in midpoint estimate (High middle error: high uncertainty)
+\end{itemize}
+\item Ensemble method to combine uncertainties into interpretable weighted metric
+\begin{itemize}
+	\item Simple normalized metric to determine confidence in calculation
+	\item Easily interpreted by chemist/biologist when prioritizing new chemistries
+\end{itemize}
+\end{itemize}
 \item Other considerations for many transformations
 Cycle closure error
 
@@ -468,7 +484,7 @@ Cycle closure error
 	\begin{itemize}
 	\item SIRE
 	\item YANK
-	\item gromacs 
+	\item gromacs
 	\item pmx for mutations
 	\end{itemize}
 \item Setup tools
