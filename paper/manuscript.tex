@@ -300,26 +300,50 @@ At present the most general solution to this problem is simply to avoid the use 
 
 \subsubsection{Absolute free energy calculations must handle the standard state and use restraints}
 
-\todo[inline, color={red!40}]{AR, LNN: complete absolute free energy simulation protocol}
+\todo[inline, color={red!40}]{LNN: complete discussion about Boresch restraints}
+
+\todo[inline, color={red!40}]{AR: would the explanation in the next paragraph be better suited for a more general section?}
 
 Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular nonbonded interactions.
 This non-interacting state can then be shifted between environments (from the protein to water, or from one solution to another) without changing its free energy, and then interactions can be restored.
 
-Absolute free energy calculations are typically done with respect to a specific reference state or reference concentration.
-For solvation free energy calculations this is typically straightforward to handle and treating it correctly simply means ensuring that the non-interacting solute is taken to the same (or equivalent) final reference state in both environments, e.g. that the transformation involves a 1 M to 1M equivalent transfer free energy (where the non-interacting solute still occupies essentially the same volume as the solute in the interacting system).
+\paragraph{Structural definition of the bound state.}
+\todo[inline, color={red!40}]{AR: This section presents concepts that are common to absolute and relative binding free energy calculations, but it is useful to have \textit{before} talking about restraints. Should we move the "common" section before the "differences" section?}
+
+\paragraph{Determination of the reference state.}
+
+Absolute free energies are typically reported with respect to a specific reference or standard state.
+The reference state effectively determines the arbitrary point at which the binding free energy is 0, and it allow us to obtain a well-defined partial molar free energy for the binding reaction
+\begin{equation*}
+\ce{AB <=> A + B}
+\end{equation*}
+through the expression
+\begin{equation} \label{eq:DGfromKAB}
+\Delta G = -RT ~ \text{ln} \left( C^0 K_{AB} \right)  = -RT ~ \text{ln}\left( \frac{C^0 C_{AB}}{C_A C_B} \right) ,
+\end{equation}
+where $R$ is the gas, $T$ is the temperature, $C_X$ is the equilibrium concentration of the chemical species $X$ in the reaction solvent, and the reference state concentration $C^0$ converts the binding constant $K_{AB}$ into a dimensionless quantity expressed in reference concentration units.
+It should be noted that ignoring the term $C^0$ is equivalent to assuming a reference concentration of 1~D$^{-1}$, where D are the units used for $K_{AB}$, and would thus cause the value of $\Delta G$ to vary with the choice of the units.
+Typically, it is convenient to define a standard state at a constant pressure of 1~atm and where each chemical species (i.e., A, B, and AB) in the reaction solvent has a concentration of $C^0$~=~1~M~=~1 molecule/1660 \r{A}$^3$ but do not interact with other molecules of A, B, or AB.
+
+For solvation free energy calculations, this is typically straightforward to handle and treating it correctly simply means ensuring that the non-interacting solute is taken to the same (or equivalent) final reference state in both environments, e.g. that the transformation involves a 1M to 1M equivalent transfer free energy (where the non-interacting solute still occupies essentially the same volume as the solute in the interacting system).
 So typically in such cases no special care is required to ensure the correct standard state, as long as the \emph{experimental} data being analyzed uses the same standard state and if it does not, a simple entropic correction is needed.
 
 However, for binding the situation is much more complex and requires special care.
 Experimental absolute binding free energies are reported relative to a specific reference state -- a 1 M standard state -- which must also be used in calculations.
-In practice this has implications for how the calculations are done, as the reference concentration must enter the thermodynamic cycle employed.
+In practice, this has implications for how the calculations are done, as the reference concentration must enter the thermodynamic cycle employed.
 
 
 Typically, to deal with both practical sampling issues and the standard state issue, restraints are employed in absolute binding free energy calculations to keep the ligand in a well defined volume as its interactions with the system are removed [ref Gilson 1997 BPJ].
 This solves two problems.
 First, if the ligand were not kept in a well-defined region, as its interactions were removed it might wander the system, perhaps quite slowly, and only inadequately sample the noninteracting or weakly interacting state -- yet adequate sampling of these states might be required for convergence.
 So for practical purposes, the use of restraints can dramatically improve sampling as interactions are weakened and removed.
+
+\todo[inline, color={red!40}]{AR: Is the next sentence true? I thought in this case the volume correction should just become the box volume unless the convergence is not reached, and this is covered by the previous paragraph. I thought the problem with not having the restraint is that you are sampling configurations that are not "bound", but here we enter the discussion of weak binders, as this problem is greater the weaker is the binding. Maybe we should present the problem of weak binders before this section as it is a problem with relative calculations as well.}
+
 Second, if the ligand is not kept in a well-defined region then it is hard to determine how to link a computed binding free energy to the correct 1M standard state.
 In contrast, with restraints, the free energy of releasing the restrained ligand to a 1M standard state can be computed analytically or numerically by solving the relevant integral [refs], allowing the standard state to enter the thermodynamic cycle [refs].
+
+\todo[inline, color={red!40}]{AR: Given the audience, it might be good to discuss the connection to the experiments signal to define the bound state, viz. the experimental methodology must be sensitive to the configurations that are defined to be "bound" and its signal of the "unbound" configurations should be negligible, although this is not specific to absolute binding free energies. I'm now thinking we should discuss this in a previous section. Maybe in the "know what you want to simulate" step? In that paragraph, we should also mention that most modern calculations rely on kinetic traps, but that this doesn't work with weak binders or enhanced sampling techniques without proper restraints.}
 
 \paragraph{Several choices of restraints are possible.}
 In practice, a variety of types of restraints are common, from simple harmonic distance restraints between the ligand and the protein [refs], to flat-bottom restraints which work similarly but only exert a force if the ligand leaves a specific region [refs].
@@ -337,6 +361,7 @@ Again, in principle this choice is unimportant given adequate simulation time bu
 The choice is likely especially important with Boresch-style restraints, where some relative placements of reference atoms are likely to be numerically unstable; additionally, ligand reference atoms should likely be in a part of the molecule which defines the binding orientation well, rather than in a floppy solvent-exposed tail, for example.
 \todo[inline, color={blue!20}]{DLM: Get input from JDC on what they've learned about these.}
 
+\todo[inline, color={red!40}]{AR: Add that with weak binders, since we use restraints to define the bound state, the predicted free energy depends on the restraint and relative calculations may need restraints as well. Also, when kinetic trapping doesn't work a restraint is required in the bound state as well, but the restraint can introduce a bias in the free energy. One possible strategy is to use a relatively soft restraint (harmonic, flat-bottom) and post-process the data to remove "unbound" configurations and the enthalpic bias introduced by the restraint.}
 
 \todo[inline, color={blue!20}]{DLM: Clarify terminology: Double decoupling, etc. See Feature Box below.}
 
