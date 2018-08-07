@@ -183,6 +183,7 @@ Extensive explanation for the checklist questions can be found in section~\ref{s
 \item Can I get the required accuracy with the simulation I want to carry out
 \item
 \item And finally
+\item choice of equilibrium or nonequilibrium methods (probably prefer equilibrium, because easier to check things; nonequilibrium requires checking to make sure the distribution is converged, but you aren't guaranteed you don't miss things.
 \end{itemize}
 \end{checklist}
 
@@ -205,6 +206,7 @@ Extensive explanation for the checklist questions can be found in section~\ref{s
 \item Restraints
 \item Standard state handling
 \end{itemize}
+\item Hamiltonian Replica exchange can always help, if you can run the simulations in parallel, as the simulation will be able to sample more in the uncoupled state.
 \end{checklist}
 
 \begin{checklist}{Relative simulations}
@@ -220,10 +222,9 @@ Extensive explanation for the checklist questions can be found in section~\ref{s
 \begin{checklist}{Analysis}
 \textbf{This is all about analysis of the simulation}
 Extensive explanation for the checklist questions can be found in section~\ref{sec:step4}.
-\begin{itemize}
-\item Are my simulations converged enough?
-\item Am I using the right analysis techniques?
-\end{itemize}
+\item Pick an appropriate method; usually MBAR, BAR, or TI.  Better yet, use multiple types of analysis.
+\item Make sure the data you collect are uncorrelated samples.
+\item Visualize the molecule to make sure it is behaving as you expect.
 \end{checklist}
 
 \end{Checklists*}
@@ -432,31 +433,33 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 \item Decorrelating samples for analysis
 \begin{itemize}
 \item Subsample different lambdas based on correlation times
-\item Ensure all simulations at least 50x correlation time
+\item Ensure all simulations at least 50x correlation time %MRS: I've heard 40x from Swope. Rationale has to do with the number of uncorrelated samples for the estimate of the uncertainty to be reliable.
 \end{itemize}
 \item Examining output data for common problems with discussions of what exactly to plot or look at; examples of typical curves for dV/dlambda and free energy versus lambda, for example
 \begin{itemize}
 \item Make sure ligand doesn’t tumble out of binding site (Mey has observed this)
-\item Significant discrepancies between different free energy estimators (TI, BAR, MBAR)
+\item If possible, look at multiple estimators.  Significant discrepancies between different free energy estimators (TI, BAR, MBAR) indicate there is a problem..
 \item Poor replica mixing (for replica-exchange)
 \item Correlation time as a function of lambda as it would be expected to be a smooth
-\item Dependence on initial conformation
+\item Dependence on initial conformation (best practice would be to look at 
 \item Torsional analysis: Is it stuck in specific states? Only very rarely transitions?
-\item More “usual suspects”
+\item More ``usual suspects''
 \end{itemize}
 \item Estimators for free energies
 \begin{itemize}
-\item MBAR recommended if all energy differences are available
-\item BAR just as good for highly optimized lambda values
-\item TI should be roughly concordant, but quadrature error hard to quantify
+\item MBAR is gold standard, but requires energies from each sample at all of the other states.  BAR is almost as good if the states are separated so as to minimize the number of states (i.e. there is good overlap from $i \rightarrow i+1$ and $i \rightarrow i-1$, but not to $i\pm 2$.
+\item Using bootstrap (or block bootstrap) for errors is more reliable than analytical error estimates. BAR uncertainties are underestimate.
+\item TI should be roughly in agreement, but quadrature error hard to quantify; should generally be used only if the path is known to be good for that size of molecule.
 \item Other variants useful in special circumstances (e.g. Z. Tan stochastic version)
+\item expontential averaging is very problematic.  If using intermediates (which will almost always be the case) should avoid.
 \end{itemize}
 \item Computing and reporting uncertainties on free energies
-correlated bootstrap v. timeseries analysis
+\item correlated bootstrap versus timeseries subsampling.
 \begin{itemize}
 \item Quantifying standard error in dG estimate
-\item Varience in dG estimate using multiple methods (TI, DEXP, IEXP, BAR, MBAR, GDEL, etc.)
+\item Variance in dG estimate using multiple methods (TI, DEXP, IEXP, BAR, MBAR, GDEL, etc.)
 \item Agreement in dG estimate when repeating calculations with different parameters (random seeds, initial configurations, forcefield, etc.)
+\item looking at the overlap matrix and making sure that there is decent overlap between all states.
 \item Calculating differences in free energy change as a function of time
 \begin{itemize}
 	\item Starting from beginning or end of simulation
@@ -469,8 +472,9 @@ correlated bootstrap v. timeseries analysis
 \end{itemize}
 \end{itemize}
 \item Other considerations for many transformations
-Cycle closure error
-
+\begin{itemize}
+Compute cycle closure error
+\end{itemize}
 
 
 \end{enumerate}
