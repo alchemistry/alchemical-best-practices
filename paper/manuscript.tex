@@ -299,19 +299,36 @@ Typical molecular dynamics engines are not set up to recognize this change, or a
 At present the most general solution to this problem is simply to avoid the use of constraints (and thus use a smaller timestep if necessary) in any relative free energy calculation involving a transformation of a constrained bond.
 
 \subsubsection{Absolute free energy calculations must handle the standard state and use restraints}
+\label{sec:standardstate-restraints}
 
-\todo[inline, color={red!40}]{AR, LNN: complete absolute free energy simulation protocol}
+\todo[inline, color={red!40}]{LNN: complete discussion about Boresch restraints}
+
+\todo[inline, color={red!40}]{AR: would the explanation in the next paragraph be better suited for a more general section?}
 
 Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular nonbonded interactions.
 This non-interacting state can then be shifted between environments (from the protein to water, or from one solution to another) without changing its free energy, and then interactions can be restored.
 
-Absolute free energy calculations are typically done with respect to a specific reference state or reference concentration.
-For solvation free energy calculations this is typically straightforward to handle and treating it correctly simply means ensuring that the non-interacting solute is taken to the same (or equivalent) final reference state in both environments, e.g. that the transformation involves a 1 M to 1M equivalent transfer free energy (where the non-interacting solute still occupies essentially the same volume as the solute in the interacting system).
+Absolute free energies are typically reported with respect to a specific reference or standard state, which effectively determines the arbitrary point at which the free energy is 0.
+The role of the standard state is particularly evident with binding free energies, in which having a reference state allows us to obtain a well-defined partial molar free energy for the reaction
+\begin{equation*}
+\ce{AB <=> A + B}
+\end{equation*}
+through the well-known expression derived from the law of mass action
+\begin{equation} \label{eq:DGfromKAB}
+\Delta G = -RT ~ \text{ln} \left( C^0 K_{AB} \right)  = -RT ~ \text{ln}\left( \frac{C^0 C_{AB}}{C_A C_B} \right) ,
+\end{equation}
+where $R$ is the gas, $T$ is the temperature, $C_X$ is the equilibrium concentration of the chemical species $X$ in the reaction solvent, and the reference state concentration $C^0$ converts the binding constant $K_{AB}$ into a dimensionless quantity expressed in reference concentration units.
+It should be noted that ignoring the term $C^0$ is equivalent to assuming a reference concentration of 1~D$^{-1}$, where D are the units used to express $K_{AB}$, and would thus cause the value of $\Delta G$ to vary with the choice of the units.
+Typically, it is convenient to define a standard state at a constant pressure of 1~atm and where each chemical species (i.e., A, B, and AB) in the reaction solvent has a concentration of $C^0$~=~1~M~=~1~molecule/1660~\r{A}$^3$ but do not interact with other molecules of A, B, or AB.
+
+\paragraph{Handling the standard state in absolute free energy calculations.}
+
+For solvation free energy calculations, handling the standard state is typically straightforward, and treating it correctly simply means ensuring that the non-interacting solute is taken to the same (or equivalent) final reference state in both environments, e.g. that the transformation involves a 1M to 1M equivalent transfer free energy (where the non-interacting solute still occupies essentially the same volume as the solute in the interacting system).
 So typically in such cases no special care is required to ensure the correct standard state, as long as the \emph{experimental} data being analyzed uses the same standard state and if it does not, a simple entropic correction is needed.
 
 However, for binding the situation is much more complex and requires special care.
 Experimental absolute binding free energies are reported relative to a specific reference state -- a 1 M standard state -- which must also be used in calculations.
-In practice this has implications for how the calculations are done, as the reference concentration must enter the thermodynamic cycle employed.
+In practice, this has implications for how the calculations are done, as the reference concentration must enter the thermodynamic cycle employed.
 
 
 Typically, to deal with both practical sampling issues and the standard state issue, restraints are employed in absolute binding free energy calculations to keep the ligand in a well defined volume as its interactions with the system are removed [ref Gilson 1997 BPJ].
@@ -337,11 +354,26 @@ Again, in principle this choice is unimportant given adequate simulation time bu
 The choice is likely especially important with Boresch-style restraints, where some relative placements of reference atoms are likely to be numerically unstable; additionally, ligand reference atoms should likely be in a part of the molecule which defines the binding orientation well, rather than in a floppy solvent-exposed tail, for example.
 \todo[inline, color={blue!20}]{DLM: Get input from JDC on what they've learned about these.}
 
-
 \todo[inline, color={blue!20}]{DLM: Clarify terminology: Double decoupling, etc. See Feature Box below.}
 
 
 \subsection{Absolute and relative calculations must deal with some of the same issues}
+
+\subsubsection{Structural definition of the bound state and weak binders}
+
+In binding free energy calculations, extra care should be taken when simulating the bound state, especially when dealing with weak binders and absolute free energy calculations in combination with enhanced sampling techniques.
+In principle, only configurations of the receptor-ligand complex that we consider "bound" should be sampled from the bound state, and, in atomistic simulations, this requires to establish a structural definition of the bound state.
+In practice, the simulation of the bound state starts with the ligand already placed in the binding site and relies on kinetic trapping to maintain a bound complex.
+However, this strategy may not be sufficient if the complex dissociation rate is high or if methodologies such as Hamiltonian replica exchange [ref] and expanded ensemble [ref] are employed in absolute free energy calculations to enhance sampling since, in both cases, the ligand may find a way out of the binding site on timescales that are achievable by modern MD simulations.
+A solution commonly adopted in these cases is the use of one or more restraints making the unbound configurations energetically unfavorable through the addition of extra terms in the potential function.
+In practice, even with restraints, it is not always trivial to force a molecular dynamics simulation to explore a restricted region of the configurational space with a complicated geometry such as a binding site.
+If the ligand is a tight binder\todo[inline, color={red!40}]{AR: Should we give an order of magnitude to define a tight and a weak binder?}, it is usually safe to employ a restraint that allows some of the unbound configurations to be sampled since they generally contribute negligibly to the partition function (i.e., they have a relatively small Boltzmann weight) as long as the sampled volume is not so large that their cumulative contribution becomes significant.
+However, this is more problematic when dealing with weak binders as the unbound configurations can have a non-negligible Boltzmann weight, and their binding affinity can exhibit a significant dependency on the restraint type and parameters that are used to determine the sampled volume [ref].
+Moreover, it should be noted that the additional potential energy terms used to model the restraints can introduce a bias in the predicted free energy.
+The bias can be removed at the analysis stage through reweighting techniques, but this procedure can increase the statistical uncertainty of the binding free energy estimate when the restraints are so strong that the overlap with the reweighted state is diminished [ref].
+
+Finally, it is useful to keep in mind that, for a meaningful comparison between computational predictions and experimental measurements, the definition of the bound state should be consistent.
+In particular, this means that the signal used by the experimental methodology to determine the fraction of bound complexes in solution should in principle reflect the population of complexes in the bound state as defined in the calculation.
 
 \subsubsection{Changes in net charge can be challenging/problematic.}
 
