@@ -28,7 +28,7 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Best Practices for Alchemical Free Energy Calculations : v\versionnumber}
+\title{Best Practices for Alchemical Free Energy Calculations: v\versionnumber}
 
 \author[1*]{John D. Chodera}
 \author[2*]{Antonia S. J. S. Mey}
@@ -37,25 +37,43 @@
 \author[4*]{Conor Parks}
 \author[5*]{Julia E. Rice}
 \author[6*]{Michael Shirts}
-\affil[1]{Computational and Systems Biology Program, Memorial Sloan Kettering Cancer Center, New York NY 10065}
-\affil[2]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine}
-\affil[3]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
+\author[7]{Bryce K. Allen}
+\author[1]{Levi N. Naden}
+\author[1,9]{Andrea Rizzi}
+\affil[1]{Computational and Systems Biology Program, Memorial Sloan Kettering Cancer Center, New York NY, USA}
+\affil[2]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
+\affil[3]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine, USA}
 \affil[4]{I don't know my affiliation}
 \affil[5]{I don't know my affiliation}
+\affil[6]{University of Colorado Boulder, Boulder, CO, USA}
+\affil[7]{Silicon Therapeutics, Boston, MA, USA}
+\affil[8]{Tri-Institutional Training Program in Computational Biology and Medicine, New York, NY, USA}
 
 
 \corr{john.chodera@choderalab.org}{JDC}
 \corr{dmobley@mobleylab.org}{DLM}
 \corr{antonia.mey@ed.ac.uk}{ASJSM}
 \corr{info@julienmichel.net}{JM}
+\corr{michael.shirts@colorado.edu}{MRS}
 \corr{ddd@yyy}{CP}
-\corr{fff@ddd}{MS}
 
 \contrib[\authfn{1}]{These authors contributed equally to this work}
 \contrib[\authfn{2}]{These authors also contributed equally to this work}
 
 
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% PUBLICATION INFORMATION
+%%% Fill out these parameters when available
+%%% These are used when the "pubversion" option is invoked
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\pubDOI{10.XXXX/YYYYYYY}
+\pubvolume{<volume>}
+\pubyear{<year>}
+\articlenum{<number>}
+\datereceived{Month, Day, Year}
+\dateaccepted{Month, Day, Year}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE START
@@ -67,13 +85,15 @@
 \maketitle
 
 \begin{abstract}
-\todo[inline, color={green!20}]{ASJSM: @Volunteer write abstract}
-This particular document provides a skeleton illustrating key sections for a Best Practices document. Please see the sample \texttt{sample-document.tex} in \url{github.com/livecomsjournal/article_templates/templates} for additional information on and examples of using the LiveCoMS LaTeX class.
-Here we also assume familiarity with LaTeX and knowledge of how to include figures, tables, etc.; if you want examples, see the sample just referenced.
-
-In your work, in this particular slot, please provide an abstract of no more than 250 words.
-Your abstract should explain the main contributions of your article, and should not contain any material that is not included in the main text.
-Please note that your abstract, plus the authorship material following it, must not extend beyond the title page or modifications to the LaTeX class will likely be needed.
+%\todo[inline, color={green!20}]{ASJSM: @Volunteer write abstract}
+%In your work, in this particular slot, please provide an abstract of no more than 250 words.
+%Your abstract should explain the main contributions of your article, and should not contain any material that is not included in the main text.
+%Please note that your abstract, plus the authorship material following it, must not extend beyond the title page or modifications to the LaTeX class will likely be needed.
+Alchemical free energy calculations can be a useful tool for predicting free energy differences associated with the transfer of small molecules from one environment to another.
+The hallmark of these methods is the use of modified potential energy functions to represent \emph{alchemical} intermediate states that cannot exist in chemistry; by analyzing simulation data collected from a series of bridging alchemical thermodynamic states, transfer free energies (or differences in transfer free energies) can be computed with orders of magnitude less simulation time than observing the process spontaneously. 
+While these methods are highly flexible, care must be taken in avoiding common pitfalls to ensure that computed free energy differences can be robust and reproducible for the chosen forcefield, and that appropriate corrections are included to permit comparison with experimental data.
+In this paper, we review current best practices for several popular application domains of alchemical free energy calculations, including relative and absolute small molecule binding free energy calculations to biomolecular targets.
+\todo[inline]{JDC: What about biopolymer mutations?}
 \end{abstract}
 
 \end{frontmatter}
@@ -88,13 +108,24 @@ Please note that your abstract, plus the authorship material following it, must 
 %%%%%%%%%%%%%%%%%%%%
 \section{Introduction}
 \label{sec:intro}
-\todo[inline, color={green!20}]{ASJSM: @Volunteer write Intro}
-Meeting Members: 
-David Mobley, Conor Parks, Samarjeet, Julia Rice, Toni Mey, John Chodera, Michael Shirts
-[please add your name if you have contributed to the document!]
-(Original Members: John Chodera, Conor Parks, Heather Mayes)
-People to Invite: Clara Christ (drug discovery expertise), Hannes Loeffler (FESetup expertise)
+Alchemical free energy calculations have become a mature technology for computing various properties related to the transfer of chemical species from one environment to another.
+The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies~\cite{binding-free-energies}, ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), loss of affinity due to resistance mutations~\cite{resistance-mutations}, and changes in protein thermostability due to engineered mutations~\cite{thermostability}.
 
+The defining characteristic of alchemical free energy calculations is the use of a series of modified potential functions $U(x; \lambda)$ in which an alchemical parameter $\lambda$ modulates interactions in a manner that cannot occur in real chemical systems.
+One or more simulations are used to collect data from a multitude of alchemical states to compute a free energy difference between a chemical state ($\lambda_0$) and another chemical or alchemical reference state ($\lambda_1$),
+\begin{eqnarray}
+\Delta f &\equiv& f(\lambda_1) - f(\lambda_0) = - \ln \frac{Z(\lambda_1)}{Z(\lambda_0)}
+\end{eqnarray}
+where the dimensionless free energy $f(\lambda) \equiv \beta F(\lambda)$ is given in terms of partition functions $Z(\lambda)$,
+\begin{eqnarray}
+Z(\lambda) &=& \int dx \, e^{-u(x; \lambda)} .
+\end{eqnarray}
+Here, the inverse temperature $\beta \equiv (k_B T)^{-1}$ where $k_B$ is the Boltzmann constant, and the \emph{reduced potential} $u(x; \lambda)$~\cite{reduced-potential} is generally given by a trace over thermodynamic parameters with their conjugate dynamical variables,
+\begin{eqnarray}
+u(x;\lambda) &\equiv& \beta \left[ U(x;\lambda) + p \, V(x) + \sum_{i=1}^N \mu_i N_i(x) + \cdots \right]
+\end{eqnarray}
+where the collection of thermodynamic and alchemical parameters $\theta \equiv \{\beta, \lambda, p, \mu, \ldots\}$ defines a \emph{thermodynamic state}.
+The physical transformation of interest may require several free energy differences $\Delta f$ to be computed in order to produce an estimate of the overall desired quantity.
 
 %%%%%%%%%%%%%%%%%%%%
 %              Prerequesites                %
@@ -131,11 +162,10 @@ Additionally, the choice of force field (for protein, ligand, ions, cosolvents, 
 \item Checklist and background for new practitioners of relative and absolute alchemical free energy calculations: What should you pay attention to in setting up and running calculations in common codes and why.
 \item Provide guidance to authors as to what should be reported about their protocols in a Methods section, either conforming to standard or reporting where they did not conform and why. Useful to reviewers as well.
 \end{itemize}
-
 \section{Checklist}
 \label{sec:checklist}
 \todo[inline, color={green!20}]{ASJSM: @Volunteer This needs to be revised and expanded, some initial thoughts were just thrown in.}
-An attempt at identifying most important checklist items. 
+An attempt at identifying most important checklist items.
 
 
 % This provides a checklist which
@@ -151,7 +181,7 @@ An attempt at identifying most important checklist items.
 Extensive explanation for the checklist questions can be found in section~\ref{sec:step0}.
 \begin{itemize}
 \item Can I get the required accuracy with the simulation I want to carry out
-\item 
+\item
 \item And finally
 \end{itemize}
 \end{checklist}
@@ -202,9 +232,9 @@ Extensive explanation for the checklist questions can be found in section~\ref{s
 \section{Step 0 -- What can be expected from alchemical simulations?}
 \label{sec:step0}
 \begin{itemize}
-\item What level of accuracy you can expect? 
-\item What timescales and how many transformations can you address given available computational resources? 
-\item Can you even hope to tackle the problem you are attempting? 
+\item What level of accuracy you can expect?
+\item What timescales and how many transformations can you address given available computational resources?
+\item Can you even hope to tackle the problem you are attempting?
 \end{itemize}
 
 \section{Step 1 -- Simulation prerequesites}
@@ -249,7 +279,7 @@ Specifically, with a single topology approach in mind, atom types are allowed to
 Some tools automate this process; for example, LOMAP can take a set of ligands and generate proposed pairings of molecules which are scored by their MCSS similarity and other properties [refs].
 Schr\"{o}dinger's FEP+ planning tool is based on a version of LOMAP [ref].
 
-MCSS searches can be relatively time consuming, so if scoring a library of ligands to identify promising pairs for relative calculations is the goal, it can be helpful to use faster approaches such as shape similarity to perform an initial scoring and then use MCSS only to identify final mappings for relative calculations. 
+MCSS searches can be relatively time consuming, so if scoring a library of ligands to identify promising pairs for relative calculations is the goal, it can be helpful to use faster approaches such as shape similarity to perform an initial scoring and then use MCSS only to identify final mappings for relative calculations.
 
 The MCSS approach, though relatively standard, takes into account only topological similarity.
 It is possible that changes in binding mode could actually require a different choice of mapping, so in some cases mappings may need to be planned differently depending on 3D positioning of atoms in space [ref; does Cournia paper address this?].
@@ -271,19 +301,39 @@ At present the most general solution to this problem is simply to avoid the use 
 \subsubsection{Absolute free energy calculations must handle the standard state and use restraints}
 
 
-Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular nonbonded interactions. 
+\label{sec:standardstate-restraints}
+
+\todo[inline, color={red!40}]{LNN: complete discussion about Boresch restraints}
+
+\todo[inline, color={red!40}]{AR: would the explanation in the next paragraph be better suited for a more general section?}
+
+Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular nonbonded interactions.
 This non-interacting state can then be shifted between environments (from the protein to water, or from one solution to another) without changing its free energy, and then interactions can be restored.
 
-Absolute free energy calculations are typically done with respect to a specific reference state or reference concentration.
-For solvation free energy calculations this is typically straightforward to handle and treating it correctly simply means ensuring that the non-interacting solute is taken to the same (or equivalent) final reference state in both environments, e.g. that the transformation involves a 1 M to 1M equivalent transfer free energy (where the non-interacting solute still occupies essentially the same volume as the solute in the interacting system).
+Absolute free energies are typically reported with respect to a specific reference or standard state, which effectively determines the arbitrary point at which the free energy is 0.
+The role of the standard state is particularly evident with binding free energies, in which having a reference state allows us to obtain a well-defined partial molar free energy for the reaction
+\begin{equation*}
+\ce{AB <=> A + B}
+\end{equation*}
+through the well-known expression derived from the law of mass action
+\begin{equation} \label{eq:DGfromKAB}
+\Delta G = -RT ~ \text{ln} \left( C^0 K_{AB} \right)  = -RT ~ \text{ln}\left( \frac{C^0 C_{AB}}{C_A C_B} \right) ,
+\end{equation}
+where $R$ is the gas, $T$ is the temperature, $C_X$ is the equilibrium concentration of the chemical species $X$ in the reaction solvent, and the reference state concentration $C^0$ converts the binding constant $K_{AB}$ into a dimensionless quantity expressed in reference concentration units.
+It should be noted that ignoring the term $C^0$ is equivalent to assuming a reference concentration of 1~D$^{-1}$, where D are the units used to express $K_{AB}$, and would thus cause the value of $\Delta G$ to vary with the choice of the units.
+Typically, it is convenient to define a standard state at a constant pressure of 1~atm and where each chemical species (i.e., A, B, and AB) in the reaction solvent has a concentration of $C^0$~=~1~M~=~1~molecule/1660~\r{A}$^3$ but do not interact with other molecules of A, B, or AB.
+
+\paragraph{Handling the standard state in absolute free energy calculations.}
+
+For solvation free energy calculations, handling the standard state is typically straightforward, and treating it correctly simply means ensuring that the non-interacting solute is taken to the same (or equivalent) final reference state in both environments, e.g. that the transformation involves a 1M to 1M equivalent transfer free energy (where the non-interacting solute still occupies essentially the same volume as the solute in the interacting system).
 So typically in such cases no special care is required to ensure the correct standard state, as long as the \emph{experimental} data being analyzed uses the same standard state and if it does not, a simple entropic correction is needed.
 
 However, for binding the situation is much more complex and requires special care.
-Experimental absolute binding free energies are reported relative to a specific reference state -- a 1 M standard state -- which must also be used in calculations. 
-In practice this has implications for how the calculations are done, as the reference concentration must enter the thermodynamic cycle employed.
+Experimental absolute binding free energies are reported relative to a specific reference state -- a 1 M standard state -- which must also be used in calculations.
+In practice, this has implications for how the calculations are done, as the reference concentration must enter the thermodynamic cycle employed.
 
 
-Typically, to deal with both practical sampling issues and the standard state issue, restraints are employed in absolute binding free energy calculations to keep the ligand in a well defined volume as its interactions with the system are removed [ref Gilson 1997 BPJ]. 
+Typically, to deal with both practical sampling issues and the standard state issue, restraints are employed in absolute binding free energy calculations to keep the ligand in a well defined volume as its interactions with the system are removed [ref Gilson 1997 BPJ].
 This solves two problems.
 First, if the ligand were not kept in a well-defined region, as its interactions were removed it might wander the system, perhaps quite slowly, and only inadequately sample the noninteracting or weakly interacting state -- yet adequate sampling of these states might be required for convergence.
 So for practical purposes, the use of restraints can dramatically improve sampling as interactions are weakened and removed.
@@ -312,9 +362,25 @@ The choice is likely especially important with Boresch-style restraints, where s
 
 \subsection{Absolute and relative calculations must deal with some of the same issues}
 
+\subsubsection{Structural definition of the bound state and weak binders}
+
+In binding free energy calculations, extra care should be taken when simulating the bound state, especially when dealing with weak binders and absolute free energy calculations in combination with enhanced sampling techniques.
+In principle, only configurations of the receptor-ligand complex that we consider "bound" should be sampled from the bound state, and, in atomistic simulations, this requires to establish a structural definition of the bound state.
+In practice, the simulation of the bound state starts with the ligand already placed in the binding site and relies on kinetic trapping to maintain a bound complex.
+However, this strategy may not be sufficient if the complex dissociation rate is high or if methodologies such as Hamiltonian replica exchange [ref] and expanded ensemble [ref] are employed in absolute free energy calculations to enhance sampling since, in both cases, the ligand may find a way out of the binding site on timescales that are achievable by modern MD simulations.
+A solution commonly adopted in these cases is the use of one or more restraints making the unbound configurations energetically unfavorable through the addition of extra terms in the potential function.
+In practice, even with restraints, it is not always trivial to force a molecular dynamics simulation to explore a restricted region of the configurational space with a complicated geometry such as a binding site.
+If the ligand is a tight binder\todo[inline, color={red!40}]{AR: Should we give an order of magnitude to define a tight and a weak binder?}, it is usually safe to employ a restraint that allows some of the unbound configurations to be sampled since they generally contribute negligibly to the partition function (i.e., they have a relatively small Boltzmann weight) as long as the sampled volume is not so large that their cumulative contribution becomes significant.
+However, this is more problematic when dealing with weak binders as the unbound configurations can have a non-negligible Boltzmann weight, and their binding affinity can exhibit a significant dependency on the restraint type and parameters that are used to determine the sampled volume [ref].
+Moreover, it should be noted that the additional potential energy terms used to model the restraints can introduce a bias in the predicted free energy.
+The bias can be removed at the analysis stage through reweighting techniques, but this procedure can increase the statistical uncertainty of the binding free energy estimate when the restraints are so strong that the overlap with the reweighted state is diminished [ref].
+
+Finally, it is useful to keep in mind that, for a meaningful comparison between computational predictions and experimental measurements, the definition of the bound state should be consistent.
+In particular, this means that the signal used by the experimental methodology to determine the fraction of bound complexes in solution should in principle reflect the population of complexes in the bound state as defined in the calculation.
+
 \subsubsection{Changes in net charge can be challenging/problematic.}
 
-If the net charge of the system will change as the alchemical calculation progresses, this can pose major challenges. 
+If the net charge of the system will change as the alchemical calculation progresses, this can pose major challenges.
 Specifically, finite-size effects can introduce profound artifacts into computed binding free energies [refs], in part because typical schemes for long-range electrostatics (including PME and reaction field) do not handle free energy contributions from such changes effectively or as they would be handled in a hypothetical macroscopic bulk solution [refs].
 
 There are two main potential solutions to avoid artifacts due to changes in net charge: Correcting for the introduced artifacts, or avoiding changing the net charge.
@@ -349,7 +415,7 @@ Some schemes to adaptively optimize the spacing of intermediate states based on 
 \begin{enumerate}
 \item Choice of discrete alchemical protocol (Shirts, Mey, Chodera)
 	%\begin{itemize}
-	%\item Many options: Adaptive scheme, Chebyshev polynomials, linear spacing, ``choose your next lambda from data at this lambda'' Äù, optimal thermodynamic length approaches (separately: Shirts, Sivak, Huafeng Xu).
+	%\item Many options: Adaptive scheme, Chebyshev polynomials, linear spacing, ``choose your next lambda from data at this lambda'' ÔøΩÔøΩ, optimal thermodynamic length approaches (separately: Shirts, Sivak, Huafeng Xu).
 	%\item Levi Naden had paper with lambda protocol which worked for all cases -- methane solvation, host-guest (including disappearing host)
 	%\end{itemize}
 \item Relative
@@ -374,6 +440,7 @@ Part of AMBER still can‚Äôt run at endpoints (lambda = 0 or 1); SANDER cannot bu
 \item In absolute: Confine-and-release, BLUES
 \item In relative (ugh!!)
 \end{itemize}
+\todo[inline, color={red!40}]{LNN, BA: write stopping condition section}
 \item Determine \textbf{stopping conditions}
 Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 
@@ -382,7 +449,7 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 \begin{itemize}
 \item What data to save: dU/dlambda, Delta E‚Äôs between neighbor for BAR, between further for MBAR, ‚Ä¶
 \item BAR captures most of info with well-optimized lambda protocol, but MBAR when perhaps not, except when there are way too many lambda values.
-\item Recommend against solely relying on TI when possible 
+\item Recommend against solely relying on TI when possible
 \item Recommend cross-comparing methods (TI (spline, trapezoid, etc.), BAR, MBAR) as diagnosis of trouble
 \end{itemize}
 
@@ -390,6 +457,7 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 
 \section{Step 3 -- Overview of available analysis techniques}
 \label{sec:step3}
+\todo[inline, color={red!40}]{JDC, BA: uncertainty estimation section}
 \begin{enumerate}
 \item Detecting boundary between equilibrated and production regions (Chodera: \url{http://dx.doi.org/10.1021/acs.jctc.5b00784})
 \item Decorrelating samples for analysis
@@ -416,6 +484,21 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 \end{itemize}
 \item Computing and reporting uncertainties on free energies
 correlated bootstrap v. timeseries analysis
+\begin{itemize}
+\item Quantifying standard error in dG estimate
+\item Varience in dG estimate using multiple methods (TI, DEXP, IEXP, BAR, MBAR, GDEL, etc.)
+\item Agreement in dG estimate when repeating calculations with different parameters (random seeds, initial configurations, forcefield, etc.)
+\item Calculating differences in free energy change as a function of time
+\begin{itemize}
+	\item Starting from beginning or end of simulation
+	\item Significance of differences in midpoint estimate (High middle error: high uncertainty)
+\end{itemize}
+\item Ensemble method to combine uncertainties into interpretable weighted metric
+\begin{itemize}
+	\item Simple normalized metric to determine confidence in calculation
+	\item Easily interpreted by chemist/biologist when prioritizing new chemistries
+\end{itemize}
+\end{itemize}
 \item Other considerations for many transformations
 Cycle closure error
 
@@ -457,7 +540,7 @@ Cycle closure error
 	\begin{itemize}
 	\item SIRE
 	\item YANK
-	\item gromacs 
+	\item gromacs
 	\item pmx for mutations
 	\end{itemize}
 \item Setup tools
