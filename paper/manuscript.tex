@@ -41,8 +41,8 @@
 \author[1]{Levi N. Naden}
 \author[1,9]{Andrea Rizzi}
 \affil[1]{Computational and Systems Biology Program, Memorial Sloan Kettering Cancer Center, New York NY, USA}
-\affil[2]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine, USA}
-\affil[3]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
+\affil[2]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
+\affil[3]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine, USA}
 \affil[4]{I don't know my affiliation}
 \affil[5]{I don't know my affiliation}
 \affil[6]{University of Colorado Boulder, Boulder, CO, USA}
@@ -136,8 +136,8 @@ The physical transformation of interest may require several free energy differen
 %Checklists are normally focused on errors made by users with training and experience in molecular simulations, so you can assume a basic familiarity with the fundamentals of molecular simulations.
 
 Before proceeding with this document, you are assumed to have a basic familiarity with the principles of molecular simulations, molecular dynamics simulations, statistical mechanics and thermodynamics, and so on.
-This document focuses on aspects specific to alchemical free energy calculations, which remain an advanced topic within the molecular simulations area.
-Thus, if you are a beginner in the area of molecular simulations, not all background you need will be covered within the scope of this document.
+This document focuses on aspects specific to alchemical free energy calculations, which remain an advanced topic within the molecular simulations area. 
+Thus, if you are a beginner in the area of molecular simulations, not all background you need will be covered within the scope of this document. 
 For example, we assume that you are able to set up and conduct a successful equilibrium molecular dynamics simulation of a particular thermodynamic state of a system interest as a prerequisite for this document.
 
 \section{Scope and Goals}
@@ -284,7 +284,7 @@ MCSS searches can be relatively time consuming, so if scoring a library of ligan
 The MCSS approach, though relatively standard, takes into account only topological similarity.
 It is possible that changes in binding mode could actually require a different choice of mapping, so in some cases mappings may need to be planned differently depending on 3D positioning of atoms in space [ref; does Cournia paper address this?].
 
-Single topology relative calculations, and calculations based on substructure searches, only work if in fact the ligands share a common substructure.
+Single topology relative calculations, and calculations based on substructure searches, only work if in fact the ligands share a common substructure. 
 If no common substructure is shared, then essentially one ends up needing sophisticated dual or hybrid topology free energy calculations, where one would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
 To our knowledge no general pipeline for such calculations yet exists and this would likely remain a research problem.
 
@@ -299,6 +299,8 @@ Typical molecular dynamics engines are not set up to recognize this change, or a
 At present the most general solution to this problem is simply to avoid the use of constraints (and thus use a smaller timestep if necessary) in any relative free energy calculation involving a transformation of a constrained bond.
 
 \subsubsection{Absolute free energy calculations must handle the standard state and use restraints}
+
+
 \label{sec:standardstate-restraints}
 
 \todo[inline, color={red!40}]{LNN: complete discussion about Boresch restraints}
@@ -354,6 +356,7 @@ Again, in principle this choice is unimportant given adequate simulation time bu
 The choice is likely especially important with Boresch-style restraints, where some relative placements of reference atoms are likely to be numerically unstable; additionally, ligand reference atoms should likely be in a part of the molecule which defines the binding orientation well, rather than in a floppy solvent-exposed tail, for example.
 \todo[inline, color={blue!20}]{DLM: Get input from JDC on what they've learned about these.}
 
+
 \todo[inline, color={blue!20}]{DLM: Clarify terminology: Double decoupling, etc. See Feature Box below.}
 
 
@@ -395,10 +398,6 @@ We are not yet aware of a careful comparison of charge corrections versus other 
 
 \subsubsection{The alchemical pathway is quite important}
 
-\todo[inline, color={red!40}]{LNN: write common principles alchemical path choice}
-\todo[inline, color={red!40}]{AR: write absolute-specific section on  alchemical path choice}
-\todo[inline, color={red!40}]{BA: write relative-specific section on  alchemical path choice}
-
 Both absolute and relative calculations must choose an alchemical pathway connecting initial and final states, which is in principle arbitrary but in practice affects the efficiency of the calculations considerably.
 Some choices are particularly crucial -- for example, transformations involving insertions or deletions of atoms should employ soft-core potentials for Lennard-Jones or other hard-core interactions [refs].
 Other issues, such as whether absolute calculations retain intramolecular nonbonded interactions or remove these interactions, may be less critical and differ among studies in the literature [refs].
@@ -410,7 +409,7 @@ We have less experience with dual topology calculations but expect that similar 
 
 A key additional consideration in choosing the alchemical pathway is the choice of spacing of intermediate states.
 The spacing depends to some extent on the choice of analysis method, though states should essentially be spaced equidistant in the relevant thermodynamic length [ref].
-For BAR/MBAR techniques this means that spacings should typically be equal in [what, variance? ref].
+For BAR/MBAR techniques this means that spacings should typically be equal in [what, variance? ref]. 
 Some schemes to adaptively optimize the spacing of intermediate states based on initial exploratory simulations have been proposed [refs].
 
 \begin{enumerate}

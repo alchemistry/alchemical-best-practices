@@ -26,7 +26,7 @@ Preparation (focused on aspects unique to alchemical free energies), execution, 
 - Michael Shirts
 
 
-##List of Contributors
+## List of Contributors
 (non-author list of people who contributed to document)
 
 ## Paper Writing as Code Development
