@@ -449,36 +449,37 @@ Absolute free energy calculations for dissimilar ligands can have particular cha
 This means that researchers performing absolute binding free energy calculations will have to pay particular attention to generating reasonable putative binding modes.
 
 In some cases, it is tempting to simply use docking techniques to generate initial bound structures for starting molecular dynamics simulations.
-However, timescales for binding mode interconversion are usually slow [refs] compared to MD/free energy timescales, meaning that simulations started from different potential binding modes are likely to yield disparate computed binding free energies. [refs]
+However, timescales for binding mode interconversion are usually slow compared to MD/free energy timescales, meaning that simulations started from different potential binding modes are likely to yield disparate computed binding free energies~\cite{~\cite{Mobley:2006:TheJournalofChemicalPhysics, Palma:2012:J.Comput.Chem., Mobley:2012:TheJournalofChemicalPhysics, Gill:2018:J.Phys.Chem.B} }.
 And docking techniques are good at identifying sterically reasonable potential binding modes, but still perform relatively poorly at identifying a single dominant binding mode \emph{a priori}. [refs] 
 
 It is worth highlighting a recent SAMPL blind challenge on HIV integrase as an illustration of this. 
-Many submissions, using state-of-the-art methods, had difficulty even predicting which \emph{binding site} ligands would bind in (most submissions placed more than half of the ligands into the incorrect binding site), and even given correct binding sites, the binding mode within each site was also quite difficult to predict [refs].
-The best performing submission for predicting binding modes actually ended up being a human expert with more than 10 years of experience on the particular target [ref], rather than an algorithm.
-While free energy calculations on this set had some success, many of the failures actually ended up being cases where the binding mode selected as input for free energy calculations was later found to be incorrect [ref Levy], highlighting the importance of these issues.
+Many submissions, using state-of-the-art methods, had difficulty even predicting which \emph{binding site} ligands would bind in (most submissions placed more than half of the ligands into the incorrect binding site), and even given correct binding sites, the binding mode within each site was also quite difficult to predict~\cite{Mobley:2014:J.Comput.AidedMol.Des.}.
+The best performing submission for predicting binding modes actually ended up being a human expert (aided by computational tools) with more than 10 years of experience on the particular target~\cite{Voet:2014:JournalofComputer-AidedMolecularDesign}, rather than a fully automated approach.
+While free energy calculations on this set had some success, many of the failures actually ended up being cases where the binding mode selected as input for free energy calculations was later found to be incorrect~\cite{Gallicchio:2014:JournalofComputer-AidedMolecularDesign}, highlighting the importance of these issues.
 
-One approach which has shown some success is to retain diverse potential binding modes from docking, perform short MD simulations of these to identify distinct stable binding modes, and then consider these in subsequent calculations [refs].
+One approach which has shown some success is to retain diverse potential binding modes from docking, perform short MD simulations of these to identify distinct stable binding modes, and then consider these in subsequent calculations~\cite{Gallicchio:2014:JournalofComputer-AidedMolecularDesign, Mobley:2006:TheJournalofChemicalPhysics, Rocklin:2013:JournalofMolecularBiology, Boyce:2009:JournalofMolecularBiology, Mobley:2007:JournalofMolecularBiology}.
 
-Routes to handle multiple potential binding modes are different depending on whether absolute or relative calculations are selected, unless a method is available to estimate the relative populations of different stable binding modes in advance (e.g. such as the BLUES approach currently in development [ref]), in which case this approach could be applied to assist both types of calculations.
+Routes to handle multiple potential binding modes are different depending on whether absolute or relative calculations are selected, unless a method is available to estimate the relative populations of different stable binding modes in advance (e.g. such as the BLUES approach currently in development~\cite{Gill:2018:J.Phys.Chem.B}), in which case this approach could be applied to assist both types of calculations.
 
 
 
 \paragraph{Handling multiple potential binding modes within absolute calculations.}
-Within absolute binding free energy calculations, multiple potential binding modes can be handled by two main strategies: Consider each binding mode separately (a separation of states strategy) or sample all binding modes within a single simulation.
+Within absolute binding free energy calculations, multiple potential binding modes can be handled by two main strategies: Consider each binding mode separately (a separation of states strategy) or sample all binding modes within a single simulation~\cite{Mobley:2012:TheJournalofChemicalPhysics}.
 This couples to the choice of restraints selected, as some restraints will allow transitions between binding modes and even binding sites (Section~\ref{sec:standardstate-restraints}), and others do not.
 
-Sampling all binding modes within a single free energy calculation is usually impractical without some form of enhanced sampling or at least Hamiltonian replica exchange [refs] because barriers for binding mode interconversion result in kinetics which are too slow compared to simulation timescales [refs].
-Hamiltonian exchange, coupled with appropriate restraints, can allow the ligand to relatively rapidly exchange between potential binding modes when non-interacting, accelerating sampling of binding modes [ref Kai Wang, Yank, ...].
+Sampling all binding modes within a single free energy calculation is usually impractical without some form of enhanced sampling or at least Hamiltonian replica exchange~\cite{Wang:2013:JournalofComputer-AidedMolecularDesign} because barriers for binding mode interconversion result in kinetics which are too slow compared to simulation timescales~\cite{Mobley:2006:TheJournalofChemicalPhysics, Palma:2012:J.Comput.Chem., Mobley:2012:TheJournalofChemicalPhysics, Gill:2018:J.Phys.Chem.B}.
+Hamiltonian exchange, coupled with appropriate restraints, can allow the ligand to relatively rapidly exchange between potential binding modes when non-interacting, accelerating sampling of binding modes~\cite{Wang:2013:JournalofComputer-AidedMolecularDesign}.
+\todo[inline, color={yellow!40}]{DLM probably need more background refs on hamiltonian lambda exchange here.}
 
-Separation of states provides a simple though potentially expensive alternative, where each stable binding mode is considered separately with a binding free energy calculation restricted to that binding mode, and then (as long as the binding modes are non-overlapping) the resulting component binding free energies can be combined into a total [refs].
+Separation of states provides a simple though potentially expensive alternative, where each stable binding mode is considered separately with a binding free energy calculation restricted to that binding mode, and then (as long as the binding modes are non-overlapping) the resulting component binding free energies can be combined into a total~\cite{Mobley:2006:TheJournalofChemicalPhysics, Mobley:2012:TheJournalofChemicalPhysics}.
 This approach necessitates a separate binding free energy calculation for each potential binding mode, however, so it can be computationally quite costly.
-If relative populations of different stable binding modes were available from some other technique, it could make this separation of states approach considerably more efficient [refs].
+If relative populations of different stable binding modes were available from some other technique, it could make this separation of states approach considerably more efficient~\cite{Mobley:2012:TheJournalofChemicalPhysics, Gill:2018:J.Phys.Chem.B}.
 
 \paragraph{Handling multiple potential binding modes within relative calculations.}
 
 Multiple potential binding modes pose particular problems for relative free energy calculations, as having multiple starting structures for these calculations could yield substantially different calculated relative binding free energies for the same transformation due to kinetic trapping, and, without additional information (specifically, the free energy of binding mode interconversion or, equivalently, the relative populations of different binding modes) it becomes impossible to sort out which of the multiple answers is in fact the correct relative binding free energy [refs].
 
-To deal with this, some practitioners have actually computed relative binding free energies of different binding modes of the same ligand [ref Palma, Jorgensen (?) etc.].
+To deal with this, some practitioners have actually computed relative binding free energies of different binding modes of the same ligand~\cite{Palma:2012:J.Comput.Chem.} [ref Jorgensen (?) etc.].
 For example, a mutation which adds a methyl to an aromatic ring of a larger ligand might yield one result if the methyl points in one direction, and a different value if it points in the other due to slow ring motions. [e.g. get ref from Sukanya]
 One could compute the free energy of turning off the methyl group in one orientation and turning it back on in the other orientation to obtain the free energy difference between the two potential binding modes.
 While this approach has precedent, it is relatively difficult to automate at present and requires considerable care.
@@ -664,7 +665,7 @@ Declare any potentially conflicting interests here, whether or not they pose an 
 %%%%%%%
 FMS acknowledges the support of NSF grant CHE-1111111.
 
-\bibliography{livecoms-sample}
+\bibliography{alchemical}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% APPENDICES
