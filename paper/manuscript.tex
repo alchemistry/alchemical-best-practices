@@ -34,7 +34,7 @@
 \author[2*]{Antonia S. J. S. Mey}
 \author[2*]{Julien Michel}
 \author[3*]{David L. Mobley}
-\author[4*]{Conor Parks}
+\author[4*]{Samarjeet Prasad}
 \author[5*]{Julia E. Rice}
 \author[6*]{Michael Shirts}
 \author[7]{Bryce K. Allen}
@@ -109,23 +109,25 @@ In this paper, we review current best practices for several popular application 
 \section{Introduction}
 \label{sec:intro}
 Alchemical free energy calculations have become a mature technology for computing various properties related to the transfer of chemical species from one environment to another.
-The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies~\cite{binding-free-energies}, ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), loss of affinity due to resistance mutations~\cite{resistance-mutations}, and changes in protein thermostability due to engineered mutations~\cite{thermostability}.
+The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies~\cite{binding-free-energies}, ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), loss of affinity due to resistance mutations~\cite{hauser2018predicting,aldeghi2018accurate}, and changes in protein thermostability due to engineered mutations~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}.
 
-The defining characteristic of alchemical free energy calculations is the use of a series of modified potential functions $U(x; \lambda)$ in which an alchemical parameter $\lambda$ modulates interactions in a manner that cannot occur in real chemical systems.
+The defining characteristic of alchemical free energy calculations is the use of a series of alchemically-modified potential functions $U(x; \lambda)$ in which an alchemical parameter $\lambda$ modulates interactions in a manner that cannot occur in real chemical systems.
 One or more simulations are used to collect data from a multitude of alchemical states to compute a free energy difference between a chemical state ($\lambda_0$) and another chemical or alchemical reference state ($\lambda_1$),
 \begin{eqnarray}
-\Delta f &\equiv& f(\lambda_1) - f(\lambda_0) = - \ln \frac{Z(\lambda_1)}{Z(\lambda_0)}
+\Delta f &\equiv& f(\lambda_1) - f(\lambda_0) = - \ln \frac{Z(\lambda_1)}{Z(\lambda_0)} , \label{equation:dimensionless-free-energy-difference}
 \end{eqnarray}
 where the dimensionless free energy $f(\lambda) \equiv \beta F(\lambda)$ is given in terms of partition functions $Z(\lambda)$,
 \begin{eqnarray}
-Z(\lambda) &=& \int dx \, e^{-u(x; \lambda)} .
+Z(\lambda) &=& \int dx \, e^{-u(x; \lambda)} . \label{equation:partition-function-definition}
 \end{eqnarray}
-Here, the inverse temperature $\beta \equiv (k_B T)^{-1}$ where $k_B$ is the Boltzmann constant, and the \emph{reduced potential} $u(x; \lambda)$~\cite{reduced-potential} is generally given by a trace over thermodynamic parameters with their conjugate dynamical variables,
+Here, the inverse thermal energy $\beta \equiv (k_B T)^{-1}$ where $k_B$ is the Boltzmann constant and $T$ is the absolute temperature, and the \emph{reduced potential} $u(x; \lambda)$~\cite{shirts2008statistically} is generally given by a trace over thermodynamic parameters with their conjugate dynamical variables,
 \begin{eqnarray}
-u(x;\lambda) &\equiv& \beta \left[ U(x;\lambda) + p \, V(x) + \sum_{i=1}^N \mu_i N_i(x) + \cdots \right]
+u(x;\lambda) &\equiv& \beta \left[ U(x;\lambda) + p \, V(x) + \sum_{i=1}^N \mu_i \, N_i(x) + \cdots \right] . \label{equation:reduced-potential}
 \end{eqnarray}
-where the collection of thermodynamic and alchemical parameters $\theta \equiv \{\beta, \lambda, p, \mu, \ldots\}$ defines a \emph{thermodynamic state}.
-The physical transformation of interest may require several free energy differences $\Delta f$ to be computed in order to produce an estimate of the overall desired quantity.
+Here, the collection of thermodynamic and alchemical parameters $\theta \equiv \{\beta, \lambda, p, \mu, \ldots\}$ defines a \emph{thermodynamic state}.
+The physical transformation of interest---such as a protein-ligand association process, or transfer free energy among phases---may involve a thermodynamic cycle that requires several free energy differences $\Delta f$ to be computed in order to produce an estimate of the overall desired quantity.
+
+\todo[inline]{JDC: Should we give a few examples, along with illustrative figures?}
 
 %%%%%%%%%%%%%%%%%%%%
 %              Prerequesites                %
@@ -135,7 +137,7 @@ The physical transformation of interest may require several free energy differen
 %Here you would identify prerequisites/background knowledge that are assumed by your work and your checklist which you view as critical, ideally giving links to good sources on these topics.
 %Checklists are normally focused on errors made by users with training and experience in molecular simulations, so you can assume a basic familiarity with the fundamentals of molecular simulations.
 
-Before proceeding with this document, you are assumed to have a basic familiarity with the principles of molecular simulations, molecular dynamics simulations, statistical mechanics and thermodynamics, and so on.
+In this review, we assume a basic familiarity with the principles of molecular mechanics, molecular dynamics simulations, statistical mechanics, and the biophysics of protein-ligand association.
 This document focuses on aspects specific to alchemical free energy calculations, which remain an advanced topic within the molecular simulations area.
 Thus, if you are a beginner in the area of molecular simulations, not all background you need will be covered within the scope of this document.
 For example, we assume that you are able to set up and conduct a successful equilibrium molecular dynamics simulation of a particular thermodynamic state of a system interest as a prerequisite for this document.
@@ -231,6 +233,7 @@ Extensive explanation for the checklist questions can be found in section~\ref{s
 
 \section{Step 0 -- What can be expected from alchemical simulations?}
 \label{sec:step0}
+\todo[inline]{Huafeng XU/David Mobely: write section?}
 \begin{itemize}
 \item What level of accuracy you can expect?
 \item What timescales and how many transformations can you address given available computational resources?
@@ -239,6 +242,7 @@ Extensive explanation for the checklist questions can be found in section~\ref{s
 
 \section{Step 1 -- Simulation prerequesites}
 \label{sec:step1}
+\todo[inline]{ASJSM & JM: write section}
 \begin{enumerate}
 \item Generate geometry of initial state: Reference biomolecular simulation preparation best practices
 \item Relative: Generate geometry of final state (Mey)
@@ -258,7 +262,7 @@ To use binding as a concrete example, in absolute binding free energy calculatio
 In contrast, in relative binding free energy calculations, one compares the binding free energy of two related inhibitors to determine the potency difference.
 
 Many protocol issues for alchemical calculations are common, but some are different between absolute and relative calculations, so before treating the common elements we treat the protocol differences.
-
+\todo[inline]{JM: single/dual hybrid toplogies what are they?}
 \subsubsection{Relative free energy calculations must select a topology and produce an atom mapping}
 
 \paragraph{Topologies and atom mappings.} A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a dual topology, single topology, or hybrid topology approach to relative calculations.
@@ -510,12 +514,14 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 \label{sec:step3}
 \todo[inline, color={red!40}]{JDC, BA: uncertainty estimation section}
 \begin{enumerate}
+\todo[inline]{JDC: write section}
 \item Detecting boundary between equilibrated and production regions (Chodera: \url{http://dx.doi.org/10.1021/acs.jctc.5b00784})
 \item Decorrelating samples for analysis
 \begin{itemize}
 \item Subsample different lambdas based on correlation times
 \item Ensure all simulations at least 50x correlation time
 \end{itemize}
+\todo[inline]{MS: write section}
 \item Examining output data for common problems with discussions of what exactly to plot or look at; examples of typical curves for dV/dlambda and free energy versus lambda, for example
 \begin{itemize}
 \item Make sure ligand doesn’t tumble out of binding site (Mey has observed this)
@@ -526,6 +532,7 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 \item Torsional analysis: Is it stuck in specific states? Only very rarely transitions?
 \item More “usual suspects”
 \end{itemize}
+\todo[inline]{MS/JDC: write section}
 \item Estimators for free energies
 \begin{itemize}
 \item MBAR recommended if all energy differences are available
@@ -533,6 +540,7 @@ Uncertainty-directed stopping criteria can ensure target uncertainty is achieved
 \item TI should be roughly concordant, but quadrature error hard to quantify
 \item Other variants useful in special circumstances (e.g. Z. Tan stochastic version)
 \end{itemize}
+\todo[inline]{BA: write section}
 \item Computing and reporting uncertainties on free energies
 correlated bootstrap v. timeseries analysis
 \begin{itemize}
@@ -551,6 +559,7 @@ correlated bootstrap v. timeseries analysis
 \end{itemize}
 \end{itemize}
 \item Other considerations for many transformations
+\todo[inline]{JM: write section}
 Cycle closure error
 
 
@@ -575,6 +584,7 @@ Cycle closure error
 %                Software                    %
 %%%%%%%%%%%%%%%%%%%%
 \section{Available software -- a summary}
+\todo[inline]{Samar: write section}
 \label{sec:software}
 \begin{itemize}
 \item Commercial:
