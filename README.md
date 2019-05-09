@@ -24,7 +24,7 @@ Preparation (focused on aspects unique to alchemical free energies), execution, 
 - Julia Rice
 - Samarjeet
 - Michael Shirts
-
+- Bryce Allen
 
 ##List of Contributors
 (non-author list of people who contributed to document)
