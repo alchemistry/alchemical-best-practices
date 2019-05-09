@@ -24,7 +24,7 @@
 \usepackage[colorinlistoftodos]{todonotes}
 \newcommand{\versionnumber}{0.1}  % you should update the minor version number in preprints and major version number of submissions.
 \newcommand{\githubrepository}{\url{https://github.com/michellab/alchemical-best-practices}}  %this should be the main github repository for this article
-
+\newcommand{\expect}[1]{\left\langle{#1}\right\rangle}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -471,7 +471,7 @@ At present the most general solution to this problem is simply to avoid the use 
 
 \todo[inline, color={red!40}]{AR: would the explanation in the next paragraph be better suited for a more general section?}
 
-Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular nonbonded interactions.
+Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular non-bonded interactions.
 This non-interacting state can then be shifted between environments (from the protein to water, or from one solution to another) without changing its free energy, and then interactions can be restored.
 
 Absolute free energies are typically reported with respect to a specific reference or standard state, which effectively determines the arbitrary point at which the free energy is 0.
@@ -739,23 +739,100 @@ How decorelation impacts calculations, and how to compute it is discussed in oth
 \item Ensure all simulations at least 50x correlation time
 \end{itemize}
 \todo[inline]{MS: write section}
-\item Examining output data for common problems with discussions of what exactly to plot or look at; examples of typical curves for dV/dlambda and free energy versus lambda, for example
-\begin{itemize}
-\item Make sure ligand doesn’t tumble out of binding site (Mey has observed this)
-\item Significant discrepancies between different free energy estimators (TI, BAR, MBAR)
-\item Poor replica mixing (for replica-exchange)
-\item Correlation time as a function of lambda as it would be expected to be a smooth
-\item Dependence on initial conformation
-\item Torsional analysis: Is it stuck in specific states? Only very rarely transitions?
-\item More “usual suspects”
-\end{itemize}
+
 \todo[inline]{MS/JDC: write section}
-\item Estimators for free energies
+\item Free energy differences between two different states differing in the energy function are directly related to the
+ratio of probabilities of those states.AS can be noted, the partition functions in Eq.~\ref{equation:dimensionless-free-energy-difference} are simply the total accumulated probabilites for all possible configurations of the system. Virtually all of the ways to estimate this free energy are based in converting this ratio of integrals to something that can be measures in one (or several) simulations.  
+
 \begin{itemize}
-\item MBAR recommended if all energy differences are available
-\item BAR just as good for highly optimized lambda values
-\item TI should be roughly concordant, but quadrature error hard to quantify
-\item Other variants useful in special circumstances (e.g. Z. Tan stochastic version)
+    \item \textbf{The Zwanzig relationship} Perhaps the simplest method for calculating free energy
+differences from simulations is the so-called \textit{Zwanzig
+relationship}~\cite{orig.TPT}, also called EXP or simply free energy perturbation, thought that term later grew to encompass all ways of calculating free energy differences.
+The free energy between two states defined by two different potential energy functions 
+$U_0(\vec{q})$ and $U_1(\vec{q})$ over coordinate space $\vec{q}$ can be calculated as:
+\begin{eqnarray}
+\Delta f_{01} & = & \ln \expect{e^{-(U_1(\vec{q}) - U_0(\vec{q}))}}_0 =  \ln \expect{e^{-\Delta U(\vec{q})} }_0
+\end{eqnarray}\label{eqn.zwanzig}
+In words, we take the samples generated during our run with the potential energy function $U_0(\vec{q}}$, recalculate what the energy difference would be to switch to potential energy function $U_1(\vec{q}}$, and exponentially average them to get the free energy.  Here, the exponential average consists in multiplying by -1, exponentiating, averaging, taking the logarithm, and multiplying by -1 again.  This almost requires no extra code functionality to perform; one need only to save a full precision trajectory, and run an unmodified molecular simulation code using the $U_1$ in order to calculate the new energies.  The analysis can be written in a line of code.  We note that this method is even more general, in that the instantaneous work to change the potential energy function from $U_0$ to $U_1$ can be replaced by the nonreversible work $W$ to make the same change some conditions~\cite{???} 
+Although the Zwanzig equation is formally correct (as long as the two states considered sample the same phase space volume), it has some very important numerical issues that mean that it is usually when performing a standard free energy calculation for a small molecule.~\cite{shirts.comparison,LuND:Appmcf}  One can show that if the standard deviation of the difference $\Delta U(\vec{q}) = U_1(vec{q})-U_2(\vec{q})$ over all sampled $\vec{q}$ is large (which in this case, means only several times $k_BT)$, then very few samples contribute to the average, and the answer will be both biased and extremely noisy~\cite{???}.  There are a number of applicatitons where it is useful, but those usually involve investigating the dependence of the free energy on small changes in parameters, not changing molecules or even single atoms in molecules~cite{???}
+
+\item Bennett Acceptance Ratio
+
+If we have the ensemble of differences in the potential energy both sampled from the distribution defined by $U_0$ and the distribution defined by $U_1$, we can obtain a significantly improved estimate of the
+free energy difference compared to that obtained by EXP.  
+This estimate was first derived by Bennett and is hence generally called the Bennett Acceptance Ratio.  It is solved by finding the reduced free energy $f_{ij}$ that satisfied the following implicit equation:
+\begin{eqnarray}
+ \sum_{i=1}^{n_i} \frac{1}{1 + \exp(\ln(n_i/n_j) + u_{ij}(\vec{q}) - f_{ij}))} \\
+ =\sum_{i=1}^{n_j} \frac{1}{1 + \exp(\ln(n_j/n_i) - U_{ij}(\vec{q}) + f_ij))} 
+\end{eqnarray}
+where $n_i$ and $n_j$ are the number of samples from each state. We
+will refer to this method as BAR. More recent derivations shows that this formula is the maximum likelihood estimate of the free energy difference
+given sets of samples from the two states~\citebold{shirts.bennett}. 
+
+Many studies have demonstrated both the
+theoretical and practical superiority of BAR over EXP in molecular
+simulations~\citebold{shirts.comparison,LuND:Appmcf}, and BAR converges to EXP in the limit that all samples are from a
+single state~\citebold{bennettCH,shirts.bennett}. Significantly less
+overlap between the configurational space of each state is required to
+converge than for EXP, though some overlap must still exist.
+
+The Bennett acceptance ratio is only defined between two states.  Usually, the endpoints of interest in a free energy calculation are sufficiently different that we will need a chain of states that gradually change the potential energy function from $U_0$to $U_1$, as discussed in section~\ref{sec:???}. One can simply carry out BAR between each pair of states $\Delta G_{1 \rightarrow N} = \Delta_G_{1\rightarrow 2} + \Delta_G_{2\rightarrow 3} +  \ldots + \Delta_G_{N-1\rightarrow N}$.
+
+There is one important thing to note about the uncertainty estimates when summing multiple free energies together to calculate an overall free energy estimate.  Although BAR itself gives a free energy estimate that is asymptotically correct in and is much less biased than the uncertainty estimate for EXP, the uncertainties in $\Delta_G_{i-1\rightarrow i}$ and $\Delta_G_{i\rightarrow i+1}$ are not uncorrelated, because they both involve the energies $U_i(\vec{q})$. The variances of each of the free energies will \textit{not} sum to the variance of the overall free energy. Instead, some other uncertainty method such as bootstrapping~\cite{???} must be used.
+
+\item \textit{Thermodynamic integration} 
+By taking the derivative of the free energy with respect to the
+variable $\lambda$, we find that:
+\begin{equation}
+df/d\lambda &=& \frac{d}{d\lambda} \ln \int e^{-u(\lambda,\vec{q})} d\vec{q} = \expect{\frac{du(\lambda,\vec{q})}{d\lambda}\
+}_{\lambda} 
+\end{equation}
+
+And than we can then numerically integrate $df/d\lambda$ over an alchemical transformation, using a range of different well-established techniques, to obtain:
+\begin{equation}
+\Delta f    &=& \int_{0}^{1} \expect{\frac{du(\lambda,\vec{q})}{d\lambda}}_{\lambda}  d\lambda    
+\end{equation}
+This approach to calculating the free energy is called thermodynamic integration (TI). Averaging over $\expect{\frac{du}{d\lambda}}$ requires
+fewer uncorrelated samples to reach a given level of relative error
+than averaging $e^{-u(\vec{q})}$, as the range is usually
+narrower with a more Gaussian distribution. Rather than being limited by overlap, as in the case of BAR and MBAR, we are instead limited by the bias in the numerical quadrature, which must be minimized sufficiently to be beneath the level of statistical noise.
+
+Various numerical integration schemes are possible, but the trapezoid
+rule provides a simple and robust scheme.  All types of
+numerical integration can be written as:
+\[ \Delta f \approx \sum_{k=1}^{K} w_k
+\expect{\frac{du(\lambda,\vec{q})}{d\lambda}}_{k} \] where the weights
+$w_k$ correspond to a particular choice of numerical integration.
+Researchers have tried a large number of different integration
+schemes~\citebold{resat.mezei.93,jorge_effect_2010,shyu_reducing_2009}. For However, many other integration choices require specific choices of $\lambda$
+to minimize bias, which makes them unsuitable when the intermediates
+have widely-varying levels of uncertainty. For example, integrating a cubic spline interpolation provided negligble benefits~\cit{paliwal.benchmark}. For starting researchers, we therefore recommend a simple trapezoid rule scheme, as it allows for maximal flexibility in which values of $\lambda$ are simulated.  Because fitting to higher
+order polynomials can have numerical instabilities for some energy functions, and because alternate functional forms might only be appropriate
+with some types of transformations, expertise and experience is
+required to perform such numerical integration modifications.  In practice, adding 2-3 more intermediates is sufficient to match the performance of these more complicated numerical quadrature schemes.
+
+One drawback of TI is that it derivatives with respect to $\lambda$ to be calculated directly in the code. Unfortunately, many problems of interest
+require using pathways (such as Lennard-Jones softcore) that are not linear, as we discuss.  If the code of interest does compute $\frac{du}{d\lambda}$, then TI is perhaps the simplest method to use, as it involves a very little post-processing,
+
+\item \textit{MBAR}. One can generalize Bennett's logic from two states to multiple states to obtain a free energy estimator that uses energy differences along.  MBAR gives a system of implicit equations for the free energies $f_i$:
+\begin{eqnarray}
+f_i = \sum_{n=1}^{N} \frac{\exp(-u_i(\vec{q}_n}{\sum_{k=1}^K N_k \exp(f_k-u_k(\vec{q}_n}))}
+\end{eqnarray}
+where there are $N_k$ samples from each of $K$ states, with $N=\sum_k N_k$ the total number of samples. Thus, we need to evaluate the energy function $U_i$ for all samples obtained at all states in the transformation. The equations can be solved by a number of different standard routines.  We note that there are only $K-1$ independent equations, so one of the $f_i$ must be specified.
+
+MBAR is provably the lowest variance asymptotically unbiases estimator of the free energies given the energies of the samples~\cite{zqtan}. It also provides an uncertainty estimate, which has been shown to be accurate as long as there are sufficient samples at each state~\cite{paliwal:benchmark}.
+
+MBAR can also be thought of as the Zwanzig estimator of the free energy to state $i$ where the sampled distribution is the \textit{mixture distribution} of all the other samples thrown together in one "pot", defined as $p_m(\vec{q} = N^{-1} \sum_k  N_k \exp(f_k-u_k\vec{q})$, the weighted average of all the individual normalized probability distributions that are performed.~\cite{shirts.prl}.
+
+\end{itemize}
+
+
+\begin{itemize}
+\item MBAR recommended if all energy differences are available. It is provably the lowest variance free energy estimate given samples from multiple states.
+\item BAR is essentially just as good as MBAR for highly optimized $\lambda$ intermediates.  Specifically, if the $\lambdas$ are chosen such that intermediate states have moderate overlap with their neighbors (i.e. between $i$ and $i+1$ and between $i$ and $i-1$, they will \testit{not} have significant overlap with their next nearest neighbors $i+2$ and $i-2$. Thus MBAR doesn't actually get significant information from these energy differences, so one might as well not even calculate them, and just perform BAR between nearest neighbors.~\cite{paliwal.benchmark} 
+\item TI usually gives similar values as MBAR implemented with sufficient numbers of intermediates, but quadrature error hard to estimate beforehand.~\cite{paliwal.benchmark}
+\item WHAM is an approximation to MBAR, and there are no compelling reasons it should be used. 
+\item Other variants useful in special circumstances (e.g. Z. Tan stochastic version), but beyond the scope of a Best Practices article.
 \end{itemize}
 \todo[inline]{BA: write section}
 \item Computing and reporting uncertainties on free energies
@@ -773,6 +850,16 @@ correlated bootstrap v. timeseries analysis
 \begin{itemize}
 	\item Simple normalized metric to determine confidence in calculation
 	\item Easily interpreted by chemist/biologist when prioritizing new chemistries
+\end{itemize}
+\item Examining output data for common problems with discussions of what exactly to plot or look at; examples of typical curves for dV/dlambda and free energy versus lambda, for example
+\begin{itemize}
+\item Make sure ligand doesn’t tumble out of binding site (Mey has observed this)
+\item Significant discrepancies between different free energy estimators (TI, BAR, MBAR)
+\item Poor replica mixing (for replica-exchange)
+\item Correlation time as a function of lambda as it would be expected to be a smooth
+\item Dependence on initial conformation
+\item Torsional analysis: Is it stuck in specific states? Only very rarely transitions?
+\item More “usual suspects”
 \end{itemize}
 \end{itemize}
 \item Other considerations for many transformations
@@ -830,7 +917,7 @@ There are several softwares availble for carrying out alchemical free energy cal
 	\item SIRE
 	\item YANK is a tool developed by John Chodera and group on the top of OpenMM MD package. It allows the users to write their inputs in easy-to-use YAML format. 
 	\item CHARMM-GUI is a web based tool for setting up a variety of MD simulations. It can be used to generate CHARMM sctipts for solvation and ligand-binding free energy calculations. 
-	\item gromacs
+	\item GROMACS is a molecular simulation package with a significant number of free energy methods implemente. The LiveCOMS GROMACS tutorial has an example free energycalculation~\cite{LiveCOMS-gromacs}.
 	\item pmx for mutations
 	\end{itemize}
 \item Setup tools
