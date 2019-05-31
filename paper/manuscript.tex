@@ -416,7 +416,7 @@ Many protocol issues for alchemical calculations are common, but some are differ
 
 \paragraph{Topologies} A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a \emph{dual topology}, \emph{single topology}, or \emph{hybrid topology} approach to relative calculations.
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/Fig2_dummy.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig4/topologies.pdf}
     \caption{a) single topology b) dual topology Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
     \label{fig:topology}
 \end{figure} 
@@ -435,7 +435,7 @@ Once a particular approach to the topology is selected, a crucial next step is t
 Rigorously, this process essentially comprises a maximal common substructure (MCSS) search of the molecules involved to identify the common substructure -- though the parameters of the MCSS search will differ depending on whether single or dual topology calculations are planned.
 Specifically, with a single topology approach in mind, atom types are allowed to change, so a permissive MCSS search can be done, whereas with dual topology a more strict search is required.
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/Fig2_dummy.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig5/MCS.pdf}
     \caption{a) restrictive MCSS match b) ring breaking}
     \label{fig:mcss}
 \end{figure} 
@@ -873,7 +873,7 @@ A scheme to reduce cycle closure errors is used in FEP+ whereby calculated free 
 \end{enumerate}
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{free_energy_trajectories.pdf}
+    \includegraphics[width=0.95\linewidth]{fig6/free_energy_trajectories.pdf}
     \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dashed lines show the final binding free energy prediction of the two calculations after a total of ~5230 ns for OA-G3 and ~6650 ns for CB8-G3. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/MobleyLab/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
 }
     \label{fig:freeenergytrajectories}
