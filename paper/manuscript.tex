@@ -190,7 +190,7 @@ Here, the collection of thermodynamic and alchemical parameters $\theta \equiv \
 The physical transformation of interest---such as a protein-ligand association process, or transfer free energy among phases---may involve a thermodynamic cycle that requires several free energy differences $\Delta f$ to be computed in order to produce an estimate of the overall desired quantity.
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/Fig2_dummy.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/Fig1_dummy.pdf}
     \caption{Thermodynamic cycles}
     \label{fig:fig1}
 \end{figure}
@@ -681,13 +681,19 @@ If the rate of change in the free energy estimate is significant when a calculat
 convergence of relative free energy calculations in predictive simulations where the entire phase space not known in advance, requires sampling the different kinetically stable states [cite Mobley and Klimovich JCP 2012]. This highlights 
 the importance of choosing the correct thermodynamic path to ensure you sample the required thermodynamic states as discussed in section~\ref{sec:important_path}.
 
-The condition of minimizing the statistical uncertainty of different free energy estimators below a sufficient threshold should be one metric monitored over the simulation. This can be done through the uncertainty estimator built into certain analysis tools such as MBAR, or can be done though more general statistical tools like Bootstrap Sampling. A target 
-statistical uncertainty should be chosen at the onset of the simulation to avoid excessively long simulations, or falling 
-into the trap of running until the free energy estimate is "good enough," which is subjective and has no defined criteria. This could be a fixed value such as $0.20 \mathrm{kcal/mol}$, or a functional quantity such as "below $0.5 \mathrm{kcal/mol}$ and $10\%$ of the free energy estimate." The user does not need to monitor this information in real-time and can choose to run simulations for fixed duration (either time or number of samples) and run analysis on the data collected thus far. If more samples are needed, the simulations can be resumed, or, started again in different initial 
-conditions. 
+The condition of minimizing the statistical uncertainty of different free energy estimators below a sufficient threshold should be one metric monitored over the simulation. This can be done through the uncertainty estimator built into certain analysis tools such as MBAR, or can be done though more general statistical tools like Bootstrap Sampling. 
+A target statistical uncertainty should be chosen at the onset of the simulation to avoid excessively long simulations, or falling into the trap of running until the free energy estimate is "good enough," which is subjective and has no defined criteria. This could be a fixed value such as $0.20 \mathrm{kcal/mol}$, or a functional quantity such as "below $0.5 \mathrm{kcal/mol}$ and $10\%$ of the free energy estimate." The user does not need to monitor this information in real-time and can choose to run simulations for fixed duration (either time or number of samples) and run analysis on the data collected thus far. If more samples are needed, the simulations can be resumed, or, started again in different initial conditions. 
 
 Convergence in other alchemical observables should also be monitored to determine if the defined phase space has been sufficiently sampled and enough decorrelated samples have been drawn. These additional observables include, but are not
-limited to, the variance in $\frac{dU}{d\lambda}$ across all $\lambda$ values, calculating the variance in free energy using bootstrap analysis, and comparing differences in free energies calculated using different percentages of the simulation in both the forward and reverse directions. 
+limited to, the variance in $\frac{dU}{d\lambda}$ across all $\lambda$ values, calculating the variance in free energy using bootstrap analysis, and comparing differences in free energies calculated using different percentages of the simulation in both the forward and reverse directions (figure \ref{fig:convergence_forward_reverse}).
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{paper/figures/figX/Forward_Reverse_Fig.pdf}
+    \caption{Free energy calculated in k$_{B}$T for two different RBFE perturbations. Each plot shows the change in free energy calculated using different fractions of simulation time (5 ns total). The top panel shows the three-step protocol for a perturbation involving 5 perturbed atoms, while the bottom panel shows the same protocol for a perturbation involving 10 perturbed atoms. The difference in energy between the forward (blue) and reverse (red) free energy calculations at the midpoint of the simulation time gives an indication of the overall convergence of the simulation, with differences over 1 k$_{B}$T indicating poor convergence.}
+    \label{fig:convergence_forward_reverse}
+\end{figure}
+
 Each of these metrics have demonstrated promising results for diagnosing when a simulation has a convergence issue beyond simple convergence of uncertainty estimate. 
 Results obtained from calculations with convergence issues should be checked for errors or run for longer before any confidence should be placed in conclusions drawn from their analysis.
 In relative calculations that share similar binding modes, for example, and do not induce large conformational changes when in complex with protein, the need to sample exhaustively to converge estimates in free energy differences is often not necessary due to the locality of sampling changes in the molecular topology and shared phase space of the core atoms.
@@ -835,22 +841,30 @@ MBAR can also be thought of as the Zwanzig estimator of the free energy to state
 \item Other variants useful in special circumstances (e.g. Z. Tan stochastic version), but beyond the scope of a Best Practices article.
 \end{itemize}
 \todo[inline]{BA: write section}
-\item Computing and reporting uncertainties on free energies
-correlated bootstrap v. timeseries analysis
+\subsubsection{Uncertainty estimation}
+Analysis of independent samples of energy data from a series of equilibrium simulations allow for the estimation of the free energy and error associated with its estimate. 
+Quantification of different error metrics depend on the form of analysis and method being used, such as those outlined above.
+The computation of free energies using TI (section \ref{sec:step3}) is straightforward and the trapezoidal rule is often recommended since it allows unequal spacing of lambda states, which is required to minimize the variance in the free energy estimate. 
+The determination of regions of high curvature when estimating the integral is helpful to determine regions of phase space where more sampling is necessary to converge the best approximation of the integral.
+Additionally, computation of the overall variance of TI requires the calculation of the overall variance of integration, rather than each individual $\Delta$G$_{i,i+1}$ and assuming variances add independently. 
+Therefore, $var$($\Delta$G) = $\sum_{i=1}^{K}w_{k}^2 var(\frac{dU}{d\lambda})_{k}$.
+For alchemical changes that result in smooth, low curvature sets of $\expect{\frac{dU}{d\lambda}}$, a relatively small number of lambda states is necessary for sufficient accuracy and low variance in the free energy estimate. 
+However, with increasing numbers of perturbed atoms, the bias introduced by discretization of the integral can become large due to increased curvature, and more lambda intermediate states become necessary to reduce error. 
+It is recommended that researchers verify that a sufficient number of states are included such that the free energy is essentially invariant to the number of lambda intermediate states chosen.
+Compared with TI, the MBAR method (section \ref{sec:step3}) discussed above provides uncertainty estimation directly from solving complex systems of linear equations to compute the variances between all states. 
+The number of states and amount of sampling should be optimized to minimize the uncertainty in the MBAR free energy estimate. 
+Additionally, agreement in the free energy across different estimators can be compared and variance computed across estimates used to assess convergence.
+For example, variance in free energy estimates computed with BAR, MBAR, and TI correlated with larger errors in a set of MCL1 inhibitors.
+Those perturbations where free energies across different estimators shared high agreement with each other (variance less than 0.1 kcal/mol) had a r$^2$ of 0.623 and mean unsigned error (MUE) of 0.787 kcal/mol (N=17) compared with a r$^2$ of 0.295 and MUE of 1.49 kcal/mol (N=23) (unpublished results).
+Uncertainty can also be assessed for a particular perturbation by repeating calculations with slight changes in initial configurations, forcefield parameters, and different random seeds in the MD engine. 
+The assessment of variability in free energy calculations due to repeating simulations has been previously reported \cite{aldeghi2019accurate}, and large variance in free energies estimated from simulations with different random seeds should be flagged as issues with convergence or problems with system set up. 
+System set up errors include poor ligand or protein preparation, atom mapping, or forcefield parameters as described above.
+For relative binding free energy calculations, additional sensitivity analysis can be performed by changing the initial configurations of non-core regions of the perturbation topology and determining if the proposed change results in a large differences in the computed relative free energy.
+The proposed changes in configuration are increasingly relevant if no experimental evidence is available to reduce uncertainty in where the changing atoms should be positioned.
+Rerunning calculations with different protein, water, or small molecule force fields (assuming they are sufficiently accurate) can also be used as an additional line of evidence that the free energy you are calculating does not change significantly based on the force field parameters utilized.
+
+
 \begin{itemize}
-\item Quantifying standard error in dG estimate
-\item Varience in dG estimate using multiple methods (TI, DEXP, IEXP, BAR, MBAR, GDEL, etc.)
-\item Agreement in dG estimate when repeating calculations with different parameters (random seeds, initial configurations, forcefield, etc.)
-\item Calculating differences in free energy change as a function of time
-\begin{itemize}
-	\item Starting from beginning or end of simulation
-	\item Significance of differences in midpoint estimate (High middle error: high uncertainty)
-\end{itemize}
-\item Ensemble method to combine uncertainties into interpretable weighted metric
-\begin{itemize}
-	\item Simple normalized metric to determine confidence in calculation
-	\item Easily interpreted by chemist/biologist when prioritizing new chemistries
-\end{itemize}
 \item Examining output data for common problems with discussions of what exactly to plot or look at; examples of typical curves for dV/dlambda and free energy versus lambda, for example
 \begin{itemize}
 \item Make sure ligand doesn’t tumble out of binding site (Mey has observed this)
