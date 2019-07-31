@@ -222,22 +222,21 @@ The physical transformation of interest---such as a protein-ligand association p
 \section{What can be expected from alchemical simulations? -- Step 0}
 \label{sec:step0}
 \todo[inline, color={green!20}]{@everyone please review this section}
-Step 0 is essentially about initially counting the cost of your
+Step 0 is about initially counting the cost of your
 project: Can you even hope to tackle the problem you are thinking
 about attempting given available resources and, if successful, will it
 be worth it?
 \subsection*{How accurate are current alchemical free energy calculations?}
 Current alchemical free energy calculations seem to achieve, in favorable cases, RMS errors around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative~\cite{lots-of-citations}. 
-\todo[inline,color={green!20}]{JDC: We should probably provide a short list of key benchmark references here, broken down by force field, and keep this up to date. GT: would a table, at the end of the document be an easier way to do this, only requiring some brief comments in the text?}
+\todo[inline,color={green!20}]{JDC: We should probably provide a short list of key benchmark references here, broken down by force field, and keep this up to date. GT: would a table, at the end of the document be an easier way to do this, only requiring some brief comments in the text? ASJSM: I like the table idea.}
 However, the domain of applicability is a significant concern~\cite{Sherborne2016, Cournia2017}, especially for relative calculations, which typically require a bound structure of a closely
 related ligand as a starting point. Additional factors such as slow protein or ligand rearrangements, uncertainties in ligand binding mode, or charged ligands can make these calculations far less reliable and more of a research effort.
 
-It is worth noting that the accuracy of free energy calculations is highly variable across different protein targets, and likely across different ligand chemotypes as well. For instance, FEP+ with OPLS3 achieves an RMSE of 0.62 kcal/mol for a set of 21 compounds binding to JNK1 kinase, yet only an RMSE of 1.05 kcal/mol for a set of 34 compounds binding to P38$\alpha$ kinase (cite Harder et al. 2016). Furthermore, perturbations for the same chemotype in different pockets of the BACE enzyme gave varied errors (cite keranen et al jctc 2017, 13 1439)  
-\todo[inline,color={green!20}]{JDC: It's important to be clear on what error is being reported: $\Delta G$ after shifting by a constant to minimize the RMSE, unshifted $\Delta G$, $\Delta \Delta G$ of computed edges, or $\Delta \Delta G$ of all edges. Note that computed edge $\Delta \Delta G$ RMSE significantly underestimates the error of all edge RMSE: \url{https://github.com/jchodera/jacs-dataset-analysis}}
-We
-thus recommend that retrospective study for a particular target and a particular chemical series be performed to establish the relevant accuracy of free energy calculations for each particular application case.
-
-\subsection{Is the system of study suitable for alchemical free energy calculations?}
+It is worth noting that the accuracy of free energy calculations is highly variable across different protein targets, and likely across different ligand chemotypes as well. For instance, FEP+ with OPLS3 achieves an RMSE of 0.62 kcal/mol for a set of 21 compounds binding to JNK1 kinase, yet only an RMSE of 1.05 kcal/mol for a set of 34 compounds binding to P38$\alpha$ kinase~\cite{harder2016opls3}. Furthermore, perturbations for the same chemotype in different pockets of the BACE enzyme gave varied errors~\cite{keranen2017acylguanidine}
+\todo[inline,color={green!20}]{JDC: It's important to be clear on what error is being reported: $\Delta G$ after shifting by a constant to minimize the RMSE, unshifted $\Delta G$, $\Delta \Delta G$ of computed edges, or $\Delta \Delta G$ of all edges. Note that computed edge $\Delta \Delta G$ RMSE significantly underestimates the error of all edge RMSE: \url{https://github.com/jchodera/jacs-dataset-analysis} ASJSM: Can we incorporate your analysis in this section as an example?}
+We thus recommend that retrospective study for a particular target and a particular chemical series be performed to establish the relevant accuracy of free energy calculations for each particular application case.
+%
+\subsection*{Is the system of study suitable for alchemical free energy calculations?}
 Before even planning free energy calculations to study binding to a
 particular target, it is important to assess what is known about the
 system and its timescales and its suitability for free energy
@@ -268,19 +267,13 @@ binding constant of this inhibitor against this kinase is then
   \label{eqn:conformational-binding}
 \end{equation}
 
-Since binding experiments cannot resolve $K_D^\ast$ and $K_C$ individually,
-such experiments cannot address the basis of selectivity of the type II
-inhibitors.  Absolute binding free energy calculations, in contrast, can
-take advantage of the slow kinetics of DFG-in/out conversion, and estimate the
-conformation-specific binding constant $K_D^\ast$, thus yielding clues as
-to the source of selectivity.
+Since binding experiments cannot resolve $K_D^\ast$ and $K_C$ individually, such experiments cannot address the basis of selectivity of the type II inhibitors.  Absolute binding free energy calculations, in contrast, can take advantage of the slow kinetics of DFG-in/out conversion, and estimate the conformation-specific binding constant $K_D^\ast$, thus yielding clues as to the source of selectivity.
 
-\subsection{Is the expected accuracy of the computation good enough?}
+\subsection*{Is the expected accuracy of the computation good enough?}
 Additionally, the requisite level of accuracy is important -- if the
 goal is to guide lead optimization when many compounds will be
 synthesized, free energy calculations can be appealing even with
-accuracies in the 1-2 kcal/mol range [cite Brown/Mobley/Shirts,
-  Klimovich/Mobley Perspective], but if the number of compounds to be
+accuracies in the 1-2 kcal/mol range~\cite{brown2010freeenergy,mobley2012perspective}, but if the number of compounds to be
 synthesized is very small, this accuracy may not be enough to provide
 much value.
 
@@ -328,7 +321,7 @@ average 3.5 molecules will have actual favorable free energy change.
 In other words, selection by free energy calculations yields 3.5 times
 more molecules of improved affinities than selection without free
 energy calculations.
-\todo[inline, color={green!20}]{@DM: A plot of this might be useful. I believe you have used/generated one of these before.}
+\todo[inline, color={blue!20}]{@DM: A plot of this might be useful. I believe you have used/generated one of these before.}
 %  
 Available computational resources and timescales of motion also factor
 into this initial analysis. An individual free energy calculation
@@ -337,20 +330,21 @@ involves simulations at many different intermediate states (perhaps
 capture the relevant motions in the system. If such motions are
 microsecond events or longer, the computational cost of running 20-40
 microsecond or longer simulations for each of $N$ ligands may become
-prohibitive, or at least should be carefully considered. And, are
+prohibitive, or at least should be carefully considered. 
+%
+\subsection*{Can I afford the calculation?}
+Furthermore, are
 available computational resources sufficient that throughput will be
 reasonable compared to needs of experimental collaborators working on
 this system? How many ligands ($N$) can you afford to handle given
 your computational resources?
-%
-\subsection*{Can I afford the calculation?}
 This analysis should be done up front, part of ``counting the cost''
 of involvement in a particular project. In some cases, the result of
 this analysis may be a conclusion that free energy calculations will
 certainly not be feasible for the proposed problem.
 \todo[inline, color={green!20}]{@everyone: Might be nice to do an example calculation X perturbation on GTX 1080s on a AWS cluster cost \$\$X. Synthesis costs \$\$Y. }
 %
-\subsection*{Is an explorative study what I want?}
+\subsection*{Is an exploratory study what I want?}
 An additional consideration is how much is known about your particular
 target, ligand binding modes in the target, and any relevant motions
 -- essentially, has it been studied enough to know whether it might be
@@ -386,9 +380,6 @@ For prospective drug discovery applications there are several other consideratio
 In summary, the key aspects for successful drug discovery application are to work within the domain of applicability using high quality X-ray structure of the target compounds and testing the approach with a retrospective validation study to ensure the basics of system setup are understood and under control. Always assess the confidence in the predictions and communicate this when discussing with experimentalists. Consider performing repeat calculations for at least some of the perturbations in the study. In a drug discovery setting it is inevitable to consider larger virtual libraries, in these cases again evaluate if shorter simulation time per $\lambda$ window can be sufficient for a ‘virtual screening’ mode of application. It is expected that future tools may allow efficient exploration of large virtual libraries. There are many accounts of success of alchemical FE calculations, the methods are undoubtedly showing good performance towards the goal of binding energy prediction. However, it is important to have realistic expectations. Structure based drug design projects are often capable of improving potency relatively quickly and the range of activity narrows to just two-to-three log units. It may seem hard to impact with substantially different, more potent, stand-out compounds in this scenario, but binding energy prediction can still be extremely useful for ensuring activity is maintained as other properties are optimized. An interesting cost benefit analysis has been performed, see drug discovery strategy related discussions of Mobley Abel and co. From a drug discovery point of view, FEP is expanding its domain of applicability, there are reports of success using homology models and GPCRs for instance, as well as enabling charge change and scaffold hopping, but these systems are undoubtedly more difficult.  In the meantime the use cases are expanding to resistance prediction, disease mutation prediction, solubility prediction – an exciting future for alchemical FE calculations. 
 
 
-
-
-\todo[inline, color={blue!20}]{@Gary, here may be a good spot to add some lessons learned from FEP in drug discovery.  }
 %
 %
 %
