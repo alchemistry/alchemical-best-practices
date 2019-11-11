@@ -54,8 +54,8 @@
 \affil[6]{University of Colorado Boulder, Boulder, CO, USA}
 \affil[7]{Silicon Therapeutics, Boston, MA, USA}
 \affil[8]{Tri-Institutional Training Program in Computational Biology and Medicine, New York, NY, USA}
-\affil[11]{Computational Chemistry, Janssen Research & Development, Turnhoutseweg 30, Beerse B-2340,Belgium}
-
+\affil[11]{Computational Chemistry, Janssen Research \& Development, Turnhoutseweg 30, Beerse B-2340,Belgium}
+\affil[12]{Cresset, Cambridgeshire, UK}
 
 \corr{john.chodera@choderalab.org}{JDC}
 \corr{dmobley@mobleylab.org}{DLM}
@@ -92,15 +92,13 @@
 
 \begin{abstract}
 Alchemical free energy calculations can be a useful tool for predicting free energy differences associated with the transfer of small molecules from one environment to another.
-The hallmark of these methods is the use of modified potential energy functions to represent \emph{alchemical} intermediate states that cannot exist in chemistry; by analyzing simulation data collected from a series of bridging alchemical thermodynamic states, transfer free energies (or differences in transfer free energies) can be computed with orders of magnitude less simulation time than observing the process spontaneously. 
-While these methods are highly flexible, care must be taken in avoiding common pitfalls to ensure that computed free energy differences can be robust and reproducible for the chosen forcefield, and that appropriate corrections are included to permit direct comparison with experimental data.
+The hallmark of these methods is the use of bridging potential energy functions representing \emph{alchemical} intermediate states that cannot exist in chemistry; by analyzing simulation data collected from these bridging alchemical thermodynamic states, transfer free energies (or differences in transfer free energies) can be computed with orders of magnitude less simulation time than simulating the transfer process directly. 
+While these methods are highly flexible, care must be taken in avoiding common pitfalls to ensure that computed free energy differences can be robust and reproducible for the chosen force field, and that appropriate corrections are included to permit direct comparison with experimental data.
 In this paper, we review current best practices for several popular application domains of alchemical free energy calculations, including relative and absolute small molecule binding free energy calculations to biomolecular targets.
 \todo[inline, color=green!20]{JDC: Should we migrate this document to \url{https://github.com/alchemistry}? ASJSM: Let's migrate with the submitted version, but leave it here for now?}
 \end{abstract}
 
 \end{frontmatter}
-https://www.overleaf.com/5136551543vgjqbkzpmqkp
-
 
 \todototoc
 \listoftodos
@@ -108,16 +106,26 @@ https://www.overleaf.com/5136551543vgjqbkzpmqkp
 %%%%%%%%%%%%%%%%%%%%
 %  Introduction    %
 %%%%%%%%%%%%%%%%%%%%
+
+\todo[inline]{}The current Overleaf document is \url{https://www.overleaf.com/5136551543vgjqbkzpmqkp}}
+
+
+\section{Abbreviations}
+\label{sec:abbreviations}
+
+\todo[inline]{JDC: Should we add an Abbreviations section? Maybe it can be in a shaded box?}
+
 \section{What are alchemical free energy methods?}
 \label{sec:intro}
-Alchemical free energy (FE) calculations allow the calculation of energy differences associated with changes from one state to another, such as ligand binding to protein from solvent~\cite{zwanzig1954hightemperature}. The calculations use non-physical intermediate states where atoms are changed from one to another or can be removed or inserted by decoupling or coupling with their environment, Figure 1. These so-called alchemical states permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, known as an absolute FE calculation, or modifying a substituent between two analogous ligands in a binding site, a relative FE calculation. Two common approaches are free energy perturbation (FEP) and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, biosimspace}. This foundation work, combined with the methodological, technological and hardware improvements of the last 5-10 years have led to an explosion of interest.  The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies (both relative~\cite{relative-binding-free-energies} and absolute~\cite{absolute-binding-free-energies}), ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), affinity changes due to mutations in therapeutic targets~\cite{hauser2018predicting,aldeghi2018accurate}, and changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}. As the field of molecular simulation moves towards millisecond timescales accurate FE calculations on even more challenging problems will be in scope. In the meantime, today's user may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
+Alchemical free energy (FE) calculations compute free energy differences associated with transfer processes, such as the binding of a small molecule to a receptor or the transfer of a small molecule from an aqeuous to apolar phase~\cite{zwanzig1954hightemperature}. 
+The calculations use non-physical intermediate states where atoms are changed from one to another or can be removed or inserted by decoupling or coupling with their environment, Figure~\ref{fig:}. These so-called alchemical states permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, known as an absolute FE calculation, or modifying a substituent between two analogous ligands in a binding site, a relative FE calculation. Two common approaches are free energy perturbation (FEP) and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, biosimspace}. This foundation work, combined with the methodological, technological and hardware improvements of the last 5-10 years have led to an explosion of interest.  The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies (both relative~\cite{relative-binding-free-energies} and absolute~\cite{absolute-binding-free-energies}), ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), affinity changes due to mutations in therapeutic targets~\cite{hauser2018predicting,aldeghi2018accurate}, and changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}. As the field of molecular simulation moves towards millisecond timescales accurate FE calculations on even more challenging problems will be in scope. In the meantime, today's user may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
 
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig1/Fig1_dummy.pdf}
     \caption{{\bf What is alchemistry?}
     \todo[inline, color=green!20]{JDC: What is the concept for what this figure is supposed to communicate?}
     }
-    \label{fig:fig1}
+    \label{fig:illustrative-alchemical-transformation}
 \end{figure}
 
 \todo[inline, color={green!20}]{ASJSM: This section should be expanded a little, but in a very general way, any volunteers?}
@@ -171,26 +179,31 @@ Below, we provide a non-exhaustive list of topics we have not addressed with som
 % Theory basics    %
 %%%%%%%%%%%%%%%%%%%%
 
-\section{Theoretical background}
+\section{Statistical mechanics can tell us why alchemical free energy calculations work}
 \label{sec:theory}
-\todo[inline, color={green!20}]{Info box what is free energy}
-\todo[inline, color={green!20}]{Info box what is a thermodynamic cycle}
+Why would want to run an alchemical free energy calculation and why do they work? Suppose you want to compute the binding affinity, or free energy of binding, of a ligand $L$ to a protein $P$, given by:
+\begin{euqation}
+P+L\leftrightharpoons PL
+\end{euqation}
+The equilibrium rate of binding is given by the ratio of concentrations of product $[PL]$ and reactants $[P]$, $[L]$:
+\begin{equation}
+ K_b^{\circ} = c^{\circ}\frac{[[PL]}{[L][P]}
+\end{equation}
+In order to define a reference state the, standard state is usually defined as $1 \mathrm{mol}/\mathrm{L}$ and $c^\circ$ is the standard state concentration. From the rate of binding a binding free energy is given by:
+\begin{equation}
+    \Delta G_{\mathrm{bind}} = -RT\ln K_b^{\circ}
+\end{equation}
+One way to estimate the binding rate is by computing the probability of finding the molecular system in the bound state of the unbound state, making use of partition function ratios, i.e. 
 
-$\left[
-      \begin{tabular}{@{\quad}m{0.8\columnwidth}@{\quad}}
-          \raggedright%
-          \textbf{What is a thermodynamic cycle?} \par
-            There's a package called \texttt{url} designed for typesetting web addresses.
-            Write \mbox{\texttt{\string\usepackage\string{url\string}}} in your preamble; this will provide the
-            command \mbox{\texttt{\string\url}}. This command takes an address for the argument and
-            will print it out with typewriter font. Furthermore, it is able to handle
-            special characters in addresses like underscores and percent signs. It even
-            enables hyphenation in addresses, which is useful for websites with a very
-            long name.%
-      \end{tabular}
-\right]$
-\newline
-%May need to look at this again: https://tex.stackexchange.com/questions/66820/how-to-create-highlight-boxes-in-latex
+\begin{equation}
+    \Delta G_{\mathrm{bind}} = -RT\ln\frac{\int_\mathrm{bound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}{\int_\mathrm{unbound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}
+\end{equation}
+Or more generally in a simplified form the free energy difference between the bound state is:
+\begin{equation}
+\Delta f \equiv f(\mathrm{bound}) - f(\mathrm{unbound}) = -\ln\frac{Z(\mathrm{unbound})}{Z({\mathrm{bound}})},
+\end{equation}
+where $Z = \int_\mathrm{bound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}$ represents the configurational integral. 
+How can we compute $\Delta G_{\mathrm{bind}}$ from a molecular dynamics simulation? Running a direct simulation of the binding events is too computationally costly, meaning we cannot easily estimate the configurational integrals of the bound and unbound state from the simulation. This is where alchemical free simulations come in. We can write down a thermodynamic cycle as seen in ~\ref{fig:illustrative-alchemical-transformation}, for a relative free energy simulation. Based on this cycle we can compute the relative free energy of binding between two compounds $A$ and $B$, by going along the arrow of $\Delta G_{\mathrm{bound}}$, where we introduce a second compound that is similar to the first one. Now $\Delta G_{\mathrm{bound}}$ can be expressed as a ratio of partition functions of toluene (A) and benzyl alcohol (B). 
 The defining characteristic of alchemical free energy calculations is the use of a series of alchemically-modified potential functions $U(x; \lambda)$ in which an alchemical parameter $\lambda$ modulates interactions in a manner that cannot occur in real chemical systems.
 One or more simulations are used to collect data from a multitude of alchemical states to compute a free energy difference between a chemical state ($\lambda_0$) and another chemical or alchemical reference state ($\lambda_1$),
 \begin{eqnarray}
@@ -198,7 +211,8 @@ One or more simulations are used to collect data from a multitude of alchemical 
 \end{eqnarray}
 where the dimensionless free energy $f(\lambda) \equiv \beta F(\lambda)$ is given in terms of partition functions $Z(\lambda)$,
 \begin{eqnarray}
-Z(\lambda) &=& \int dx \, e^{-u(x; \lambda)} . \label{equation:partition-function-definition}
+Z(\lambda) &=& \int dx \, e^{-u(x; \lambda)} .
+\label{equation:partition-function-definition}
 \end{eqnarray}
 Here, the inverse thermal energy $\beta \equiv (k_B T)^{-1}$ where $k_B$ is the Boltzmann constant and $T$ is the absolute temperature, and the \emph{reduced potential} $u(x; \lambda)$~\cite{shirts2008statistically} is generally given by a trace over thermodynamic parameters with their conjugate dynamical variables,
 \begin{eqnarray}
@@ -211,7 +225,7 @@ The physical transformation of interest---such as a protein-ligand association p
     \includegraphics[width=0.95\columnwidth]{paper/figures/fig2/Fig2.pdf}
     \caption{{\bf Thermodynamic cycle for computing the relative free energy of binding ($\Delta \Delta G$) between two related small molecules to a supramolecular host.}
     The relative binding free energy difference between two small molecules, $\Delta \Delta G_{\mathrm{bind}, A \rightarrow B} \equiv \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A}$---here benzyl alcohol (top) to toluene (bottom)---can be computed as a difference between two alchemical transformations, $\Delta G_\mathrm{bound} - \Delta G_\mathrm{solvated}$, where $\Delta G_\mathrm{bound}$ represents the free energy change of transforming $A \rightarrow B$ in complex and $\Delta G_\mathrm{solvated}$ the free energy change of transforming $A \rightarrow B$ in solvent.}
-    \label{fig:fig1}
+    \label{fig:binding-thermodynamic-cycle}
 \end{figure}
 \todo[inline, color=green!20]{This section needs to be expanded and give a good introduction to the theoretical background without going into too much detail.}
 
@@ -221,14 +235,18 @@ The physical transformation of interest---such as a protein-ligand association p
 %%%%%%%%%%%%
 \section{What can be expected from alchemical simulations? -- Step 0}
 \label{sec:step0}
+
 \todo[inline, color={green!20}]{@everyone please review this section}
+
+\todo[inline]{JDC: Do we need explicit "Step 0", "Step 1", or can we use some other scheme to clearly delineate the steps one must follow?}
+
 Step 0 is about initially counting the cost of your
 project: Can you even hope to tackle the problem you are thinking
 about attempting given available resources and, if successful, will it
 be worth it?
-\subsection*{How accurate are current alchemical free energy calculations?}
-Current alchemical free energy calculations seem to achieve, in favorable cases, RMS errors around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative~\cite{lots-of-citations}. 
-\todo[inline,color={green!20}]{JDC: We should probably provide a short list of key benchmark references here, broken down by force field, and keep this up to date. GT: would a table, at the end of the document be an easier way to do this, only requiring some brief comments in the text? ASJSM: I like the table idea.}
+\subsection*{How accurate are alchemical free energy calculations?}
+Current alchemical free energy calculations seem to achieve, in favorable cases, RMS errors around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative. An overview of benchmark datasets and case studies can be found in section \ref{sec:benchmark} at the end of this document.
+\todo[inline,color={green!20}]{JDC: We should probably provide a short list of key benchmark references here, broken down by force field, and keep this up to date. GT: would a table, at the end of the document be an easier way to do this, only requiring some brief comments in the text? ASJSM: I like the table idea. MK: Feel free to remove this todo item if you are happy with the table provided. I refrained from just listing lots of case studies, as I think we should highlight the recommended datasets which should be used for benchmarking. Nevertheless, I have cited an review article containing such a summary as well as a recent publication comparing FEP+ and Gromacs in the brief text below the table.}
 However, the domain of applicability is a significant concern~\cite{Sherborne2016, Cournia2017}, especially for relative calculations, which typically require a bound structure of a closely
 related ligand as a starting point. Additional factors such as slow protein or ligand rearrangements, uncertainties in ligand binding mode, or charged ligands can make these calculations far less reliable and more of a research effort.
 
@@ -236,7 +254,12 @@ It is worth noting that the accuracy of free energy calculations is highly varia
 \todo[inline,color={green!20}]{JDC: It's important to be clear on what error is being reported: $\Delta G$ after shifting by a constant to minimize the RMSE, unshifted $\Delta G$, $\Delta \Delta G$ of computed edges, or $\Delta \Delta G$ of all edges. Note that computed edge $\Delta \Delta G$ RMSE significantly underestimates the error of all edge RMSE: \url{https://github.com/jchodera/jacs-dataset-analysis} ASJSM: Can we incorporate your analysis in this section as an example?}
 We thus recommend that retrospective study for a particular target and a particular chemical series be performed to establish the relevant accuracy of free energy calculations for each particular application case.
 %
-\subsection*{Is the system of study suitable for alchemical free energy calculations?}
+
+\subsection*{How reproducible are alchemical free energy calculations?}
+
+\todo[inline]{Discuss implications of the SAMPL6 SAMPLing paper~\cite{rizzi2019sampl6} on reproducibility between simulation packages and potential sensitivity to other calculation details.}
+
+\subsection*{Is my problem suitable for alchemical free energy calculations?}
 Before even planning free energy calculations to study binding to a
 particular target, it is important to assess what is known about the
 system and its timescales and its suitability for free energy
@@ -269,11 +292,11 @@ binding constant of this inhibitor against this kinase is then
 
 Since binding experiments cannot resolve $K_D^\ast$ and $K_C$ individually, such experiments cannot address the basis of selectivity of the type II inhibitors.  Absolute binding free energy calculations, in contrast, can take advantage of the slow kinetics of DFG-in/out conversion, and estimate the conformation-specific binding constant $K_D^\ast$, thus yielding clues as to the source of selectivity.
 
-\subsection*{Is the expected accuracy of the computation good enough?}
-Additionally, the requisite level of accuracy is important -- if the
+\subsection*{Is the expected accuracy of the computation sufficient?}
+Additionally, the requisite level of accuracy is important---if the
 goal is to guide lead optimization when many compounds will be
 synthesized, free energy calculations can be appealing even with
-accuracies in the 1-2 kcal/mol range~\cite{brown2010freeenergy,mobley2012perspective}, but if the number of compounds to be
+accuracies in the 1--2 kcal/mol range~\cite{mobley2012perspective}, but if the number of compounds to be
 synthesized is very small, this accuracy may not be enough to provide
 much value.
 
@@ -288,7 +311,7 @@ change $\Delta\Delta G$.  The latter conditional probability can be modeled
 by a normal distribution
 \begin{equation}
   P(\Delta\Delta G^\dagger|\Delta\Delta G) = \frac{1}{\sqrt{2\pi\sigma^2}}
-  \exp\left(-\frac{(\Delta\Delta G^\dagger - \Delta\Delta G)^2}{2\sigma^2}\right)
+  \exp\left(-\frac{(\Delta\Delta G^\dagger - \Delta\Delta G)^2}{2\sigma^2}\right),
   \label{eqn:free-energy-distribution}
 \end{equation}
 where $\sigma$ signifies the accuracy of free energy calculations.
@@ -301,9 +324,9 @@ synthesize and experimentally test molecules that are predicted to
 have favorable free energy changes.  We are thus interested in how
 often that a molecule predicted to bind stronger actually turns out to
 bind stronger.  In other words, we are interested in the conditional
-probability
+probability:
 \begin{equation}
-  P(\Delta\Delta G<0|\Delta\Delta G^\dagger<0)
+  P(\Delta\Delta G<0|\Delta\Delta G^\dagger<0).
   \label{eqn:true-positive}
 \end{equation}
 %
@@ -314,7 +337,7 @@ distribution, that the standard deviation in the changes is $RT\ln 5$
 1 in 10 new molecules have increased binding affinity ($\Delta\Delta G
 \leq 0$).  Under such assumptions, the conditional probability in
 Eq.~\ref{eqn:true-positive} can be easily computed.  If the accuracy
-of free energy calculations is $\sigma = 1$kcal/mol, $P(\Delta\Delta
+of free energy calculations is $\sigma = 1$ kcal/mol, $P(\Delta\Delta
 G<0|\Delta\Delta G^\dagger<0) = 0.35$, which means that out of every
 10 molecules selected for predicted favorable free energy change, on
 average 3.5 molecules will have actual favorable free energy change.
@@ -362,6 +385,9 @@ idea of feasibility and how accurate the calculations might be for the
 proposed target.
 
 \subsection*{Drug discovery}
+
+\todo[inline]{JDC: Should this be a Section or Subsection?}
+\todo[inline]{JDC: This section needs some structure (subsections, paragraph) to break up the "wall of text".}
 
 The concerns mentioned so far, such as understanding if the series of molecules is suitable, the simulation timescales relevant to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. However, without venturing too far into details of system setup that is beyond the scope of this article, there are some additional points to consider. Formal charge, or tautomeric state of the small molecules can change within a series. The pKa can change by several log units with only small structural modifications and this is a tactic often used within a congeneric series to modify drug properties. Check up-front because charge or tautomeric change would require modified approaches. A second concern is to try to capture aspects of the bioassay into the simulations, for instance what pH was used for screening? Does the protein X-ray match the construct used for screening (i.e. catalytic vs full length, monomer vs dimer) (cite Perez-Benito Sci Rep 2018, 8, 4883)? Were certain co-factors or partner proteins required to augment activity? 
 %
@@ -422,7 +448,7 @@ An additional consideration arises for single topology relative free energy calc
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{paper/figures/fig2/Fig2.pdf}
     \caption{a) Bad alignment of congeneric series b) good alignment}
-    \label{fig:fig1}
+    \label{fig:not-sure-what-this-is}
 \end{figure}
 
 If the binding site location is uncertain but the structure of the receptor is well defined and plausible binding sites are identified, you are more likely to chose an absolute free energy protocol to compute the standard free energy of binding of the ligand to a set of binding sites. This requires the user to prepare input files describing the bound conformation in different putative binding sites (REF). The apparent binding free energy of the ligand may be obtained by combining the individual binding site free energies, which also indicate where the ligand is more likely to bind. In this case using a docking program to generate initial structures is the way to go. Different commercial and none commercial tools are available, such as: rDock, Vina, glide, or Flare to name a few~\cite{rDock, Vina, Glide, Flare}. 
@@ -511,7 +537,7 @@ At present the most general solution to this problem is simply to avoid the use 
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{paper/figures/fig6/Fig3.pdf}
     \caption{Absolute thermodynamic cycle}
-    \label{fig:fig1}
+    \label{fig:absolute-thermodynamic-cycle}
 \end{figure}
 
 Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular non-bonded interactions.
@@ -781,28 +807,115 @@ However, the information should not be collected \textit{every} time step, as mo
 A sample collected every time step will likely result in most samples being discarded due to decorrelation routines in the analysis. However, if it is computationally cheap and disk space is plentiful, do save often. 
 How decorelation impacts calculations, and how to compute it is discussed in other sections. [section ref]
 
-\section{Step 3 -- Overview of available analysis techniques}
+\section{Step 3 -- Data analysis}
 \label{sec:step3}
 \todo[inline, color={red!40}]{JDC, BA: uncertainty estimation section}
-\begin{enumerate}
 
-\item Detecting boundary between equilibrated and production regions (Chodera: \url{http://dx.doi.org/10.1021/acs.jctc.5b00784})
-\item Decorrelating samples for analysis
-\todo[inline]{JDC: write section}
-\begin{itemize}
-\item Subsample different lambdas based on correlation times
-\item Ensure all simulations at least 50x correlation time
-\end{itemize}
-\todo[inline]{MS: write section}
+Once data has been collected from alchemical intermediates using a sampling algorithm described above, this data must be analyzed to produce an estimate of the transfer free energy (and its associated statistical uncertainty) for each edge of the thermodynamic cycle.
+While a number of different estimators are available that will give consistent results under optimal circumstances, some approaches are recommended over others due to their robustness and ability to report on poor convergence.
 
-\todo[inline]{MS/JDC: write section}
-\item Free energy differences between two different states differing in the energy function are directly related to the
-ratio of probabilities of those states.AS can be noted, the partition functions in Eq.~\ref{equation:dimensionless-free-energy-difference} are simply the total accumulated probabilites for all possible configurations of the system. Virtually all of the ways to estimate this free energy are based in converting this ratio of integrals to something that can be measures in one (or several) simulations.  
+\subsection*{Detecting the boundary between equilibrated and production regions}
+\label{sec:automatic-equilibration-detection}
 
-\begin{itemize}
-    \item \textbf{The Zwanzig relationship} Perhaps the simplest method for calculating free energy
+Much of the infrastructure for analyzing alchemical free energy calculations relies on the concept of asymptotically unbiased estimators, which produce unbiased estimates of the free energy when fed very long simulations~\cite{shirts2005comparison}.
+In reality, free energy calculations are often initiated from highly atypical initial conditions (such as a protein-ligand geometry obtained from docking and subjected to a heuristic solvent placement scheme), and simulations are of a finite length dictated by available computational resources and computing demands.
+As a result, these estimators can produce significantly biased estimates if fed the entirety of simulation data generated without further processing~\cite{chodera2016simple}.
+
+
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{paper/figures2/automatic-equilibration-detection/argon-potential.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures2/automatic-equilibration-detection/argon-potential-reverse-cumulative-average.pdf}
+    \caption{{\bf Automatic partitioning into equilibration and production regions.}
+    \emph{Top:} The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient before relaxing to the true average potential energy.
+    \emph{Middle:} A cumulative average (red) of the entire simulation data demonstrates a bias in the estimate of the average potential $<u>$ that persists far beyond the initial transient relaxation time, while averaging a production region that omits the initial transient (blue) eliminates this bias.
+    \emph{Bottom:} A simple automated approach to determination of the equilibration boundary $t_0$ suggested in \cite{chodera2016simple} examines the number of effectively uncorrelated samples $N_\mathrm{eff}_{[t_0,T]} = (T-t_0) / g_{[t_0,T]}$ within the proposed production region $[t_0,T]$ by computing the statistical inefficiency $g_{[t_0,T]}$ for that simulation interval.
+    $N_\mathrm{eff}_{[t_0,T]}$ has the general behavior of increasing linearly as $t_0$ moves backwards from $T$ until the initial transient relaxation is encountered, at which point it plunges.
+    The optimal equilibration boundary $t_0$ is selected to maximize the number of uncorrelated samples.
+    \emph{Figure adapted from \cite{chodera2016simple}.}
+    \todo[inline]{JDC will update this figure with something similar for a real alchemical free energy calculation.}
+    }
+    \label{fig:automatic-equilibration-detection}
+\end{figure}
+
+To minimize this effect, an initial portion of the simulation is often discarded to \emph{equilibration}, with the idea of removing the most heavily biased initial portion of simulation data but retaining the unbiased \emph{production} region that represents a stationary Markov chain process sampling from the desired equilibrium target distribution.
+Because the simulation time required for the atypical initial sampler state to relax toward equilibrium is a property of the specific system being simulated and the specific initial conditions selected, it is simplest to collect data for the whole process and use an automated algorithm to select how much data should be discarded to equilibration in a post-processing step.
+
+A simple approach to automatically partitioning simulation data into equilibration and production regions is described in \cite{chodera2016simple} (illustrated in Figure~\ref{fig:automatic-equilibration-detection}).
+Suppose we have a simulation of length $T$ consisting of correlated data.
+Here, the goal of the post-processing step is to select the equilibration boundary $t_0 \in [0, T]$ so as to \emph{maximize} the number of effectively uncorrelated samples remaining in the production region $N_{[t_0,T]}$, which is defined as
+\begin{eqnarray}
+N_{[t_0,T]} &=& \frac{T - t_0}{g_{[t_0,T]}}
+\end{eqnarray}
+where $g_{[t_0,T]}$ is the \emph{statistical inefficiency} of a timeseries $a_t$, described in more detail below.
+Conveniently, this procedure also produces the information necessary to decorrelate the simulation data for estimating the free energy differences, a requisite next step in analysis.
+This approach is implemented within the MBAR~\cite{mbar} and alchemlyb~\cite{alchemlyb} packages, and is highly recommended for standard practice.
+
+\paragraph{Computing the timeseries for equilibration detection}
+Typically, the timeseries of note $a_t$ analyzed in automated equilibration detection is the negative logarithm of the probability density sampled by the MCMC algorithm (up to an irrelevant additive constant).
+For simple independent simulations that sample $x_t \sim \pi(x ; \lambda)$, this is given by the reduced potential
+\begin{eqnarray}
+a_t &\equiv& - \ln \pi(x_t; \lambda) + c = u(x_t; \lambda) .
+\end{eqnarray}
+For a Hamiltonian replica exchange simulation where the super-replica state $(X_t, S_t) \sim \Pi(X_t, S_t)$, where $X \equiv \{x_1, \ldots, x_K\}$ are the positions and $S \equiv \{s_1, \ldots, s_K}$ is the alchemical state permutation vecftor, the negative logarithm of the super-replica reduced potential is used:
+\begin{eqnarray}
+a_t &\equiv& - \ln \Pi(X_t, S_t) + c = \sum_{k=1}^K u(x_{kt}; s_{kt})
+\end{eqnarray}
+Note that the use of the effective reduced potential is not guaranteed to pick up on all slow relaxation processes that may be coupled to the alchemical free energy, but the simplicity of its computation means it is generally appropriate for most cases.
+
+\paragraph{Cautions in automating equilibration detection}
+For simulations that are simply not long enough to contain a large number of samples from true equilibrium either because they are very short or contain slow processes, this procedure cannot completely remove the bias.
+In those cases, this approach simply selects the final portion of the the simulation, which may be contained in a single substate of conformational space, which may itself lead to biased estimates. 
+This situation can be detected if the equilibration boundary $t_0$ is a significant fraction of the total simulation length $T$, with a good rule of thumb being that $T \gtrsim 20 t_0$.
+If this is not possible, advanced analysis techniques that assume only local equilibrium (rather than global equilibrium) such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate.
+
+\subsection*{Decorrelating samples for analysis}
+\label{sec:decorrelating-samples}
+
+\paragraph{Computing the statistical inefficiency}
+Most estimators require an uncorrelated set of samples from the equilibrium distribution to produce (relatively) unbiased estimates of the free energy difference and its statistical uncertainty.
+To do this, the production region of the simulation is generally \emph{subsampled} with an interval approximately equal to or greater than the \emph{statistical inefficiency} $g \ge 1$ to produce a set of uncorrelated samples that can be fed to the estimator machinery~\cite{chodera2016simple},
+\begin{eqnarray}
+g &\equiv& 1 + 2 \tau_\mathrm{eq} \label{eq:statistical-inefficiency-definition}
+\end{eqnarray}
+where $\tau_\mathrm{eq}$ is the integrated autocorrelation time, formally defined as
+\begin{eqnarray}
+\tau_\mathrm{eq} &\equiv& \sum_{t=1}^{T-1} \left(1 - \frac{t}{T}\right) C_t \label{eq:integrated-autocorrelation-time-definition} , 
+\end{eqnarray}
+with the discrete-time normalized fluctuation autocorrelation function $C_t$ defined as
+\begin{eqnarray}
+C_t &\equiv& \frac{\expect{a_n a_{n+t}} - \expect{a_n}^2}{\expect{a_n^2} - \expect{a_n}^2} . \label{equation:autocorrelation-definition}
+\end{eqnarray}
+The basic concept is that $\tau_\mathrm{eq}$ corresponds to the single-exponential decay time for the autocorrelation process that generates samples, so the statistical inefficiency $g$ measures the approximate temporal separation between two effectively uncorrelated samples (where two exponential relaxation times are presumed to be sufficient).
+
+Robust estimation of $C_t$ for $t \sim T$ is difficult due to growth in statistical error, so common estimators of $g$ make use of several additional properties of $C_t$ to provide useful estimates (see \emph{Practical Computation of Statistical Inefficiencies} in \cite{chodera2016simple} for a detailed discussion).
+\todo[inline]{JDC: Describe recommended statistical inefficiency computation algorithm.}
+We recommend using the robust statistical inefficinecy computation routines available within the MBAR~\cite{mbar} and alchemlyb~\cite{alchemlyb} packages.
+
+\paragraph{Subsampling data to generate uncorrelated samples}
+Once the statistical inefficiency $g$ has been estimated, it is straightforward to subsample the correlated timeseries simulation data to produce effectively uncorrelated data that can ba fed to estimators of the free energy.
+Suppose the correlated timeseries is $\{a_t\}_{t=1}^T$; we can form a new timeseries of $N_\mathrm{eff} \approx T / g$ effectively uncorrelated samples by selecting a subset of indices $\{ \: t = \mathrm{round}((n-1) \, g) \: | \: n \in \range 1,\ldots,N \: \}$ where $\mathrm{round(x)}$ denotes rounding to the nearest integer.
+
+If independent simulations are used, the alchemical state $\lambda$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficinecy $g$ for each alchemical state.
+If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state.
+Conveniently, the approach described above for automated equilibration detection produces an appropriate estimate of $g$ over the production region for automating this process.
+
+\paragraph{Cautions and considerations}
+Reliable estimation of the statistical inefficiency is difficult, and estimates will not generally be as precise (in a relative error sense) as averages.
+To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_\mathrm{eff} \geapprox 50$.
+
+\subsection*{Estimators for free energy differences}
+
+Free energy differences between two different states differing in the energy function are directly related to the
+ratio of probabilities of those states.
+As can be noted, the partition functions in Eq.~\ref{equation:dimensionless-free-energy-difference} are simply the total accumulated probabilites for all possible configurations of the system. Virtually all of the ways to estimate this free energy are based in converting this ratio of integrals to something that can be measures in one (or several) simulations.  
+
+\paragraph{The Zwanzing relationship (EXP)}
+
+The simplest method for calculating free energy
 differences from simulations is the so-called \textit{Zwanzig
-relationship}~\cite{orig.TPT}, also called EXP or simply free energy perturbation, thought that term later grew to encompass all ways of calculating free energy differences.
+relationship}~\cite{orig.TPT}, also called one-sided exponential reweighting (EXP), or simply free energy perturbation, thought that term later grew to encompass all ways of calculating free energy differences.
+
 The free energy between two states defined by two different potential energy functions 
 $U_0(\vec{q})$ and $U_1(\vec{q})$ over coordinate space $\vec{q}$ can be calculated as:
 \begin{eqnarray}
@@ -811,7 +924,7 @@ $U_0(\vec{q})$ and $U_1(\vec{q})$ over coordinate space $\vec{q}$ can be calcula
 In words, we take the samples generated during our run with the potential energy function $U_0(\vec{q})$, recalculate what the energy difference would be to switch to potential energy function $U_1(\vec{q})$, and exponentially average them to get the free energy.  Here, the exponential average consists in multiplying by -1, exponentiating, averaging, taking the logarithm, and multiplying by -1 again.  This almost requires no extra code functionality to perform; one need only to save a full precision trajectory, and run an unmodified molecular simulation code using the $U_1$ in order to calculate the new energies.  The analysis can be written in a line of code.  We note that this method is even more general, in that the instantaneous work to change the potential energy function from $U_0$ to $U_1$ can be replaced by the non-reversible work $W$ to make the same change some conditions~\cite{xx} 
 Although the Zwanzig equation is formally correct (as long as the two states considered sample the same phase space volume), it has some very important numerical issues that mean that it is usually when performing a standard free energy calculation for a small molecule.~\cite{shirts.comparison,LuND:Appmcf}  One can show that if the standard deviation of the difference $\Delta U(\vec{q}) = U_1(vec{q})-U_2(\vec{q})$ over all sampled $\vec{q}$ is large (which in this case, means only several times $k_BT)$, then very few samples contribute to the average, and the answer will be both biased and extremely noisy~\cite{xx}.  There are a number of applications where it is useful, but those usually involve investigating the dependence of the free energy on small changes in parameters, not changing molecules or even single atoms in molecules~\cite{xx}
 
-\item Bennett Acceptance Ratio
+\paragraph{The Bennett Acceptance Ratio (BAR)}
 
 If we have the ensemble of differences in the potential energy both sampled from the distribution defined by $U_0$ and the distribution defined by $U_1$, we can obtain a significantly improved estimate of the
 free energy difference compared to that obtained by EXP.  
@@ -835,7 +948,8 @@ The Bennett acceptance ratio is only defined between two states.  Usually, the e
 
 There is one important thing to note about the uncertainty estimates when summing multiple free energies together to calculate an overall free energy estimate.  Although BAR itself gives a free energy estimate that is asymptotically correct in and is much less biased than the uncertainty estimate for EXP, the uncertainties in $\Delta {G_{i-1\rightarrow i}}$ and $\Delta {G_{i\rightarrow i+1}}$ are not uncorrelated, because they both involve the energies $U_i(\vec{q})$. The variances of each of the free energies will \textit{not} sum to the variance of the overall free energy. Instead, some other uncertainty method such as bootstrapping~\cite{???} must be used.
 
-\item \textit{Thermodynamic integration} 
+\paragraph{Thermodynamic integration (TI)}
+
 By taking the derivative of the free energy with respect to the
 variable $\lambda$, we find that:
 \begin{equation}
@@ -869,7 +983,9 @@ required to perform such numerical integration modifications.  In practice, addi
 One drawback of TI is that it derivatives with respect to $\lambda$ to be calculated directly in the code. Unfortunately, many problems of interest
 require using pathways (such as Lennard-Jones softcore) that are not linear, as we discuss.  If the code of interest does compute $\frac{du}{d\lambda}$, then TI is perhaps the simplest method to use, as it involves a very little post-processing,
 
-\item \textit{MBAR}. One can generalize Bennett's logic from two states to multiple states to obtain a free energy estimator that uses energy differences along.  MBAR gives a system of implicit equations for the free energies $f_i$:
+\paragraph{The multistate Bennett acceptance ratio (MBAR)}
+
+One can generalize Bennett's logic from two states to multiple states to obtain a free energy estimator that uses energy differences along.  MBAR gives a system of implicit equations for the free energies $f_i$:
 \begin{equation}
 f_i = \sum_{n=1}^{N} \frac{\exp(-u_i(\vec{q}_n}{\sum_{k=1}^K N_k \exp(f_k-u_k(\vec{q}_n}))
 \end{equation}
@@ -879,18 +995,20 @@ MBAR is provably the lowest variance asymptotically unbiases estimator of the fr
 
 MBAR can also be thought of as the Zwanzig estimator of the free energy to state $i$ where the sampled distribution is the \textit{mixture distribution} of all the other samples thrown together in one "pot", defined as $p_m(\vec{q} = N^{-1} \sum_k  N_k \exp(f_k-u_k\vec{q})$, the weighted average of all the individual normalized probability distributions that are performed.~\cite{shirts.prl}.
 
-\end{itemize}
-
+\paragraph{Recommendations}
 
 \begin{itemize}
 \item MBAR recommended if all energy differences are available. It is provably the lowest variance free energy estimate given samples from multiple states.
-\item BAR is essentially just as good as MBAR for highly optimized $\lambda$ intermediates.  Specifically, if the $\lambda$s are chosen such that intermediate states have moderate overlap with their neighbors (i.e. between $i$ and $i+1$ and between $i$ and $i-1$, they will \testit{not} have significant overlap with their next nearest neighbors $i+2$ and $i-2$. Thus MBAR doesn't actually get significant information from these energy differences, so one might as well not even calculate them, and just perform BAR between nearest neighbors.~\cite{paliwal.benchmark} 
+\item BAR is essentially just as good as MBAR for highly optimized $\lambda$ intermediates.  Specifically, if the $\lambda$s are chosen such that intermediate states have moderate overlap with their neighbors (i.e. between $i$ and $i+1$ and between $i$ and $i-1$, they will \textit{not} have significant overlap with their next nearest neighbors $i+2$ and $i-2$. Thus MBAR doesn't actually get significant information from these energy differences, so one might as well not even calculate them, and just perform BAR between nearest neighbors.~\cite{paliwal.benchmark} 
 \item TI usually gives similar values as MBAR implemented with sufficient numbers of intermediates, but quadrature error hard to estimate beforehand.~\cite{paliwal.benchmark}
 \item WHAM is an approximation to MBAR, and there are no compelling reasons it should be used. 
 \item Other variants useful in special circumstances (e.g. Z. Tan stochastic version), but beyond the scope of a Best Practices article.
 \end{itemize}
+
 \todo[inline]{BA: write section}
-\subsubsection{Uncertainty estimation}
+
+\subsubsection*{Uncertainty estimation}
+
 Analysis of independent samples of energy data from a series of equilibrium simulations allow for the estimation of the free energy and error associated with its estimate. 
 Quantification of different error metrics depend on the form of analysis and method being used, such as those outlined above.
 The computation of free energies using TI (section \ref{sec:step3}) is straightforward and the trapezoidal rule is often recommended since it allows unequal spacing of lambda states, which is required to minimize the variance in the free energy estimate. 
@@ -915,8 +1033,21 @@ Rerunning calculations with different protein, water, or small molecule force fi
 
 \subsubsection{Are my simulations any good?}
 \todo[inline, color={green!20}]{ASJSM: write and tidy}
+One way of assessing reliability of the calculations may be by checking the phase space overlap between neighboring $\lambda$-windows \cite{wu2005phasespace,wu2005phasespacea}. For this purpose, a so-called overlap matrix can be used. This is a $K\times K$ matrix, where $K$ is the number of simulated states, i.e. $\lambda$s. Sufficient overlap is important for reweighting estimators such as BAR or MBAR, but cannot help assess reliability of estimates, when using TI. 
+These matrices are graphical representations of the phase space overlap, i.e. the average probability that a sample generated at state $j$ can be observed at state $i$. As this probability is computed considering the samples from all states (and not just the adjacent states), the values in each row and column add up to 1. Details on the calculation and properties of these matrices can be found elsewhere~\cite{klimovich2015guidelines}.
+In an overlap matrix $\mathbf{O}$, the off-diagonal values (${O}_{i,j,i\ne j}$) are negatively correlated with the variance of the free energy difference. Accordingly, the uncertainty of the free energy difference between the states i and j will be smaller when ${O}_{i,j,i\ne j}$ is larger (and thus the values in the main diagonal (${O}_{i,j,i=j}$) are smaller). In order to obtain a reliable estimate of the free energy all neighbouring states must be connected, i.e. there must be sufficient overlap between the samples of these states (general description: ${O}_{i,j,i\ne j}\ge$ threshold).
+However, due to the mathematical derivation it is difficult to explicitly describe the relation of the overlap matrix and the variance by formulae. Consequently, the threshold has to be derived empirically. It has been proposed that the values of the first off-diagonals (i.e. the diagonals above and below the main diagonal) should at least be 0.03 to obtain a reliable free energy estimate~\cite{klimovich2015guidelines}. Smaller values should be considered as a warning sign (see Figure~\ref{fig:overlap}), as the variance tends to be underestimated in case of poor overlap.
+\todo[inline, color={green!20}]{ASJSM: Please upload the updated figure for the overlap matrices and modify the path below, if necessary}
+\begin{figure}
+\includegraphics[width=0.95\columnwidth]{figures/overlap/Overlap_plot.pdf}
+\caption{\label{fig:overlap}Overlap matrices showing (A) good, (B) mediocre, and (C) poor overlap.}
+\end{figure}
+Figure~\ref{fig:overlap} shows examples of good, mediocre and poor overlap in ~\ref{fig:overlap} A, B, and C respectively. For (A), the probability to find a sample from state $i$ in its neighbouring state $j$ is about 0.2 for all states adjacent to the main diagonal, and hence the overall connectivity is good. In the case of (B), the overlap is strongly diminishing in the lower right corner, raising concerns regarding the reliability of the free energy estimate obtained. For (C), the state at $\lambda$ index = 6 is connected to neither of its neighbouring states. While this does not necessarily imply that the result for this perturbation is wrong, the energy estimate must at least be considered as highly unreliable.
+In order to overcome the issue of poor overlap, additional sampling should be performed by introducing additional states, i.e. $\lambda$ windows.
+Interestingly, as the variance is inversely correlated with the number of states\cite{klimovich2015guidelines}, it can in principle be reduced below any arbitrary threshold. However, decreasing the variance to a value close to 0 is not feasible, as this approach would strongly increase the calculation time. Instead, the uncertainty may be decreased most effectively by adjusting the $\lambda$ spacing to perform additional sampling in the areas of poor overlap, rather than using arbitrarily spaced windows. Different approaches are described in section \ref{part_of_section_six}) and more details can be found in the literature~\cite{dakka2018concurrent, hahn2019alchemical}.
+On a final note, it has been argued that overlap matrices are only a qualitative estimator for the spacing of windows. Another estimator named Time Derivative of overall Variance (TDV)~\cite{sun2017barbased} has been suggested for this task, which is an explicit function of the overall variance. However, it could not be proven that better suggestions for the $\lambda$ spacing can be obtained by this approach compared to overlap matrices. Hence, it should rather be seen as a complementary approach. 
+In a nutshell, it must be ensured that the values of an overlap matrix in the first diagonals above and below the main diagonal are at least 0.03 in order to yield reliable results. 
 
-\todo[inline, color={yellow!20}]{@MKuhn: write section on overlap with example plots}
 \begin{itemize}
 \item Examining output data for common problems with discussions of what exactly to plot or look at; examples of typical curves for dV/dlambda and free energy versus lambda, for example
 \begin{itemize}
@@ -940,6 +1071,7 @@ A scheme to reduce cycle closure errors is used in FEP+ whereby calculated free 
 
 \end{enumerate}
 
+\todo[inline, color={green!20}]{ASJSM: Please upload the correct figure here and modify the path below}
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{fig6/free_energy_trajectories.pdf}
     \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dashed lines show the final binding free energy prediction of the two calculations after a total of ~5230 ns for OA-G3 and ~6650 ns for CB8-G3. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/MobleyLab/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
@@ -983,15 +1115,15 @@ There are several softwares availble for carrying out alchemical free energy cal
 	\begin{itemize}
 	\item PLUMED is an open source tool which enables the usage of a variety of MD engines. It is designed as a plugin for MD packages such that it analyzes the trajectory on the fly. It also offers a VMD based plugin for the computation of collective variables.   	
 	\item SIRE
-	\item YANK is a tool developed by John Chodera and group on the top of OpenMM MD package. It allows the users to write their inputs in easy-to-use YAML format. 
-	\item CHARMM-GUI is a web based tool for setting up a variety of MD simulations. It can be used to generate CHARMM sctipts for solvation and ligand-binding free energy calculations. 
-	\item GROMACS is a molecular simulation package with a significant number of free energy methods implemente. The LiveCOMS GROMACS tutorial has an example free energycalculation~\cite{LiveCOMS-gromacs}.
+	\item YANK is a tool developed by John Chodera and group on the top of OpenMM MD package. It allows the users to write their inputs in easy-to-use YAML format.
+	\item GROMACS is a molecular simulation package with a significant number of free energy methods implementations. The LiveCOMS GROMACS tutorial has an example free energy calculation~\cite{LiveCOMS-gromacs}.
 	\item pmx for mutations
 	\end{itemize}
 \item Setup tools
 	\begin{itemize}
 	\item FESetup: AMBER, gromacs, Sire
 	\item Lomap/Lomap2 : Relative alchemical transformation graph planning
+	\item CHARMM-GUI is a web based tool for setting up a variety of MD simulations. It can be used to generate CHARMM sctipts for solvation and ligand-binding free energy calculations.
 	\end{itemize}
 \item Analysis tools:
 	\begin{itemize}
@@ -1012,6 +1144,49 @@ There are several softwares availble for carrying out alchemical free energy cal
 \item Alchemical Free Energy Methods for Drug Discovery: Progress and Challenges (\url{doi: 10.1016/j.sbi.2011.01.011})
 \item Alchemistry wiki: \url{http://www.alchemistry.org/wiki/Best_Practices}
 \end{itemize}
+
+\clearpage
+\section{Benchmark Datasets}
+\label{sec:benchmark}
+\vspace{5mm}
+\begin{tabular}{cccc}
+\caption{Overview of benchmark datasets}
+\textbf{Publication} & \textbf{Targets} & \textbf{Ligands} & \textbf{Force Field} \\
+\hline
+\multicolumn{4}{|c|}{D3R Grand Challenges \cite{D3R}} \\
+\hline
+GC3 \cite{gaieb2019} & 6 & 266 & various \\
+GC2 \cite{gaieb2018} & 1 & 102 & various \\
+GC2015 \cite{gathiaka2016} & 2 & 215 & various \\
+\hline
+\multicolumn{4}{|c|}{SAMPL Challenges \cite{SAMPL}} \\
+\hline
+SAMPL6 \cite{rizzi2018} & 3 & 21 & various \\
+SAMPL5 \cite{yin2017} & 3 & 22 & various \\
+SAMPL4 \cite{muddana2014} & 2 & 23 & various \\
+\hline
+\multicolumn{4}{|c|}{Schrödinger Datasets} \\
+\hline
+FEP+ Dataset \cite{wang2015} & 8 & 199 & OPLS2.1 \\
+FEP+ Dataset \cite{harder2016} & 8 & 199 & OPLS3 \\
+FEP+ Dataset \cite{roos2019} & 8 & 199 & OPLS3e \\
+FEP+ Dataset \cite{song2019} & 8 & 199 & AMBER18 \\
+Fragment Optimization \cite{steinbrecher2015} & 8 & 96 & OPLS2.1 \\
+Scaffold Hopping \cite{wang2017} & 6 & 21 & OPLS3 \\
+Macrocycles \cite{yu2017} & 7 & 33 & OPLS3 \\
+\hline
+\multicolumn{4}{|c|}{Further Suggested Datasets} \\
+\hline
+Cucurbit[7]uril (CB7) \cite{mobley2017} & 1 & 15 & NA \\
+Deep cavity cavitand \cite{mobley2017} & 2 & 19 & NA \\
+T4 Lysozyme \cite{mobley2017} & 2 & 20 & NA \\
+\hline
+\label{tab:benchmarks}
+\end{tabular}
+
+\todo[inline, color={green!20}]{ASJSM: Please check whether you can format this in a more appealing way.}
+Several other case studies of FEP calculations can be found in the review by Williams-Noonan et al. \cite{williams2017}. For comparison of FEP+ and Gromacs (using the AMBER99SB-ILDN and GAFF2 force field), cf. the recently published study by Pérez-Benito et al. \cite{perez2019}.
+An overview of further suggested benchmark sets can be found in the review by Mobley and Gilson \cite{mobley2017} or on alchemistry.org \cite{alchemistry}. These include cyclodextrins, the Cytochrome c peroxidase (CCP) protein model binding site, thrombin and bromodomains as well as solvation benchmark sets \cite{paliwal2011}. 
 
 \section{Checklist}
 \label{sec:checklist}
@@ -1130,7 +1305,7 @@ Declare any potentially conflicting interests here, whether or not they pose an 
 %%%%%%%
 FMS acknowledges the support of NSF grant CHE-1111111.
 
-\bibliography{alchemical}
+\bibliography{alchemical1,manual}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% APPENDICES
