@@ -107,7 +107,7 @@ In this paper, we review current best practices for several popular application 
 %  Introduction    %
 %%%%%%%%%%%%%%%%%%%%
 
-\todo[inline]{}The current Overleaf document is \url{https://www.overleaf.com/5136551543vgjqbkzpmqkp}}
+\todo[inline]{}The current Overleaf document is \url{https://www.overleaf.com/5136551543vgjqbkzpmqkp}
 
 
 \section{Abbreviations}
@@ -121,7 +121,7 @@ Alchemical free energy (FE) calculations compute free energy differences associa
 The calculations use non-physical intermediate states where atoms are changed from one to another or can be removed or inserted by decoupling or coupling with their environment, Figure~\ref{fig:}. These so-called alchemical states permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, known as an absolute FE calculation, or modifying a substituent between two analogous ligands in a binding site, a relative FE calculation. Two common approaches are free energy perturbation (FEP) and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, biosimspace}. This foundation work, combined with the methodological, technological and hardware improvements of the last 5-10 years have led to an explosion of interest.  The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies (both relative~\cite{relative-binding-free-energies} and absolute~\cite{absolute-binding-free-energies}), ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), affinity changes due to mutations in therapeutic targets~\cite{hauser2018predicting,aldeghi2018accurate}, and changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}. As the field of molecular simulation moves towards millisecond timescales accurate FE calculations on even more challenging problems will be in scope. In the meantime, today's user may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{figures/fig1/Fig1_dummy.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig1/Fig1.pdf}
     \caption{{\bf What is alchemistry?}
     \todo[inline, color=green!20]{JDC: What is the concept for what this figure is supposed to communicate?}
     }
@@ -182,9 +182,9 @@ Below, we provide a non-exhaustive list of topics we have not addressed with som
 \section{Statistical mechanics can tell us why alchemical free energy calculations work}
 \label{sec:theory}
 Why would want to run an alchemical free energy calculation and why do they work? Suppose you want to compute the binding affinity, or free energy of binding, of a ligand $L$ to a protein $P$, given by:
-\begin{euqation}
+\begin{equation}
 P+L\leftrightharpoons PL
-\end{euqation}
+\end{equation}
 The equilibrium rate of binding is given by the ratio of concentrations of product $[PL]$ and reactants $[P]$, $[L]$:
 \begin{equation}
  K_b^{\circ} = c^{\circ}\frac{[[PL]}{[L][P]}
@@ -194,7 +194,11 @@ In order to define a reference state the, standard state is usually defined as $
     \Delta G_{\mathrm{bind}} = -RT\ln K_b^{\circ}
 \end{equation}
 One way to estimate the binding rate is by computing the probability of finding the molecular system in the bound state of the unbound state, making use of partition function ratios, i.e. 
-
+\begin{figure}
+    \includegraphics[width=0.95\columnwidth]{paper/figures/fig2/Fig2.pdf}
+    \caption{{\bf Illustration of $\lambda$}}
+    \label{fig:what_is_lambda}
+\end{figure}
 \begin{equation}
     \Delta G_{\mathrm{bind}} = -RT\ln\frac{\int_\mathrm{bound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}{\int_\mathrm{unbound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}
 \end{equation}
@@ -222,7 +226,7 @@ Here, the collection of thermodynamic and alchemical parameters $\theta \equiv \
 The physical transformation of interest---such as a protein-ligand association process, or transfer free energy among phases---may involve a thermodynamic cycle that requires several free energy differences $\Delta f$ to be computed in order to produce an estimate of the overall desired quantity.
 
 \begin{figure}
-    \includegraphics[width=0.95\columnwidth]{paper/figures/fig2/Fig2.pdf}
+    \includegraphics[width=0.95\columnwidth]{paper/figures/fig3/Fig3.pdf}
     \caption{{\bf Thermodynamic cycle for computing the relative free energy of binding ($\Delta \Delta G$) between two related small molecules to a supramolecular host.}
     The relative binding free energy difference between two small molecules, $\Delta \Delta G_{\mathrm{bind}, A \rightarrow B} \equiv \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A}$---here benzyl alcohol (top) to toluene (bottom)---can be computed as a difference between two alchemical transformations, $\Delta G_\mathrm{bound} - \Delta G_\mathrm{solvated}$, where $\Delta G_\mathrm{bound}$ represents the free energy change of transforming $A \rightarrow B$ in complex and $\Delta G_\mathrm{solvated}$ the free energy change of transforming $A \rightarrow B$ in solvent.}
     \label{fig:binding-thermodynamic-cycle}
@@ -859,7 +863,7 @@ For simple independent simulations that sample $x_t \sim \pi(x ; \lambda)$, this
 \begin{eqnarray}
 a_t &\equiv& - \ln \pi(x_t; \lambda) + c = u(x_t; \lambda) .
 \end{eqnarray}
-For a Hamiltonian replica exchange simulation where the super-replica state $(X_t, S_t) \sim \Pi(X_t, S_t)$, where $X \equiv \{x_1, \ldots, x_K\}$ are the positions and $S \equiv \{s_1, \ldots, s_K}$ is the alchemical state permutation vecftor, the negative logarithm of the super-replica reduced potential is used:
+For a Hamiltonian replica exchange simulation where the super-replica state $(X_t, S_t) \sim \Pi(X_t, S_t)$, where $X \equiv \{x_1, \ldots, x_K\}$ are the positions and $S \equiv \{s_1, \ldots, s_K}$ is the alchemical state permutation vector, the negative logarithm of the super-replica reduced potential is used:
 \begin{eqnarray}
 a_t &\equiv& - \ln \Pi(X_t, S_t) + c = \sum_{k=1}^K u(x_{kt}; s_{kt})
 \end{eqnarray}
@@ -1041,7 +1045,7 @@ In an overlap matrix $\mathbf{O}$, the off-diagonal values (${O}_{i,j,i\ne j}$) 
 However, due to the mathematical derivation it is difficult to explicitly describe the relation of the overlap matrix and the variance by formulae. Consequently, the threshold has to be derived empirically. It has been proposed that the values of the first off-diagonals (i.e. the diagonals above and below the main diagonal) should at least be 0.03 to obtain a reliable free energy estimate~\cite{klimovich2015guidelines}. Smaller values should be considered as a warning sign (see Figure~\ref{fig:overlap}), as the variance tends to be underestimated in case of poor overlap.
 \todo[inline, color={green!20}]{ASJSM: Please upload the updated figure for the overlap matrices and modify the path below, if necessary}
 \begin{figure}
-\includegraphics[width=0.95\columnwidth]{figures/overlap/Overlap_plot.pdf}
+\includegraphics[width=0.95\columnwidth]{paper/figures/fig8/Fig8.pdf}
 \caption{\label{fig:overlap}Overlap matrices showing (A) good, (B) mediocre, and (C) poor overlap.}
 \end{figure}
 Figure~\ref{fig:overlap} shows examples of good, mediocre and poor overlap in ~\ref{fig:overlap} A, B, and C respectively. For (A), the probability to find a sample from state $i$ in its neighbouring state $j$ is about 0.2 for all states adjacent to the main diagonal, and hence the overall connectivity is good. In the case of (B), the overlap is strongly diminishing in the lower right corner, raising concerns regarding the reliability of the free energy estimate obtained. For (C), the state at $\lambda$ index = 6 is connected to neither of its neighbouring states. While this does not necessarily imply that the result for this perturbation is wrong, the energy estimate must at least be considered as highly unreliable.
