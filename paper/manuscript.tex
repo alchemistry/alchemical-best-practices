@@ -245,6 +245,7 @@ project: Can you even hope to tackle the problem you are thinking
 about attempting given available resources and, if successful, will it
 be worth it?
 \subsection*{How accurate are alchemical free energy calculations?}
+
 Current alchemical free energy calculations seem to achieve, in favorable cases, RMS errors around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative. An overview of benchmark datasets and case studies can be found in section \ref{sec:benchmark} at the end of this document.
 \todo[inline,color={green!20}]{JDC: We should probably provide a short list of key benchmark references here, broken down by force field, and keep this up to date. GT: would a table, at the end of the document be an easier way to do this, only requiring some brief comments in the text? ASJSM: I like the table idea. MK: Feel free to remove this todo item if you are happy with the table provided. I refrained from just listing lots of case studies, as I think we should highlight the recommended datasets which should be used for benchmarking. Nevertheless, I have cited an review article containing such a summary as well as a recent publication comparing FEP+ and Gromacs in the brief text below the table.}
 However, the domain of applicability is a significant concern~\cite{Sherborne2016, Cournia2017}, especially for relative calculations, which typically require a bound structure of a closely
@@ -297,6 +298,7 @@ Additionally, the requisite level of accuracy is important---if the
 goal is to guide lead optimization when many compounds will be
 synthesized, free energy calculations can be appealing even with
 accuracies in the 1--2 kcal/mol range~\cite{mobley2012perspective}, but if the number of compounds to be
+
 synthesized is very small, this accuracy may not be enough to provide
 much value.
 
