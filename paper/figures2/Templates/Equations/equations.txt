@@ -1,0 +1,21 @@
+dGbind,A
+dGbind,B
+dGsolvated
+dGbound
+
+ddGbind = etc etc
+
+lambda = 0
+lambda = 0.5
+
+dGbind
+dGbind = 0
+dG(^o)bind
+dG(^o)rest
+
+dGsolvated, elec(tric?)
+dGbound, elec(tric?)
+
+dGsolvated, VdW
+dGbound, VdW
+
