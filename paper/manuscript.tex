@@ -22,6 +22,7 @@
 %%% IMPORTANT USER CONFIGURATION
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[colorinlistoftodos]{todonotes}
+\usepackage[most]{tcolorbox}
 \newcommand{\versionnumber}{0.1}  % you should update the minor version number in preprints and major version number of submissions.
 \newcommand{\githubrepository}{\url{https://github.com/michellab/alchemical-best-practices}}  %this should be the main github repository for this article
 \newcommand{\expect}[1]{\left\langle{#1}\right\rangle}
@@ -115,6 +116,26 @@ In this paper, we review current best practices for several popular application 
 
 \todo[inline]{JDC: Should we add an Abbreviations section? Maybe it can be in a shaded box?}
 
+\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
+    \begin{center}
+        \textit{In alphabetical order:}
+    \end{center}
+    \textit{CPU} - Central Processing Unit\\
+    \textit{FE} - Free Energy\\
+    \textit{FEP} - Free Energy Perturbation\\
+    \textit{GPCR} - G-Protein Coupled Receptor\\
+    \textit{GPU} - Graphics Processing Unit\\
+    \textit{MBAR} - Multistate Bennett Acceptance Ratio\\
+    \textit{MCSS} - Maximum Common SubStructure\\
+    \textit{MD} - Molecular Dynamics\\
+    \textit{RBFE} - Relative Binding Free Energy\\
+    \textit{RMSE} - Root Mean Square Error\\
+    \textit{SAR} - Structure-Activity Relationships\\
+    \textit{TI} - Thermodynamic Integration
+
+
+\end{tcolorbox}
+
 \section{What are alchemical free energy methods?}
 \label{sec:intro}
 Alchemical free energy (FE) calculations compute free energy differences associated with transfer processes, such as the binding of a small molecule to a receptor or the transfer of a small molecule from an aqeuous to apolar phase~\cite{zwanzig1954hightemperature}. 
@@ -193,7 +214,7 @@ In order to define a reference state the, standard state is usually defined as $
 \end{equation}
 One way to estimate the binding rate is by computing the probability of finding the molecular system in the bound state of the unbound state, making use of partition function ratios, i.e. 
 \begin{figure}
-    \includegraphics[width=0.95\columnwidth]{paper/figures/fig2_what_is_lam/Fig2.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig2_what_is_lam/Fig2.pdf}
     \caption{By introducing a switching function that depends on a factor $\lambda$ it is possible to describe alchemical intermediates. In A it is shown that at $\lambda$ 0 the molecule is a fully interacting phenol and at $\lambda=1$ a fully interacting benzene. Intermediates can be modelled with a softcore potentials whose shape is illustrated in C with dependence on $\lambda$ and D with dependence on the potential energy. B shows an illustration of the probability distribution of the potential energies as the switching function takes values of $\lambda=0$ to $\lambda=1$, intermediates are required for a sufficient overlap in potential energies to estimate a free energy difference between $\lambda=0$ and $\lambda=1$. }
     \label{fig:fig2_what_is_lambda}
 \end{figure}
@@ -224,7 +245,7 @@ Here, the collection of thermodynamic and alchemical parameters $\theta \equiv \
 The physical transformation of interest---such as a protein-ligand association process, or transfer free energy among phases---may involve a thermodynamic cycle that requires several free energy differences $\Delta f$ to be computed in order to produce an estimate of the overall desired quantity.
 
 \begin{figure}
-    \includegraphics[width=0.95\columnwidth]{paper/figures/fig3_therm_cycle/Fig3.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig3_therm_cyc/Fig3.pdf}
     \caption{{\bf Thermodynamic cycle for computing the relative free energy of binding ($\Delta \Delta G$) between two related small molecules to a supramolecular host.}
     The relative binding free energy difference between two small molecules, $\Delta \Delta G_{\mathrm{bind}, A \rightarrow B} \equiv \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A}$---here benzyl alcohol (top) to toluene (bottom)---can be computed as a difference between two alchemical transformations, $\Delta G_\mathrm{bound} - \Delta G_\mathrm{solvated}$, where $\Delta G_\mathrm{bound}$ represents the free energy change of transforming $A \rightarrow B$ in complex and $\Delta G_\mathrm{solvated}$ the free energy change of transforming $A \rightarrow B$ in solvent.}
     \label{fig:fig3_binding-thermodynamic-cycle}
@@ -386,14 +407,14 @@ number of ligands. Sometimes this can be sufficient to get an initial
 idea of feasibility and how accurate the calculations might be for the
 proposed target.
 %\subsection*{Drug discovery}
-\section{Drug discovery}
+\section{How should alchemical simulations be applied to drug discovery?}
 
 \todo[inline]{JDC: Should this be a Section or Subsection?}
 \todo[inline]{JDC: This section needs some structure (subsections, paragraph) to break up the "wall of text".}
 
-The concerns mentioned so far, such as understanding if the series of molecules is suitable, the simulation timescales relevant to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. However, without venturing too far into details of system setup, which is beyond the scope of this article, there are some additional points to consider. Formal charge, or tautomeric state of the small molecules can change within a series. The pKa can change by several log units with only small structural modifications and this is a tactic often used within a congeneric series to modify drug properties. Check up-front because charge or tautomeric change would require modified approaches. A second concern is to try to capture aspects of the bioassay into the simulations, for instance what pH was used for screening? Does the protein X-ray match the construct used for screening (i.e. catalytic vs full length, monomer vs dimer) (cite Perez-Benito Sci Rep 2018, 8, 4883)? Were certain co-factors or partner proteins required to augment activity? 
+The concerns mentioned in the previous section such as understanding if the series of molecules is suitable, the simulation timescales relevant to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. However, without venturing too far into details of system setup, which is beyond the scope of this article, there are some additional points to consider. Formal charge, or tautomeric state of the small molecules can change within a series. The pKa can change by several log units with only small structural modifications and this is a tactic often used within a congeneric series to modify drug properties. Check up-front because charge or tautomeric change would require modified approaches. A second concern is to try to capture aspects of the bioassay into the simulations, for instance what pH was used for screening? Does the protein X-ray match the construct used for screening (i.e. catalytic vs full length, monomer vs dimer) (cite Perez-Benito Sci Rep 2018, 8, 4883)? Were certain co-factors or partner proteins required to augment activity? 
 %
-
+\subsection*{Is my binding mode accurate?}
 As also mentioned, good performance of alchemical FE calculations requires an accurate representation of the ligand binding mode, normally solved via X-ray crystallography. If more than one structure is available, the modeler should pay attention to choose the most suitable. The quality of the structure can be a concern, and the reader is referred to work of Warren et al for a detailed discussion of choosing optimal structures for structure-based modeling (CITE: Warren et al Drug Discov Today, 2012, 17, 1270). Particularly relevant for alchemical FE calculations is to study the SAR and understand the impact in the binding site, is side chain movement required and is there evidence of this in any alternative X-ray structures of the same protein? Normally, only one protein and water configuration is used, so this needs to be capable of accommodating the smallest through to largest ligands in a way that allows stable and well behaved simulations. This can be a practical limitation for the extent of structural change that can be attempted within a series, a simple work around can be to separate compounds into subseries for different calculations. If multiple structures are available there is some evidence the higher affinity complex can give better performance (cite Perez-Benito jctc 2019, 15, 1884). 
 %
 
@@ -475,7 +496,7 @@ Many protocol issues for alchemical calculations are common, but some are differ
 
 \paragraph{Topologies} A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a \emph{dual topology}, \emph{single topology}, or \emph{hybrid topology} approach to relative calculations.
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig4_topol/Fig4.pdf}
+    \includegraphics[width=0.95\columnwidth]{paper/figures/fig4_topol/Fig4.pdf}
     \caption{top: single topology bottom: dual topology Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
     \label{fig:fig4_topology}
 \end{figure} 
@@ -725,11 +746,11 @@ Overall, this likely means that relative free energy calculations will be suscep
 \subsubsection*{What different samples schemes exist and which one should I use?}
 
 \begin{figure}
-    \centering
-    \includegraphics[width=0.95*\columnwidth]{paper/figures/fig7_sampl_scheme/sampling_schemes.pd}
+    \includegraphics[width=0.95\columnwidth]{paper/figures/fig7_sampl_scheme/sampling_schemes.pdf}
     \caption{\textbf{There are 4 different sampling strategies available and implemntations are availble for different software packages.} A: Multiple replicas in parallel at different lambda states. B: Hamiltonian replica exchange scheme. C: Single replica scheme sampling from all $\lambda$ states. D: Non-equilibrium sampling scheme.}
     \label{fig:fig7_sampling_scheme}
-\end{figure}
+\end{figure} 
+
 
 \subsubsection*{How long should I run my simulation for and what information should be saved?}
 
