@@ -580,7 +580,7 @@ Second, if the ligand is not kept in a well-defined region then it is hard to de
 In contrast, with restraints, the free energy of releasing the restrained ligand to a 1M standard state can be computed analytically or numerically by solving the relevant integral, allowing the standard state to enter the thermodynamic cycle.
 
 \paragraph{Several choices of restraints are possible.}
-\todo[inline, color={blue!20}]{@author: Check references
+\todo[inline, color={blue!20}]{@author: Check references}
 In practice, a variety of types of restraints are common, from simple harmonic distance restraints between the ligand and the protein~\cite{mobley2006use}, to flat-bottom restraints which work similarly but only exert a force if the ligand leaves a specific region~\cite{}.
 
 Alternatively, a set of restraints proposed by Boresch have also commonly been employed, where all six rigid-body degrees of freedom governing the orientation of the ligand relative to the receptor are restrained~\cite{leitgeb2005alchemical}.
@@ -661,27 +661,27 @@ This threshold can be empirically defined as the number of atoms being inserted 
 If the absolute value of the difference in SEM is below the defined threshold, then the change in $\lambda$ for re-evaluation of SEM in $\frac{dU}{d\lambda}$ is defined by the current difference in SEM from the threshold divided by the derivative of the SEM with respect to $\lambda$.
 
 
-\begin{enumerate}
+%\begin{enumerate}
+%
+%\item Choice of discrete alchemical protocol (Shirts, Mey, Chodera)
+%    \begin{itemize}
+%    %\item Many options: Adaptive scheme, Chebyshev polynomials, linear spacing, ``choose your next lambda from data at this lambda'' ��, optimal thermodynamic length approaches (separately: Shirts, Sivak, Huafeng Xu).
+%    %\item Levi Naden had paper with lambda protocol which worked for all cases -- methane solvation, host-guest (including disappearing host)
+%    %\end{itemize}
+%\item Relative
+%Three-stage protocol (discharge unique initial atoms, transform LJ, charge unique final atoms) vs softcore electrostatics/LJ
+%
+%\item Absolute
+%    \begin{itemize}
+%    \item Select a \textbf{common alchemically-eliminated end state}
+%    \item Decoupled vs annihilated for electrostatics and LJ
+%    \item Sequential electrostatics and LJ versus simultaneous (recommend sequential)
 
-\item Choice of discrete alchemical protocol (Shirts, Mey, Chodera)
-	\begin{itemize}
-	%\item Many options: Adaptive scheme, Chebyshev polynomials, linear spacing, ``choose your next lambda from data at this lambda'' ��, optimal thermodynamic length approaches (separately: Shirts, Sivak, Huafeng Xu).
-	%\item Levi Naden had paper with lambda protocol which worked for all cases -- methane solvation, host-guest (including disappearing host)
-	%\end{itemize}
-\item Relative
-Three-stage protocol (discharge unique initial atoms, transform LJ, charge unique final atoms) vs softcore electrostatics/LJ
+%\end{itemize}
+%\item Concerns:
+%Part of AMBER still can’t run at endpoints (lambda = 0 or 1); SANDER cannot but PMEMD can.
 
-\item Absolute
-	\begin{itemize}
-	\item Select a \textbf{common alchemically-eliminated end state}
-	\item Decoupled vs annihilated for electrostatics and LJ
-	\item Sequential electrostatics and LJ versus simultaneous (recommend sequential)
-
-\end{itemize}
-\item Concerns:
-Part of AMBER still can’t run at endpoints (lambda = 0 or 1); SANDER cannot but PMEMD can.
-
-\end{enumerate}
+%\end{enumerate}
 
 \subsubsection{Multiple or uncertain binding modes may require considerable care}
 \label{sec:multiple_binding_modes}
@@ -843,8 +843,8 @@ As a result, these estimators can produce significantly biased estimates if fed 
     \caption{{\bf Automatic partitioning into equilibration and production regions.}
     \emph{Top:} The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient before relaxing to the true average potential energy.
     \emph{Middle:} A cumulative average (red) of the entire simulation data demonstrates a bias in the estimate of the average potential $<u>$ that persists far beyond the initial transient relaxation time, while averaging a production region that omits the initial transient (blue) eliminates this bias.
-    \emph{Bottom:} A simple automated approach to determination of the equilibration boundary $t_0$ suggested in~\cite{chodera2016simple} examines the number of effectively uncorrelated samples $N_\mathrm{eff}_{[t_0,T]} = (T-t_0) / g_{[t_0,T]}$ within the proposed production region $[t_0,T]$ by computing the statistical inefficiency $g_{[t_0,T]}$ for that simulation interval.
-    $N_\mathrm{eff}_{[t_0,T]}$ has the general behavior of increasing linearly as $t_0$ moves backwards from $T$ until the initial transient relaxation is encountered, at which point it plunges.
+    \emph{Bottom:} A simple automated approach to determination of the equilibration boundary $t_0$ suggested in~\cite{chodera2016simple} examines the number of effectively uncorrelated samples $N_{\mathrm{eff}_{[t_0,T]}} = (T-t_0) / g_{[t_0,T]}$ within the proposed production region $[t_0,T]$ by computing the statistical inefficiency $g_{[t_0,T]}$ for that simulation interval.
+    $N_{\mathrm{eff}_{[t_0,T]}}$ has the general behavior of increasing linearly as $t_0$ moves backwards from $T$ until the initial transient relaxation is encountered, at which point it plunges.
     The optimal equilibration boundary $t_0$ is selected to maximize the number of uncorrelated samples.
     \emph{Figure adapted from~\cite{chodera2016simple}.}
     \todo[inline]{JDC will update this figure with something similar for a real alchemical free energy calculation.}
@@ -863,7 +863,7 @@ N_{[t_0,T]} &=& \frac{T - t_0}{g_{[t_0,T]}}
 \end{eqnarray}
 where $g_{[t_0,T]}$ is the \emph{statistical inefficiency} of a timeseries $a_t$, described in more detail below.
 Conveniently, this procedure also produces the information necessary to decorrelate the simulation data for estimating the free energy differences, a requisite next step in analysis.
-This approach is implemented within the MBAR~\cite{mbar} and alchemlyb~\cite{alchemlyb} packages, and is highly recommended for standard practice.
+This approach is implemented within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, and is highly recommended for standard practice.
 
 \paragraph{Computing the timeseries for equilibration detection}
 Typically, the timeseries of note $a_t$ analyzed in automated equilibration detection is the negative logarithm of the probability density sampled by the MCMC algorithm (up to an irrelevant additive constant).
@@ -901,11 +901,11 @@ The basic concept is that $\tau_\mathrm{eq}$ corresponds to the single-exponenti
 
 Robust estimation of $C_t$ for $t \sim T$ is difficult due to growth in statistical error, so common estimators of $g$ make use of several additional properties of $C_t$ to provide useful estimates (see \emph{Practical Computation of Statistical Inefficiencies} in~\cite{chodera2016simple} for a detailed discussion).
 \todo[inline]{JDC: Describe recommended statistical inefficiency computation algorithm.}
-We recommend using the robust statistical inefficinecy computation routines available within the MBAR~\cite{mbar} and alchemlyb~\cite{alchemlyb} packages.
+We recommend using the robust statistical inefficinecy computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages.
 
 \paragraph{Subsampling data to generate uncorrelated samples}
 Once the statistical inefficiency $g$ has been estimated, it is straightforward to subsample the correlated timeseries simulation data to produce effectively uncorrelated data that can ba fed to estimators of the free energy.
-Suppose the correlated timeseries is $\{a_t\}_{t=1}^T$; we can form a new timeseries of $N_\mathrm{eff} \approx T / g$ effectively uncorrelated samples by selecting a subset of indices $\{ \: t = \mathrm{round}((n-1) \, g) \: | \: n \in \range 1,\ldots,N \: \}$ where $\mathrm{round(x)}$ denotes rounding to the nearest integer.
+Suppose the correlated timeseries is $\{a_t\}_{t=1}^T$; we can form a new timeseries of $N_{\mathrm{eff}} \approx T / g$ effectively uncorrelated samples by selecting a subset of indices $\{ \: t = \mathrm{round}((n-1) \, g) \: | \: n \in \mathrm{range}(1,\ldots ,N) \: \}$ where $\mathrm{round(x)}$ denotes rounding to the nearest integer.
 
 If independent simulations are used, the alchemical state $\lambda$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficinecy $g$ for each alchemical state.
 If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state.
@@ -913,7 +913,7 @@ Conveniently, the approach described above for automated equilibration detection
 
 \paragraph{Cautions and considerations}
 Reliable estimation of the statistical inefficiency is difficult, and estimates will not generally be as precise (in a relative error sense) as averages.
-To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_\mathrm{eff} \geapprox 50$.
+To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_{\mathrm{eff}} \ge \approx 50$.
 
 \subsection*{Estimators for free energy differences}
 
@@ -925,7 +925,7 @@ As can be noted, the partition functions in Eq.~\ref{equation:dimensionless-free
 
 The simplest method for calculating free energy
 differences from simulations is the so-called \textit{Zwanzig
-relationship}~\cite{orig.TPT}, also called one-sided exponential reweighting (EXP), or simply free energy perturbation, thought that term later grew to encompass all ways of calculating free energy differences.
+relationship}~\cite{zwanzig1954hightemperature}, also called one-sided exponential reweighting (EXP), or simply free energy perturbation, thought that term later grew to encompass all ways of calculating free energy differences.
 
 The free energy between two states defined by two different potential energy functions 
 $U_0(\vec{q})$ and $U_1(\vec{q})$ over coordinate space $\vec{q}$ can be calculated as:
@@ -933,7 +933,7 @@ $U_0(\vec{q})$ and $U_1(\vec{q})$ over coordinate space $\vec{q}$ can be calcula
 \Delta f_{01} & = & \ln \expect{e^{-(U_1(\vec{q}) - U_0(\vec{q}))}}_0 =  \ln \expect{e^{-\Delta U(\vec{q})} }_0
 \end{eqnarray}\label{eqn.zwanzig}
 In words, we take the samples generated during our run with the potential energy function $U_0(\vec{q})$, recalculate what the energy difference would be to switch to potential energy function $U_1(\vec{q})$, and exponentially average them to get the free energy.  Here, the exponential average consists in multiplying by -1, exponentiating, averaging, taking the logarithm, and multiplying by -1 again.  This almost requires no extra code functionality to perform; one need only to save a full precision trajectory, and run an unmodified molecular simulation code using the $U_1$ in order to calculate the new energies.  The analysis can be written in a line of code.  We note that this method is even more general, in that the instantaneous work to change the potential energy function from $U_0$ to $U_1$ can be replaced by the non-reversible work $W$ to make the same change some conditions~\cite{xx} 
-Although the Zwanzig equation is formally correct (as long as the two states considered sample the same phase space volume), it has some very important numerical issues that mean that it is usually when performing a standard free energy calculation for a small molecule.~\cite{shirts.comparison,LuND:Appmcf}  One can show that if the standard deviation of the difference $\Delta U(\vec{q}) = U_1(vec{q})-U_2(\vec{q})$ over all sampled $\vec{q}$ is large (which in this case, means only several times $k_BT)$, then very few samples contribute to the average, and the answer will be both biased and extremely noisy~\cite{xx}.  There are a number of applications where it is useful, but those usually involve investigating the dependence of the free energy on small changes in parameters, not changing molecules or even single atoms in molecules~\cite{xx}
+Although the Zwanzig equation is formally correct (as long as the two states considered sample the same phase space volume), it has some very important numerical issues that mean that it is usually when performing a standard free energy calculation for a small molecule.~\cite{shirts2005comparison,lu2003appropriate}  One can show that if the standard deviation of the difference $\Delta U(\vec{q}) = U_1(vec{q})-U_2(\vec{q})$ over all sampled $\vec{q}$ is large (which in this case, means only several times $k_BT)$, then very few samples contribute to the average, and the answer will be both biased and extremely noisy~\cite{xx}.  There are a number of applications where it is useful, but those usually involve investigating the dependence of the free energy on small changes in parameters, not changing molecules or even single atoms in molecules~\cite{xx}
 
 \paragraph{The Bennett Acceptance Ratio (BAR)}
 
@@ -950,8 +950,8 @@ given sets of samples from the two states~\cite{shirts.bennett}.
 
 Many studies have demonstrated both the
 theoretical and practical superiority of BAR over EXP in molecular
-simulations~\cite{shirts.comparison,LuND:Appmcf}, and BAR converges to EXP in the limit that all samples are from a
-single state~\cite{bennettCH,shirts.bennett}. Significantly less
+simulations~\cite{shirts2005comparison,lu2003appropriate}, and BAR converges to EXP in the limit that all samples are from a
+single state~\cite{bennett1976efficient,shirts.bennett}. Significantly less
 overlap between the configurational space of each state is required to
 converge than for EXP, though some overlap must still exist.
 
@@ -984,9 +984,9 @@ numerical integration can be written as:
 \expect{\frac{du(\lambda,\vec{q})}{d\lambda}}_{k} \] where the weights
 $w_k$ correspond to a particular choice of numerical integration.
 Researchers have tried a large number of different integration
-schemes~\cite{resat.mezei.93,jorge_effect_2010,shyu_reducing_2009}. For However, many other integration choices require specific choices of $\lambda$
+schemes~\cite{resat1993studies,jorge2010effect,shyu2009reducing}. For However, many other integration choices require specific choices of $\lambda$
 to minimize bias, which makes them unsuitable when the intermediates
-have widely-varying levels of uncertainty. For example, integrating a cubic spline interpolation provided negligble benefits~\cite{paliwal.benchmark}. For starting researchers, we therefore recommend a simple trapezoid rule scheme, as it allows for maximal flexibility in which values of $\lambda$ are simulated.  Because fitting to higher
+have widely-varying levels of uncertainty. For example, integrating a cubic spline interpolation provided negligble benefits~\cite{paliwal2011benchmark}. For starting researchers, we therefore recommend a simple trapezoid rule scheme, as it allows for maximal flexibility in which values of $\lambda$ are simulated.  Because fitting to higher
 order polynomials can have numerical instabilities for some energy functions, and because alternate functional forms might only be appropriate
 with some types of transformations, expertise and experience is
 required to perform such numerical integration modifications.  In practice, adding 2-3 more intermediates is sufficient to match the performance of these more complicated numerical quadrature schemes.
@@ -1002,16 +1002,16 @@ f_i = \sum_{n=1}^{N} \frac{\exp(-u_i(\vec{q}_n}{\sum_{k=1}^K N_k \exp(f_k-u_k(\v
 \end{equation}
 where there are $N_k$ samples from each of $K$ states, with $N=\sum_k N_k$ the total number of samples. Thus, we need to evaluate the energy function $U_i$ for all samples obtained at all states in the transformation. The equations can be solved by a number of different standard routines.  We note that there are only $K-1$ independent equations, so one of the $f_i$ must be specified.
 
-MBAR is provably the lowest variance asymptotically unbiases estimator of the free energies given the energies of the samples~\cite{zqtan}. It also provides an uncertainty estimate, which has been shown to be accurate as long as there are sufficient samples at each state~\cite{paliwal:benchmark}.
+MBAR is provably the lowest variance asymptotically unbiases estimator of the free energies given the energies of the samples~\cite{zqtan}. It also provides an uncertainty estimate, which has been shown to be accurate as long as there are sufficient samples at each state~\cite{paliwal2011benchmark}.
 
-MBAR can also be thought of as the Zwanzig estimator of the free energy to state $i$ where the sampled distribution is the \textit{mixture distribution} of all the other samples thrown together in one "pot", defined as $p_m(\vec{q} = N^{-1} \sum_k  N_k \exp(f_k-u_k\vec{q})$, the weighted average of all the individual normalized probability distributions that are performed.~\cite{shirts.prl}.
+MBAR can also be thought of as the Zwanzig estimator of the free energy to state $i$ where the sampled distribution is the \textit{mixture distribution} of all the other samples thrown together in one "pot", defined as $p_m(\vec{q} = N^{-1} \sum_k  N_k \exp(f_k-u_k\vec{q})$, the weighted average of all the individual normalized probability distributions that are performed.~\cite{shirts2003equilibrium}.
 
 \paragraph{Recommendations}
 
 \begin{itemize}
 \item MBAR recommended if all energy differences are available. It is provably the lowest variance free energy estimate given samples from multiple states.
-\item BAR is essentially just as good as MBAR for highly optimized $\lambda$ intermediates.  Specifically, if the $\lambda$s are chosen such that intermediate states have moderate overlap with their neighbors (i.e. between $i$ and $i+1$ and between $i$ and $i-1$, they will \textit{not} have significant overlap with their next nearest neighbors $i+2$ and $i-2$. Thus MBAR doesn't actually get significant information from these energy differences, so one might as well not even calculate them, and just perform BAR between nearest neighbors.~\cite{paliwal.benchmark} 
-\item TI usually gives similar values as MBAR implemented with sufficient numbers of intermediates, but quadrature error hard to estimate beforehand.~\cite{paliwal.benchmark}
+\item BAR is essentially just as good as MBAR for highly optimized $\lambda$ intermediates.  Specifically, if the $\lambda$s are chosen such that intermediate states have moderate overlap with their neighbors (i.e. between $i$ and $i+1$ and between $i$ and $i-1$, they will \textit{not} have significant overlap with their next nearest neighbors $i+2$ and $i-2$. Thus MBAR doesn't actually get significant information from these energy differences, so one might as well not even calculate them, and just perform BAR between nearest neighbors.~\cite{paliwal2011benchmark} 
+\item TI usually gives similar values as MBAR implemented with sufficient numbers of intermediates, but quadrature error hard to estimate beforehand.~\cite{paliwal2011benchmark}
 \item WHAM is an approximation to MBAR, and there are no compelling reasons it should be used. 
 \item Other variants useful in special circumstances (e.g. Z. Tan stochastic version), but beyond the scope of a Best Practices article.
 \end{itemize}
@@ -1127,7 +1127,7 @@ There are several softwares availble for carrying out alchemical free energy cal
 	\item PLUMED is an open source tool which enables the usage of a variety of MD engines. It is designed as a plugin for MD packages such that it analyzes the trajectory on the fly. It also offers a VMD based plugin for the computation of collective variables.   	
 	\item SIRE  is a free, open source, multiscale molecular simulation framework, written to allow computational modellers to quickly prototype and develop new algorithms for molecular simulation and molecular design. 
 	\item YANK is a tool developed by John Chodera and group on the top of OpenMM MD package. It allows the users to write their inputs in easy-to-use YAML format.
-	\item GROMACS is a molecular simulation package with a significant number of free energy methods implementations. The LiveCOMS GROMACS tutorial has an example free energy calculation~\cite{LiveCOMS-gromacs}.
+	\item GROMACS is a molecular simulation package with a significant number of free energy methods implementations. The LiveCOMS GROMACS tutorial has an example free energy calculation~\cite{Lemkul2018From}.
 	\item pmx for mutations
 	\end{itemize}
 \item Setup tools
@@ -1162,12 +1162,13 @@ There are several softwares availble for carrying out alchemical free energy cal
 \label{sec:benchmark}
 \vspace{5mm}
 
-
-\begin{tabular}{cccc}
+\begin{table}
 \caption{Overview of benchmark datasets}
+\begin{tabular}{cccc}
+
 \textbf{Publication} & \textbf{Targets} & \textbf{Ligands} & \textbf{Force Field} \\
 \hline
-\multicolumn{4}{|c|}{D3R Grand Challenges~\cite{D3R2019Dec}} \\
+\multicolumn{4}{|c|}{D3R Grand Challenges~\cite{D3R}} \\
 \hline
 GC3~\cite{gaieb2019d3r} & 6 & 266 & various \\
 GC2~\cite{gaieb2018d3r} & 1 & 102 & various \\
@@ -1199,6 +1200,7 @@ Merck benchmarking set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 \hline
 \label{tab:benchmarks}
 \end{tabular}
+\end{table}
 
 Several other case studies of FEP calculations can be found in the review by Williams-Noonan et al.~\cite{williams-noonan2018free}. For comparison of FEP+ and Gromacs (using the AMBER99SB-ILDN and GAFF2 force field), cf. the recently published study by Pérez-Benito et al.~\cite{perez-benito2019predicting}.
 An overview of further suggested benchmark sets can be found in the review by Mobley and Gilson~\cite{mobley2017predicting} or on \url{alchemistry.org}~\cite{alchemistry}. These include cyclodextrins, the Cytochrome C peroxidase (CCP) protein model binding site, thrombin and bromodomains as well as solvation benchmark sets~\cite{paliwal2011benchmark}. 
