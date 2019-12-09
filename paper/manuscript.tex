@@ -93,8 +93,8 @@
 \maketitle
 
 \begin{abstract}
-Alchemical free energy calculations can be a useful tool for predicting free energy differences associated with the transfer of small molecules from one environment to another.
-The hallmark of these methods is the use of bridging potential energy functions representing \emph{alchemical} intermediate states that cannot exist in chemistry; by analyzing simulation data collected from these bridging alchemical thermodynamic states, transfer free energies (or differences in transfer free energies) can be computed with orders of magnitude less simulation time than simulating the transfer process directly. 
+Alchemical free energy calculations are a useful tool for predicting free energy differences associated with the transfer of small molecules from one environment to another.
+The hallmark of these methods is the use of bridging potential energy functions representing \emph{alchemical} intermediate states that cannot exist in chemistry. The data collected from these bridging alchemical thermodynamic states allows the computation of transfer free energies (or differences in transfer free energies) with orders of magnitude less simulation time than simulating the transfer process directly. 
 While these methods are highly flexible, care must be taken in avoiding common pitfalls to ensure that computed free energy differences can be robust and reproducible for the chosen force field, and that appropriate corrections are included to permit direct comparison with experimental data.
 In this paper, we review current best practices for several popular application domains of alchemical free energy calculations, including relative and absolute small molecule binding free energy calculations to biomolecular targets.
 \todo[inline, color=green!20]{JDC: Should we migrate this document to \url{https://github.com/alchemistry}? ASJSM: Let's migrate with the submitted version, but leave it here for now?}
@@ -134,7 +134,7 @@ Alchemical free energy (FE) calculations compute free energy differences associa
 The calculations use non-physical intermediate states where atoms are changed from one to another or can be removed or inserted by decoupling or coupling with their environment, Figure~\ref{fig:fig1_what_is_alchemy}. These so-called alchemical states permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, known as an absolute FE calculation, or modifying a substituent between two analogous ligands in a binding site, a relative FE calculation. Two common approaches are free energy perturbation (FEP) and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, biosimspace}. This foundation work, combined with the methodological, technological and hardware improvements of the last 5-10 years have led to an explosion of interest.  The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies (both relative~\cite{relative-binding-free-energies} and absolute~\cite{absolute-binding-free-energies}), ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), affinity changes due to mutations in therapeutic targets~\cite{hauser2018predicting,aldeghi2018accurate}, and changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}. As the field of molecular simulation moves towards millisecond timescales accurate FE calculations on even more challenging problems will be in scope. In the meantime, today's user may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig1_what_is_alchemy/Fig1.pdf}    \caption{Illustration of different types of free energies differences that can be computed using alchemical free energy calculations. A: Change in free energy due to a conformational change. B: Partition coefficient such as $\log P$ or $\log D$, here as an example the partition coefficient between methanol and water of a given molecule. C: Free energies of membrane insertions. D: Simulations of protein or other host molecule simulations. E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respec to another, here toluene and benzyl alcohol.
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig1_what_is_alchemy/Fig1.pdf}    \caption{Illustration of the types of free energies differences that can be calculated using alchemical free energy methods. A: Change in free energy due to a conformational change. B: Partition coefficient such as $\log P$ or $\log D$, here as an example the partition coefficient between methanol and water of a given molecule. C: Free energies of membrane insertions. D: Simulations of protein or other host molecule simulations. E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol.
     \label{fig:fig1_what_is_alchemy}
     }
 \end{figure}
@@ -154,7 +154,7 @@ The calculations use non-physical intermediate states where atoms are changed fr
 This best practices guide aims to answer the following questions:
 \begin{itemize}
     \item Is my problem suitable for an alchemical free energy calculation? 
-    \item How do I chose the right free energy protocol and run it? How do I analyze my simulations accurately? 
+    \item How do I choose the right free energy protocol and run it? How do I analyze my simulations accurately? 
     \item What software tools are available to simulate alchemical free energy protocols? 
 \end{itemize}
 This guide is meant to serve as a comprehensive starting point for new practitioners, as well as a reference guide with a convenient checklist (Section~\ref{sec:checklist}) to help with standard alchemical simulation and analysis practices. 
@@ -172,8 +172,8 @@ For readers unfamiliar with these concepts that have never set up and run an equ
 \end{itemize}
 References marked with an asterisk (*) indicate nonessential reading or tutorials that provide further depth and understanding.
 
-As some of the theoretical background can seem daunting, we provide an essentials guide to the theory behind alchemical fee energy calculations in Section~\ref{sec:theory}. 
-We will cover topics that are essential to the  preparation, execution, and analysis of alchemical free energy calculations. 
+As some of the theoretical background can seem daunting, we provide an essentials guide to the theory behind alchemical free energy calculations in Section~\ref{sec:theory}. 
+We will cover topics that are key to the  preparation, execution, and analysis of alchemical free energy calculations. 
 Particular focus will be given to aspects of the molecular simulations which are unique to alchemical calculations---these include the calculation of transfer free energies (hydration free energies, partition coefficients, etc.), and binding free energies (absolute and relative).
 While we try to address as many methods and practices as possible, the field of free energy calculations is broad, and there are many advanced topics that are left to future best practices documents focusing on specific issues. 
 
@@ -183,7 +183,7 @@ Below, we provide a non-exhaustive list of topics we have not addressed with som
 \item Complex association stoichiometry (beyond simple 1:1 association)~\cite{awesome reference}. 
 \item Endpoint free energy methods such as MM-PBSA~\cite{genheden2015mm} and LIE~\cite{gutierrez-de-terran2012linear}
 \item Free energy methods that extract the ligand using geometric order parameters and potential of mean force methods~\cite{heinzelmann2017attachpullrelease}
-\item Forcefield dependence for protein, ligand, ions, co-solvents, and co-factors. Different studies have looked at the influence of force fields and we assume you made an adequate choice for the system you would like to study.~\cite{loeffler2018reproducibility, vassetti2019assessment, lopes2015current} 
+\item Forcefield dependence for protein, ligand, ions, co-solvents, and co-factors. Different studies have looked at the influence of force fields and it is assumed the user has made an adequate choice for the system under study.~\cite{loeffler2018reproducibility, vassetti2019assessment, lopes2015current} 
 \end{itemize}
 
 %%%%%%%%%%%%%%%%%%%%
@@ -192,7 +192,7 @@ Below, we provide a non-exhaustive list of topics we have not addressed with som
 
 \section{Statistical mechanics can tell us why alchemical free energy calculations work}
 \label{sec:theory}
-Why would want to run an alchemical free energy calculation and why do they work? Suppose you want to compute the binding affinity, or free energy of binding, of a ligand $L$ to a protein $P$, given by:
+Why would you want to run an alchemical free energy calculation and why do they work? Suppose you want to compute the binding affinity, or free energy of binding, of a ligand $L$ to a protein $P$, given by:
 \begin{equation}
 P+L\leftrightharpoons PL
 \end{equation}
@@ -200,11 +200,11 @@ The equilibrium rate of binding is given by the ratio of concentrations of produ
 \begin{equation}
  K_b^{\circ} = c^{\circ}\frac{[[PL]}{[L][P]}
 \end{equation}
-In order to define a reference state the, standard state is usually defined as $1 \mathrm{mol}/\mathrm{L}$ and $c^\circ$ is the standard state concentration. From the rate of binding a binding free energy is given by:
+In order to define a reference state, the standard state is usually defined as $1 \mathrm{mol}/\mathrm{L}$ and $c^\circ$ is the standard state concentration. Thus, the binding free energy is given by:
 \begin{equation}
     \Delta G_{\mathrm{bind}} = -RT\ln K_b^{\circ}
 \end{equation}
-One way to estimate the binding rate is by computing the probability of finding the molecular system in the bound state of the unbound state, making use of partition function ratios, i.e. 
+One way to estimate the binding rate is by computing the probability of finding the molecular system in the bound state or the unbound state, making use of partition function ratios, i.e. 
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{paper/figures/fig2_what_is_lam/Fig2.pdf}
     \caption{By introducing a switching function that depends on a factor $\lambda$ it is possible to describe alchemical intermediates. In A it is shown that at $\lambda$ 0 the molecule is a fully interacting phenol and at $\lambda=1$ a fully interacting benzene. Intermediates can be modelled with a softcore potentials whose shape is illustrated in C with dependence on $\lambda$ and D with dependence on the potential energy. B shows an illustration of the probability distribution of the potential energies as the switching function takes values of $\lambda=0$ to $\lambda=1$, intermediates are required for a sufficient overlap in potential energies to estimate a free energy difference between $\lambda=0$ and $\lambda=1$. }
@@ -213,7 +213,7 @@ One way to estimate the binding rate is by computing the probability of finding 
 \begin{equation}
     \Delta G_{\mathrm{bind}} = -RT\ln\frac{\int_\mathrm{bound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}{\int_\mathrm{unbound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}
 \end{equation}
-Or more generally in a simplified form the free energy difference between the bound state is:
+Or more generally in a simplified form the free energy difference between the bound and unbound states is:
 \begin{equation}
 \Delta f \equiv f(\mathrm{bound}) - f(\mathrm{unbound}) = -\ln\frac{Z(\mathrm{unbound})}{Z({\mathrm{bound}})},
 \end{equation}
@@ -253,9 +253,9 @@ The physical transformation of interest---such as a protein-ligand association p
 
 \todo[inline, color={green!20}]{@everyone please review this section}
 
-When starting an alchemcial free energy project you need to determine if an alchemical free energy calculation is the appropriate strategy by initially counting the cost of your
+When starting an alchemical free energy project you need to determine if an alchemical free energy calculation is the appropriate strategy by initially counting the cost of your
 project: Can you even hope to tackle the problem you are thinking
-about attempting given available resources and, if successful, will it
+about given available resources and, if successful, will it
 be worth it?
 \subsection*{How accurate are alchemical free energy calculations?}
 
@@ -377,26 +377,19 @@ reasonable compared to needs of experimental collaborators working on
 this system? How many ligands ($N$) can you afford to handle given
 your computational resources?
 This analysis should be done up front, part of ``counting the cost''
-of involvement in a particular project. In some cases, the result of
-this analysis may be a conclusion that free energy calculations will
-certainly not be feasible for the proposed problem.
+of involvement in a particular project. In some cases, the analysis may conclude that free energy calculations will not be feasible for the proposed problem.
 \todo[inline, color={green!20}]{@everyone: Might be nice to do an example calculation X perturbation on GTX 1080s on a AWS cluster cost \$\$X. Synthesis costs \$\$Y. }
 %
 \subsection*{Is an exploratory study what I want?}
 An additional consideration is how much is known about your particular
 target, ligand binding modes in the target, and any relevant motions
 -- essentially, has it been studied enough to know whether it might be
-suitable for free energy calculations? If the conclusion it is hardly
-been studied, this is important to know going in as well as, if
-initial calculations perform poorly, the effort may turn into an
-attempt to understand the relevant sampling, force field, or system
-preparation problems.
+suitable for free energy calculations? It is important to know if the system has hardly been studied, because should the initial calculations perform poorly, the effort may turn into an attempt to understand the relevant sampling, force field, or system preparation problems.
 %
 If you are unsure whether your project is feasible, one option may be
-to conduct a short exploratory study to assess whether calculations
-seem feasible at reasonable computational cost for just a very small
-number of ligands. Sometimes this can be sufficient to get an initial
-idea of feasibility and how accurate the calculations might be for the
+to conduct a short exploratory study to assess tractability for just a very small
+number of ligands. This can be sufficient to get an initial
+idea of feasibility and accuracy of the calculations for the
 proposed target.
 %\subsection*{Drug discovery}
 \section{How should alchemical simulations be applied to drug discovery?}
@@ -404,7 +397,9 @@ proposed target.
 \todo[inline]{JDC: Should this be a Section or Subsection?}
 \todo[inline]{JDC: This section needs some structure (subsections, paragraph) to break up the "wall of text".}
 
-The concerns mentioned in the previous section such as understanding if the series of molecules is suitable, the simulation timescales relevant to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. However, without venturing too far into details of system setup, which is beyond the scope of this article, there are some additional points to consider. Formal charge, or tautomeric state of the small molecules can change within a series. The pKa can change by several log units with only small structural modifications and this is a tactic often used within a congeneric series to modify drug properties. Check up-front because charge or tautomeric change would require modified approaches. A second concern is to try to capture aspects of the bioassay into the simulations, for instance what pH was used for screening? Does the protein X-ray match the construct used for screening (i.e. catalytic vs full length, monomer vs dimer) (cite Perez-Benito Sci Rep 2018, 8, 4883)? Were certain co-factors or partner proteins required to augment activity? 
+The concerns mentioned in the previous section such as understanding if the series of molecules is suitable, the simulation timescales relevant to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. However, without venturing too far into details of system setup, which is beyond the scope of this article, there are some additional points to consider. 
+\subsection*{Capturing the experimental conditions?}
+The calculations aim to capture the alchemical change from one ligand to another as accurately as possible. Therefore, it is necessary to consider details of the experimental setup, such as pH. AssaysFormal charge, or tautomeric state of the small molecules can change within a series. The pKa can change by several log units with only small structural modifications and this is a tactic often used within a congeneric series to modify drug properties. Changes in charge or tautomers would require modified approaches. A second concern is to try to capture aspects of the bioassay into the simulations, for instance what pH was used for screening? Does the protein X-ray match the construct used for screening (i.e. catalytic vs full length, monomer vs dimer) (cite Perez-Benito Sci Rep 2018, 8, 4883)? Were certain co-factors or partner proteins required to augment activity? 
 %
 \subsection*{Is my binding mode accurate?}
 As also mentioned, good performance of alchemical FE calculations requires an accurate representation of the ligand binding mode, normally solved via X-ray crystallography. If more than one structure is available, the modeler should pay attention to choose the most suitable. The quality of the structure can be a concern, and the reader is referred to work of Warren et al for a detailed discussion of choosing optimal structures for structure-based modeling (CITE: Warren et al Drug Discov Today, 2012, 17, 1270). Particularly relevant for alchemical FE calculations is to study the SAR and understand the impact in the binding site, is side chain movement required and is there evidence of this in any alternative X-ray structures of the same protein? Normally, only one protein and water configuration is used, so this needs to be capable of accommodating the smallest through to largest ligands in a way that allows stable and well behaved simulations. This can be a practical limitation for the extent of structural change that can be attempted within a series, a simple work around can be to separate compounds into subseries for different calculations. If multiple structures are available there is some evidence the higher affinity complex can give better performance (cite Perez-Benito jctc 2019, 15, 1884). 
@@ -1087,7 +1082,7 @@ A scheme to reduce cycle closure errors is used in FEP+ whereby calculated free 
 
 \todo[inline, color={green!20}]{ASJSM: Please upload the correct figure here and modify the path below}
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig8_convergence/free_energy_trajectories.pdf}/free_energy_trajectories.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig8_convergence/free_energy_trajectories.pdf}
     \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dashed lines show the final binding free energy prediction of the two calculations after a total of ~5230 ns for OA-G3 and ~6650 ns for CB8-G3. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/MobleyLab/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
 }
     \label{fig:freeenergytrajectories}
