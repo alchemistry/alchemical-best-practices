@@ -777,7 +777,7 @@ limited to, the variance in $\frac{dU}{d\lambda}$ across all $\lambda$ values, c
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{paper/figures/figX/Forward_Reverse_Fig.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig9_forward_reverse/Forward_Reverse_Fig.pdf}
     \caption{Free energy (in k$_{B}$T) for two different relative binding free energy (RBFE) perturbations. 
     Each plot shows the estimated free energy change using a varying fraction of total simulation time (up to 5 ns total). 
     The top panel shows the three-step protocol for a perturbation involving 5 perturbed atoms, while the bottom panel shows the same protocol for a perturbation involving 10 perturbed atoms. The difference in energy between the forward (blue) and reverse (red) free energy calculations at the midpoint of the simulation time gives an indication of the overall convergence of the simulation, with differences over 1 k$_{B}$T indicating poor convergence.}
@@ -839,8 +839,7 @@ As a result, these estimators can produce significantly biased estimates if fed 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{paper/figures2/automatic-equilibration-detection/argon-potential.pdf}
-    \includegraphics[width=0.95\linewidth]{paper/figures2/automatic-equilibration-detection/argon-potential-reverse-cumulative-average.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig10_equib_detection/fig10_equib.pdf}
     \caption{{\bf Automatic partitioning into equilibration and production regions.}
     \emph{Top:} The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient before relaxing to the true average potential energy.
     \emph{Middle:} A cumulative average (red) of the entire simulation data demonstrates a bias in the estimate of the average potential $<u>$ that persists far beyond the initial transient relaxation time, while averaging a production region that omits the initial transient (blue) eliminates this bias.
@@ -1054,7 +1053,7 @@ In an overlap matrix $\mathbf{O}$, the off-diagonal values (${O}_{i,j,i\ne j}$) 
 However, due to the mathematical derivation it is difficult to explicitly describe the relation of the overlap matrix and the variance by formulae. Consequently, the threshold has to be derived empirically. It has been proposed that the values of the first off-diagonals (i.e. the diagonals above and below the main diagonal) should at least be 0.03 to obtain a reliable free energy estimate~\cite{klimovich2015guidelines}. Smaller values should be considered as a warning sign (see Figure~\ref{fig:overlap}), as the variance tends to be underestimated in case of poor overlap.
 \todo[inline, color={green!20}]{ASJSM: Please upload the updated figure for the overlap matrices and modify the path below, if necessary}
 \begin{figure}
-\includegraphics[width=0.95\columnwidth]{paper/figures/fig8/Fig8.pdf}
+\includegraphics[width=0.95\columnwidth]{paper/figures/fig11_overlap/overlap_matrices.pdf}
 \caption{\label{fig:overlap}Overlap matrices showing (A) good, (B) mediocre, and (C) poor overlap.}
 \end{figure}
 Figure~\ref{fig:overlap} shows examples of good, mediocre and poor overlap in ~\ref{fig:overlap} A, B, and C respectively. For (A), the probability to find a sample from state $i$ in its neighbouring state $j$ is about 0.2 for all states adjacent to the main diagonal, and hence the overall connectivity is good. In the case of (B), the overlap is strongly diminishing in the lower right corner, raising concerns regarding the reliability of the free energy estimate obtained. For (C), the state at $\lambda$ index = 6 is connected to neither of its neighbouring states. While this does not necessarily imply that the result for this perturbation is wrong, the energy estimate must at least be considered as highly unreliable.
@@ -1088,7 +1087,7 @@ A scheme to reduce cycle closure errors is used in FEP+ whereby calculated free 
 
 \todo[inline, color={green!20}]{ASJSM: Please upload the correct figure here and modify the path below}
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{fig6/free_energy_trajectories.pdf}
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig8_convergence/free_energy_trajectories.pdf}/free_energy_trajectories.pdf}
     \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dashed lines show the final binding free energy prediction of the two calculations after a total of ~5230 ns for OA-G3 and ~6650 ns for CB8-G3. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/MobleyLab/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
 }
     \label{fig:freeenergytrajectories}
