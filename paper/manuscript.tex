@@ -14,6 +14,7 @@
 \usepackage{lipsum} % Required to insert dummy text
 \usepackage[version=4]{mhchem}
 \usepackage{siunitx}
+\usepackage{url}
 \DeclareSIUnit\Molar{M}
 \usepackage[italic]{mathastext}
 \graphicspath{{figures/}}
@@ -37,13 +38,13 @@
 \author[2*]{Julien Michel}
 \author[3*]{David L. Mobley}
 \author[1]{Levi N. Naden}
-\author[4*]{Samarjeet Prasad}
-\author[5*]{Julia E. Rice}
+\author[4]{Samarjeet Prasad}
+\author[5]{Julia E. Rice}
 \author[1,9]{Andrea Rizzi}
-\author[2*]{Jenke Scheen}
+\author[2]{Jenke Scheen}
 \author[6*]{Michael Shirts}
 \author[11]{Gary Tresadern}
-\author[10*]{Huafeng Xu}
+\author[10]{Huafeng Xu}
 
 
 
@@ -111,15 +112,8 @@ In this paper, we review current best practices for several popular application 
 \todo[inline]{}The current Overleaf document is \url{https://www.overleaf.com/5136551543vgjqbkzpmqkp}
 
 
-\section{Abbreviations}
-\label{sec:abbreviations}
-
-\todo[inline]{JDC: Should we add an Abbreviations section? Maybe it can be in a shaded box?}
-
-\begin{tcolorbox}[colback=blue!5!white,colframe=blue!75!black]
-    \begin{center}
-        \textit{In alphabetical order:}
-    \end{center}
+%\label{sec:abbreviations}
+\begin{tcolorbox}[title=Abbreviations, colback=blue!10!white]
     \textit{CPU} - Central Processing Unit\\
     \textit{FE} - Free Energy\\
     \textit{FEP} - Free Energy Perturbation\\
@@ -132,8 +126,6 @@ In this paper, we review current best practices for several popular application 
     \textit{RMSE} - Root Mean Square Error\\
     \textit{SAR} - Structure-Activity Relationships\\
     \textit{TI} - Thermodynamic Integration
-
-
 \end{tcolorbox}
 
 \section{What are alchemical free energy methods?}
@@ -142,7 +134,7 @@ Alchemical free energy (FE) calculations compute free energy differences associa
 The calculations use non-physical intermediate states where atoms are changed from one to another or can be removed or inserted by decoupling or coupling with their environment, Figure~\ref{fig:fig1_what_is_alchemy}. These so-called alchemical states permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, known as an absolute FE calculation, or modifying a substituent between two analogous ligands in a binding site, a relative FE calculation. Two common approaches are free energy perturbation (FEP) and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, biosimspace}. This foundation work, combined with the methodological, technological and hardware improvements of the last 5-10 years have led to an explosion of interest.  The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies (both relative~\cite{relative-binding-free-energies} and absolute~\cite{absolute-binding-free-energies}), ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), affinity changes due to mutations in therapeutic targets~\cite{hauser2018predicting,aldeghi2018accurate}, and changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}. As the field of molecular simulation moves towards millisecond timescales accurate FE calculations on even more challenging problems will be in scope. In the meantime, today's user may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig1_what_is_alchemy/Fig1.pdf}    \caption{Illustration of different types of free energies differences that can be computed using alchemical free energy calculations. A: Change in free energy due to a conformational change. B: Partition coefficient such as $\log P$ or $\log D$, here as an example the partition coefficient between methanol and water of a given molecule. C: Free energies of membrane insertions. D: Simulations of portein or other host molecule simulations. E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respec to another, here toluene and benzyl alcohol.
+    \includegraphics[width=0.95\linewidth]{paper/figures/fig1_what_is_alchemy/Fig1.pdf}    \caption{Illustration of different types of free energies differences that can be computed using alchemical free energy calculations. A: Change in free energy due to a conformational change. B: Partition coefficient such as $\log P$ or $\log D$, here as an example the partition coefficient between methanol and water of a given molecule. C: Free energies of membrane insertions. D: Simulations of protein or other host molecule simulations. E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respec to another, here toluene and benzyl alcohol.
     \label{fig:fig1_what_is_alchemy}
     }
 \end{figure}
@@ -488,8 +480,6 @@ To use binding as a concrete example, in absolute binding free energy calculatio
 In contrast, in relative binding free energy calculations, one compares the binding free energy of two related inhibitors to determine the potency difference.
 \subsection*{Absolute and relative free energy calculations have some differences}
 Many protocol issues for alchemical calculations are common, but some are different between absolute and relative calculations, so before treating the common elements we treat the protocol differences.
-\todo[inline, color=green!20]{JM: single/dual hybrid toplogies what are they? ASJSM: These have been addressed below}
-
 
 
 \subsubsection*{Choices unique to relative free energy calculations}
@@ -1139,7 +1129,7 @@ There are several softwares availble for carrying out alchemical free energy cal
 \item Free (libre) open source:
 	\begin{itemize}
 	\item PLUMED is an open source tool which enables the usage of a variety of MD engines. It is designed as a plugin for MD packages such that it analyzes the trajectory on the fly. It also offers a VMD based plugin for the computation of collective variables.   	
-	\item SIRE
+	\item SIRE  is a free, open source, multiscale molecular simulation framework, written to allow computational modellers to quickly prototype and develop new algorithms for molecular simulation and molecular design. 
 	\item YANK is a tool developed by John Chodera and group on the top of OpenMM MD package. It allows the users to write their inputs in easy-to-use YAML format.
 	\item GROMACS is a molecular simulation package with a significant number of free energy methods implementations. The LiveCOMS GROMACS tutorial has an example free energy calculation~\cite{LiveCOMS-gromacs}.
 	\item pmx for mutations
@@ -1172,13 +1162,16 @@ There are several softwares availble for carrying out alchemical free energy cal
 
 \clearpage
 \section{Benchmark Datasets}
+
 \label{sec:benchmark}
 \vspace{5mm}
+
+
 \begin{tabular}{cccc}
 \caption{Overview of benchmark datasets}
 \textbf{Publication} & \textbf{Targets} & \textbf{Ligands} & \textbf{Force Field} \\
 \hline
-\multicolumn{4}{|c|}{D3R Grand Challenges \cite{D3R}} \\
+\multicolumn{4}{|c|}{D3R Grand Challenges \cite{D3R2019Dec}} \\
 \hline
 GC3 \cite{gaieb2019} & 6 & 266 & various \\
 GC2 \cite{gaieb2018} & 1 & 102 & various \\
@@ -1205,11 +1198,12 @@ Macrocycles \cite{yu2017} & 7 & 33 & OPLS3 \\
 Cucurbit[7]uril (CB7) \cite{mobley2017} & 1 & 15 & NA \\
 Deep cavity cavitand \cite{mobley2017} & 2 & 19 & NA \\
 T4 Lysozyme \cite{mobley2017} & 2 & 20 & NA \\
+Merck benchmarking set \cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
+
 \hline
 \label{tab:benchmarks}
 \end{tabular}
 
-\todo[inline, color={green!20}]{ASJSM: Please check whether you can format this in a more appealing way.}
 Several other case studies of FEP calculations can be found in the review by Williams-Noonan et al. \cite{williams2017}. For comparison of FEP+ and Gromacs (using the AMBER99SB-ILDN and GAFF2 force field), cf. the recently published study by Pérez-Benito et al. \cite{perez2019}.
 An overview of further suggested benchmark sets can be found in the review by Mobley and Gilson \cite{mobley2017} or on alchemistry.org \cite{alchemistry}. These include cyclodextrins, the Cytochrome c peroxidase (CCP) protein model binding site, thrombin and bromodomains as well as solvation benchmark sets \cite{paliwal2011}. 
 
