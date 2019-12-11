@@ -493,15 +493,15 @@ Many of the issues of setup and protocol for alchemical calculations are common,
     \caption{top: single topology bottom: dual topology Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
     \label{fig:fig4_topology}
 \end{figure} 
-The distinction between these can be illustrated by considering a hypothetical transformation from molecule A to molecule B, where both atoms share a common substructure but differ in which functional groups are present; e.g. consider a transformation of benzene (A) to benzyl alcohol (B)~\ref{fig:fig4_topology}.
+The distinction between these can be illustrated by considering a hypothetical transformation from molecule A to molecule B, where both atoms share a common substructure but differ in their substituents; e.g. consider a transformation of benzene (A) to benzyl alcohol (B)~\ref{fig:fig4_topology}.
 In this case the common substructure is the benzene ring, though perhaps may be larger depending on how it is defined, as we discuss below.
 In single topology calculations, the overall transformation is set up to involve as few additional atoms as possible, so benzene would be typically changed into benzyl alcohol by changing one of the hydrogens into a carbon. To this new carbon you also find non-interacting atoms called ``dummy atoms'' (retaining their bonded interactions but not interacting with the rest of the system), which will become the two hydrogens attached to the new carbon and the OH group. Bond parameters as well as partial charges are adjusted accordingly. 
-Thus in a single topology calculation, atoms may change their type so relatively few dummy atoms are created. This is illustrated in fig.~\ref{fig:fig4_topology} (a). 
+Thus, in a single topology calculation, atoms may change their type so relatively few dummy atoms are created. This is illustrated in fig.~\ref{fig:fig4_topology} (a). 
 In contrast, in a dual topology free energy calculation, no atoms are allowed to change type~\cite{shirts2012best}. This means that the benzene to benzyl alcohol transformation involves starting with benzene plus the non-interacting dummy atoms making up the hydroxy methyl group, then passing through an intermediate state where atoms which are becoming dummy atoms or ceasing being dummy atoms are partially interacting (this state may or may not be well defined~\cite{mobley2014blind}  and culminating in a state where benzyl alcohol is present along with the additional dummy atoms which was previously a corresponding hydrogen of the benzene. Fig.~\ref{fig:fig4_topology} (b) depicts how such a dual topology works. 
 
-Hybrid topology calculations have seen much less use but essentially consist of two absolute free energy calculations in opposite directions at the same time (turning one molecule off while turning the other on), and are best considered in that light~\cite{jiang2019computing}.
+Hybrid topology calculations have seen much less use but essentially consist of two absolute free energy calculations in opposite directions at the same time (turning one molecule off while turning the other on)~\cite{jiang2019computing}.
 At present, the most widely used approaches, such as in Schrodinger's FEP+~\cite{wang2019protein} and in FESetup~\cite{loeffler2015fesetup} (for which calculations may be planned with Lead Optimization Mapper (LOMAP)~\cite{liu2013lead} seem to use single topology approaches, though some codes only support dual topology.
-To our knowledge efficiency differences have not been thoroughly explored, though conventional wisdom would suggest that fewer dummy atoms are better~\cite{liu2013lead,mobley2012perspective}.
+To our knowledge efficiency differences have not been thoroughly explored, though conventional wisdom suggests that fewer dummy atoms are better~\cite{liu2013lead,mobley2012perspective}.
 
 \paragraph{Atom mapping}
 Once a particular approach to the topology is selected, a crucial next step is to identify the common atoms which will not be perturbed.
@@ -513,26 +513,26 @@ Specifically, with a single topology approach in mind, atom types are allowed to
     \label{fig:fig5_mcss}
 \end{figure} 
 
-There are different tools that allow the generation of MCSS matches as well as single topology input. A large number of software tools are nowadays available for computing MCSS matches, some of the rely on RDKit for this computation, such as LOMAP or FESetup and partially BioSimSpace, others such as fkckombu are standalone tools~\cite{rdkit2019Dec,loeffler2015fesetup, liu2013lead, hedges2019biosimspace, kawabata20143d}. Schr\"{o}dinger's FEP+ planning tool is based on a version of LOMAP, also allows MCSS matching and planning single topology calculations between molecules~\cite{wang2015accurate}. 
+There are different tools that allow the generation of MCSS matches as well as single topology input. A large number of software can compute MCSS matches, some rely on RDKit, such as LOMAP or FESetup and partially BioSimSpace, others such as fkckombu are standalone tools~\cite{rdkit2019Dec,loeffler2015fesetup, liu2013lead, hedges2019biosimspace, kawabata20143d}. Schr\"{o}dinger's FEP+ planning tool is based on a version of LOMAP, and it also uses MCSS matching as well as 3D considerations to plan the network of single topology calculations between molecules~\cite{wang2015accurate}. 
 
-MCSS searches can be relatively time consuming, so if scoring a library of ligands to identify promising pairs for relative calculations is the goal, it can be helpful to use faster approaches such as shape similarity to perform an initial scoring and then use MCSS only to identify final mappings for relative calculations.
+MCSS searches can be relatively time consuming, so if the goal is to assess a library of ligands to identify promising pairs for relative calculations, it can be helpful to use faster approaches such as shape similarity to perform an initial assessment and then use MCSS only to identify final mappings for relative calculations.
 
 The MCSS approach, though relatively standard, takes into account only topological similarity.
 It is possible that changes in binding mode could actually require a different choice of mapping, so in some cases mappings may need to be planned differently depending on 3D positioning of atoms in space [ref; does Cournia paper address this?].
 
 Single topology relative calculations, and calculations based on substructure searches, only work if in fact the ligands share a common substructure, e.g. are part of a congeneric series.
-If no common substructure is shared, then essentially one ends up needing sophisticated dual or hybrid topology free energy calculations, where one would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
+If no common substructure is shared, then alternative dual or hybrid topology free energy calculations are needed, where one would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
 To our knowledge no general pipeline for such calculations yet exists and this would likely remain a research problem. Using an absolute style free energy calculation instead seems a more promising approach in such a case. 
 
 \paragraph{Ring breaking and forming.} Relative free energy calculations for ring breaking and forming are particularly challenging/problematic, in part because relative calculations rely on the free energy contributions of dummy atoms canceling between different legs of the thermodynamic cycle~\cite{}, which may not be true whenever dummy atoms are involved in rings.
 Some approaches have attempted to address this [ref Schrodinger] but a general solution is not yet in mainstream use.
 
 \paragraph{Perturbation maps}
-As part of LOMAP and the FEP+ planning tool. Based on the input ligand series a perturbation map can be planned. Recent heuristics have shown the more connected the perturbation network the better, however there is away to optimise network structure while minimising the number of perturbations that need to be computed minimising the resulting computational cost~\cite{yang2019optimal}. Sometimes the introduction of intermediates that are not part of the original congeneric series are essential to avoid ring breaking, or dealing with perturbations that would otherwise result in large numbers of atoms to be grown or disappearing. None commercial tools have underlying good heuristic but may fail with complicated input, needing user validation in particular when dealing with chiral compounds. 
+Based on the input ligand series a perturbation map can be planned. Recent heuristics have shown the more connected the perturbation network the better, however, there is a way to optimise network structure while minimising the number of perturbations that need to be computed minimising the resulting computational cost~\cite{yang2019optimal}. Sometimes the introduction of intermediates that are not part of the original congeneric series are essential to avoid ring breaking, or dealing with perturbations that would otherwise result in large numbers of atoms to be grown or disappearing. Some commercial tools have underlying good heuristic but may fail with complicated input, needing user validation in particular when dealing with chiral compounds. 
 
 \paragraph{Constraints and relative free energy calculations.}
 One issue which requires particular care is the use of constraints.
-Commonly, bonds involving hydrogen are constrained to a fixed length to allow the use of longer timesteps.
+Commonly, bonds involving hydrogen are constrained to a fixed length using algorithms such as SHAKE or LINCS, allowing the use of longer timesteps.
 However, in single topology relative free energy calculations, the atoms involved might be mutated to other atom types -- for example, in a mutation of methane to methanol, one hydrogen might become an oxygen atom.
 Typical molecular dynamics engines are not set up to recognize this change, or at least not to correctly include contributions to the free energy from changing constraints/constraint length, so results for a transformation would usually be erroneous.
 At present the most general solution to this problem is simply to avoid the use of constraints (and thus use a smaller timestep if necessary, usually of around 1 fs) in any relative free energy calculation involving a transformation of a constrained bond.
@@ -591,7 +591,7 @@ Alternatively, a set of restraints proposed by Boresch have also commonly been e
 Further restraints, such as on the overall ligand RMSD have also been used~\cite{woo2005calculation}.
 
 In principle, all of these forms will yield correct binding free energies in the limit of adequate sampling (if their effects and connection to the standard state are correctly handled) but they have different strengths and weaknesses.
-For example, with more involved restraints, sampling at intermediate lambda values will not likely need to be as extensive but more computational effort must go to computing the restraining free energy.
+For example, with more involved restraints, sampling at intermediate lambda values will usually not need to be as extensive but more computational effort must go to computing the restraining free energy.
 Additionally, such restraints would typically keep the ligand from exploring alternative binding modes, which may be undesirable with Hamiltonian lambda exchange or expanded ensemble techniques where allowing the ligand to exchange binding modes when it is non-interacting could provide sampling benefits~\cite{wang2013identifying}.
 Concretely, flat bottom restraints might allow a ligand to explore multiple binding sites, harmonic restraints multiple binding modes within a site, and Boresch restraints a single binding mode within a single site.
 See additional discussion of the possibility of multiple binding modes below~\ref{sec:multiple_binding_modes}.
@@ -635,12 +635,12 @@ Absolute free energy calculations can potentially avoid changing the charge of t
 This is the approach employed by the Yank free energy package~\cite{wang2013identifying}.
 
 Charge corrections have also been explored, and are potentially a viable solution to this problem~\cite{} where artifacts introduced by finite-size effects are corrected numerically.
-However, application of such corrections typically remains a research problem (except in the FEP+ protocol~\cite{}).
+~\cite{}). (chen et al J. Chem. Theory Comput. 2018, 14, 12, 6346-6358) However, application of such corrections typically remains less common than the use of a co-alchemical ion.
 
 When free energy calculations \emph{do} need to change the charge of a ligand or solute, the literature does not yet seem to indicate what approach should be preferable, so considerable care should be taken.
 We are not yet aware of a careful comparison of charge corrections versus other approaches such as decoupling an ion at the same time, so in our view the issue of proper handling of charge mutations in the context of alchemical calculations remains a research problem.
 
-\subsubsection*{The alchemical pathway is quite important \label{sec:important_path}}
+\subsubsection*{The importance of the alchemical pathway\label{sec:important_path}}
 
 \todo[inline, color={red!40}]{LNN: write common principles alchemical path choice}
 \todo[inline, color={red!40}]{AR: write absolute-specific section on  alchemical path choice}
@@ -650,10 +650,10 @@ Both absolute and relative calculations must choose an alchemical pathway connec
 Some choices are particularly crucial -- for example, transformations involving insertions or deletions of atoms should employ soft-core potentials for Lennard-Jones or other hard-core interactions~\cite{}.
 Other issues, such as whether absolute calculations retain intramolecular nonbonded interactions or remove these interactions, may be less critical and differ among studies in the literature~\cite{}.
 
-Relative calculations introduce additional choices, including whether to define explicit intermediate states~\cite{} or leave these implicitly defined by the code~\cite{}.
+As mentioned above, relative calculations introduce additional choices, including whether to define explicit intermediate states~\cite{} or leave these implicitly defined by the code~\cite{}.
 Typically in single topology relative calculations it proves most efficient to first remove electrostatic interactions of any atoms which will be deleted, then modify other nonbonded interactions, then restore electrostatic interactions of any atoms which are being inserted.
 Other schemes, such as simultaneously changing electrostatic and Lennard-Jones interactions, even with electrostatic ``soft core'' potentials, in our experience typically introduce errors and/or instabilities or are at least unreliable.
-We have less experience with dual topology calculations but expect that similar considerations will apply, and the principle of first removing electrostatics and then removing steric interactions will likely serve well.
+It is expected that similar considerations will apply to dual topology calculations, and the principle of first removing electrostatics and then removing steric interactions will likely serve well.
 
 A key additional consideration in choosing the alchemical pathway is the choice of spacing of intermediate states.
 The spacing depends to some extent on the choice of analysis method, though states should essentially be spaced equidistant in the relevant thermodynamic length~\cite{}.
@@ -696,7 +696,7 @@ To deal with prospective ligands with unknown binding modes, discovery projects 
 This is not necessarily always the case~\cite{kaus2015how}, as reviewed elsewhere~cite{mobley2009binding} and in some cases unexpected binding mode changes can be the origin of apparent non-additivity in structure-activity relationships~\cite{calabro2016elucidation}.
 Binding modes also tend to be particularly variable in the case of fragments, which often may have multiple relevant binding modes~\cite{}.
 
-Absolute free energy calculations for dissimilar ligands can have particular challenges with binding modes, because the (potentially incorrect) assumption of consistent binding modes across a series of similar ligands provides even less help in this case.
+Absolute free energy calculations for dissimilar ligands can have particular challenges because the (potentially incorrect) assumption of consistent binding modes across a series of similar ligands is likely to be even less robust than the in the case of relatively calculations.
 This means that researchers performing absolute binding free energy calculations will have to pay particular attention to generating reasonable putative binding modes.
 
 In some cases, it is tempting to simply use docking techniques to generate initial bound structures for starting molecular dynamics simulations.
@@ -742,7 +742,7 @@ Overall, this likely means that relative free energy calculations will be suscep
 \ref{fig:fig7_ampling_scheme} A:\cite{hedges2019biosimspace, song2019using } B\cite{aldeghi2015accurate, wang2015accurate,jiang2019computing} C:\cite{li2007simulated, tan2017optimally} D:\cite{aldeghi2018accurate}
 \begin{figure}
     \includegraphics[width=0.95\columnwidth]{paper/figures/fig7_sampl_scheme/sampling_schemes.pdf}
-    \caption{\textbf{There are 4 different sampling strategies available and implementations are available for different software packages.} A: Multiple replicas in parallel at different lambda states. B: Hamiltonian replica exchange scheme. C: Single replica scheme sampling from all $\lambda$ states. D: Non-equilibrium sampling scheme.}
+    \caption{\textbf{Four sampling strategies available in different software packages.} A: Multiple replicas in parallel at different lambda states. B: Hamiltonian replica exchange scheme. C: Single replica scheme sampling from all $\lambda$ states. D: Non-equilibrium sampling scheme.}
     \label{fig:fig7_sampling_scheme}
 \end{figure} 
 
@@ -765,13 +765,12 @@ Overall, this likely means that relative free energy calculations will be suscep
 % 
 % \end{enumerate}
 
-The conditions on when to stop alchemical free energy calculations should be determined before they are started, and the process of detecting whetn the calculation should be stopped may require several iterative checks. 
-A metric of convergence should be chosen ahead of time to determine when the calculation should be terminated.
-One useful metric is the target uncertainty of a desired free energy estimate, though care must be exercised should the uncertainty estimate prove unreliable.
+Before launching alchemical free energy calculations it is wise to consider how convergence and completion will be assesses. Different conditions on when to stop alchemical free energy calculations should be determined, and this may require several iterative checks and therefore modifications to the calculation protocol.
+One useful metric to use for termination is the expected or desired uncertainty of a desired free energy estimate, though care must be exercised should the uncertainty estimate prove unreliable.
 In particular, if the rate of change in the free energy estimate is significant when this condition is met, the simulation may not be locally converged, and more sampling may be necessary to determine a stable free energy estimate which is no longer changing significantly over time. 
 However, this is not the only metric which should be used, as the uncertainty only captures the information about the sampled phase space, not necessarily the entirety of the phase space.  
 For example, 
-convergence of relative free energy calculations in predictive simulations where the entire phase space not known in advance, requires sampling the different kinetically stable states \todo[inline]{cite Mobley and Klimovich JCP 2012}. 
+convergence of relative free energy calculations in predictive simulations where the entire phase space is not known in advance, requires sampling the different kinetically stable states \todo[inline]{cite Mobley and Klimovich JCP 2012}. 
 This highlights the importance of choosing the correct thermodynamic path to ensure you sample the required thermodynamic states as discussed in Section~\ref{sec:important_path}.
 
 The condition of minimizing the statistical uncertainty of different free energy estimators below a sufficient threshold should be one metric monitored over the simulation. This can be done through the uncertainty estimator built into certain analysis tools such as MBAR, or can be done though more general statistical tools like Bootstrap Sampling. 
@@ -1380,7 +1379,7 @@ An overview of further suggested benchmark sets can be found in the review by Mo
     {\large {\color{teal}STEP 5: DATA ANALYSIS}} \newline
     \textbf{Steps to analyzing your output data correctly}
     \item Make sure you have run enough replicates to ensure statistical reliability (\textgreater3)
-    \item Compute both correlation and ranking coefficients and ranking statistics (e.g. r, \textrho, MUE and \texttau)
+    \item Compute both correlation and ranking coefficients and error statistics (e.g. r, \textrho, MUE and \texttau)
     \item You should be able to explain large energy differences based on your system (trajectory)
 \end{tcolorbox}
 
