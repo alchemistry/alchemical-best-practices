@@ -733,11 +733,12 @@ While this approach has precedent, it is relatively difficult to automate at pre
 
 Overall, this likely means that relative free energy calculations will be susceptible to problems resulting from uncertainty in ligand binding modes until more robust approaches are available to determine dominant binding modes, or the relative populations of different potential binding modes, in advance.
 
-\subsubsection*{What different samples schemes exist and which one should I use?}
+\subsubsection*{What different sampling schemes exist and which one should I use?}
 
+\ref{fig:fig7_ampling_scheme} A:\cite{hedges2019biosimspace, song2019using } B\cite{aldeghi2015accurate, wang2015accurate,jiang2019computing} C:\cite{li2007simulated, tan2017optimally} D:\cite{aldeghi2018accurate}
 \begin{figure}
     \includegraphics[width=0.95\columnwidth]{paper/figures/fig7_sampl_scheme/sampling_schemes.pdf}
-    \caption{\textbf{There are 4 different sampling strategies available and implemntations are availble for different software packages.} A: Multiple replicas in parallel at different lambda states. B: Hamiltonian replica exchange scheme. C: Single replica scheme sampling from all $\lambda$ states. D: Non-equilibrium sampling scheme.}
+    \caption{\textbf{There are 4 different sampling strategies available and implementations are available for different software packages.} A: Multiple replicas in parallel at different lambda states. B: Hamiltonian replica exchange scheme. C: Single replica scheme sampling from all $\lambda$ states. D: Non-equilibrium sampling scheme.}
     \label{fig:fig7_sampling_scheme}
 \end{figure} 
 
@@ -1002,7 +1003,7 @@ f_i = \sum_{n=1}^{N} \frac{\exp(-u_i(\vec{q}_n}{\sum_{k=1}^K N_k \exp(f_k-u_k(\v
 \end{equation}
 where there are $N_k$ samples from each of $K$ states, with $N=\sum_k N_k$ the total number of samples. Thus, we need to evaluate the energy function $U_i$ for all samples obtained at all states in the transformation. The equations can be solved by a number of different standard routines.  We note that there are only $K-1$ independent equations, so one of the $f_i$ must be specified.
 
-MBAR is provably the lowest variance asymptotically unbiases estimator of the free energies given the energies of the samples~\cite{zqtan}. It also provides an uncertainty estimate, which has been shown to be accurate as long as there are sufficient samples at each state~\cite{paliwal2011benchmark}.
+MBAR is provably the lowest variance asymptotically unbiased estimator of the free energies given the energies of the samples~\cite{tan2004likelihood}. It also provides an uncertainty estimate, which has been shown to be accurate as long as there are sufficient samples at each state~\cite{paliwal2011benchmark}.
 
 MBAR can also be thought of as the Zwanzig estimator of the free energy to state $i$ where the sampled distribution is the \textit{mixture distribution} of all the other samples thrown together in one "pot", defined as $p_m(\vec{q} = N^{-1} \sum_k  N_k \exp(f_k-u_k\vec{q})$, the weighted average of all the individual normalized probability distributions that are performed.~\cite{shirts2003equilibrium}.
 
