@@ -24,10 +24,6 @@
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage[colorinlistoftodos]{todonotes}
 \usepackage[most]{tcolorbox}
-\usepackage{enumitem,amssymb}
-\usepackage{textgreek}
-\usepackage{changepage}
-
 \newcommand{\versionnumber}{0.1}  % you should update the minor version number in preprints and major version number of submissions.
 \newcommand{\githubrepository}{\url{https://github.com/michellab/alchemical-best-practices}}  %this should be the main github repository for this article
 \newcommand{\expect}[1]{\left\langle{#1}\right\rangle}
@@ -142,7 +138,7 @@ Alchemical free energy (FE) calculations compute free energy differences associa
 The calculations use non-physical intermediate states where atoms are changed from one to another or can be removed or inserted by decoupling or coupling with their environment, Figure~\ref{fig:fig1_what_is_alchemy}. These so-called alchemical states permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, known as an absolute FE calculation, or modifying a substituent between two analogous ligands in a binding site, a relative FE calculation. Two common approaches are free energy perturbation (FEP) and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, hedges2019biosimspace}. This foundation work, combined with the methodological, technological and hardware improvements of the last 5-10 years have led to an explosion of interest.  The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies (both relative~\cite{relative-binding-free-energies} and absolute~\cite{absolute-binding-free-energies}), ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), affinity changes due to mutations in therapeutic targets~\cite{hauser2018predicting,aldeghi2018accurate}, and changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}. As the field of molecular simulation moves towards millisecond timescales accurate FE calculations on even more challenging problems will be in scope. In the meantime, today's user may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig1_what_is_alchemy/Fig1.pdf}    \caption{Illustration of the types of free energies differences that can be calculated using alchemical free energy methods. A: Change in free energy due to a conformational change. B: Partition coefficient such as $\log P$ or $\log D$, here as an example the partition coefficient between methanol and water of a given molecule. C: Free energies of membrane insertions. D: Simulations of protein or other host molecule simulations. E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol.
+    \includegraphics[width=0.95\linewidth]{figures/fig1_what_is_alchemy/Fig1.pdf}    \caption{Illustration of the types of free energies differences that can be calculated using alchemical free energy methods. A: Change in free energy due to a conformational change. B: Partition coefficient such as $\log P$ or $\log D$, here as an example the partition coefficient between methanol and water of a given molecule. C: Free energies of membrane insertions. D: Simulations of protein or other host molecule simulations. E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol.
     \label{fig:fig1_what_is_alchemy}
     }
 \end{figure}
@@ -214,7 +210,7 @@ In order to define a reference state, the standard state is usually defined as $
 \end{equation}
 One way to estimate the binding rate is by computing the probability of finding the molecular system in the bound state or the unbound state, making use of partition function ratios, i.e. 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig2_what_is_lam/Fig2.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig2_what_is_lam/Fig2.pdf}
     \caption{By introducing a switching function that depends on a factor $\lambda$ it is possible to describe alchemical intermediates. In A it is shown that at $\lambda$ 0 the molecule is a fully interacting phenol and at $\lambda=1$ a fully interacting benzene. Intermediates can be modelled with a softcore potentials whose shape is illustrated in C with dependence on $\lambda$ and D with dependence on the potential energy. B shows an illustration of the probability distribution of the potential energies as the switching function takes values of $\lambda=0$ to $\lambda=1$, intermediates are required for a sufficient overlap in potential energies to estimate a free energy difference between $\lambda=0$ and $\lambda=1$. }
     \label{fig:fig2_what_is_lambda}
 \end{figure}
@@ -245,7 +241,7 @@ Here, the collection of thermodynamic and alchemical parameters $\theta \equiv \
 The physical transformation of interest---such as a protein-ligand association process, or transfer free energy among phases---may involve a thermodynamic cycle that requires several free energy differences $\Delta f$ to be computed in order to produce an estimate of the overall desired quantity.
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig3_therm_cyc/Fig3.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig3_therm_cyc/Fig3.pdf}
     \caption{{\bf Thermodynamic cycle for computing the relative free energy of binding ($\Delta \Delta G$) between two related small molecules to a supramolecular host.}
     The relative binding free energy difference between two small molecules, $\Delta \Delta G_{\mathrm{bind}, A \rightarrow B} \equiv \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A}$---here benzyl alcohol (top) to toluene (bottom)---can be computed as a difference between two alchemical transformations, $\Delta G_\mathrm{bound} - \Delta G_\mathrm{solvated}$, where $\Delta G_\mathrm{bound}$ represents the free energy change of transforming $A \rightarrow B$ in complex and $\Delta G_\mathrm{solvated}$ the free energy change of transforming $A \rightarrow B$ in solvent.}
     \label{fig:fig3_binding-thermodynamic-cycle}
@@ -415,7 +411,7 @@ As also mentioned, good performance of alchemical FE calculations requires an ac
 \subsection*{Input setup and scale of calculations}
 In a drug discovery setting it is normal to consider dozens (or more) of ligands and it is necessary to align them in the binding site. There is no detailed study of how different alignment approaches may affect results, but the user should be aware of some practical considerations. Tools are available to compare the ligands and build the hybrid topologies that define the changes between one ligand and another~\cite{loeffler2015fesetup,hedges2019biosimspace,gapsys2015pmx}. In simple terms, providing poor alignment to these tools will make this job harder. Therefore, docking ligands with no restraints is not usually the best method for defining the ligand inputs, instead a core restrained docking can provide satisfactory outcomes, but in this case one still should pay careful attention to consistency of alignment for identical substituents. Another alternative often used is to manually edit the same core with the changing substituents. This provides assurances that coordinates for the non-perturbed structures remain identical and aromatic substituents for instance obey consistent dihedral angles. This approach is not feasible for many compounds and therefore automating this approach can be desirable. Finally, the role of water in ligand binding is now well understood and it is a crucial aspect to accurately reflect the changes in binding site solvation during ligand binding. Can crystallographic waters be retained? Do they clash with some of the larger ligands used in the FEP? If so, how will the water be incorporated for smaller ligands that require the water – consider pre-solvation methods such as GCMC steps~\cite{michel2010prediction}. Tools such as watermap or opensource equivalents (SSTmap, others) can be used to help define water structure for systems with no experimental evidence of water sites. Before launching large numbers of alchemical free energy calculations it is recommended to test the defined system using classical MD simulations and limited numbers of alchemical perturbations. Metrics such as ligand and protein RMSD and RMSF can be inspected, along with visual inspection of simulations, to ensure the system is stable and likely to be suitable for FE calculations. 
 %
-Running binding FE calculations in a drug discovery application will typically require the use of software or tools to facilitate the calculations of many compounds. The commercial implementation from Schrodinger, FEP+, uses a graphical user interface and once the user has calculated any missing force field parameters, calculations can be prepared and submitted within minutes. The software builds the network of perturbations, connecting similar compounds based on LOMAP methodology~\cite{liu2013lead}, all inputs for the Desmond simulations are built automatically and the job can be saved or run immediately on available GPUs. The cost of this software is often prohibitive but alternative tools are becoming available to allow relatively straight forward running of alchemical FE calculations with other software~\cite{gapsys2015pmx, loeffler2015fesetup} (CITE New Merz paper, cite PMX paper Vytas and Bert de Groot, cite FESETUP, cite FEanalysis). One consideration at this point is to define the perturbations suitable for the application. For instance, if the goal is to accurately assess the relative binding energy of a small number of compounds, possibly with challenging synthesis, the map of perturbations may contain as many connections between compounds as affordable. However, when running calculations on hundreds of compounds a so called ‘star-map’ can be used that just contains one connection per compound: perturbing every compound to a central ligand, typically the crystal structure ligand. In this way the top-ranking examples can be readily identified and submitted to additional calculations in a second round. 
+Running binding FE calculations in a drug discovery application will typically require the use of software or tools to facilitate the calculations of many compounds. The commercial implementation from Schrodinger, FEP+, uses a graphical user interface and once the user has calculated any missing force field parameters, calculations can be prepared and submitted within minutes. The software builds the network of perturbations, connecting similar compounds based on LOMAP methodology~\cite{liu2013lead}, all inputs for the Desmond simulations are built automatically and the job can be saved or run immediately on available GPUs. The cost of this software is often prohibitive but alternative tools are becoming available to allow relatively straight forward running of alchemical FE calculations with other software~\cite{2015pmx, loeffler2015fesetup} (CITE New Merz paper, cite PMX paper Vytas and Bert de Groot, cite FESETUP, cite FEanalysis). One consideration at this point is to define the perturbations suitable for the application. For instance, if the goal is to accurately assess the relative binding energy of a small number of compounds, possibly with challenging synthesis, the map of perturbations may contain as many connections between compounds as affordable. However, when running calculations on hundreds of compounds a so called ‘star-map’ can be used that just contains one connection per compound: perturbing every compound to a central ligand, typically the crystal structure ligand. In this way the top-ranking examples can be readily identified and submitted to additional calculations in a second round. 
 %
 \subsection*{Making predictions, understanding errors}
 For prospective drug discovery applications there are several other considerations including understanding likely errors and taking selection bias into account. It is crucial when proposing compounds for synthesis to have some idea of the underlying error or uncertainty in the predictions. Fortunately, there are several useful indicators, results suggest MBAR errors for perturbations greater than 0.3 kcal/mol can be indicative of inaccuracy~\cite{perez-benito2019predicting}. In addition, the hysteresis can be checked by comparing the difference for forward and reverse perturbations of the same structural change, or in the case of large maps of perturbations cycle closure hysteresis~\cite{wang2013modeling} indicates problematic perturbations involved in cycles connecting many compounds. Selection bias, as described above, can be problematic in prospective applications as there is normally an aim to focus on only a narrow range of predicted activity (i.e. the most active). Thus, correlation between prediction and subsequent experiment may lead to disappointment but corrections can be applied based on previous recommendations~\cite{abel2017critical}. 
@@ -489,7 +485,7 @@ Many protocol issues for alchemical calculations are common, but some are differ
 
 \paragraph{Topologies} A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a \emph{dual topology}, \emph{single topology}, or \emph{hybrid topology} approach to relative calculations.
 \begin{figure}
-    \includegraphics[width=0.95\columnwidth]{paper/figures/fig4_topol/Fig4.pdf}
+    \includegraphics[width=0.95\columnwidth]{figures/fig4_topol/Fig4.pdf}
     \caption{top: single topology bottom: dual topology Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
     \label{fig:fig4_topology}
 \end{figure} 
@@ -508,7 +504,7 @@ Once a particular approach to the topology is selected, a crucial next step is t
 Rigorously, this process essentially comprises a maximal common substructure (MCSS) search of the molecules involved to identify the common substructure -- though the parameters of the MCSS search will differ depending on whether single or dual topology calculations are planned.
 Specifically, with a single topology approach in mind, atom types are allowed to change, so a permissive MCSS search can be done, whereas with dual topology a more strict search is required.
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig5_mcs/MCS.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig5_mcs/MCS.pdf}
     \caption{A: restrictive MCSS match B: ring breaking}
     \label{fig:fig5_mcss}
 \end{figure} 
@@ -545,7 +541,7 @@ At present the most general solution to this problem is simply to avoid the use 
 \todo[inline, color={red!40}]{AR: would the explanation in the next paragraph be better suited for a more general section?}
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig6_thermo_cyc_abs/fig6_therm_abs.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig6_thermo_cyc_abs/fig6_therm_abs.pdf}
     \caption{Absolute thermodynamic cycle}
     \label{fig:fig6_absolute-thermodynamic-cycle}
 \end{figure}
@@ -741,7 +737,7 @@ Overall, this likely means that relative free energy calculations will be suscep
 
 \ref{fig:fig7_ampling_scheme} A:\cite{hedges2019biosimspace, song2019using } B\cite{aldeghi2015accurate, wang2015accurate,jiang2019computing} C:\cite{li2007simulated, tan2017optimally} D:\cite{aldeghi2018accurate}
 \begin{figure}
-    \includegraphics[width=0.95\columnwidth]{paper/figures/fig7_sampl_scheme/sampling_schemes.pdf}
+    \includegraphics[width=0.95\columnwidth]{figures/fig7_sampl_scheme/sampling_schemes.pdf}
     \caption{\textbf{There are 4 different sampling strategies available and implementations are available for different software packages.} A: Multiple replicas in parallel at different lambda states. B: Hamiltonian replica exchange scheme. C: Single replica scheme sampling from all $\lambda$ states. D: Non-equilibrium sampling scheme.}
     \label{fig:fig7_sampling_scheme}
 \end{figure} 
@@ -782,7 +778,7 @@ limited to, the variance in $\frac{dU}{d\lambda}$ across all $\lambda$ values, c
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig9_forward_reverse/Forward_Reverse_Fig.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig9_forward_reverse/Forward_Reverse_Fig.pdf}
     \caption{Free energy (in k$_{B}$T) for two different relative binding free energy (RBFE) perturbations. 
     Each plot shows the estimated free energy change using a varying fraction of total simulation time (up to 5 ns total). 
     The top panel shows the three-step protocol for a perturbation involving 5 perturbed atoms, while the bottom panel shows the same protocol for a perturbation involving 10 perturbed atoms. The difference in energy between the forward (blue) and reverse (red) free energy calculations at the midpoint of the simulation time gives an indication of the overall convergence of the simulation, with differences over 1 k$_{B}$T indicating poor convergence.}
@@ -844,7 +840,7 @@ As a result, these estimators can produce significantly biased estimates if fed 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig10_equib_detection/fig10_equib.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig10_equib_detection/fig10_equib.pdf}
     \caption{{\bf Automatic partitioning into equilibration and production regions.}
     \emph{Top:} The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient before relaxing to the true average potential energy.
     \emph{Middle:} A cumulative average (red) of the entire simulation data demonstrates a bias in the estimate of the average potential $<u>$ that persists far beyond the initial transient relaxation time, while averaging a production region that omits the initial transient (blue) eliminates this bias.
@@ -1055,7 +1051,7 @@ In an overlap matrix $\mathbf{O}$, the off-diagonal values (${O}_{i,j,i\ne j}$) 
 However, due to the mathematical derivation it is difficult to explicitly describe the relation of the overlap matrix and the variance by formulae. Consequently, the threshold has to be derived empirically. It has been proposed that the values of the first off-diagonals (i.e. the diagonals above and below the main diagonal) should at least be 0.03 to obtain a reliable free energy estimate~\cite{klimovich2015guidelines}. Smaller values should be considered as a warning sign (see Figure~\ref{fig:overlap}), as the variance tends to be underestimated in case of poor overlap.
 \todo[inline, color={green!20}]{ASJSM: Please upload the updated figure for the overlap matrices and modify the path below, if necessary}
 \begin{figure}
-\includegraphics[width=0.95\columnwidth]{paper/figures/fig11_overlap/overlap_matrices.pdf}
+\includegraphics[width=0.95\columnwidth]{figures/fig11_overlap/overlap_matrices.pdf}
 \caption{\label{fig:overlap}Overlap matrices showing (A) good, (B) mediocre, and (C) poor overlap.}
 \end{figure}
 Figure~\ref{fig:overlap} shows examples of good, mediocre and poor overlap in ~\ref{fig:overlap} A, B, and C respectively. For (A), the probability to find a sample from state $i$ in its neighbouring state $j$ is about 0.2 for all states adjacent to the main diagonal, and hence the overall connectivity is good. In the case of (B), the overlap is strongly diminishing in the lower right corner, raising concerns regarding the reliability of the free energy estimate obtained. For (C), the state at $\lambda$ index = 6 is connected to neither of its neighbouring states. While this does not necessarily imply that the result for this perturbation is wrong, the energy estimate must at least be considered as highly unreliable.
@@ -1089,7 +1085,7 @@ A scheme to reduce cycle closure errors is used in FEP+ whereby calculated free 
 
 \todo[inline, color={green!20}]{ASJSM: Please upload the correct figure here and modify the path below}
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig8_convergence/free_energy_trajectories.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig8_convergence/free_energy_trajectories.pdf}
     \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dashed lines show the final binding free energy prediction of the two calculations after a total of ~5230 ns for OA-G3 and ~6650 ns for CB8-G3. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/MobleyLab/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
 }
     \label{fig:freeenergytrajectories}
@@ -1212,8 +1208,9 @@ An overview of further suggested benchmark sets can be found in the review by Mo
 
 \section{Checklist}
 \label{sec:checklist}
-\todo[inline, color={green!20}]{JS: @everyone Please input your own suggestions, I made some points off the top of my head. Feel free to add helpful citations to any of the bullet points}
-\todo[inline, color={green!20}]{JS: @self,ASJSM do some final formatting when text is complete.}
+\todo[inline, color={green!20}]{ASJSM: @Volunteer This needs to be revised and expanded, some initial thoughts were just thrown in.}
+An attempt at identifying most important checklist items.
+
 
 % This provides a checklist which
 % - spans a full page
@@ -1221,192 +1218,62 @@ An overview of further suggested benchmark sets can be found in the review by Mo
 % - exists on a separate page
 % This style of checklist will be especially helpful if you want to encourage readers to print and use your checklist in practice, as they
 % can easily print it without also printing other material from your manuscript. However, other styles of checklist are also possible (below).
-% \begin{Checklists*}[p!]
+\begin{Checklists*}[p!]
 
-% \begin{checklist}{Step 0 -- Know what you want to simulate }
-% \textbf{What are the first questions that need addressing before setting up a molecular dynamics simulation}\\
-% Extensive explanation for the checklist questions can be found in Section~\ref{sec:step0}.
-% \begin{itemize}
-% \item Can I get the required accuracy with the simulation I want to carry out?
-% \item Have I properly prepared my protein and ligand systems?
-% \item Does my system contain any groups that require custom parameters?
-% \item What simulation protocol will provide the most evidence to answer my hypothesis?
-
-% \item And finally
-% \end{itemize}
-% \end{checklist}
-
-% \begin{checklist}{Simulation preparation}
-% \textbf{How do I get started setting up an alchemical free energy calculation}
-% Extensive explanation for the checklist questions can be found in Section~\ref{sec:step1}.
-% \begin{itemize}
-% \item Have I followed the Best practices for biomolecular simulation set up?
-% \item In a relative simulation, will I run into problems with clashing geometries in the ligand transformation or crystal waters?
-% \end{itemize}
-% \end{checklist}
-% \end{Checklists*}
-
-% \begin{Checklists*}[p!]
-% \begin{checklist}{Absolute simulations}
-% \textbf{What are the main things I need to consider for an absolute alchemical free energy calculation?}
-% Extensive explanation for the checklist questions can be found in Section~\ref{sec:step2}.
-% \begin{itemize}
-% \item Topology
-% \item Restraints
-% \item Standard state handling
-% \end{itemize}
-% \end{checklist}
-
-% \begin{checklist}{Relative simulations}
-% \textbf{What are the main things I need to consider for an relative alchemical free energy calculation?}
-% Extensive explanation for the checklist questions can be found in Section~\ref{sec:step2}.
-% \begin{itemize}
-% \item First thing
-% \item Also remember
-% \item And finally
-% \end{itemize}
-% \end{checklist}
-
-% \begin{checklist}{Analysis}
-% \textbf{This is all about analysis of the simulation}
-% Extensive explanation for the checklist questions can be found in Section~\ref{sec:step4}.
-% \begin{itemize}
-% \item Are my simulations converged enough?
-% \item Am I using the right analysis techniques?
-% \end{itemize}
-% \end{checklist}
-
-% \end{Checklists*}
-
-%Checklist:
-\clearpage
-%%%%%%%%%%%%%%%% 
-%% Checklist-specific precommands:
-
-\newenvironment{checklist_font}{\fontfamily{lmss}\small\selectfont}{\par}
-\newlist{todolist}{itemize}{2}
-\setlist[todolist]{label=$\square$}
-%% start checklist:
-\begin{checklist_font}
+\begin{checklist}{Step 0 -- Know what you want to simulate }
+\textbf{What are the first questions that need addressing before setting up a molecular dynamics simulation}\\
+Extensive explanation for the checklist questions can be found in Section~\ref{sec:step0}.
 \begin{itemize}
-\begin{todolist}
-\onecolumn
-\centering
-%%%%%%%%%%%%%%%%%
-%%%%%% step 0
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 0: KNOW WHAT YOU WANT TO SIMULATE}} \newline
-    \textbf{Initial questions you should ask before you set up an alchemical free energy calculation using molecular dynamics simulations}
-    \item Do I understand the biology, chemistry and physics of my system?
-    \item Have I properly prepared my protein and ligand systems?
-    \item Does my system contain any structures that require custom parameters?
-    \item What simulation protocol will provide the most evidence to answer my hypothesis?
-    \item Are the projected computational expense and runtime realistic for my goals?
-    \item Will my protocol be reproducible? 
-    \item Will my statistics be reliable? If not, would more replicates solve the problem? Three replicates is the minimal number of replicates that should be run
-    \item Can I open-source my data?
-\end{tcolorbox}
+\item Can I get the required accuracy with the simulation I want to carry out?
+\item Have I properly prepared my protein and ligand systems?
+\item Does my system contain any groups that require custom parameters?
+\item What simulation protocol will provide the most evidence to answer my hypothesis?
 
-%%%%%% step 1
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 1: PREPARING YOUR SIMULATIONS}} \newline
-    \textbf{Steps to getting started setting up your alchemical free energy calculation}
-    \item Make sure you know why you have picked your (combination of) force field(s)
-    \item Minimize your system
-    \item Equilibrate your system with your choice of thermodynamic ensemble
-    \item Check the stability of your system and whether it behaves the way you want it to
-\end{tcolorbox}
-
-%%%%%% step 2
-\begin{tcbraster}[raster columns=2,raster equal height, raster width=18cm]
-\begin{adjustwidth}{-1cm}{}           % workaround to make the dual box pass the margin
-\begin{todolist}
-    \begin{tcolorbox}
-    % absolute
-        {\large {\color{teal}STEP 2: RUNNING ABSOLUTE SIMULATIONS}} \newline
-        \textbf{Steps to running your absolute alchemical free energy calculations}
-        
-        \item Your ligands should have the same, biologically correct binding pose
-        \item Make sure your \textlambda-scheduling is set correctly
-        \item Check if your ligands are discharging and vanishing correctly
-        \item Set up your restraints correctly
-        \item Make sure you subsample in your MBAR protocol
-        \item Apply the right correction terms
-    \end{tcolorbox}
-    \begin{tcolorbox}
-    % relative
-        {\large {\color{teal}STEP 2: RUNNING RELATIVE SIMULATIONS}} \newline
-        \textbf{Steps to running your relative alchemical free energy calculations}
-        \item           % circumvents bug in tcbraster/todolist
-        \item Your ligands should have the same, biologically correct binding pose
-        \item Make sure your λ-scheduling is set correctly
-        \item Make sure your molecular transformations are realistic (1-5 heavy atoms for reliable computations)
-        \item Generate a perturbation network by your method of choice; check whether you have enough cycle closures (preferably, every ligand should be in a cycle)
-        \item Check whether dummy atoms were assigned correctly
-        \item Make sure you subsample in your MBAR protocol
-    \end{tcolorbox}
-    
-\end{todolist}
-\end{adjustwidth}
-\end{tcbraster}
-
-
-%%%%%% step 3
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 3: HOW DO I KNOW WHICH SIMULATIONS ARE NOT RELIABLE?}} \newline
-    \textbf{Situations suggesting your relative alchemical free energy calculations have not run properly (assuming absence of experimental affinities)}
-    \item Standard error (\textsigma) should be \textless1 kcal·mol-1 
-    \item Simulated systems have not converged 
-    \newline\newline\textit{Relative:}
-    \item If you observe hysteresis in perturbations and incorrect cycle closures
-    \item Energy differences \textgreater15 kcal·mol-1  are unreliable
-    \newline\newline\textit{Absolute:}
-    \item Energies below -15 kcal·mol-1  are unreliable
-    \item The ligand has not sampled most of the intended region after the vanishing step
-    \item The ligand is drifting out of the intended region after the vanishing step
-\end{tcolorbox}
-
-%%%%%% step 4
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 4: HOW DO I KNOW WHICH SIMULATIONS ARE NOT RELIABLE?}} \newline
-    \textbf{Situations suggesting your relative alchemical free energy calculations have not run properly (assuming absence of experimental affinities)}
-    \item Standard error (\textsigma) should be \textless1 kcal·mol-1 
-    \item Simulated systems have not converged 
-    \newline\newline\textit{Relative:}
-    \item If you observe hysteresis in perturbations and incorrect cycle closures
-    \item Energy differences \textgreater15 kcal·mol-1  are unreliable
-    \newline\newline\textit{Absolute:}
-    \item Energies below -15 kcal·mol-1  are unreliable
-    \item The ligand has not sampled most of the intended region after the vanishing step
-    \item The ligand is drifting out of the intended region after the vanishing step
-\end{tcolorbox}
-
-%%%%%% step 5
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 5: WHY ARE THEY NOT RELIABLE?}} \newline
-    \textbf{Suggestions for finding out why your alchemical free energy calculations may not be reliable}
-    \item Check again whether dummy atoms were assigned correctly
-    \item Inspect the trajectories across the λ-schedule (particularly the endpoints)
-    \item Inspect the overlap matrices
-\end{tcolorbox}
-
-%%%%%% step 6
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 6: DATA ANALYSIS}} \newline
-    \textbf{Steps to analyzing your output data correctly}
-    \item Make sure you have run enough replicates to ensure statistical reliability (\textgreater3)
-    \item Compute both correlation and ranking coefficients and ranking statistics (e.g. r, \textrho, MUE and \texttau)
-    \item You should be able to explain large energy differences based on your system (trajectory)
-\end{tcolorbox}
-
-
-%%%%%%%%%%%%%%%% 
-% end checklist:
-\end{todolist}
+\item And finally
 \end{itemize}
-\end{checklist_font}
-\twocolumn
-%%%%%%%%%%%%%%%%%
+\end{checklist}
+
+\begin{checklist}{Simulation preparation}
+\textbf{How do I get started setting up an alchemical free energy calculation}
+Extensive explanation for the checklist questions can be found in Section~\ref{sec:step1}.
+\begin{itemize}
+\item Have I followed the Best practices for biomolecular simulation set up?
+\item In a relative simulation, will I run into problems with clashing geometries in the ligand transformation or crystal waters?
+\end{itemize}
+\end{checklist}
+\end{Checklists*}
+
+\begin{Checklists*}[p!]
+\begin{checklist}{Absolute simulations}
+\textbf{What are the main things I need to consider for an absolute alchemical free energy calculation?}
+Extensive explanation for the checklist questions can be found in Section~\ref{sec:step2}.
+\begin{itemize}
+\item Topology
+\item Restraints
+\item Standard state handling
+\end{itemize}
+\end{checklist}
+
+\begin{checklist}{Relative simulations}
+\textbf{What are the main things I need to consider for an relative alchemical free energy calculation?}
+Extensive explanation for the checklist questions can be found in Section~\ref{sec:step2}.
+\begin{itemize}
+\item First thing
+\item Also remember
+\item And finally
+\end{itemize}
+\end{checklist}
+
+\begin{checklist}{Analysis}
+\textbf{This is all about analysis of the simulation}
+Extensive explanation for the checklist questions can be found in Section~\ref{sec:step4}.
+\begin{itemize}
+\item Are my simulations converged enough?
+\item Am I using the right analysis techniques?
+\end{itemize}
+\end{checklist}
+
+\end{Checklists*}
 \clearpage
 
 \section*{Author Contributions}
@@ -1424,7 +1291,7 @@ An overview of further suggested benchmark sets can be found in the review by Mo
 \todo[inline, color={green!20}]{ASJSM: @everyone, can you check your contribution is acknowledge and if not add the appropriate information. }
 (Explain the contributions of the different authors here)
 ASJSM: Coordinated the document, contributed to most sections, and created figures \ref{fig:fig2_what_is_lambda},~\ref{fig:fig7_sampling_scheme},~\ref{fig:overlap} and replotted~\ref{fig:automatic-equilibration-detection} 
-JS: created figures \ref{fig:fig1_what_is_alchemy}, \ref{fig:fig3_binding-thermodynamic-cycle}-\ref{fig:fig6_absolute-thermodynamic-cycle} and contributed to general formatting discussions. 
+\textit{JS}: created figures \ref{fig:fig1_what_is_alchemy}, \ref{fig:fig3_binding-thermodynamic-cycle}-\ref{fig:fig6_absolute-thermodynamic-cycle} and contributed to general formatting discussions. 
 % We suggest you preserve this comment:
 For a more detailed description of author contributions,
 see the GitHub issue tracking and changelog at \githubrepository.
