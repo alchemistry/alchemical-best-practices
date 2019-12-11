@@ -142,7 +142,7 @@ Alchemical free energy (FE) calculations compute free energy differences associa
 The calculations use non-physical intermediate states where atoms are changed from one to another or can be removed or inserted by decoupling or coupling with their environment, Figure~\ref{fig:fig1_what_is_alchemy}. These so-called alchemical states permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, known as an absolute FE calculation, or modifying a substituent between two analogous ligands in a binding site, a relative FE calculation. Two common approaches are free energy perturbation (FEP) and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, hedges2019biosimspace}. This foundation work, combined with the methodological, technological and hardware improvements of the last 5-10 years have led to an explosion of interest.  The domain of applicability for these calculations now involves such varied applications as the computation of protein-ligand binding free energies (both relative~\cite{relative-binding-free-energies} and absolute~\cite{absolute-binding-free-energies}), ligand selectivities~\cite{selectivity}, partition and distribution coefficients between different liquid phases (such as octanol-water partition coefficients~\cite{octanol-water-partition}), affinity changes due to mutations in therapeutic targets~\cite{hauser2018predicting,aldeghi2018accurate}, and changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}. As the field of molecular simulation moves towards millisecond timescales accurate FE calculations on even more challenging problems will be in scope. In the meantime, today's user may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig1_what_is_alchemy/Fig1.pdf}    \caption{Illustration of the types of free energies differences that can be calculated using alchemical free energy methods. A: Change in free energy due to a conformational change. B: Partition coefficient such as $\log P$ or $\log D$, here as an example the partition coefficient between methanol and water of a given molecule. C: Free energies of membrane insertions. D: Simulations of protein or other host molecule simulations. E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol.
+    \includegraphics[width=0.95\linewidth]{figures/fig1_what_is_alchemy/Figure.pdf}    \caption{Illustration of the types of free energies differences that can be calculated using alchemical free energy methods. A: Change in free energy due to a conformational change. B: Partition coefficient such as $\log P$ or $\log D$, here as an example the partition coefficient between methanol and water of a given molecule. C: Free energies of membrane insertions. D: Simulations of protein or other host molecule simulations. E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol.
     \label{fig:fig1_what_is_alchemy}
     }
 \end{figure}
@@ -213,11 +213,7 @@ In order to define a reference state, the standard state is usually defined as $
     \Delta G_{\mathrm{bind}} = -RT\ln K_b^{\circ}
 \end{equation}
 One way to estimate the binding rate is by computing the probability of finding the molecular system in the bound state or the unbound state, making use of partition function ratios, i.e. 
-\begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig2_what_is_lam/Fig2.pdf}
-    \caption{By introducing a switching function that depends on a factor $\lambda$ it is possible to describe alchemical intermediates. In A it is shown that at $\lambda$ 0 the molecule is a fully interacting phenol and at $\lambda=1$ a fully interacting benzene. Intermediates can be modelled with a softcore potentials whose shape is illustrated in C with dependence on $\lambda$ and D with dependence on the potential energy. B shows an illustration of the probability distribution of the potential energies as the switching function takes values of $\lambda=0$ to $\lambda=1$, intermediates are required for a sufficient overlap in potential energies to estimate a free energy difference between $\lambda=0$ and $\lambda=1$. }
-    \label{fig:fig2_what_is_lambda}
-\end{figure}
+
 \begin{equation}
     \Delta G_{\mathrm{bind}} = -RT\ln\frac{\int_\mathrm{bound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}{\int_\mathrm{unbound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}
 \end{equation}
@@ -245,10 +241,10 @@ Here, the collection of thermodynamic and alchemical parameters $\theta \equiv \
 The physical transformation of interest---such as a protein-ligand association process, or transfer free energy among phases---may involve a thermodynamic cycle that requires several free energy differences $\Delta f$ to be computed in order to produce an estimate of the overall desired quantity.
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig3_therm_cyc/Fig3.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig2_therm_cyc/Figure.pdf}
     \caption{{\bf Thermodynamic cycle for computing the relative free energy of binding ($\Delta \Delta G$) between two related small molecules to a supramolecular host.}
     The relative binding free energy difference between two small molecules, $\Delta \Delta G_{\mathrm{bind}, A \rightarrow B} \equiv \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A}$---here benzyl alcohol (top) to toluene (bottom)---can be computed as a difference between two alchemical transformations, $\Delta G_\mathrm{bound} - \Delta G_\mathrm{solvated}$, where $\Delta G_\mathrm{bound}$ represents the free energy change of transforming $A \rightarrow B$ in complex and $\Delta G_\mathrm{solvated}$ the free energy change of transforming $A \rightarrow B$ in solvent.}
-    \label{fig:fig3_binding-thermodynamic-cycle}
+    \label{fig:fig_binding-thermodynamic-cycle}
 \end{figure}
 \todo[inline, color=green!20]{This section needs to be expanded and give a good introduction to the theoretical background without going into too much detail.}
 
@@ -487,9 +483,9 @@ Many of the issues of setup and protocol for alchemical calculations are common,
 
 \paragraph{Topologies} A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a \emph{dual topology}, \emph{single topology}, or \emph{hybrid topology} approach to relative calculations.
 \begin{figure}
-    \includegraphics[width=0.95\columnwidth]{paper/figures/fig4_topol/Fig4.pdf}
+    \includegraphics[width=0.95\columnwidth]{figures/fig3_topol/Figure.pdf}
     \caption{top: single topology bottom: dual topology Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
-    \label{fig:fig4_topology}
+    \label{fig:fig_topology}
 \end{figure} 
 The distinction between these can be illustrated by considering a hypothetical transformation from molecule A to molecule B, where both atoms share a common substructure but differ in their substituents; e.g. consider a transformation of benzene (A) to benzyl alcohol (B)~\ref{fig:fig4_topology}.
 In this case the common substructure is the benzene ring, though perhaps may be larger depending on how it is defined, as we discuss below.
@@ -506,9 +502,9 @@ Once a particular approach to the topology is selected, a crucial next step is t
 Rigorously, this process essentially comprises a maximal common substructure (MCSS) search of the molecules involved to identify the common substructure -- though the parameters of the MCSS search will differ depending on whether single or dual topology calculations are planned.
 Specifically, with a single topology approach in mind, atom types are allowed to change, so a permissive MCSS search can be done, whereas with dual topology a more strict search is required.
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig5_mcs/MCS.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig4_mcs/Figure.pdf}
     \caption{A: restrictive MCSS match B: ring breaking}
-    \label{fig:fig5_mcss}
+    \label{fig:fig_mcss}
 \end{figure} 
 
 There are different tools that allow the generation of MCSS matches as well as single topology input. A large number of software can compute MCSS matches, some rely on RDKit, such as LOMAP or FESetup and partially BioSimSpace, others such as fkckombu are standalone tools~\cite{rdkit2019Dec,loeffler2015fesetup, liu2013lead, hedges2019biosimspace, kawabata20143d}. Schr\"{o}dinger's FEP+ planning tool is based on a version of LOMAP, and it also uses MCSS matching as well as 3D considerations to plan the network of single topology calculations between molecules~\cite{wang2015accurate}. 
@@ -527,6 +523,12 @@ Some approaches have attempted to address this~\cite{clark2019relative} but a ge
 
 \paragraph{Perturbation maps}
 Based on the input ligand series a perturbation map can be planned. Recent heuristics have shown the more connected the perturbation network the better, however, there is a way to optimise network structure while minimising the number of perturbations that need to be computed minimising the resulting computational cost~\cite{yang2019optimal}. Sometimes the introduction of intermediates that are not part of the original congeneric series are essential to avoid ring breaking, or dealing with perturbations that would otherwise result in large numbers of atoms to be grown or disappearing. Some commercial tools have underlying good heuristic but may fail with complicated input, needing user validation in particular when dealing with chiral compounds. 
+\begin{figure}
+    \includegraphics[width=0.95\columnwidth]{figures/fig6_types_of_networks/Figure.pdf}
+    \caption{\textbf{Examples of perturbation networks} A: Star Shaped network B: Network with cycle closures. The diamond indicates the use of a crystal structure binding mode.}
+    \label{fig:fig_types_of_networks}
+\end{figure} 
+
 
 \paragraph{Constraints and relative free energy calculations.}
 One issue which requires particular care is the use of constraints.
@@ -543,9 +545,9 @@ At present the most general solution to this problem is simply to avoid the use 
 \todo[inline, color={red!40}]{AR: would the explanation in the next paragraph be better suited for a more general section?}
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig6_thermo_cyc_abs/fig6_therm_abs.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig5_thermo_cyc_abs/Figure.pdf}
     \caption{Absolute thermodynamic cycle}
-    \label{fig:fig6_absolute-thermodynamic-cycle}
+    \label{fig:fig_absolute-thermodynamic-cycle}
 \end{figure}
 
 Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular non-bonded interactions.
@@ -644,6 +646,12 @@ We are not yet aware of a careful comparison of charge corrections versus other 
 \todo[inline, color={red!40}]{AR: write absolute-specific section on  alchemical path choice}
 \todo[inline, color={red!40}]{BA: write relative-specific section on  alchemical path choice}
 
+\begin{figure}
+    \includegraphics[width=0.95\linewidth]{figures/fig7_what_is_lam/Figure.pdf}
+    \caption{By introducing a switching function that depends on a factor $\lambda$ it is possible to describe alchemical intermediates. In A it is shown that at $\lambda$ 0 the molecule is a fully interacting phenol and at $\lambda=1$ a fully interacting benzene. Intermediates can be modelled with a softcore potentials whose shape is illustrated in C with dependence on $\lambda$ and D with dependence on the potential energy. B shows an illustration of the probability distribution of the potential energies as the switching function takes values of $\lambda=0$ to $\lambda=1$, intermediates are required for a sufficient overlap in potential energies to estimate a free energy difference between $\lambda=0$ and $\lambda=1$. }
+    \label{fig:fig_what_is_lambda}
+\end{figure}
+
 Both absolute and relative calculations must choose an alchemical pathway connecting initial and final states, which is in principle arbitrary but in practice affects the efficiency of the calculations considerably.
 Some choices are particularly crucial -- for example, transformations involving insertions or deletions of atoms should employ soft-core potentials for Lennard-Jones or other hard-core interactions~\cite{}.
 Other issues, such as whether absolute calculations retain intramolecular nonbonded interactions or remove these interactions, may be less critical and differ among studies in the literature~\cite{}.
@@ -737,11 +745,11 @@ Overall, this likely means that relative free energy calculations will be suscep
 
 \subsubsection*{What different sampling schemes exist and which one should I use?}
 
-\ref{fig:fig7_ampling_scheme} A:\cite{hedges2019biosimspace, song2019using } B\cite{aldeghi2015accurate, wang2015accurate,jiang2019computing} C:\cite{li2007simulated, tan2017optimally} D:\cite{aldeghi2018accurate}
+\ref{fig:fig_sampling_scheme} A:\cite{hedges2019biosimspace, song2019using } B\cite{aldeghi2015accurate, wang2015accurate,jiang2019computing} C:\cite{li2007simulated, tan2017optimally} D:\cite{aldeghi2018accurate}
 \begin{figure}
-    \includegraphics[width=0.95\columnwidth]{paper/figures/fig7_sampl_scheme/sampling_schemes.pdf}
+    \includegraphics[width=0.95\columnwidth]{figures/fig8_sampl_scheme/Figure.pdf}
     \caption{\textbf{Four sampling strategies available in different software packages.} A: Multiple replicas in parallel at different lambda states. B: Hamiltonian replica exchange scheme. C: Single replica scheme sampling from all $\lambda$ states. D: Non-equilibrium sampling scheme.}
-    \label{fig:fig7_sampling_scheme}
+    \label{fig:fig_sampling_scheme}
 \end{figure} 
 
 
@@ -779,7 +787,7 @@ limited to, the variance in $\frac{dU}{d\lambda}$ across all $\lambda$ values, c
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig9_forward_reverse/Forward_Reverse_Fig.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig10_forward_reverse/Figure.pdf}
     \caption{Free energy (in k$_{B}$T) for two different relative binding free energy (RBFE) perturbations. 
     Each plot shows the estimated free energy change using a varying fraction of total simulation time (up to 5 ns total). 
     The top panel shows the three-step protocol for a perturbation involving 5 perturbed atoms, while the bottom panel shows the same protocol for a perturbation involving 10 perturbed atoms. The difference in energy between the forward (blue) and reverse (red) free energy calculations at the midpoint of the simulation time gives an indication of the overall convergence of the simulation, with differences over 1 k$_{B}$T indicating poor convergence.}
@@ -841,7 +849,7 @@ As a result, these estimators can produce significantly biased estimates if fed 
 
 \begin{figure}
     \centering
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig10_equib_detection/fig10_equib.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig11_equib_detection/Figure.pdf}
     \caption{{\bf Automatic partitioning into equilibration and production regions.}
     \emph{Top:} The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient before relaxing to the true average potential energy.
     \emph{Middle:} A cumulative average (red) of the entire simulation data demonstrates a bias in the estimate of the average potential $<u>$ that persists far beyond the initial transient relaxation time, while averaging a production region that omits the initial transient (blue) eliminates this bias.
@@ -1045,14 +1053,13 @@ Rerunning calculations with different protein, water, or small molecule force fi
 
 
 \subsubsection{Are my simulations any good?}
-\todo[inline, color={green!20}]{ASJSM: write and tidy}
 One way of assessing reliability of the calculations may be by checking the phase space overlap between neighboring $\lambda$-windows~\cite{wu2005phasespace,wu2005phasespacea}. For this purpose, a so-called overlap matrix can be used. This is a $K\times K$ matrix, where $K$ is the number of simulated states, i.e. $\lambda$s. Sufficient overlap is important for reweighting estimators such as BAR or MBAR, but cannot help assess reliability of estimates, when using TI. 
 These matrices are graphical representations of the phase space overlap, i.e. the average probability that a sample generated at state $j$ can be observed at state $i$. As this probability is computed considering the samples from all states (and not just the adjacent states), the values in each row and column add up to 1. Details on the calculation and properties of these matrices can be found elsewhere~\cite{klimovich2015guidelines}.
 In an overlap matrix $\mathbf{O}$, the off-diagonal values (${O}_{i,j,i\ne j}$) are negatively correlated with the variance of the free energy difference. Accordingly, the uncertainty of the free energy difference between the states i and j will be smaller when ${O}_{i,j,i\ne j}$ is larger (and thus the values in the main diagonal (${O}_{i,j,i=j}$) are smaller). In order to obtain a reliable estimate of the free energy all neighbouring states must be connected, i.e. there must be sufficient overlap between the samples of these states (general description: ${O}_{i,j,i\ne j}\ge$ threshold).
 However, due to the mathematical derivation it is difficult to explicitly describe the relation of the overlap matrix and the variance by formulae. Consequently, the threshold has to be derived empirically. It has been proposed that the values of the first off-diagonals (i.e. the diagonals above and below the main diagonal) should at least be 0.03 to obtain a reliable free energy estimate~\cite{klimovich2015guidelines}. Smaller values should be considered as a warning sign (see Figure~\ref{fig:overlap}), as the variance tends to be underestimated in case of poor overlap.
 \todo[inline, color={green!20}]{ASJSM: Please upload the updated figure for the overlap matrices and modify the path below, if necessary}
 \begin{figure}
-\includegraphics[width=0.95\columnwidth]{paper/figures/fig11_overlap/overlap_matrices.pdf}
+\includegraphics[width=0.95\columnwidth]{figures/fig12_overlap/Figure.pdf}
 \caption{\label{fig:overlap}Overlap matrices showing (A) good, (B) mediocre, and (C) poor overlap.}
 \end{figure}
 Figure~\ref{fig:overlap} shows examples of good, mediocre and poor overlap in ~\ref{fig:overlap} A, B, and C respectively. For (A), the probability to find a sample from state $i$ in its neighbouring state $j$ is about 0.2 for all states adjacent to the main diagonal, and hence the overall connectivity is good. In the case of (B), the overlap is strongly diminishing in the lower right corner, raising concerns regarding the reliability of the free energy estimate obtained. For (C), the state at $\lambda$ index = 6 is connected to neither of its neighbouring states. While this does not necessarily imply that the result for this perturbation is wrong, the energy estimate must at least be considered as highly unreliable.
@@ -1086,7 +1093,7 @@ A scheme to reduce cycle closure errors is used in FEP+ whereby calculated free 
 
 \todo[inline, color={green!20}]{ASJSM: Please upload the correct figure here and modify the path below}
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig8_convergence/free_energy_trajectories.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig9_convergence/Figure.pdf}
     \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dashed lines show the final binding free energy prediction of the two calculations after a total of ~5230 ns for OA-G3 and ~6650 ns for CB8-G3. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/MobleyLab/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
 }
     \label{fig:freeenergytrajectories}
