@@ -47,6 +47,9 @@ y_data = np.append(y_data_raw, [-8.3, -9])
 # figure plotting:
 
 sns.set(font='sans-serif', style="ticks")
+plt.tick_params(labelsize=18)
+
+
 sns.scatterplot(x_data, y_data, linewidth=0)
 
 # plot kcal bounds:
@@ -125,14 +128,14 @@ plt.table(cellText=df.values, colLabels=df.columns,
 sns.despine()
 plt.xlim(-12.9, -7.1)
 plt.ylim(plt.xlim())
-plt.xlabel(r"Experimental $\Delta$G [kcal$\cdot$mol$^{-1}$]")
-plt.ylabel(r"AFE-predicted $\Delta$G [kcal$\cdot$mol$^{-1}$]")
+plt.xlabel(r"Experimental $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
+plt.ylabel(r"AFE-predicted $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
 plt.tight_layout()
 
+plt.savefig("Figure.pdf", dpi=300)
 
-plt.savefig("data_depictions.png", dpi=300)
-plt.show()
 
+#plt.show()
 
 
 
