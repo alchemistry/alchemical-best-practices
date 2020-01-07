@@ -1162,7 +1162,7 @@ Seeing as essentially all alchemical FE prediction schemes are regression proble
 
 Because we are interested mainly in the linear relationship between the alchemical FE predictions and the experimentally-determined affinity values, plots should be depicted with the same range on both axes (i.e. $x=y$). Furthermore, bounds should be depicted for the 1- and 2-kcal/mol confidence regions. These regions can serve as tools to communicate your model performance: any perturbation inside the 1 kcal/mol region can be seen as highly reliable, any perturbation inside the 2 kcal/mol region should be seen as somewhat reliable, and any perturbation outside the confidence regions should be expected to be unreliable (and handled as outliers). In a drug discovery context, this type of data depiction may suggest the reliability of alchemical FE predictions in the project, and can give an idea of how trustworthy predictions can be for synthesis ideas. 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig13_analysis_practices/Figure.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig13_analysis_practices/Figure.pdf}
     \caption{Example of a well-depicted alchemical free energy prediction showing the relation between predicted and experimentally-determined Gibbs free energy in kcal per mol with standard errors as error bars. The two outliers (underestimations) are shown in red; the dark and light-orange regions depict the 1- and 2-kcal per mol confidence bounds.}
     \label{fig:scatterplot_analysis}
 \end{figure}
@@ -1369,115 +1369,6 @@ An overview of further suggested benchmark sets can be found in the review by Mo
 %%%%%%%%%%%%%%%% 
 %% Checklist-specific precommands:
 
-\newenvironment{checklist_font}{\fontfamily{lmss}\small\selectfont}{\par}
-\newlist{todolist}{itemize}{2}
-\setlist[todolist]{label=$\square$}
-%% start checklist:
-\begin{checklist_font}
-\begin{itemize}
-\begin{todolist}
-\onecolumn
-\centering
-%%%%%%%%%%%%%%%%%
-%%%%%% step 0
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 0: KNOW WHAT YOU WANT TO SIMULATE}} \newline
-    \textbf{Initial questions you should ask before you set up an alchemical free energy calculation using molecular dynamics simulations}
-    \item Do I understand the biology, chemistry and physics of my system?
-    \item Have I properly prepared my protein and ligand systems?
-    \item Does my system contain any structures that require custom parameters?
-    \item What simulation protocol will provide the most evidence to answer my hypothesis?
-    \item Are the projected computational expense and runtime realistic for my goals?
-    \item Will my protocol be reproducible? 
-    \item Will my statistics be reliable? If not, would more replicates solve the problem? Three replicates is the minimal number of replicates that should be run
-    \item Can I open-source my data?
-\end{tcolorbox}
-
-%%%%%% step 1
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 1: PREPARING YOUR SIMULATIONS}} \newline
-    \textbf{Steps to getting started setting up your alchemical free energy calculation}
-    \item Make sure you know why you have picked your (combination of) force field(s)
-    \item Minimize your system
-    \item Equilibrate your system with your choice of thermodynamic ensemble
-    \item Check the stability of your system and whether it behaves the way you want it to
-\end{tcolorbox}
-
-%%%%%% step 2
-\begin{tcbraster}[raster columns=2,raster equal height, raster width=18cm]
-\begin{adjustwidth}{-1cm}{}           % workaround to make the dual box pass the margin
-\begin{todolist}
-    \begin{tcolorbox}
-    % absolute
-        {\large {\color{teal}STEP 2: RUNNING ABSOLUTE SIMULATIONS}} \newline
-        \textbf{Steps to running your absolute alchemical free energy calculations}
-        
-        \item Your ligands should have the same, biologically correct binding pose
-        \item Make sure your \textlambda-scheduling is set correctly
-        \item Check if your ligands are discharging and vanishing correctly
-        \item Set up your restraints correctly
-        \item Make sure you subsample in your MBAR protocol
-        \item Apply the right correction terms
-    \end{tcolorbox}
-    \begin{tcolorbox}
-    % relative
-        {\large {\color{teal}STEP 2: RUNNING RELATIVE SIMULATIONS}} \newline
-        \textbf{Steps to running your relative alchemical free energy calculations}
-        \item           % circumvents bug in tcbraster/todolist
-        \item Your ligands should have the same, biologically correct binding pose
-        \item Make sure your λ-scheduling is set correctly
-        \item Make sure your molecular transformations are realistic (1-5 heavy atoms for reliable computations)
-        \item Generate a perturbation network by your method of choice; check whether you have enough cycle closures (preferably, every ligand should be in a cycle)
-        \item Check whether dummy atoms were assigned correctly
-        \item Make sure you subsample in your MBAR protocol
-    \end{tcolorbox}
-    
-\end{todolist}
-\end{adjustwidth}
-\end{tcbraster}
-
-
-%%%%%% step 3
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 3: HOW DO I KNOW WHICH SIMULATIONS ARE NOT RELIABLE?}} \newline
-    \textbf{Situations suggesting your relative alchemical free energy calculations have not run properly (assuming absence of experimental affinities)}
-    \item Standard error (\textsigma) should be \textless1 kcal·mol-1 
-    \item Simulated systems have not converged 
-    \newline\newline\textit{Relative:}
-    \item If you observe hysteresis in perturbations and incorrect cycle closures
-    \item Energy differences \textgreater15 kcal·mol-1  are unreliable
-    \newline\newline\textit{Absolute:}
-    \item Energies below -15 kcal·mol-1  are unreliable
-    \item The ligand has not sampled most of the intended region after the vanishing step
-    \item The ligand is drifting out of the intended region after the vanishing step
-\end{tcolorbox}
-
-%%%%%% step 4
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 4: WHY ARE THEY NOT RELIABLE?}} \newline
-    \textbf{Suggestions for finding out why your alchemical free energy calculations may not be reliable}
-    \item Check again whether dummy atoms were assigned correctly
-    \item Inspect the trajectories across the λ-schedule (particularly the endpoints)
-    \item Inspect the overlap matrices
-\end{tcolorbox}
-
-%%%%%% step 5
-\begin{tcolorbox}[width=15cm, center]
-    {\large {\color{teal}STEP 5: DATA ANALYSIS}} \newline
-    \textbf{Steps to analyzing your output data correctly}
-    \item Make sure you have run enough replicates to ensure statistical reliability (\textgreater3)
-    \item Compute both correlation and ranking coefficients and error statistics (e.g. r, \textrho, MUE and \texttau)
-    \item You should be able to explain large energy differences based on your system (trajectory)
-\end{tcolorbox}
-
-
-%%%%%%%%%%%%%%%% 
-% end checklist:
-\end{todolist}
-\end{itemize}
-\end{checklist_font}
-\twocolumn
-%%%%%%%%%%%%%%%%%
 \clearpage
 
 \section*{Author Contributions}
@@ -1501,11 +1392,11 @@ DLM: Contributed to the outline, drafted some of the sections, gave ideas on fig
 GT: Contributed to introduction and drug discovery sections, and helped edit the paper.
 AR: Created figure~\ref{fig:freeenergytrajectories}, contributed to section \ref{sec:step2}, and helped edit the paper.
 MRS: Helped create figure~\ref{fig:fig_what_is_lambda}, wrote sections describing choices for alchemical pathways and analysis for free energy calculations.
-LN: \todo[inline, color={red!20}{@Levi insert info here}
-BA: \todo[inline, color={red!20}{@Bryce insert info here}
-JM: \todo[inline, color={red!20}{@Julien insert info here}
-JDC: \todo[inline, color={red!20}{@JDC insert info here}
-HX: \todo[inline, color={red!20}{@Huafeng insert info here}
+LN: \todo[inline, color={red!20}]{@Levi insert info here}
+BA: \todo[inline, color={red!20}]{@Bryce insert info here}
+JM: \todo[inline, color={red!20}]{@Julien insert info here}
+JDC: \todo[inline, color={red!20}]{@JDC insert info here}
+HX: \todo[inline, color={red!20}]{@Huafeng insert info here}
 % We suggest you preserve this comment:
 For a more detailed description of author contributions,
 see the GitHub issue tracking and changelog at \githubrepository.
