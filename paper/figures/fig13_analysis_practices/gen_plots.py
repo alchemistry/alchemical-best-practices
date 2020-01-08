@@ -135,7 +135,7 @@ plt.tight_layout()
 plt.savefig("Figure.pdf", dpi=300)
 
 
-#plt.show()
+plt.show()
 
 
 
