@@ -132,8 +132,11 @@ plt.xlabel(r"Experimental $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
 plt.ylabel(r"AFE-predicted $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
 plt.tight_layout()
 
-plt.savefig("Figure.pdf", dpi=300)
 
+# we need the image as PDF but seaborn has an issue with negative axis ticks in PDF.
+# instead, save as PNG and convert to PDF manually.
+# (see https://github.com/mwaskom/seaborn/issues/1107)
+plt.savefig("Figure.png", dpi=300)
 
 plt.show()
 
