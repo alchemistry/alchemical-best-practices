@@ -48,7 +48,7 @@
 \author[2]{Jenke Scheen}
 \author[6*]{Michael R. Shirts}
 \author[11]{Gary Tresadern}
-\author[10]{Huafeng Xu}
+\author[7]{Huafeng Xu}
 
 
 
@@ -492,6 +492,7 @@ In contrast, in relative binding free energy calculations, one compares the bind
 Many of the issues of setup and protocol for alchemical calculations are common, but some are different between absolute and relative calculations, so before treating the common elements we consider the protocol differences.
 
 \subsubsection{Choices unique to relative free energy calculations}
+\label{sec:relative-fe-protocol}
 
 \paragraph{Topologies} A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a \emph{dual topology}, \emph{single topology}, or \emph{hybrid topology} approach to relative calculations.
 
@@ -541,6 +542,8 @@ Based on the input ligand series a perturbation map or network can be planned. R
     \label{fig:fig_types_of_networks}
 \end{figure} 
 In some cases, during the lead optimization stage, or if perturbations would be rather large a star shaped network as seen in fig.~\ref{fig:fig_types_of_networks} (A) is used.. However, adding redundancy into the network means that a better error analysis can be carried out, by looking at cycle closure errors as discussed in sec.~\ref{subsec:predictions}, with an example given in fig.~\ref{fig:fig_types_of_networks}.
+
+Methods in experimental design have been applied to the construction of the perturbation maps.  Yang et al.~\cite{yang2019optimal} optimized the perturbation map by selecting a fixed number of calculations from the pairwise perturbations so that the resulting set of calculations minimize the total variance.  Xu~\cite{xu2019diffnet} optimized the perturbation map by allocating different amounts of simulation time to different pairwise perturbations so as to minimize the total variance, given the total simulation time of all the perturbation calculations.  Both approaches lead to substantial reduction in the statistical error of the estimated free energies.  
 %
 \paragraph{Constraints and relative free energy calculations.}
 One issue which requires particular care is the use of constraints.
@@ -648,7 +651,7 @@ We are not yet aware of a careful comparison of charge corrections versus other 
 
 \subsubsection{The importance of the alchemical pathway\label{sec:important_path}}
 \todo[inline, color={green!20}]{ASJM: This a bit waffly. Can we address: what do softcore potentials actually look like (equation)? Give an example of a lambda switching function(equation)? MRS: adressed these questions to some extent.  How should you chose your lambda intermediates? What is the best practice here? I have conveniently provided a figure to help with the discussion.}
-\todo[inline, color={red!40}]{LNN: write common principles alchemical path choice. MRS: mostly wrote this, LNN can comment on it,}
+\todo[inline, color={red!40}]{LNN: write common principles alchemical path choice. MRS: mostly wrote this, LNN can comment on it. LNN: LGTM}
 \todo[inline, color={red!40}]{AR: write absolute-specific section on  alchemical path choice}
 \todo[inline, color={red!40}]{BA: write relative-specific section on  alchemical path choice}
 
@@ -674,11 +677,11 @@ U(\vec{q},\lambda) = \lambda U_0(\vec{q}) + (1-\lambda)U_1(\vec{q})
 
 so-called because the dependence on $\lambda$ is linear. This clearly satisfies the basic requirement that it gives the initial endpoint potential energy $U_0(\vec{q})$ when $\lambda=0$ and final endpoint energy $U_1(\vec{q})$ when $\lambda=1$. 
 
-For many energy terms, \textit{as long as a repulsive core remains on}, this is a very good approach.  For example, it can be shown that if van der Waals repulsions are left on, then the linear approach is very nearly the optimal path  possible for changing, removing, or inserting the electrostatic energy terms, with the path being within about \%10--20 of the minimum possible uncertainty~\cite{naden2015linear} for a fixed amount of simulation, as well as being nearly optimally efficient for van der Waals attractive terms with repulsion terms turned on~\cite{naden2014linear}. Although we are not aware of any quantitative tests for dipolar or higher multipole terms, theoretically it should behave equally well for those systems.
+For many energy terms, \textit{as long as a repulsive core remains on}, this is a very good approach.  For example, it can be shown that if van der Waals repulsions are left on, then the linear approach is very nearly the optimal path  possible for changing, removing, or inserting the electrostatic energy terms, with the path being within about 10--20\% of the minimum possible uncertainty~\cite{naden2015linear} for a fixed amount of simulation, as well as being nearly optimally efficient for van der Waals attractive terms with repulsion terms turned on~\cite{naden2014linear}. Although we are not aware of any quantitative tests for dipolar or higher multipole terms, theoretically it should behave equally well for those systems.
 
 However, this approach ends up being terrible for removing or adding repulsive potentials that go to infinity quickly at or near the origin. One way to look at this is to examine how low $\lambda$ must go to reduce the energy at $0.5\sigma$ (the atomic size parameter) down to 1 $k_BT$, where thermal fluctuations make it possible for other atomic sites to penetrate routinely that deep. If we are trying go from a particle being present, and desire to make it disappear alchemically, then if the repulsive terms is of the form $\epsilon\frac{\sigma}{r}^{12}$, then if $\epsilon$ was 1 $K_BT$ at the temperature of interest, and we start with the particle present, then solving for $(1-\lambda)(1 kB_T)\frac{\sigma}{\frac{1}{2}\sigma}) = 1 k_B T$ we get $\lambda = 1-2^{-12} \sim 0.999976$.  So we have gone virtually all the way to the end of the transformation, there's still an impenetrable post in the middle of our simulation! This is not very much like the desired final state of no interactions between the particle and its environment. We can play around with a few ways of modifying this, like simulating many more intermediate states near $\lambda=1$. Various analyses have shown that this is not a very good strategy, however~\cite{pham2011identifying, beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble}
 
-What we need instead is some sort of function that smoothly gets rid of this infinity.  A large number of scheme have been tried~\cite{beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble, pham2011identifying, pham2012optimal, naden2014linear, beutler1994avoiding, donnini2005molecular}, but the most common strategy that appears to be the best practices is to use a "soft-core" potential, of the form:
+What we need instead is some sort of function that smoothly gets rid of this infinity.  A large number of scheme have been tried~\cite{beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble, pham2011identifying, pham2012optimal, naden2014linear, donnini2005molecular}, but the most common strategy that appears to be the best practices is to use a "soft-core" potential, of the form:
 
 \begin{equation}
     U(\vec{r_{ij}},\lambda) = 4\epsilon_{ij} \lambda \left(\frac{1}{(\alpha(1-\lambda) + (r_{ij}/\sigma_{ij})^6)^2} +  \frac{1}{\alpha(1-\lambda) + (r_{ij}/\sigma_{ij})^6}\right)\label{eq:softcore}
@@ -1368,7 +1371,8 @@ LNN: Helped write the simulation length, stopping conditions, and information sa
 BA: \todo[inline, color={red!20}]{@Bryce insert info here}
 JM: Contributed to sections~\ref{subsec:reproducible},~\ref{sec:step1},~\ref{} 4.2, 5.3, 6, 8.3.1, 8.3.2\todo[inline, color={red!20}]{@Julien insert info here}
 JDC: \todo[inline, color={red!20}]{@JDC insert info here}
-HX: \todo[inline, color={red!20}]{@Huafeng insert info here}
+HX: Contributed section~\ref{subsec:accuracy} and to section~\ref{sec:relative-fe-protocol}.
+
 % We suggest you preserve this comment:
 For a more detailed description of author contributions,
 see the GitHub issue tracking and changelog at \githubrepository.
