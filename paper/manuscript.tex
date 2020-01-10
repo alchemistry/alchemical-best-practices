@@ -35,46 +35,40 @@
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{Best Practices for Alchemical Free Energy Calculations: v\versionnumber}
-\author[2*]{Antonia S. J. S. Mey}
+\author[1*]{Antonia S. J. S. Mey}
 \author[7]{Bryce K. Allen}
-\author[1*]{John D. Chodera}
-\author[2,12]{Maximilian Kuhn}
-\author[2*]{Julien Michel}
+\author[2*]{John D. Chodera}
+\author[1,10]{Maximilian Kuhn}
+\author[1*]{Julien Michel}
 \author[3*]{David L. Mobley}
 \author[1]{Levi N. Naden}
 \author[4]{Samarjeet Prasad}
 \author[5]{Julia E. Rice}
-\author[1,8]{Andrea Rizzi}
-\author[2]{Jenke Scheen}
+\author[2,8]{Andrea Rizzi}
+\author[1]{Jenke Scheen}
 \author[6*]{Michael R. Shirts}
-\author[11]{Gary Tresadern}
+\author[9]{Gary Tresadern}
 \author[7]{Huafeng Xu}
-
-
-
-\affil[1]{Computational and Systems Biology Program, Sloan Kettering Institute, Memorial Sloan Kettering Cancer Center, New York NY, USA}
-\affil[2]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
+%
+\affil[1]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
+\affil[2]{Computational and Systems Biology Program, Sloan Kettering Institute, Memorial Sloan Kettering Cancer Center, New York NY, USA}
 \affil[3]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine, USA}
 \affil[4]{National Institutes of Health, Bethesda, MD, USA}
 \affil[5]{IBM Alamden Research Center, Almaden, CA, USA}
 \affil[6]{University of Colorado Boulder, Boulder, CO, USA}
 \affil[7]{Silicon Therapeutics, Boston, MA, USA}
 \affil[8]{Tri-Institutional Training Program in Computational Biology and Medicine, New York, NY, USA}
-\affil[11]{Computational Chemistry, Janssen Research \& Development, Turnhoutseweg 30, Beerse B-2340,Belgium}
-\affil[12]{Cresset, Cambridgeshire, UK}
-
+\affil[9]{Computational Chemistry, Janssen Research \& Development, Turnhoutseweg 30, Beerse B-2340,Belgium}
+\affil[10]{Cresset, Cambridgeshire, UK}
+%
 \corr{john.chodera@choderalab.org}{JDC}
 \corr{dmobley@mobleylab.org}{DLM}
 \corr{antonia.mey@ed.ac.uk}{ASJSM}
 \corr{mail@julienmichel.net}{JM}
 \corr{michael.shirts@colorado.edu}{MRS}
-
-\contrib[\authfn{1}]{These authors contributed equally to this work}
-\contrib[\authfn{2}]{These authors also contributed equally to this work}
-
-
+%
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
-
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PUBLICATION INFORMATION
 %%% Fill out these parameters when available
@@ -86,7 +80,7 @@
 \articlenum{<number>}
 \datereceived{Month, Day, Year}
 \dateaccepted{Month, Day, Year}
-
+%
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE START
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -107,35 +101,33 @@ In this paper, we review current best practices for several popular application 
 \todo[inline, color=green!20]{JDC: Should we migrate this document to \url{https://github.com/alchemistry}? ASJSM: Let's migrate with the submitted version, but leave it here for now?}
 \end{abstract}
 \end{frontmatter}
-
+%
 \todototoc
 \listoftodos
-
+%
 %%%%%%%%%%%%%%%%%%%%
 %  Introduction    %
 %%%%%%%%%%%%%%%%%%%%
-
 \todo[inline]{}The current Overleaf document is \url{https://www.overleaf.com/5136551543vgjqbkzpmqkp}
-
 \section{What are alchemical free energy methods?}
 \label{sec:intro}
 \todo[inline, color={green!20}]{@everyone: Any further input in this?}
-Alchemical free energy (AFE) calculations compute free energy differences associated with transfer processes, such as the binding of a small molecule to a receptor or the transfer of a small molecule from an aqeuous to apolar phase~\cite{zwanzig1954hightemperature}. 
+Alchemical free energy (AFE) calculations compute free energy differences associated with transfer processes, such as the binding of a small molecule to a receptor or the transfer of a small molecule from an aqueous to apolar phase~\cite{zwanzig1954hightemperature}. 
 The calculations use non-physical intermediate states where atoms are changed from one type to another or can be removed or inserted by turning on or off the interactions with their environment. 
-
-Fig.~\ref{fig:fig_what_is_alchemy} illustrates common free energy changes that may be difficult to compute with conventional computational methods, but are more readily tractable with AFE methods. In these types of simulations so-called \textit{alchemical states} permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, as seen in fig.~\ref{fig:fig_what_is_alchemy} (E). This type of simulation is known as an absolute AFE calculation. Other typical problems tacked with AFE calculations can be as simple as conformational changes of a molecule, that exhibit a high barrier between these (fig.~\ref{fig:fig_what_is_alchemy} (A)), computation of partition coefficients, such as $\log P$ or $\log D$ (fig.~\ref{fig:fig_what_is_alchemy} (B))~\cite{rustenburg2016measuring, bosisio2016blinded}, and membrane insertions (fig.~\ref{fig:fig_what_is_alchemy} (C))~\cite{}. Then there are common types of AFE that estimate free energies of binding: the ligand stays the same, but a protein residue is alchemically mutated and the effect on the binding affinity is probed (fig.~\ref{fig:fig_what_is_alchemy} (D))\cite{hauser2018predicting,aldeghi2018accurate}, changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}, absolute binding free energies (fig.~\ref{fig:fig_what_is_alchemy} (E))~\cite{}, and relative free energies of binding where the difference of binding free energy between to similar ligands is evaluated (fig.~\ref{fig:fig_what_is_alchemy} (F))~\cite{}.
-
-In order to obtain a free energy from these AFE simulations, historically two common approaches were used for the analysis: free energy perturbation (FEP) using the Zwanzig relation~\cite{zwanzig1954hightemperature} or Bennett's acceptance ratio~\cite{bennett1976efficient} and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, hedges2019biosimspace}. This foundational work, combined with the methodological, technological, and hardware improvements of the last 5-10 years have led to an explosion of interest and direct commercial application of the technologies~\cite{}.
-
+%
+Fig.~\ref{fig:fig_what_is_alchemy} illustrates common free energy changes that may be difficult to compute with conventional computational methods, but are more readily tractable with AFE methods. In these types of simulations so-called \textit{alchemical states} permit converged calculations for large changes, such as the entire removal of a ligand from a binding site, as seen in fig.~\ref{fig:fig_what_is_alchemy} (E). This type of simulation is known as an absolute AFE calculation. Other typical problems tackled with AFE calculations can be as simple as conformational changes of a molecule that exhibit a high barrier between these (fig.~\ref{fig:fig_what_is_alchemy} (A)); computation of partition coefficients, such as $\log P$ or $\log D$ (fig.~\ref{fig:fig_what_is_alchemy} (B))~\cite{rustenburg2016measuring, bosisio2016blinded}; and membrane insertions (fig.~\ref{fig:fig_what_is_alchemy} (C))~\cite{}. Then there are common types of AFE that estimate free energies of binding: the ligand stays the same, but a protein residue is alchemically mutated and the effect on the binding affinity is probed (fig.~\ref{fig:fig_what_is_alchemy} (D))\cite{hauser2018predicting,aldeghi2018accurate}, changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}, absolute binding free energies (fig.~\ref{fig:fig_what_is_alchemy} (E))~\cite{}, and relative free energies of binding where the difference of binding free energy between to similar ligands is evaluated (fig.~\ref{fig:fig_what_is_alchemy} (F))~\cite{}.
+%
+In order to obtain a free energy from these AFE simulations, historically two common approaches were used for the analysis: free energy perturbation (FEP) using the Zwanzig relation~\cite{zwanzig1954hightemperature} or Bennett's acceptance ratio~\cite{bennett1976efficient} and thermodynamic integration (TI) for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, hedges2019biosimspace}. This foundational work, combined with the methodological, technological, and hardware improvements of the last 5-10 years have led to an explosion of interest and direct commercial application of the technologies~\cite{wang2015accurate, fratev2019improved, schindler2020largescale, cournia2017relative, sherborne2016collaborating}.
+%
 As the field of molecular simulation moves towards millisecond timescales, accurate AFE calculations on even more challenging problems will become reasonable to perform. In the meantime, today's users may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
-
+%
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig1_what_is_alchemy/Figure.pdf}   
     \caption{\textbf{Illustration of common types of free energies differences that can be calculated using alchemical free energy methods.} A: Change in free energy due to a conformational change of the molecule. B: Partition coefficient such as $\log P$ or $\log D$ can be computed using alchemical free energy methods. Here, as an example the partition coefficient between methanol and water is shown. C: Free energy difference associated with the insertion of a molecule into a membrane. D: Effect of mutations of protein or host residues on free energies of binding.  E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol.
     \label{fig:fig_what_is_alchemy}
     }
 \end{figure}
-
+%
 %%%%%%%%%%%%%%%%%%%%
 % Prerequesites    %
 %%%%%%%%%%%%%%%%%%%%
@@ -152,15 +144,7 @@ This guide aims to answer the following questions:
     \item What software tools are available to perform alchemical free energy calculations? 
 \end{itemize}
 %
-We assume the reader possesses a basic familiarity with the principles of molecular mechanics, molecular dynamics simulations, statistical mechanics, and the biophysics of protein-ligand association.
-For readers unfamiliar with these concepts that have never set up and run an equilibrium molecular dynamics simulation, we would recommend the following texts for getting started with these topics first. 
-\begin{itemize}
-    \item Statistical mechanics and thermodynamics background~\cite{hill1956statistical, alavi2011statistical}
-    \item Understanding theory of how molecular simulations work~\cite{frenkel2002understanding}
-    \item Docking reviews~\cite{yuriev2013latest, meng2011molecular} and software overview~\cite{pagadala2017software} and generating valid molecular structures ~\cite{loeffler2015fesetup}
-    \item Getting started with setting up and running equilibrium molecular dynamics simulations: Gromacs tutorial~\cite{lemkul2018From}, Amber tutorial~\cite{amber}, HTMD: high-throughput Molecular Dynamics for Molecular Discovery~\cite{doerr2016htmd}*, or with VMD and NAMD~\cite{ribeiro2016easy}*
-\end{itemize}
-References marked with an asterisk (*) indicate nonessential reading or tutorials that provide further depth and understanding.
+We assume the reader possesses a basic familiarity with the principles of molecular mechanics, molecular dynamics simulations, statistical mechanics, and the biophysics of protein-ligand association. If you feel unfamiliar with some of these concepts please good starting points can be found in these references~\cite{braun2019best, grossfield2018best, klimovich2015guidelines, shirts2012best}. Oftentimes, docking calculations are required to generated initial binding pose for a small molecule for an AFE calculation, where binding poses are not known, thus some basic familiarty on how to run docking calculations is also expected~\cite{grinter2014challenges}. 
 %
 As some of the theoretical background can seem daunting, we provide an essentials guide to the theory behind alchemical free energy calculations in Section~\ref{sec:theory}.
 In the remainder of this paper, we will cover topics that are key to the preparation~(\ref{sec:step1}), choice and use of correct protocols~(\ref{sec:step2}), and finally the best practices that should be used for the analysis of AFE calculations~(\ref{sec:step3}). 
@@ -196,19 +180,17 @@ For convenience we have also compiled a list of common acronyms, common symbols 
 \end{tcolorbox}
 %\label{sec:abbreviations}
 \begin{tcolorbox}[title=List of Symbols, colback=green!10!white]
-U - Potential energy
+U - Potential energy\\
 \end{tcolorbox}
-
 \begin{tcolorbox}[title=Common terminology, colback=green!10!white]
     ligand - small molecular binding to a larger host molecule such as a protein.\\ 
     lead optimization - process of designing a drug candidate from an initial lead compound, considering its affinity and various pharmacokinetic parameters.\\
-    thermodynamic cycle - sequence of thermodynamic processes (like changes in temperature, volume or pressure) in which the initial and final state are equal.
+    thermodynamic cycle - sequence of thermodynamic processes (like changes in temperature, volume or pressure) in which the initial and final state are equal.\\
 \end{tcolorbox}
-
+%
 %%%%%%%%%%%%%%%%%%%%
 % Theory basics    %
 %%%%%%%%%%%%%%%%%%%%
-
 \section{Statistical mechanics can tell us why alchemical free energy calculations work}
 \label{sec:theory}
 \todo[inline, color=green!20]{ASJSM: This section needs to be expanded and give a good introduction to the theoretical background without going into too much detail.}
@@ -320,7 +302,7 @@ binding constant of this inhibitor against this kinase is then
 \end{equation}
 %
 Since binding experiments cannot resolve $K_D^\ast$ and $K_C$ individually, such experiments cannot address the basis of selectivity of the type II inhibitors.  Absolute binding free energy calculations, in contrast, can take advantage of the slow kinetics of DFG-in/out conversion, and estimate the conformation-specific binding constant $K_D^\ast$, thus yielding clues as to the source of selectivity.
-
+%
 \subsection{Is the expected accuracy of the computation sufficient?}
 \label{subsec:accuracy}
 The requisite level of accuracy is another important consideration ---if the
@@ -409,8 +391,9 @@ proposed target.
 \section{How should alchemical simulations be applied to drug discovery?}
 \label{sec:drugdiscovery}
 \todo[inline, color={green!20}]{ASJSM: Merge/tidy of what can I expect from my simulation, drug discovery aspects and simulation prerequisites, there are some duplications there at the moment, happy for restructuring ideas.  }
-
-It is expected that AFE methods can provide a valuable tool for drug discovery, capable of outperforming alternative approaches. (CITE https://pubs.acs.org/doi/abs/10.1021/acs.jmedchem.6b01881). It has been stressed that successful application in industry requires more knowledge of the "domain of applicability", in other words, a greater understanding of the success and failure~\cite{sherborne2016collaborating}, which in turn requires robust protocols for preparing, submitting and analysing AFE calculations. In this regard, the issues mentioned in the previous section such as understanding the suitability and timescales to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. Without venturing too far into details of system setup, which is beyond the scope of this article, there are some points to be stressed. 
+%
+It is expected that AFE methods can provide a valuable tool for drug discovery, capable of outperforming alternative approaches~\cite{kuhn2017prospective}. It has been stressed that successful application in industry requires more knowledge of the "domain of applicability", in other words, a greater understanding of the success and failure~\cite{sherborne2016collaborating}, which in turn requires robust protocols for preparing, submitting and analysing AFE calculations. In this regard, the issues mentioned in the previous section such as understanding the suitability and timescales to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. Without venturing too far into details of system setup, which is beyond the scope of this article, there are some points to be stressed. 
+%
 \subsection{Capturing the experimental conditions}
 The calculations aim to capture the alchemical change from one ligand to another as accurately as possible. Therefore, it is necessary to consider details of the experimental setup, such as pH. Biological assays are usually run at neutral pH but this is not always the case, and protein and ligand preparation protocols should reflect this. In more detail, the formal charge, or tautomeric state of the small molecules can change within a series of analogs. The change of pKa is a common medicinal chemistry strategy to modify drug properties and would normally require explicit effort to incorporate into alchemical calculations. Further concerns about the experimental setup require understanding what protein construct is used in the bioassay. For instance, does the X-ray that is to be used for the calculations match the construct used for screening (i.e. catalytic vs full length, monomer vs dimer etc) (CITE https://www.nature.com/articles/s41598-018-23039-5)? Also, were certain co-factors or partner proteins required in the bioassay? 
 %
@@ -559,10 +542,10 @@ At present the most general solution to this problem is simply to avoid the use 
     \caption{\textbf{Absolute thermodynamic cycle}}
     \label{fig:fig_absolute_thermodynamic_cycle}
 \end{figure}
-
+%
 Absolute free energy calculations involve completely removing the interactions between the ligand or solute and its environment, taking it to a non-interacting state that may or may not retain intramolecular non-bonded interactions.
 This non-interacting state can then be shifted between environments (from the protein to water, or from one solution to another) without changing its free energy, and then interactions can be restored.
-
+%
 Absolute free energies are typically reported with respect to a specific reference or standard state, which effectively determines the arbitrary point at which the free energy is 0.
 The role of the standard state is particularly evident with binding free energies, in which having a reference state allows us to obtain a well-defined partial molar free energy for the reaction
 \begin{equation*}
@@ -575,50 +558,44 @@ through the well-known expression derived from the law of mass action
 where $R$ is the gas, $T$ is the temperature, $C_X$ is the equilibrium concentration of the chemical species $X$ in the reaction solvent, and the reference state concentration $c^{\circ}$ converts the binding constant $K_{AB}$ into a dimensionless quantity expressed in reference concentration units.
 It should be noted that ignoring the term $c^{\circ}$ is equivalent to assuming a reference concentration of 1~D$^{-1}$, where D are the units used to express $K_{AB}$, and would thus cause the value of $\Delta G$ to vary with the choice of the units.
 Typically, it is convenient to define a standard state at a constant pressure of 1~atm and where each chemical species (i.e., A, B, and AB) in the reaction solvent has a concentration of $c^{\circ}$~=~1~M~=~1~molecule/1660~\r{A}$^3$ but do not interact with other molecules of A, B, or AB.
-
+%
 \paragraph{Handling the standard state in absolute free energy calculations.}
-
 For solvation free energy calculations, handling the standard state is typically straightforward, and treating it correctly simply means ensuring that the non-interacting solute is taken to the same (or equivalent) final reference state in both environments, e.g. that the transformation involves a 1M to 1M equivalent transfer free energy (where the non-interacting solute still occupies essentially the same volume as the solute in the interacting system).
 So typically in such cases no special care is required to ensure the correct standard state, as long as the \emph{experimental} data being analyzed uses the same standard state and if it does not, a simple entropic correction is needed.
-
+%
 However, for binding the situation is much more complex and requires special care.
 Experimental absolute binding free energies are reported relative to a specific reference state -- a 1 M standard state -- which must also be used in calculations.
 In practice, this has implications for how the calculations are done, as the reference concentration must enter the thermodynamic cycle employed.
-
-
+%
 Typically, to deal with both practical sampling issues and the standard state issue, restraints are employed in absolute binding free energy calculations to keep the ligand in a well defined volume as its interactions with the system are removed~\cite{gilson1997statisticalthermodynamic}.
 This solves two problems.
 First, if the ligand were not kept in a well-defined region, as its interactions were removed it might wander the system, perhaps quite slowly, and only inadequately sample the non-interacting or weakly interacting state -- yet adequate sampling of these states might be required for convergence.
 So for practical purposes, the use of restraints can dramatically improve sampling as interactions are weakened and removed.
 Second, if the ligand is not kept in a well-defined region then it is hard to determine how to link a computed binding free energy to the correct 1 M standard state.
 In contrast, with restraints, the free energy of releasing the restrained ligand to a 1 M standard state can be computed analytically or numerically by solving the relevant integral, allowing the standard state to enter the thermodynamic cycle.
-
+%
 \paragraph{Several choices of restraints are possible.}
 \todo[inline, color={blue!20}]{@author: Check references}
 In practice, a variety of types of restraints are common, from simple harmonic distance restraints between the ligand and the protein~\cite{mobley2006use}, to flat-bottom restraints which work similarly but only exert a force if the ligand leaves a specific region~\cite{}.
-
+%
 Alternatively, a set of restraints proposed by Boresch have also commonly been employed, where all six rigid-body degrees of freedom governing the orientation of the ligand relative to the receptor are restrained~\cite{leitgeb2005alchemical}.
 Further restraints, such as on the overall ligand RMSD have also been used~\cite{woo2005calculation}.
-
+%
 In principle, all of these forms will yield correct binding free energies in the limit of adequate sampling (if their effects and connection to the standard state are correctly handled) but they have different strengths and weaknesses.
 For example, with more involved restraints, sampling at intermediate lambda values will usually not need to be as extensive but more computational effort must go to computing the restraining free energy.
 Additionally, such restraints would typically keep the ligand from exploring alternative binding modes, which may be undesirable with Hamiltonian lambda exchange or expanded ensemble techniques where allowing the ligand to exchange binding modes when it is non-interacting could provide sampling benefits~\cite{wang2013identifying}.
 Concretely, flat bottom restraints might allow a ligand to explore multiple binding sites, harmonic restraints multiple binding modes within a site, and Boresch restraints a single binding mode within a single site.
 See additional discussion of the possibility of multiple binding modes below~\ref{sec:multiple_binding_modes}.
-
+%
 Many choices of restraints involve selecting reference atoms.
 Again, in principle this choice is unimportant given adequate simulation time but practical considerations may be important.
 The choice is likely especially important with Boresch-style restraints, where some relative placements of reference atoms are likely to be numerically unstable; additionally, ligand reference atoms should likely be in a part of the molecule which defines the binding orientation well, rather than in a floppy solvent-exposed tail, for example.
 \todo[inline, color={blue!20}]{DLM: Get input from JDC on what they've learned about these.}
-
 \todo[inline, color={blue!20}]{DLM: Clarify terminology: Double decoupling, etc. See Feature Box below.}
-
-
+%
 \subsection{Absolute and relative calculations must deal with some of the same issues}
-
 \subsubsection{Structural definition of the bound state and weak binders}
 \todo[inline, color={green!20}]{ASJM: This a bit waffly. What are the recommendations, of how to setup these restraints?}
-
 In binding free energy calculations, extra care should be taken when simulating the bound state, especially when dealing with weak binders and absolute free energy calculations in combination with enhanced sampling techniques.
 In principle, only configurations of the receptor-ligand complex that we consider "bound" should be sampled from the bound state, and, in atomistic simulations, this requires to establish a structural definition of the bound state.
 In practice, the simulation of the bound state starts with the ligand already placed in the binding site and relies on kinetic trapping to maintain a bound complex.
@@ -629,27 +606,24 @@ If the ligand is a tight binder\todo[inline, color={red!40}]{AR: Should we give 
 However, this is more problematic when dealing with weak binders as the unbound configurations can have a non-negligible Boltzmann weight, and their binding affinity can exhibit a significant dependency on the restraint type and parameters that are used to determine the sampled volume~\cite{}.
 Moreover, it should be noted that the additional potential energy terms used to model the restraints can introduce a bias in the predicted free energy.
 The bias can be removed at the analysis stage through reweighting techniques, but this procedure can increase the statistical uncertainty of the binding free energy estimate when the restraints are so strong that the overlap with the reweighted state is diminished~\cite{}.
-
+%
 Finally, it is useful to keep in mind that, for a meaningful comparison between computational predictions and experimental measurements, the definition of the bound state should be consistent.
 In particular, this means that the signal used by the experimental methodology to determine the fraction of bound complexes in solution should in principle reflect the population of complexes in the bound state as defined in the calculation.
-
+%
 \subsubsection{Changes in net charge can be challenging/problematic.}
-
 If the net charge of the system will change as the alchemical calculation progresses, this can pose major challenges.
 Specifically, finite-size effects can introduce profound artifacts into computed binding free energies~\cite{}, in part because typical schemes for long-range electrostatics (including PME and reaction field) do not handle free energy contributions from such changes effectively or as they would be handled in a hypothetical macroscopic bulk solution~\cite{}.
-
+%
 There are two main potential solutions to avoid artifacts due to changes in net charge: Correcting for the introduced artifacts, or avoiding changing the net charge.
-
+%
 Many relative free energy planning tools have been set up to avoid changing the net charge of the systems considered, including LOMAP~\cite{} and Schr\"{o}dinger's FEP+~\cite{chen2018accurate}. Absolute free energy calculations can also potentially avoid changing the charge of the system by making a charge perturbation of equal and opposite sign elsewhere in the system; for example, as a charged ligand is removed, a charged counterion of opposite sign could also be removed, or one of the same sign could be inserted. This is sometimes referred to as an "alchemical ion" approach for dealing with the needed charge change, and is also employed by the Yank free energy package~\cite{wang2013identifying}.
-
 Charge corrections have also been explored, and are potentially a viable solution to this problem~\cite{} where artifacts introduced by finite-size effects are corrected numerically.
 ~\cite{chen2018accurate}. However, application of such corrections typically remains less common than the use of a co-alchemical ion.
-
+%
 When free energy calculations \emph{do} need to change the charge of a ligand or solute, the literature does not yet seem to indicate what approach should be preferable, so considerable care should be taken.
 We are not yet aware of a careful comparison of charge corrections versus other approaches such as decoupling an ion at the same time, so in our view the issue of proper handling of charge mutations in the context of alchemical calculations remains a research problem.
-
+%
 \subsubsection{The importance of the alchemical pathway\label{sec:important_path}}
-\todo[inline, color={green!20}]{ASJM: This a bit waffly. Can we address: what do softcore potentials actually look like (equation)? Give an example of a lambda switching function(equation)? MRS: adressed these questions to some extent.  How should you chose your lambda intermediates? What is the best practice here? I have conveniently provided a figure to help with the discussion.}
 \todo[inline, color={red!40}]{LNN: write common principles alchemical path choice. MRS: mostly wrote this, LNN can comment on it. LNN: LGTM}
 \todo[inline, color={red!40}]{AR: write absolute-specific section on  alchemical path choice}
 \todo[inline, color={red!40}]{BA: write relative-specific section on  alchemical path choice}
@@ -660,78 +634,54 @@ We are not yet aware of a careful comparison of charge corrections versus other 
     One of the most efficient families of intermediate pathways  are softcore potentials, whose shape is illustrated in \textbf{C} with dependence on $\lambda$ and \textbf{D} with dependence on the potential energy. Note how when $\lambda$ approaches 0, the energy smoothly approaches zero at all $r$, a necessary requirement for efficient calculations.  }
     \label{fig:fig_what_is_lambda}
 \end{figure}
-
+%
 Both absolute and relative calculations must choose an alchemical pathway connecting initial and final states. In principle, because of the path independence of the free energy, any arbitrary pathway will give the correct free energy change, but the choice of pathway will greatly affect the efficiency of the calculations. 
 Some choices are particularly crucial -- for example, transformations involving insertions or deletions of atoms should employ a path soft-core potential path for Lennard-Jones or other interactions with repulsive interactions that go to infinite energy at small radius~\cite{}. 
-
-The key consideration for choosing alchemical pathways is that the intermediate states that a given pathway produces should sample configurational ensembles that change as slowly as possible as $\lambda$ changes, while still managing to go from the initial state to the final state as $\lambda$ goes from 0 to 1
-
+%
+The key consideration for choosing alchemical pathways is that the intermediate states that a given pathway produces should sample configurational ensembles that change as slowly as possible as $\lambda$ changes, while still managing to go from the initial state to the final state as $\lambda$ goes from 0 to 1.
+%
 Another way of stating this is that intermediate states should sample molecular configurations that are as similar as possible to their neighboring states. The more similar the configurations are between intermediate states, the lower the statistical uncertainty is in the estimate of free energy between intervals.  This can be proven directly from the BAR and MBAR formulas~\cite{bennett1976efficient,klimovich2015guidelines}, though the exact same principles apply for TI.
-
+%
 The simplest possible alchemical pathway is a \textit{linear} pathway:
-
+%
 \begin{equation}
 U(\vec{q},\lambda) = \lambda U_0(\vec{q}) + (1-\lambda)U_1(\vec{q})    
 \end{equation}
-
+%
 so-called because the dependence on $\lambda$ is linear. This clearly satisfies the basic requirement that it gives the initial endpoint potential energy $U_0(\vec{q})$ when $\lambda=0$ and final endpoint energy $U_1(\vec{q})$ when $\lambda=1$. 
-
+%
 For many energy terms, \textit{as long as a repulsive core remains on}, this is a very good approach.  For example, it can be shown that if van der Waals repulsions are left on, then the linear approach is very nearly the optimal path  possible for changing, removing, or inserting the electrostatic energy terms, with the path being within about 10--20\% of the minimum possible uncertainty~\cite{naden2015linear} for a fixed amount of simulation, as well as being nearly optimally efficient for van der Waals attractive terms with repulsion terms turned on~\cite{naden2014linear}. Although we are not aware of any quantitative tests for dipolar or higher multipole terms, theoretically it should behave equally well for those systems.
-
+%
 However, this approach ends up being terrible for removing or adding repulsive potentials that go to infinity quickly at or near the origin. One way to look at this is to examine how low $\lambda$ must go to reduce the energy at $0.5\sigma$ (the atomic size parameter) down to 1 $k_BT$, where thermal fluctuations make it possible for other atomic sites to penetrate routinely that deep. If we are trying go from a particle being present, and desire to make it disappear alchemically, then if the repulsive terms is of the form $\epsilon\frac{\sigma}{r}^{12}$, then if $\epsilon$ was 1 $K_BT$ at the temperature of interest, and we start with the particle present, then solving for $(1-\lambda)(1 kB_T)\frac{\sigma}{\frac{1}{2}\sigma}) = 1 k_B T$ we get $\lambda = 1-2^{-12} \sim 0.999976$.  So we have gone virtually all the way to the end of the transformation, there's still an impenetrable post in the middle of our simulation! This is not very much like the desired final state of no interactions between the particle and its environment. We can play around with a few ways of modifying this, like simulating many more intermediate states near $\lambda=1$. Various analyses have shown that this is not a very good strategy, however~\cite{pham2011identifying, beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble}
-
+%
 What we need instead is some sort of function that smoothly gets rid of this infinity.  A large number of scheme have been tried~\cite{beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble, pham2011identifying, pham2012optimal, naden2014linear, donnini2005molecular}, but the most common strategy that appears to be the best practices is to use a "soft-core" potential, of the form:
-
+%
 \begin{equation}
     U(\vec{r_{ij}},\lambda) = 4\epsilon_{ij} \lambda \left(\frac{1}{(\alpha(1-\lambda) + (r_{ij}/\sigma_{ij})^6)^2} +  \frac{1}{\alpha(1-\lambda) + (r_{ij}/\sigma_{ij})^6}\right)\label{eq:softcore}
 \end{equation}
 Where $r_{ij}$ is the distance between two particles $i$ and $j$, $\epsilon_{ij}$ and $\sigma_{ij}$ are the Lennard-Jones parameters corresponding to the interaction between particles $i$ and $j$, and $\alpha$ is a constant (0.5 is optimal for the functional form shown above).  This functional form has exactly the property we are looking for: it recovers the Lennard-Jones potential when $\lambda=1$, and the other endpoint ($\lambda=0$), it is exactly zero for all $r_{ij}$ everywhere, and as $\lambda$ goes to zero, the  $\alpha(1-\lambda)$ term lowers the infinite energy in the core.  There are several different variants of the same functional form~\cite{zacharias1994separationshifted, beutler1994avoiding,pham2011identifying}, but the one in given in eq.~\ref{eq:softcore} is easy to understand and implement and fairly numerically stable. This functional form is shown in parts C and D of figure~\ref{fig:fig_what_is_lambda}.
 It has been shown that more complicated forms are not significantly more efficient than eq.~\cite{pham2012optimal}.  We recommend using the softcore potential given in eq.~\cite{eq:softcore}, unless there is a compelling reason otherwise.  Using a similar equation to eq.~\cite{eq:softcore} may be acceptable in most circumstances if that is what is supported in your chosen software. However, if you are inserting or removing entire atomic sites, we heavily recommend against using the linear approach; it will be very difficult to get correct results. 
-
+%
 We have discussed optimal ways of disappearing or appearing Lennard-Jones interaction sites and turning on and off electrostatics terms.  What about performing both transformations at the same time? We can't turn off the electrostatics linearly at the same time we turn off the Lennard-Jones terms, as it would leave infinitely large attractive and repulsive electrostatic terms "bare" at small $\lambda$, resulting in the simulation crashing. It \textit{is} possible to apply the same soft core approach to the Coulomb interaction, but it turns out to be somewhat difficult to turn off two soft-core terms  terms simultaneously~\cite{Steinbrecher:JCC:2011}.  We therefore recommend performing the transformations in sequence; first, turning off all electrostatics for atoms that must be removed, inserting and removing Lennard-Jones sites (both the insertion and removal can be done simultaneously), and then turning electrostatics for the introduced particles on.  However, If there are no removals or introduction to atomic sites, then it is reasonable to change all interactions linearly.  
-
+%
 Other issues, such as whether absolute calculations should retain or remove intramolecular nonbonded interactions, may be less critical and recommendations differ among studies in the literature~\cite{}, and reasonable efficiency can be often obtained with either choice even if some are somewhat better or worse than others. Our recommendation is to leave the intramolecular interactions on during the transformation for simplicity if there are no other known issues with this approach.  The key thing to watch out for is whether the total potential energy, and therefore the intermediate ensembles sampled, change smoothly from beginning to end.  If a configurational phase transition is noted in the process (like substantial dihedral rearrangement), then other steps must be taken, perhaps including modifying intramolecular interactions~\cite{???}.  These problems can be diagnosed by noticing lack of configuration space overlap between different simulations (see section~\ref{subsec:})" 
-
+%
 Relative calculations introduce additional choices, including whether to define explicit intermediate states~\cite{} or leave these implicitly defined by the code~\cite{}.
 Typically in single topology relative calculations it proves most efficient to first remove electrostatic interactions of any atoms which will be deleted, then modify other nonbonded interactions, then restore electrostatic interactions of any atoms which are being inserted.
 Other schemes, such as simultaneously changing electrostatic and Lennard-Jones interactions, even with electrostatic ``soft core'' potentials~\cite{steinbrecher2007nonlinear}, in our experience typically introduce errors and/or instabilities or are at least unreliable.
 It is expected that similar considerations will apply to dual topology calculations, and the principle of first removing electrostatics and then removing steric interactions will likely serve well.
-
+%
 A key additional consideration in choosing the alchemical pathway is the choice of spacing of intermediate states.
 The spacing depends to some extent on the choice of analysis method, though states should essentially be spaced equidistant in the relevant thermodynamic length~\cite{}.
 For BAR/MBAR techniques this means that spacings should typically be equal in [what, variance? ref].
 Some schemes to adaptively optimize the spacing of intermediate states based on initial exploratory simulations have been proposed~\cite{}.
-
+%
 An example of this approach for relative binding free energy calculations includes saving configurations from short 10 picosecond simulations starting at $\lambda_0$, and evaluating changes in the standard error of mean (SEM) in $\frac{dU}{d\lambda}$ as reevaluated at new values of $\lambda$, starting with a step size of 0.01 up to a predetermined threshold.
 This threshold can be empirically defined as the number of atoms being inserted or deleted in the simulation / 100.
 If the absolute value of the difference in SEM is below the defined threshold, then the change in $\lambda$ for re-evaluation of SEM in $\frac{dU}{d\lambda}$ is defined by the current difference in SEM from the threshold divided by the derivative of the SEM with respect to $\lambda$.
-
-
-%\begin{enumerate}
 %
-%\item Choice of discrete alchemical protocol (Shirts, Mey, Chodera)
-%    \begin{itemize}
-%    %\item Many options: Adaptive scheme, Chebyshev polynomials, linear spacing, ``choose your next lambda from data at this lambda'' ��, optimal thermodynamic length approaches (separately: Shirts, Sivak, Huafeng Xu).
-%    %\item Levi Naden had paper with lambda protocol which worked for all cases -- methane solvation, host-guest (including disappearing host)
-%    %\end{itemize}
-%\item Relative
-%Three-stage protocol (discharge unique initial atoms, transform LJ, charge unique final atoms) vs softcore electrostatics/LJ
-%
-%\item Absolute
-%    \begin{itemize}
-%    \item Select a \textbf{common alchemically-eliminated end state}
-%    \item Decoupled vs annihilated for electrostatics and LJ
-%    \item Sequential electrostatics and LJ versus simultaneous (recommend sequential)
-
-%\end{itemize}
-%\item Concerns:
-%Part of AMBER still can’t run at endpoints (lambda = 0 or 1); SANDER cannot but PMEMD can.
-
-%\end{enumerate}
-
 \subsubsection{Multiple or uncertain binding modes may require considerable care}
 \label{sec:multiple_binding_modes}
-%
 In a discovery setting, new ligands typically have unknown or at least uncertain binding modes~\cite{kaus2015how, plountprice2000analysis,mobley2009binding,calabro2016elucidation},  complicating binding free energy estimation.
 This uncertainty is because it is usually not desirable to estimate a binding affinity for a ligand which already has an available bound structure, since such a compound has already been tested.
 To deal with prospective ligands with unknown binding modes, discovery projects commonly assume that modifications of functional groups on a common scaffold result in a consistent binding mode across all members of a series.
@@ -1044,7 +994,6 @@ MBAR can also be thought of as the Zwanzig estimator of the free energy to state
 \end{itemize}
 
 \subsubsection{Uncertainty estimation}
-
 Analysis of independent samples of energy data from a series of equilibrium simulations allows for the estimation of the free energy and error associated with its estimate. 
 Quantification of different error metrics depends on the form of analysis and method being used, such as those outlined above.
 
