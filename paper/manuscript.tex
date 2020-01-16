@@ -816,8 +816,11 @@ Free energy information should generally be saved more frequently than coordinat
 The on-disk size of the data for free energy estimation is often significantly smaller than full atomic coordinates, so the information should be collected frequently. 
 However, the information should not be collected \textit{every} time step, as most free energy techniques are operated at equilibrium, and need equilibrated \textit{and decorrelated} samples for an unbiased estimate.
 A sample collected every time step will likely result in most samples being discarded due to decorrelation routines in the analysis. However, if it is computationally cheap and disk space is plentiful, do save often. One may safely assume that the correlation time is greater than 100-200 fs even for relatively simple systems such as small molecules in solvent, so saving no more frequently than every 50-100 steps is recommended. 
-How decorrelation impacts calculations, and how to compute it is discussed in other sections.  [section ref]
+How decorrelation impacts calculations, and how to compute it is discussed in other section~\ref{sec:decorrelating-samples}. 
 %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Data Analysis               %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Data analysis}
 \label{sec:data_analysis}
 Once data has been collected from alchemical intermediates, it must be analyzed to produce an estimate of the free energy change (and its associated statistical uncertainty) for each leg of the thermodynamic cycle.
@@ -833,12 +836,12 @@ As a result, these estimators can produce significantly biased estimates if fed 
     \centering
     \includegraphics[width=0.95\linewidth]{figures/fig11_equib_detection/Figure.pdf}
     \caption{{\bf Automatic partitioning into equilibration and production regions.}
-    \textbf{A} The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient before relaxing to the true average potential energy\textbf{B} A cumulative average (red) of the entire simulation data demonstrates simulation bias not seen when initial simulation data is omitted (blue). Using an automated approach to detect equilibration of the boundary $t_0$ using statistical inefficiency $g$ (\textbf{C})  for an effective simulation interval (\textbf{D}) \textbf{E} The optimal equilibration boundary $t_0$ is selected to maximize the number of uncorrelated samples.
+    \textbf{A} The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient change before relaxing to the true average potential energy \textbf{B}. A cumulative average (red) of the entire simulation data demonstrates simulation bias not seen when initial simulation data is omitted (blue). Using an automated approach to detect equilibration of the boundary $t_0$ using statistical inefficiency $g$ (\textbf{C})  for an effective simulation interval (\textbf{D}). \textbf{E} The optimal equilibration boundary $t_0$ is selected to maximize the number of uncorrelated samples.
     \emph{Figure adapted from~\cite{chodera2016simple}.}
     }
     \label{fig:automatic-equilibration-detection}
 \end{figure}
-
+%
 To minimize this effect, an initial portion of the simulation is often discarded to \emph{equilibration}~\cite{braun2019best}, with the idea of removing the most heavily biased initial portion of simulation data but retaining the unbiased \emph{production} region that represents a stationary Markov chain process sampling from the desired equilibrium target distribution.
 Because the simulation time required for the atypical initial sampler state to relax toward equilibrium is a property of the specific system being simulated and the specific initial conditions selected, it is simplest to collect data for the whole process and use an automated algorithm to select how much data should be discarded to equilibration in a post-processing step.
 
@@ -851,23 +854,23 @@ N_{[t_0,T]} &=& \frac{T - t_0}{g_{[t_0,T]}}
 where $g_{[t_0,T]}$ is the \emph{statistical inefficiency} of a timeseries $a_t$, described in more detail below.
 Conveniently, this procedure also produces the information necessary to decorrelate the simulation data for estimating the free energy differences, a requisite next step in analysis.
 This approach is implemented within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, and is highly recommended for standard practice.
-
+%
 For additional discussion of working with correlated data and autocorrelation analysis, please refer to the work on Best Practices for Quantification of Uncertainty and Sampling Quality in Molecular Simulations~\cite{grossfield2018best}.
-
+%
 \paragraph{Computing the timeseries for equilibration detection}
 Typically, the timeseries of note $a_t$ analyzed in automated equilibration detection is the negative logarithm of the probability density sampled by the MCMC algorithm (up to an irrelevant additive constant).
 For simple independent simulations that sample $x_t \sim \pi(x ; \lambda)$, this is given by the reduced potential
 \begin{eqnarray}
 a_t &\equiv& - \ln \pi(x_t; \lambda) + c = u(x_t; \lambda) .
 \end{eqnarray}
-
+%
 Note that the use of the effective reduced potential is not guaranteed to pick up on all slow relaxation processes that may be coupled to the alchemical free energy, but the simplicity of its computation means it is generally appropriate for most cases.
-
+%
 \paragraph{Cautions in automating equilibration detection}
 For simulations that are simply not long enough to contain a large number of samples from true equilibrium either because they are very short or contain slow processes, this procedure cannot completely remove the bias.
 In such cases, this approach simply selects the final portion of the the simulation, which may be contained in a single substate of conformational space, which may itself lead to biased estimates. 
 This situation can be detected if the equilibration boundary $t_0$ is a significant fraction of the total simulation length $T$, with a good rule of thumb being that $T \gtrsim 20 t_0$.
-If this is not possible, advanced analysis techniques that assume only local equilibrium (rather than global equilibrium) such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate.
+If this is not possible, advanced analysis techniques that assume only local equilibrium (rather than global equilibrium) such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate, but are beyond the scope of this paper. 
 %
 \subsection{Decorrelating samples for analysis}
 \label{sec:decorrelating-samples}
@@ -886,7 +889,7 @@ with the discrete-time normalized fluctuation autocorrelation function $C_t$ def
 C_t &\equiv& \frac{\expect{a_n a_{n+t}} - \expect{a_n}^2}{\expect{a_n^2} - \expect{a_n}^2} . \label{equation:autocorrelation-definition}
 \end{eqnarray}
 The basic concept is that $\tau_\mathrm{eq}$ corresponds to the single-exponential decay time for the autocorrelation process that generates samples, so the statistical inefficiency $g$ measures the approximate temporal separation between two effectively uncorrelated samples (where two exponential relaxation times are presumed to be sufficient).
-
+%
 Robust estimation of $C_t$ for $t \sim T$ is difficult due to growth in statistical error, so common estimators of $g$ make use of several additional properties of $C_t$ to provide useful estimates (see \emph{Practical Computation of Statistical Inefficiencies} in~\cite{chodera2016simple} for a detailed discussion).
 \todo[inline]{JDC: Describe recommended statistical inefficiency computation algorithm.}
 We recommend using the robust statistical inefficinecy computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages.
