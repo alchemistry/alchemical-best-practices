@@ -160,7 +160,7 @@ This guide aims to answer the following questions:
 We assume the reader possesses a basic familiarity with the principles of molecular mechanics, molecular dynamics simulations, statistical mechanics, and the biophysics of protein-ligand association. If you feel unfamiliar with some of these concepts please good starting points can be found in these references~\cite{braun2019best, grossfield2018best, klimovich2015guidelines, shirts2012best}. Oftentimes, docking calculations are required to generated initial binding pose for a small molecule for an alchemical calculation, where binding poses are not known, thus some basic familiarty on how to run docking calculations is also expected~\cite{grinter2014challenges}. 
 %
 As some of the theoretical background can seem daunting, we provide an essentials guide to the theory behind alchemical free energy calculations in Section~\ref{sec:theory}.
-In the remainder of this paper, we will cover topics that are key to the preparation~(\ref{sec:step1}), choice and use of correct protocols~(\ref{sec:step2}), and finally the best practices that should be used for the analysis of alchemical calculations~(\ref{sec:data_analysis}). 
+In the remainder of this paper, we will cover topics that are key to the preparation~(\ref{sec:step1}), choice and use of correct protocols~(\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used for the analysis of alchemical calculations~(\ref{sec:data_analysis}). 
 Particular focus will be given to aspects of the molecular simulations which are unique to alchemical calculations---these include the calculation of transfer free energies (hydration free energies, partition coefficients, etc.), and binding free energies (absolute and relative).
 %
 While we try to address as many methods and practices as possible, the field of free energy calculations is broad, and there are many advanced topics that are left to future best practices documents focusing on specific issues. 
@@ -436,7 +436,7 @@ Structure based drug design projects are often capable of improving potency rela
 \section{Simulation prerequisites}
 \label{sec:step1}
 %
-The alchemical free energy protocols, that are discussed in Section~\ref{sec:step2}, are defined for a specific type of free energy calculation, i.e. a free energy of binding or a free energy of hydration. Depending on the type of simulations different considerations have to be made for ligands, solvent, and host molecules (in the case of the estimation of free energies of binding).
+The alchemical free energy protocols, that are discussed in Section~\ref{sec:simulation_protocol_choice}, are defined for a specific type of free energy calculation, i.e. a free energy of binding or a free energy of hydration. Depending on the type of simulations different considerations have to be made for ligands, solvent, and host molecules (in the case of the estimation of free energies of binding).
 \subsection{Free energies of binding}
 \label{subsec:binding}
 In principle in the limit of sufficient conformational sampling, the free energy changes estimated from an alchemical free energy calculation should be independent of the system's initial coordinates. However, in practice because simulations of thermodynamic states are of finite duration (typically currently 1-100 ns per state) this is only true for certain classes of alchemical free energy calculations such as relative or absolute free energies of hydration of small and relatively rigid organic molecules. Host-guest or protein-ligand complexes typically exhibit slowly relaxing degrees of freedom that exceed significantly the duration of an alchemical free energy calculation. It is therefore generally important to carefully select input coordinates to obtain satisfactory results. 
@@ -452,7 +452,7 @@ The following questions may be relevant before diving into the simulation setup.
 \paragraph{Are there good X-ray structures available?}
 As for any simulation, care should be taken in selecting available X-ray structures in the protein databank and potentially choosing multiple structures initially, to account for variability in receptor conformations as well as accuracy of available X-ray structures. Typically, clustering of receptor structures can be used to identify different receptor conformations near the binding site, as well as assessing relevant side chain placements from the X-ray structure, see for example~\cite{mey2016blinded}. In terms of set up and other choices following general best practice guidelines is advisable~\cite{braun2018best}.
 %
-For binding free energy calculations using a congeneric set of ligands and therefore likely to be most suited to a relative free energy protocol (see~\ref{sec:step2}). Other than the choice of forcefield for the parameterization of the ligands, some care has to be taken selecting binding poses for these ligands. Generally a common assumption for a congeneric series is that the binding mode is conserved. Therefore, if an X-ray structure of one of the ligands is available, this should be used to position the ligands in the putative binding site in an energetically reasonable conformation that entails no steric or electrostatic mismatch with the receptor. Checking the X-ray structure versus the experimental electron densities is important, as the resolution of part of the ligand or important sidechains may be based on the interpretation of the crystallographer rather than the available electron density. For example, looking at a cyclohexane ring density, a chair conformation is vastly more likely than that of a boat and may just be poorly assigned. 
+For binding free energy calculations using a congeneric set of ligands and therefore likely to be most suited to a relative free energy protocol (see~\ref{sec:simulation_protocol_choice}). Other than the choice of forcefield for the parameterization of the ligands, some care has to be taken selecting binding poses for these ligands. Generally a common assumption for a congeneric series is that the binding mode is conserved. Therefore, if an X-ray structure of one of the ligands is available, this should be used to position the ligands in the putative binding site in an energetically reasonable conformation that entails no steric or electrostatic mismatch with the receptor. Checking the X-ray structure versus the experimental electron densities is important, as the resolution of part of the ligand or important sidechains may be based on the interpretation of the crystallographer rather than the available electron density. For example, looking at a cyclohexane ring density, a chair conformation is vastly more likely than that of a boat and may just be poorly assigned. 
 %
 \paragraph{How to deal with different binding modes?}
 Generally, binding modes within congeneric series are conserved~\cite{}, however, exceptions exist~\cite{}, and weaker binding compounds are more likely to adopt different binding modes (REFS). There may also be ambiguity about the relative orientation of substituents. A known issue involves a 180 degree flip in the dihedral angle of a 6-membered aromatic ring leading to a different spatial position of ortho- or meta- substituents that otherwise should overlap within a series. The 180 degree flip of the ring may not occur enough during simulations to overcome the starting configuration bias. Another scenario may be equatorial and axial substituted saturated rings (e.g. cyclohexane derivatives). This situation may be addressed by explicitly modelling different binding modes of the same ligand and combining later computed free energy differences for different binding modes into a relative free energies of binding~\cite{kaus2015how}.
@@ -475,61 +475,60 @@ If the putative binding sites are not apparent, for instance due to significant 
 \label{subsec:hydration}
 Preliminary considerations necessary for using free energy methods to compute partition coefficients are generally more straight forward. For example, a 3D minimised structure of the solute can be generated with a simple tool such as babel and solvated to prepare the input  to compute a free energy of hydration. However, in these cases a careful choice of forcefield, as well as water models or organic solvents is essential. See for example~\cite{bosisio2016blinded,rustenburg2016measuring} for a good discussion on these choices. 
 %
-%
-%
-%%%%%%%%%%%%
-% Step 1   %
-%%%%%%%%%%%%
-%
-\section{What simulation protocol should I choose? -- Step 2}
-\label{sec:step2}
-Alchemical free energy calculations can be grouped into two main categories, ``absolute'' (\ref{fig:fig_absolute_thermodynamic_cycle}) and ``relative'' \footnote{The distinction is a bit of a misnomer, since both compute ratios of partition functions relative to another state, and neither computes an absolute free energy.}(\ref{fig:fig_binding_thermodynamic_cycle}), which differ in whether they compute properties for a single molecule (absolute) or compare properties of different, usually closely related, molecules (relative).
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% What simulation protocol should I choose   %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{What simulation protocol should I choose?}
+\label{sec:simulation_protocol_choice}
+Alchemical free energy calculations can be grouped into two main categories, ``absolute'' (see Fig.~\ref{fig:fig_absolute_thermodynamic_cycle}) and ``relative'' \footnote{The distinction is a bit of a misnomer, since both compute ratios of partition functions relative to another state, and neither computes an absolute free energy.}(see Fig.~\ref{fig:fig_binding_thermodynamic_cycle}), which differ in whether they compute properties for a single molecule (absolute) or compare properties of different, usually closely related, molecules (relative).
 To use binding as a concrete example, in absolute binding free energy calculations, one computes the binding free energy of a ligand to an individual receptor relative to a standard reference concentration.
+%
 In contrast, in relative binding free energy calculations, one compares the binding free energy of two related inhibitors to determine the potency difference.
+%
 \subsection{Absolute and relative free energy calculations have some differences}
-Many of the issues of setup and protocol for alchemical calculations are common, but some are different between absolute and relative calculations, so before treating the common elements we consider the protocol differences.
-
+Many of the issues around simualtion setup and protocol choice for alchemical calculations are common, but there are some differences between absolute and relative calculations. First we will consider protocol differences  so before treating the common elements.
+%
 \subsubsection{Choices unique to relative free energy calculations}
 \label{sec:relative-fe-protocol}
-
-\paragraph{Topologies} A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a \emph{dual topology}, \emph{single topology}, or \emph{hybrid topology} approach to relative calculations.
+%
+\paragraph{Topologies} 
+A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a \emph{dual topology}, \emph{single topology}, or \emph{hybrid topology} approach to relative calculations.
 
 The distinction between these can be illustrated by considering a hypothetical transformation from molecule A to molecule B, where both atoms share a common substructure but differ in their substituents; e.g. consider a transformation of benzene (A) to benzyl alcohol (B) Fig.~\ref{fig:topology}.
 In this case the common substructure is the benzene ring, though perhaps may be larger depending on how it is defined, as we discuss below.
-In single topology calculations, the overall transformation is set up to involve as few additional atoms as possible, so benzene would be typically changed into benzyl alcohol by changing one of the hydrogens into a carbon. To this new carbon you also find non-interacting atoms called ``dummy atoms'' (retaining their bonded interactions but not interacting with the rest of the system), which will become the two hydrogens attached to the new carbon and the OH group. Bond parameters as well as partial charges are adjusted accordingly. 
-Thus, in a single topology calculation, atoms may change their type so relatively few dummy atoms are created. This is illustrated in left arm of Fig.~\ref{fig:fig_topology}. 
-In contrast, in a dual topology free energy calculation, no atoms are allowed to change type~\cite{shirts2012best}. This means that the benzene to benzyl alcohol transformation involves starting with benzene plus the non-interacting dummy atoms making up the hydroxy methyl group, then passing through an intermediate state where atoms which are becoming dummy atoms or ceasing being dummy atoms are partially interacting (this state may or may not be well defined~\cite{mobley2014blind}  and culminating in a state where benzyl alcohol is present along with the additional dummy atoms which was previously a corresponding hydrogen of the benzene. Fig.~\ref{fig:fig_topology}'s right branch depicts how such a dual topology works. 
+In single topology calculations, the overall transformation is set up to involve as few additional atoms as possible, so benzene would be typically changed into benzyl alcohol by changing one of the hydrogens into a carbon. On this new carbon you will also find non-interacting atoms called ``dummy atoms'' (retaining their bonded interactions but not interacting with the rest of the system), which will become the two hydrogens attached to the new carbon and the OH group after the transformation. Bond parameters as well as partial charges are adjusted accordingly. 
+Thus, in a single topology calculation, atoms may change their type ensuring only relatively few dummy atoms are created. This is illustrated in left arm of Fig.~\ref{fig:fig_topology}. 
+In contrast, in a dual topology alchemical free energy calculation, no atoms are allowed to change type~\cite{shirts2012best}. This means that the benzene to benzyl alcohol transformation involves starting with benzene plus the non-interacting dummy atoms making up the hydroxy methyl group, then passing through an intermediate state where atoms which are becoming dummy atoms or ceasing being dummy atoms are partially interacting (this state may or may not be well defined~\cite{mobley2014blind}  and culminating in a state where benzyl alcohol is present along with the additional dummy atoms which was previously a corresponding hydrogen of the benzene. Fig.~\ref{fig:fig_topology}'s right branch depicts how such a dual topology works. 
 \begin{figure}[h!]
     \includegraphics[width=0.95\columnwidth]{figures/fig3_topol/Figure.pdf}
-    \caption{\textbf{Two common topologies for alchemical calculations} left: A single topology uses softcore potentials to convert from one type of atom to an other. Dummy atoms (Du) are used when there is no corresponding maximum common substructure match between the two molecules for certain atoms. right: The dual topology does not convert one species to another, but only converts between Du atoms and an interacting species, but usually uses softcore potentials for this. The 'mixed' intermediate atoms are used in both dual and single topology approaches. Only the way the transformation occurs and the end states differ. Following the arrow along the left and right illustrate the differences.  Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
+    \caption{\textbf{Two common topologies for alchemical calculations: single and dual topology} \textbf{left}: A single topology uses softcore potentials to convert from one type of atom to an other. Dummy atoms (Du) are used when there is no corresponding maximum common substructure match between the two molecules for certain atoms. \textbf{right}: The dual topology does not convert one species to another, but only converts between Du atoms and an interacting species, but usually uses softcore potentials for this. The 'mixed' intermediate atoms are used in both dual and single topology approaches. Only the way the transformation occurs and the end states differ. Following the arrow along the left and right illustrate the differences.  Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
     \label{fig:fig_topology}
 \end{figure} 
 Hybrid topology calculations have seen much less use but essentially consist of two absolute free energy calculations in opposite directions at the same time (turning one molecule off while turning the other on)~\cite{jiang2019computing}.
-At present, the most widely used approaches, such as in Schr\"{o}dinger's FEP+~\cite{wang2019protein} and in FESetup~\cite{loeffler2015fesetup} (for which calculations may be planned with Lead Optimization Mapper (LOMAP)~\cite{liu2013lead} seem to use single topology approaches, though some codes only support dual topology.
+At present, the most widely used approaches, such as in Schr\"{o}dinger's FEP+~\cite{wang2015accurate,wang2019protein} and in BioSimSpace~\cite{hedges2019biosimspace} (for which calculations may be planned with Lead Optimization Mapper (LOMAP)~\cite{liu2013lead} seem to use single topology approaches, though some codes only support dual topology.
 To our knowledge efficiency differences have not been thoroughly explored, though conventional wisdom suggests that fewer dummy atoms are better~\cite{liu2013lead,mobley2012perspective}.
 %
 \paragraph{Atom mapping}
 Once a particular approach to the topology is selected, a crucial next step is to identify the common atoms which will not be perturbed.
-Rigorously, this process essentially comprises a maximal common substructure (MCSS) search of the molecules involved to identify the common substructure -- though the parameters of the MCSS search will differ depending on whether single or dual topology calculations are planned.
+Rigorously, this process comprises of a maximal common substructure (MCSS) search of the molecules involved to identify the common substructure -- though the parameters of the MCSS search will differ depending on whether single or dual topology calculations are planned.
 Specifically, with a single topology approach in mind, atom types are allowed to change, so a permissive MCSS search can be done, whereas with dual topology a more strict search is required.
 \begin{figure}[h!]
     \includegraphics[width=0.95\linewidth]{figures/fig4_mcs/Figure.pdf}
-    \caption{\textbf{Illustration of maximum common substructure matches} MCSS is shown in green for when A: a restrictive MCSS match is used and in B: ring breaking is allowed.}
+    \caption{\textbf{Illustration of maximum common substructure matches} MCSS is shown in green for when (\textbf{A}) a restrictive MCSS match is used and in (\textbf{B}) ring breaking is allowed.}
     \label{fig:fig_mcss}
 \end{figure} 
 %
-There are different tools that allow the generation of MCSS matches as well as single topology input. A large number of software can compute MCSS matches, some rely on RDKit, such as LOMAP or FESetup and partially BioSimSpace, others such as fkckombu are standalone tools~\cite{rdkit2019Dec, loeffler2015fesetup, liu2013lead, hedges2019biosimspace, kawabata20143d}. Schr\"{o}dinger's FEP+ planning tool is based on a version of LOMAP, and it also uses MCSS matching as well as 3D considerations to plan the network of single topology calculations between molecules~\cite{wang2015accurate}. 
+There are different tools that allow the generation of MCSS matches as well as single topology input. A large number of software can compute MCSS matches, some rely on RDKit~\cite{rdkit2019Dec}, such as LOMAP~\cite{liu2013lead} or FESetup~\cite{loeffler2015fesetup} and partially BioSimSpace~\cite{hedges2019biosimspace}, others such as fkckombu~\cite{kawabata20143d} are standalone tools. Schr\"{o}dinger's FEP+ planning tool is based on a version of LOMAP, and it also uses MCSS matching as well as 3D considerations to plan the network of single topology calculations between molecules~\cite{wang2015accurate}. 
 %
-MCSS searches can be relatively time consuming, so if the goal is to assess a library of ligands to identify promising pairs for relative calculations, it can be helpful to use faster approaches such as shape similarity to perform an initial assessment and then use MCSS only to identify final mappings for relative calculations.
+MCSS searches can be relatively time consuming, so if the goal is to assess a library of ligands to identify promising pairs for relative calculations, it can be helpful to use faster approaches such as shape similarity to perform an initial assessment and then use MCSS only to identify final mappings for relative calculations~\cite{raymond2002maximum,klabunde2012mars,jones2009elucidating}.
 %
-The MCSS approach, though relatively standard, takes into account only topological similarity.
-It is possible that changes in binding mode could actually require a different choice of mapping, so in some cases mappings may need to be planned differently depending on 3D positioning of atoms in space.
+The MCSS approach, though relatively standard, takes into account only topological similarity. It is possible that changes in binding mode could actually require a different choice of mapping, so in some cases mappings may need to be planned differently depending on 3D positioning of atoms in space.
 %
-Single topology relative calculations, and calculations based on substructure searches, only work if in fact the ligands share a common substructure, e.g. are part of a congeneric series.
+Single topology relative calculations, and calculations based on substructure searches, only work if in fact the ligands share a common substructure, e.g. are part of a congeneric series, see Fig.~\ref{fig:fig_mcss}
 If no common substructure is shared, then alternative dual or hybrid topology free energy calculations are needed, where one would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
 To our knowledge no general pipeline for such calculations yet exists and this would likely remain a research problem. Using an absolute style free energy calculation instead seems a more promising approach in such a case. 
 %
-\paragraph{Ring breaking and forming.} Relative free energy calculations for ring breaking and forming are particularly challenging/problematic, in part because relative calculations rely on the free energy contributions of dummy atoms canceling between different legs of the thermodynamic cycle~\cite{}, which may not be true whenever dummy atoms are involved in rings.
+\paragraph{Ring breaking and forming.} Relative free energy calculations for ring breaking and forming are particularly challenging/problematic (see Fig.~\ref{fig:fig_mcss} \textbf{B}), in part because relative calculations rely on the free energy contributions of dummy atoms canceling between different legs of the thermodynamic cycle, which may not be true whenever dummy atoms are involved in rings.
 Some approaches have attempted to address this~\cite{clark2019relative} but a general solution is not yet in mainstream use.
 %
 \paragraph{Perturbation maps}
@@ -541,7 +540,7 @@ Based on the input ligand series a perturbation map or network can be planned. R
 \end{figure} 
 In some cases, during the lead optimization stage, or if perturbations would be rather large a star shaped network as seen in Fig.~\ref{fig:fig_types_of_networks} (A) is used.. However, adding redundancy into the network means that a better error analysis can be carried out, by looking at cycle closure errors as discussed in sec.~\ref{subsec:predictions}, with an example given in Fig.~\ref{fig:fig_types_of_networks}.
 
-Methods in experimental design have been applied to the construction of the perturbation maps.  Yang et al.~\cite{yang2020optimal} optimized the perturbation map by selecting a fixed number of calculations from the pairwise perturbations so that the resulting set of calculations minimize the total variance.  Xu~\cite{xu2019diffnet} optimized the perturbation map by allocating different amounts of simulation time to different pairwise perturbations so as to minimize the total variance, given the total simulation time of all the perturbation calculations.  Both approaches lead to substantial reduction in the statistical error of the estimated free energies.  
+Methods in experimental design have been applied to the construction of the perturbation maps.  Yang et al.~\cite{yang2020optimal} optimized the perturbation map by selecting a fixed number of calculations from the pairwise perturbations so that the resulting set of calculations minimize the total variance.  Xu~\cite{xu2019optimal} optimized the perturbation map by allocating different amounts of simulation time to different pairwise perturbations so as to minimize the total variance, given the total simulation time of all the perturbation calculations.  Both approaches lead to substantial reduction in the statistical error of the estimated free energies.  
 %
 \paragraph{Constraints and relative free energy calculations.}
 One issue which requires particular care is the use of constraints.
@@ -553,7 +552,7 @@ At present the most general solution to this problem is simply to avoid the use 
 \subsubsection{Absolute free energy calculations must handle the standard state and use restraints}
 \label{sec:standardstate-restraints}
 %
-\begin{figure}
+\begin{figure}[h!]
     \includegraphics[width=0.95\linewidth]{figures/fig5_thermo_cyc_abs/Figure.pdf}
     \caption{\textbf{Absolute thermodynamic cycle}}
     \label{fig:fig_absolute_thermodynamic_cycle}
@@ -1252,7 +1251,7 @@ An overview of further suggested benchmark sets can be found in the review by Mo
 % \begin{Checklists*}[p!]
 % \begin{checklist}{Absolute simulations}
 % \textbf{What are the main things I need to consider for an absolute alchemical free energy calculation?}
-% Extensive explanation for the checklist questions can be found in Section~\ref{sec:step2}.
+% Extensive explanation for the checklist questions can be found in Section~\ref{sec:simulation_protocol_choice}.
 % \begin{itemize}
 % \item Topology
 % \item Restraints
@@ -1262,7 +1261,7 @@ An overview of further suggested benchmark sets can be found in the review by Mo
 
 % \begin{checklist}{Relative simulations}
 % \textbf{What are the main things I need to consider for an relative alchemical free energy calculation?}
-% Extensive explanation for the checklist questions can be found in Section~\ref{sec:step2}.
+% Extensive explanation for the checklist questions can be found in Section~\ref{sec:simulation_protocol_choice}.
 % \begin{itemize}
 % \item First thing
 % \item Also remember
@@ -1307,7 +1306,7 @@ JS: created figures \ref{fig:fig_what_is_alchemy},~\ref{fig:fig_binding_thermody
 MK: Contributed to the Data Analysis section, provided the data for figure~\ref{fig:overlap} and helped edit the paper.
 DLM: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.
 GT: Contributed to introduction and drug discovery sections, and helped edit the paper.
-AR: Created figure~\ref{fig:freeenergytrajectories}, contributed to section \ref{sec:step2}, and helped edit the paper.
+AR: Created figure~\ref{fig:freeenergytrajectories}, contributed to section \ref{sec:simulation_protocol_choice}, and helped edit the paper.
 MRS: Helped create figure~\ref{fig:fig_what_is_lambda}, wrote sections describing choices for alchemical pathways and analysis for free energy calculations.
 LNN: Helped write the simulation length, stopping conditions, and information saving section.
 BA: Helped write the uncertainty estimation, stopping conditions, and output analysis sections and created figure ~\ref{fig:convergence_forward_reverse}.
