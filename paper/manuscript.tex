@@ -535,26 +535,26 @@ Some approaches have attempted to address this~\cite{clark2019relative} but a ge
 Based on the input ligand series a perturbation map or network can be planned. Recent heuristics have shown the more connected the perturbation network the better, however, there is a way to optimise network structure while minimising the number of perturbations that need to be computed minimising the resulting computational cost~\cite{yang2020optimal}. Sometimes the introduction of intermediates that are not part of the original congeneric series are essential to avoid ring breaking, or dealing with perturbations that would otherwise result in large numbers of atoms to be grown or disappearing. Some commercial tools have underlying good heuristic but may fail with complicated input, needing user validation in particular when dealing with chiral compounds. 
 \begin{figure}[h!]
     \includegraphics[width=0.95\columnwidth]{figures/fig6_types_of_networks/Figure.pdf}
-    \caption{\textbf{Examples of perturbation networks} A: Star shaped network with the crystal structure in the center. B: Network with cycle closures. Arrows indicate the direction of the perturbation. Green cycles indicate good cycle closure, red poor cycle closure. The red arrow indicates a poorly converged simulation that would give rise to bad cycle closures. The diamond indicates the use of a crystal structure binding mode.}
+    \caption{\textbf{Examples of perturbation networks} \textbf{A} Star shaped network with the crystal structure in the center. \textbf{B} Network with cycle closures (see more on this in Sec.~\ref{sec:are-they-good}). Arrows indicate the direction of the perturbation. Green cycles indicate good cycle closure, red poor cycle closure. The red arrow indicates a poorly converged simulation that would give rise to bad cycle closures. The diamond indicates the use of a crystal structure binding mode.}
     \label{fig:fig_types_of_networks}
 \end{figure} 
-In some cases, during the lead optimization stage, or if perturbations would be rather large a star shaped network as seen in Fig.~\ref{fig:fig_types_of_networks} (A) is used.. However, adding redundancy into the network means that a better error analysis can be carried out, by looking at cycle closure errors as discussed in sec.~\ref{subsec:predictions}, with an example given in Fig.~\ref{fig:fig_types_of_networks}.
-
-Methods in experimental design have been applied to the construction of the perturbation maps.  Yang et al.~\cite{yang2020optimal} optimized the perturbation map by selecting a fixed number of calculations from the pairwise perturbations so that the resulting set of calculations minimize the total variance.  Xu~\cite{xu2019optimal} optimized the perturbation map by allocating different amounts of simulation time to different pairwise perturbations so as to minimize the total variance, given the total simulation time of all the perturbation calculations.  Both approaches lead to substantial reduction in the statistical error of the estimated free energies.  
+In some cases, during the lead optimization stage, or if perturbations would be rather large a star shaped network as seen in Fig.~\ref{fig:fig_types_of_networks} (\textbf{A}) is used. However, adding redundancy into the network means that a better error analysis can be carried out, by looking at cycle closure errors as discussed in sec.~\ref{sec:are-they-good}, with an example given in Fig.~\ref{fig:fig_types_of_networks} (\textbf{B}).
 %
-\paragraph{Constraints and relative free energy calculations.}
+Methods in experimental design have been applied to the construction of the perturbation maps. Yang et al.~\cite{yang2020optimal} optimized the perturbation map by selecting a fixed number of calculations from the pairwise perturbations so that the resulting set of calculations minimize the total variance. Xu~\cite{xu2019optimal} optimized the perturbation map by allocating different amounts of simulation time to different pairwise perturbations so as to minimize the total variance, given the total simulation time of all the perturbation calculations. Both approaches lead to substantial reduction in the statistical error of the estimated free energies.  
+%
+\paragraph{Constraints and relative free energy calculations}
 One issue which requires particular care is the use of constraints.
-Commonly, bonds involving hydrogen are constrained to a fixed length using algorithms such as SHAKE or LINCS, allowing the use of longer timesteps~\cite{}.
+Commonly, bonds involving hydrogen are constrained to a fixed length using algorithms such as SHAKE or LINCS, allowing the use of longer timesteps~\cite{krautler2001fast}.
 However, in single topology relative free energy calculations, the atoms involved might be mutated to other atom types -- for example, in a mutation of methane to methanol, one hydrogen might become an oxygen atom.
 Typical molecular dynamics engines are not set up to recognize this change, or at least not to correctly include contributions to the free energy from changing constraints/constraint length, so results for a transformation would usually be erroneous.
-At present the most general solution to this problem is simply to avoid the use of constraints (and thus use a smaller timestep if necessary, usually of around 1 fs) in any relative free energy calculation involving a transformation of a constrained bond.
+At present the most general solution to this problem is simply to avoid the use of constraints (and thus use a smaller timestep if necessary, usually of around 1 fs) in any relative free energy calculation involving a transformation of a constrained bond, as done by GROMACS. 
 %
 \subsubsection{Absolute free energy calculations must handle the standard state and use restraints}
 \label{sec:standardstate-restraints}
 %
 \begin{figure}[h!]
     \includegraphics[width=0.95\linewidth]{figures/fig5_thermo_cyc_abs/Figure.pdf}
-    \caption{\textbf{Absolute thermodynamic cycle}}
+    \caption{\textbf{Thermodynamic cycle required for an aboslute free energy calculation}}
     \label{fig:fig_absolute_thermodynamic_cycle}
 \end{figure}
 %
