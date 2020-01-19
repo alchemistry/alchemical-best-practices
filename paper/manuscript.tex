@@ -113,30 +113,28 @@ In this paper, we review current best practices for several popular application 
 \section{What are alchemical free energy methods?}
 \label{sec:intro}
 \todo[inline, color={green!20}]{@everyone: Any further input in this?}
-Alchemical free energy calculations compute free energy differences associated with transfer processes, such as the binding of a small molecule to a receptor or the transfer of a small molecule from an aqueous to apolar phase~\cite{zwanzig1954hightemperature}. 
+Alchemical free energy calculations compute free energy differences associated with transfer processes, such as the binding of a small molecule to a receptor, the transfer of a small molecule from an aqueous to apolar phase~\cite{zwanzig1954hightemperature}, or effects of protein side chain mutations on e.g. binding affinities.. 
 These calculations use non-physical\footnote{Here, the non-physical nature of the transformation is referred to as "alchemical", a term coined by Tembre and McCammon in Ref.~\cite{tembre1984ligandreceptor}.} intermediate states in which the chemical identity of some portion of the system (such as a small molecule ligand or receptor sidechain) is changed by modifying the potential governing the interaction of the atoms being modified, inserted, or deleted with their environment. 
 %
-Fig.~\ref{fig:fig_what_is_alchemy} illustrates common free energy changes that may be difficult to compute with conventional computational methods, but are more readily tractable with alchemical methods. 
-\todo[inline, color={yellow!20}]{JDC: Not sure what is meant by "conventional computational methods". Perhaps we can be precise and say "unbiased molecular dynamics simulations"?}
+Fig.~\ref{fig:fig_what_is_alchemy} illustrates common free energy changes that may be difficult to compute with unbiased molecular dynamics methods, but are more readily tractable with alchemical methods.
 In alchemical simulations, the introduction of intermediate \textit{alchemical states} that bridge the high-probability regions of configuration space between the two physical endstates of interest permits the free energy of large transformations to be robustly computed.
-%such as the entire removal of a ligand from a binding site (and \emph{absolute AFE calculation}), as illustrated in Fig.~\ref{fig:fig_what_is_alchemy} (E). 
-alchemical calculations can be used in a variety of scenarios, such as computing the free energy of a conformational change for a molecule with a high barrier to interconversion (Fig.~\ref{fig:fig_what_is_alchemy} (A)); 
-\todo[inline, color={yellow!20}]{JDC: Do you intend these to be representative of BLUES type simulations?}
-computing partition ($\log P$) or distribution ($\log D$) coefficients between environments (Fig.~\ref{fig:fig_what_is_alchemy} (B))~\cite{rustenburg2016measuring, bosisio2016blinded} or compartments or membranes (Fig.~\ref{fig:fig_what_is_alchemy} (C))~\cite{}. 
-alchemical calculations are frequently used to estimate changes in free energies upon modifying a ligand or protein: a protein residue can be alchemically mutated to probe the impact on binding affinity (Fig.~\ref{fig:fig_what_is_alchemy} (D))\cite{hauser2018predicting,aldeghi2018accurate} or changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}; the entire ligand can be alchemical transferred from protein to solvent in an absolute binding free energies (Fig.~\ref{fig:fig_what_is_alchemy} (E))~\cite{mobley2007predicting,aldeghi2015accurate,aldeghi2017predictions}; and small alchemical modifications can be made between chemically related ligands to estimate differences in binding free energies (Fig.~\ref{fig:fig_what_is_alchemy} (F))~\cite{wang2015accurate,mey2016blinded,gapsys2020large}.
-
+Alchemical calculations can be used in a variety of scenarios, such as computing the free energy of a conformational change for a molecule with a high barrier to interconversion (Fig.~\ref{fig:fig_what_is_alchemy} (A)); 
+\todo[inline, color={yellow!20}]{JDC: Do you intend these to be representative of BLUES type simulations? -- yes}
+computing partition ($\log P$) or distribution ($\log D$) coefficients between environments (Fig.~\ref{fig:fig_what_is_alchemy} (B))~\cite{rustenburg2016measuring, bosisio2016blinded} or compartments or membranes (Fig.~\ref{fig:fig_what_is_alchemy} (C))~\cite{corey2019insights}. 
+Furthermore, alchemical calculations are frequently used to estimate changes in free energies upon modifying a ligand or protein: a protein residue can be alchemically mutated to probe the impact on binding affinity (Fig.~\ref{fig:fig_what_is_alchemy} (D))\cite{hauser2018predicting,aldeghi2018accurate} or changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}; the entire ligand can be alchemical transferred from protein to solvent in an absolute binding free energies (Fig.~\ref{fig:fig_what_is_alchemy} (E))~\cite{mobley2007predicting,aldeghi2015accurate,aldeghi2017predictions}; and small alchemical modifications can be made between chemically related ligands to estimate differences in binding free energies (Fig.~\ref{fig:fig_what_is_alchemy} (F))~\cite{wang2015accurate,mey2016blinded,gapsys2020large}.
+%
 Once an alchemical simulation as been performed, the data must be analyzed to estimate the free energy for the transformation of interest.
-Early work used simple (but suboptimal) estimators for this: free energy perturbation (FEP) using the Zwanzig relation~\cite{zwanzig1954hightemperature} or thermodynamic integration (TI), for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. 
-More recent developments have seen new, highly efficient statistical estimators that make better use of all the data, often building on the Bennett acceptance ratio (BAR)~\cite{bennett1976efficient}, producing multistate generalizations~\cite{mbar} or removing the need for global equilibrium~\cite{tram}
+Early work used simple (but suboptimal) estimators for this: free energy perturbation (FEP) using the Zwanzig relation~\cite{zwanzig1954hightemperature} or thermodynamic integration (TI), for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. %
+More recent developments have seen new, highly efficient statistical estimators that make better use of all the data, often building on the Bennett acceptance ratio (BAR)~\cite{bennett1976efficient}, producing multistate generalizations~\cite{shirts2008statisticallya} or removing the need for global equilibrium~\cite{wu2016multiensemble, mey2014xtram, wu2014statistically}
 \todo[inline, color={yellow!20}]{JDC: The key pivotal moment was the Shirts paper on extremely precise free energy calculations, which demonstrated that a combination of technologies can produce robust estimates with useful precision.}
 Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, hedges2019biosimspace}. 
 This foundational work, combined with the methodological, technological, and hardware improvements of the last 5--10 years, have led to an explosion of interest and direct commercial application of the technologies~\cite{wang2015accurate, fratev2019improved, schindler2020largescale, cournia2017relative, sherborne2016collaborating}.
 %
-As the field of molecular simulation moves towards millisecond timescales, accurate alchemical calculations on even more challenging problems will become reasonable to perform. In the meantime, today's users may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This best practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
+As the field of molecular simulation moves towards millisecond timescales, accurate alchemical calculations on even more challenging problems will become reasonable to perform. In the meantime, today's users may find it hard to get started with these complex calculations whilst also keeping up with the fast pace of change. This Best Practice guide aims to serve as a go-to reference for current recommendations and tips for users of all experience.  
 %
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig1_what_is_alchemy/Figure.pdf}   
-    \caption{\textbf{Illustration of common types of free energies differences that can be calculated using alchemical free energy methods.} A: Change in free energy due to a conformational change of the molecule. B: Partition coefficient such as $\log P$ or $\log D$ can be computed using alchemical free energy methods. Here, as an example the partition coefficient between methanol and water is shown. C: Free energy difference associated with the insertion of a molecule into a membrane. D: Effect of mutations of protein or host residues on free energies of binding.  E: Absolute free energies of binding of a small molecule to a host (e.g. protein), F: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol.
+    \caption{\textbf{Illustration of common types of free energies differences that can be calculated using alchemical free energy methods.} \textbf{A}: Change in free energy due to a conformational change of the molecule. \textbf{B}: Partition coefficient such as $\log P$ or $\log D$ depend on a change in free energy between different phases; here, as an example the partition coefficient between methanol and water is shown. \textbf{C}: Free energy difference associated with the insertion of a molecule into a membrane. \textbf{D]: Effect of mutations of protein or host residues on free energies of binding. \textbf{E}: Absolute free energies of binding of a small molecule to a host (e.g. protein), \textbf{F}: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol.
     \label{fig:fig_what_is_alchemy}
     }
 \end{figure}
@@ -160,7 +158,7 @@ This guide aims to answer the following questions:
 We assume the reader possesses a basic familiarity with the principles of molecular mechanics, molecular dynamics simulations, statistical mechanics, and the biophysics of protein-ligand association. If you feel unfamiliar with some of these concepts please good starting points can be found in these references~\cite{braun2019best, grossfield2018best, klimovich2015guidelines, shirts2012best}. Oftentimes, docking calculations are required to generated initial binding pose for a small molecule for an alchemical calculation, where binding poses are not known, thus some basic familiarty on how to run docking calculations is also expected~\cite{grinter2014challenges}. 
 %
 As some of the theoretical background can seem daunting, we provide an essentials guide to the theory behind alchemical free energy calculations in Section~\ref{sec:theory}.
-In the remainder of this paper, we will cover topics that are key to the preparation~(\ref{sec:step1}), choice and use of correct protocols~(\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used for the analysis of alchemical calculations~(\ref{sec:data_analysis}). 
+In the remainder of this paper, we will cover topics that are key to the preparation~(\ref{sec:prerequisites}), choice and use of correct protocols~(\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used for the analysis of alchemical calculations~(\ref{sec:data_analysis}). 
 Particular focus will be given to aspects of the molecular simulations which are unique to alchemical calculations---these include the calculation of transfer free energies (hydration free energies, partition coefficients, etc.), and binding free energies (absolute and relative).
 %
 While we try to address as many methods and practices as possible, the field of free energy calculations is broad, and there are many advanced topics that are left to future best practices documents focusing on specific issues. 
@@ -177,25 +175,34 @@ Below, we provide a non-exhaustive list of topics we have not addressed with som
 %
 For convenience we have also compiled a list of common acronyms, common symbols used, and some essential terminology.
 \begin{tcolorbox}[title=Acronyms, colback=blue!10!white]
-    \textit{CPU} - Central Processing Unit\\
-    \textit{BAR} - Bennett Acceptance Ratio\\
-    \textit{FEP} - Free Energy Perturbation\\
-    \textit{GPCR} - G-Protein Coupled Receptor\\
-    \textit{GPU} - Graphics Processing Unit\\
-    \textit{MBAR} - Multistate Bennett Acceptance Ratio\\
-    \textit{MCSS} - Maximum Common Substructure\\
-    \textit{MD} - Molecular Dynamics\\
-    \textit{RBFE} - Relative Binding Free Energy\\
-    \textit{RMSE} - Root Mean Square Error\\
-    \textit{SAR} - Structure-Activity Relationships\\
-    \textit{TI} - Thermodynamic Integration
+    \textit{CPU} -- Central Processing Unit\\
+    \textit{BAR} -- Bennett Acceptance Ratio\\
+    \textit{FEP} -- Free Energy Perturbation\\
+    \textit{GPCR} -- G-Protein Coupled Receptor\\
+    \textit{GPU} -- Graphics Processing Unit\\
+    \textit{MBAR} -- Multistate Bennett Acceptance Ratio\\
+    \textit{MCSS} -- Maximum Common Substructure\\
+    \textit{MD} -- Molecular Dynamics\\
+    \textit{RMSE} -- Root Mean Square Error\\
+    \textit{MUE} -- Mean unsigned error\\
+    \textit{SAR} -- Structure-Activity Relationships\\
+    \textit{TI} -- Thermodynamic Integration
 \end{tcolorbox}
 %\label{sec:abbreviations}
 \begin{tcolorbox}[title=List of Symbols, colback=green!10!white]
-U - Potential energy\\
+$U$ -- potential energy\\
+$u$ -- reduced potential energy \\
+$\Delta G$ -- free energy \\
+$\Delta f$-- reduced free energy \\
+$k_B$-- Boltzmann constant \\
+$T$ -- temperature
+$k_b$ -- rate of binding \\
+$K_D$ -- dissociation constant \\
+$\lambda$ -- parameter for regulation of the alchemcial free energy path \\
+$g$ -- statistical inefficiency
 \end{tcolorbox}
-\begin{tcolorbox}[title=Common terminology, colback=green!10!white]
-    ligand - small molecular binding to a larger host molecule such as a protein.\\ 
+\begin{tcolorbox}[title=Common terminology, colback=yellow!10!white]
+    ligand - small molecular binding to a larger host molecule such as a protein (recpetor).\\ 
     lead optimization - process of designing a drug candidate from an initial lead compound, considering its affinity and various pharmacokinetic parameters.\\
     thermodynamic cycle - sequence of thermodynamic processes (like changes in temperature, volume or pressure) in which the initial and final state are equal.\\
 \end{tcolorbox}
@@ -429,13 +436,12 @@ Structure based drug design projects are often capable of improving potency rela
 %
 %
 %
-%%%%%%%%%%%%
-% Step 1   %
-%%%%%%%%%%%%
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Simulation prerequisites  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %
 \section{Simulation prerequisites}
-\label{sec:step1}
-%
+\label{sec:prerequisites}
 The alchemical free energy protocols, that are discussed in Section~\ref{sec:simulation_protocol_choice}, are defined for a specific type of free energy calculation, i.e. a free energy of binding or a free energy of hydration. Depending on the type of simulations different considerations have to be made for ligands, solvent, and host molecules (in the case of the estimation of free energies of binding).
 \subsection{Free energies of binding}
 \label{subsec:binding}
@@ -455,7 +461,7 @@ As for any simulation, care should be taken in selecting available X-ray structu
 For binding free energy calculations using a congeneric set of ligands and therefore likely to be most suited to a relative free energy protocol (see~\ref{sec:simulation_protocol_choice}). Other than the choice of forcefield for the parameterization of the ligands, some care has to be taken selecting binding poses for these ligands. Generally a common assumption for a congeneric series is that the binding mode is conserved. Therefore, if an X-ray structure of one of the ligands is available, this should be used to position the ligands in the putative binding site in an energetically reasonable conformation that entails no steric or electrostatic mismatch with the receptor. Checking the X-ray structure versus the experimental electron densities is important, as the resolution of part of the ligand or important sidechains may be based on the interpretation of the crystallographer rather than the available electron density. For example, looking at a cyclohexane ring density, a chair conformation is vastly more likely than that of a boat and may just be poorly assigned. 
 %
 \paragraph{How to deal with different binding modes?}
-Generally, binding modes within congeneric series are conserved~\cite{}, however, exceptions exist~\cite{}, and weaker binding compounds are more likely to adopt different binding modes (REFS). There may also be ambiguity about the relative orientation of substituents. A known issue involves a 180 degree flip in the dihedral angle of a 6-membered aromatic ring leading to a different spatial position of ortho- or meta- substituents that otherwise should overlap within a series. The 180 degree flip of the ring may not occur enough during simulations to overcome the starting configuration bias. Another scenario may be equatorial and axial substituted saturated rings (e.g. cyclohexane derivatives). This situation may be addressed by explicitly modelling different binding modes of the same ligand and combining later computed free energy differences for different binding modes into a relative free energies of binding~\cite{kaus2015how}.
+Generally, binding modes within congeneric series are conserved~\cite{wacker2010conserved}, however, exceptions exist~\cite{brandt2011congeneric,nazare2005probing}, and weaker binding compounds are more likely to adopt different binding modes (REFS). There may also be ambiguity about the relative orientation of substituents. A known issue involves a 180 degree flip in the dihedral angle of a 6-membered aromatic ring leading to a different spatial position of ortho- or meta- substituents that otherwise should overlap within a series. The 180 degree flip of the ring may not occur enough during simulations to overcome the starting configuration bias. Another scenario may be equatorial and axial substituted saturated rings (e.g. cyclohexane derivatives). This situation may be addressed by explicitly modelling different binding modes of the same ligand and combining later computed free energy differences for different binding modes into a relative free energies of binding~\cite{kaus2015how}.
 %
 \paragraph{Have you considered sterioisomers and enationmers?}
 Congeneric series can contain stereoisomers or enantiomers, making sure that you model the correct one is important. For racemates, the relative abundance of each stereoisomer is normally not known. Therefore, the experimental activity associated with just one conformation is more uncertain. However, the modeling typically uses just the bioactive conformation that best fits the active site. Clearly this introduces the chance for higher error versus experiment. Nevertheless, if all compounds in the congeneric series are racemic, originating from similar synthetic procedures with an expected similar abundance of stereoisomers, then the differences may cancel and the trend in calculated and observed binding energies may be robust. Nevertheless, we can see that care and further testing is needed in this scenario, and the quality of the predictions may suffer.   
@@ -464,7 +470,7 @@ Congeneric series can contain stereoisomers or enantiomers, making sure that you
 Another aspect to look out for are binding site water molecules that may form water mediated protein-ligand interactions, particularly in situations where exchange with bulk water may be slow on the simulation timescales. This happens typically in buried binding site. Overlaying multiple protein X-ray structures can identify conserved or just additional water molecules that can be useful to include. In cases where water molecules are known to play an important role in the binding, software implementations that use water sampling facilitated by Grand Canonical Monte Carlo methods may be useful. For examples see HSP90 as formed part of the D3R grand challenge 2015~\cite{mey2016blinded},A2A~\cite{brucemacdonald2018ligand}, MUP~\cite{ross2015water}, and others~\cite{michel2009energetics}.
 %
 \paragraph{How to align congeneric series}
-Input coordinates for a congeneric series may be generated by docking calculations, or by ligand alignment using maximum common substructure algorithms. The latter tends to produce alignments that are more conserved and more consistent free energy changes across a dataset, but will struggle to yield reasonable results for relative binding free energy calculations that involve a significant binding mode rearrangement. This may also lead to steric clashes with the receptor coordinates of the reference ligand if structural rearrangements are needed to accommodate different members of the congeneric series. Small steric clashes may be resolved during subsequent simulation equilibration prior to data collection but there is a risk that the complex relaxes to an alternative metastable state. 
+Input coordinates for a congeneric series may be generated by docking calculations, or by ligand alignment using maximum common substructure algorithms. The latter tends to produce alignments that are more conserved and more consistent free energy changes across a dataset, but will struggle to yield reasonable results for relative binding free energy calculations that involve a significant binding mode rearrangement. This may also lead to steric clashes with the receptor coordinates of the reference ligand if structural rearrangements are needed to accommodate different members of the congeneric series. Small steric clashes may be resolved during subsequent simulation equilibration prior to data collection, but there is a risk that the complex relaxes to an alternative metastable state. 
 %
 An additional consideration arises for single topology relative free energy calculations. In this class of alchemical free energy calculations it is necessary to generate a molecular topology that may describe the initial and final states of the perturbation (see different topologies as seen in Fig.~\ref{fig:fig_topology}). In cases where the end-states have high topological similarity and high structural overlap this is relatively straightforward and typically handled by use of maximum common substructure calculations. In situations where the end-state topologies differ significantly, or there is relatively little spatial overlap between the two end-states some user intervention may be necessary to produce a satisfactory input topology.
 %
@@ -473,7 +479,7 @@ If the putative binding sites are not apparent, for instance due to significant 
 %
 \subsection{Free energies of hydration or partition coefficients}
 \label{subsec:hydration}
-Preliminary considerations necessary for using free energy methods to compute partition coefficients are generally more straight forward. For example, a 3D minimised structure of the solute can be generated with a simple tool such as babel and solvated to prepare the input  to compute a free energy of hydration. However, in these cases a careful choice of forcefield, as well as water models or organic solvents is essential. See for example~\cite{bosisio2016blinded,rustenburg2016measuring} for a good discussion on these choices. 
+Preliminary considerations necessary for using free energy methods to compute partition coefficients are generally more straight forward. For example, a 3D minimised structure of the solute can be generated with a simple tool such as openBabel and solvated to prepare the input  to compute a free energy of hydration~\cite{oboyle2011open}. However, in these cases a careful choice of forcefield, as well as water models or organic solvents is essential. See for example~\cite{bosisio2016blinded,rustenburg2016measuring} for a good discussion on these choices. 
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % What simulation protocol should I choose   %
@@ -1206,7 +1212,7 @@ Merck benchmarking set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 \end{tabular}
 \end{table}
 
-Several other case studies of FEP calculations can be found in the review by Williams-Noonan et al.~\cite{williams-noonan2018free}. For comparison of FEP+ and Gromacs (using the AMBER99SB-ILDN and GAFF2 force field), cf. the recently published study by Pérez-Benito et al.~\cite{perez-benito2019predicting}.
+Several other case studies of alchemical calculations can be found in the review by Williams-Noonan et al.~\cite{williams-noonan2018free}. For comparison of FEP+ and Gromacs (using the AMBER99SB-ILDN and GAFF2 force field), cf. the recently published study by Pérez-Benito et al.~\cite{perez-benito2019predicting}.
 An overview of further suggested benchmark sets can be found in the review by Mobley and Gilson~\cite{mobley2017predicting} or on \url{alchemistry.org}~\cite{alchemistry}. These include cyclodextrins, the Cytochrome C peroxidase (CCP) protein model binding site, thrombin and bromodomains as well as solvation benchmark sets~\cite{paliwal2011benchmark}. Further work on shared protein-ligand benchmark sets is ongoing at \url{https://github.com/openforcefield/PLBenchmarks}.
 
 \section{Checklist}
@@ -1237,7 +1243,7 @@ An overview of further suggested benchmark sets can be found in the review by Mo
 
 % \begin{checklist}{Simulation preparation}
 % \textbf{How do I get started setting up an alchemical free energy calculation}
-% Extensive explanation for the checklist questions can be found in Section~\ref{sec:step1}.
+% Extensive explanation for the checklist questions can be found in Section~\ref{sec:prerequisites}.
 % \begin{itemize}
 % \item Have I followed the Best practices for biomolecular simulation set up?
 % \item In a relative simulation, will I run into problems with clashing geometries in the ligand transformation or crystal waters?
@@ -1307,7 +1313,7 @@ AR: Created figure~\ref{fig:freeenergytrajectories}, contributed to section \ref
 MRS: Helped create figure~\ref{fig:fig_what_is_lambda}, wrote sections describing choices for alchemical pathways and analysis for free energy calculations.
 LNN: Helped write the simulation length, stopping conditions, and information saving section.
 BA: Helped write the uncertainty estimation, stopping conditions, and output analysis sections and created figure ~\ref{fig:convergence_forward_reverse}.
-JM: Contributed to sections~\ref{subsec:reproducible},~\ref{sec:step1},~\ref{} 4.2, 5.3, 6, 8.3.1, 8.3.2\
+JM: Contributed to sections~\ref{subsec:reproducible},~\ref{sec:prerequisites},~\ref{} 4.2, 5.3, 6, 8.3.1, 8.3.2\
 JDC: Wrote section~\ref{sec:decorrelating-samples} and~\ref{sec:automatic-equilibration-detection} discussed structure and design of the whole document, suggested Figs.~\ref{fig:fig_what_is_alchemy} and~\ref{fig:fig_sampling_scheme} \todo[inline, color={red!20}]{@JDC check info}
 HX: Contributed section~\ref{subsec:accuracy}, to section~\ref{sec:relative-fe-protocol}, and to section~\ref{sec:are-they-good}.
 
