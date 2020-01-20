@@ -562,7 +562,7 @@ At present the most general solution to this problem is simply to avoid the use 
 \label{sec:standardstate-restraints}
 %
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{paper/figures/fig5_thermo_cyc_abs/Figure.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig5_thermo_cyc_abs/Figure.pdf}
     \caption{\textbf{Thermodynamic cycle required for an aboslute free energy calculation -- absolute free energy of binding example} The fully interacting ligand in water (\textbf{A}), has its charges turned off to pass to (\textbf{B}) followed by turning of van der Waals terms, resulting in a non-interacting ligand in water in (\textbf{C}). Restraints are used on the fully interacting ligand in the binding site of a protein or host molecule (\textbf{D}). The next step is to turn off the charges again (\textbf{E}) followed by the van der Waals interactions resulting in a non-interacting complex state (\textbf{F}). Free energyes can be computed as $\Delta G_{bind} = (\Delta G^{\mathrm{elec}}_{\mathrm{solv}}+ \Delta G^{\mathrm{VdW}}_{\mathrm{solv}})-(\Delta G^{\mathrm{elec}}_{\mathrm{bound}}+ \Delta G^{\mathrm{VdW}}_{\mathrm{bound}}$).
     }
     \label{fig:fig_absolute_thermodynamic_cycle}
@@ -662,7 +662,7 @@ Some choices are particularly crucial -- for example, transformations involving 
 %
 The key consideration for choosing alchemical pathways is that the intermediate states that a given pathway produces should sample configurational ensembles that change as slowly as possible as $\lambda$ changes, while still managing to go from the initial state to the final state as $\lambda$ goes from 0 to 1.
 %
-Another way of stating this is that intermediate states should sample molecular configurations that are as similar as possible to their neighboring states. The more similar the configurations are between intermediate states, the lower the statistical uncertainty is in the estimate of free energy between intervals. This can be proven directly from the BAR and MBAR formulas~\cite{bennett1976efficient,klimovich2015guidelines}, though the exact same principles apply for TI. For a 'good' path to work sufficient overlap between pontential energies is required. Fig.~\ref{fig:fig_what_is_lambda} (\textbf{A}) and (\textb{B}) try to illustrate this. Fig.~\ref{fig:fig_what_is_lambda} (\textbf{A}) shows in a pictorial way a soft-core potential can be applied across different $\lamda$s. Fig.~\ref{fig:fig_what_is_lambda} (\textbf{B}) illustrates the potential energy distributions at the different $\lambda$ intermediates, with sufficient overlap between neighboring $\lambda$ states to ensure that reweighting estimators such as MBAR can be used for analysis (see Sec.\ref{subsec:estimators}). The actual transformation is best handled with soft-core potentials of the form shown in Fig.\ref{fig:fig_what_is_lambda} (\textbf{C}) and (\textbf{B}), with more details given below. 
+Another way of stating this is that intermediate states should sample molecular configurations that are as similar as possible to their neighboring states. The more similar the configurations are between intermediate states, the lower the statistical uncertainty is in the estimate of free energy between intervals. This can be proven directly from the BAR and MBAR formulas~\cite{bennett1976efficient,klimovich2015guidelines}, though the exact same principles apply for TI. For a 'good' path to work sufficient overlap between pontential energies is required. Fig.~\ref{fig:fig_what_is_lambda} (\textbf{A}) and (\textbf{B}) try to illustrate this. Fig.~\ref{fig:fig_what_is_lambda} (\textbf{A}) shows in a pictorial way a soft-core potential can be applied across different $\lambda$s. Fig.~\ref{fig:fig_what_is_lambda} (\textbf{B}) illustrates the potential energy distributions at the different $\lambda$ intermediates, with sufficient overlap between neighboring $\lambda$ states to ensure that reweighting estimators such as MBAR can be used for analysis (see Sec.\ref{subsec:estimators}). The actual transformation is best handled with soft-core potentials of the form shown in Fig.\ref{fig:fig_what_is_lambda} (\textbf{C}) and (\textbf{B}), with more details given below. 
 %
 So how do we adjust the potentials between the two end states based on $\lambda$? The simplest possible alchemical pathway is a \textit{linear} pathway:
 %
@@ -1035,7 +1035,7 @@ Fig.~\ref{fig:freeenergytrajectories} illustrates how looking at the convergence
 \end{figure}
 %
 \paragraph{Overlap matrix}
-One way of assessing reliability of the calculations is checking the phase space overlap between neighboring $\lambda$-windows~\cite{wu2005phasespaceb, wu2005phasespacec}. For this purpose, a so-called overlap matrix $\mathcal{O}$ can be used.  $\mathcal{O} \in \mathbb{R}^{K\cross K}$, with $K$ being the number of simulated states, i.e. $\lambda$s. Sufficient overlap is important for reweighting estimators such as BAR or MBAR, but cannot help assess reliability of estimates, when using TI. 
+One way of assessing reliability of the calculations is checking the phase space overlap between neighboring $\lambda$-windows~\cite{wu2005phasespaceb, wu2005phasespacec}. For this purpose, a so-called overlap matrix $\mathcal{O}$ can be used.  $\mathcal{O} \in \mathbb{R}^{K\times K}$, with $K$ being the number of simulated states, i.e. $\lambda$s. Sufficient overlap is important for reweighting estimators such as BAR or MBAR, but cannot help assess reliability of estimates, when using TI. 
 These matrices are graphical representations of the phase space overlap, i.e. the average probability that a sample generated at state $j$ can be observed at state $i$. As this probability is computed considering the samples from all states (and not just the adjacent states), the values in each row and column add up to 1. In this analysis, the goal is to ensure every state has overlap with its neighbors in both directions -- so that off-diagonal elements are significantly larger than zero. Usually this means the matrix should be at least tridiagonal.
 %
 Details on the calculation and properties of these matrices can be found elsewhere~\cite{klimovich2015guidelines}.
@@ -1050,7 +1050,7 @@ However, due to the mathematical derivation it is difficult to explicitly descri
 Fig.~\ref{fig:overlap} shows examples of good, mediocre and poor overlap (\textbf{A}), (\textbf{B}), and (\textbf{C}) respectively. For Fig.~\ref{fig:overlap}(\textbf{A}), the probability to find a sample from state $i$ in its neighbouring state $j$ is about 0.2 for all states adjacent to the main diagonal, and hence the overall connectivity is good. In the case of Fig.~\ref{fig:overlap}(\textbf{B}), the overlap is strongly diminishing in the lower right corner, raising concerns regarding the reliability of the free energy estimate obtained. For Fig.~\ref{fig:overlap}(\textbf{C}), the state at $\lambda$ index = 6 is connected to neither of its neighbouring states. While this does not necessarily imply that the result for this perturbation is wrong, the energy estimate must at least be considered as highly unreliable.
 In order to overcome the issue of poor overlap in this example, additional sampling should be performed by introducing additional states, i.e. $\lambda$ windows.
 %
-Interestingly, as the variance is inversely correlated with the number of states\cite{klimovich2015guidelines}, it can in principle be reduced below any arbitrary threshold with enough simulation time and a large enough number of $\lambda$ windows. However, decreasing the variance to a value close to 0 is not feasible, as this approach would strongly increase the calculation time. While variance can be decreased both by increasing simulation length and by increasing the number of $\lambda$ values, if overlap is poor, the latter approach often has a larger immediate impact.  Specifically, often the goal is to adjust the $\lambda$ spacing to perform additional sampling in the areas of poor overlap, rather than using arbitrarily spaced windows. Different approaches are described in section~\ref{sec:simulation_protocol_choice}) and more details can be found in the literature~\cite{dakka2018concurrent, hahn2019alchemical}.
+Interestingly, as the variance is inversely correlated with the number of states~\cite{klimovich2015guidelines}, it can in principle be reduced below any arbitrary threshold with enough simulation time and a large enough number of $\lambda$ windows. However, decreasing the variance to a value close to 0 is not feasible, as this approach would strongly increase the calculation time. While variance can be decreased both by increasing simulation length and by increasing the number of $\lambda$ values, if overlap is poor, the latter approach often has a larger immediate impact.  Specifically, often the goal is to adjust the $\lambda$ spacing to perform additional sampling in the areas of poor overlap, rather than using arbitrarily spaced windows. Different approaches are described in section~\ref{sec:simulation_protocol_choice}) and more details can be found in the literature~\cite{dakka2018concurrent, hahn2019alchemical}.
 %
 In a nutshell, it must be ensured that the values of an overlap matrix in the first diagonals above and below the main diagonal are at least 0.03 in order to yield reliable results. 
 %
@@ -1219,6 +1219,93 @@ Merck  set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 
 \clearpage
 
+\clearpage
+
+\section{Checklist}
+\label{sec:checklist}
+\begin{Checklists*}[p!]
+\begin{checklist}{ Know what you want to simulate}
+    \textbf{Initial questions you should ask before you set up an alchemical free energy calculation using molecular dynamics simulations}
+\begin{itemize}
+    \item Do I understand the biology, chemistry and physics of my system?
+    \item Have I properly prepared my protein and ligand systems?
+    \item Does my system contain any structures that require custom parameters?
+    \item What simulation protocol will provide the most evidence to answer my hypothesis?
+    \item Are the projected computational expense and runtime realistic for my goals?
+    \item Will my protocol be reproducible? 
+    \item Will my statistics be reliable? If not, would more replicates solve the problem? Three replicates is the minimal number of replicates that should be run
+    \item Can I open-source my data?
+\end{itemize}
+\end{checklist}
+
+\begin{checklist}{Preparing your simulations}
+\textbf{Steps to getting started setting up your alchemical free energy calculation}
+\begin{itemize}
+    \item Make sure you know why you have picked your (combination of) force field(s)
+    \item Minimize your system
+    \item Equilibrate your system with your choice of thermodynamic ensemble
+    \item Check the stability of your system and whether it behaves the way you want it to
+\end{itemize}
+\end{checklist}
+
+\begin{checklist}{Running absolute simultions}
+        \textbf{Steps to running your absolute alchemical free energy calculations}
+\begin{itemize}
+ \item Your ligands should have the same, biologically correct binding pose
+        \item Make sure your \textlambda-scheduling is set correctly
+        \item Check if your ligands are discharging and vanishing correctly
+        \item Set up your restraints correctly
+        \item Make sure you subsample in your MBAR protocol
+        \item Apply the right correction terms
+\end{itemize}
+\end{checklist}
+
+\begin{checklist}{Running relative simulations}
+        \textbf{Steps to running your relative alchemical free energy calculations}
+\begin{itemize}
+   \item Your ligands should have the same, biologically correct binding pose
+        \item Make sure your λ-scheduling is set correctly
+        \item Make sure your molecular transformations are realistic (1-5 heavy atoms for reliable computations)
+        \item Generate a perturbation network by your method of choice; check whether you have enough cycle closures (preferably, every ligand should be in a cycle)
+        \item Check whether dummy atoms were assigned correctly
+        \item Make sure you subsample in your MBAR protocol
+\end{itemize}
+\end{checklist}
+
+\begin{checklist}{How do I know which simulations are not reliable}
+    \textbf{Situations suggesting your relative alchemical free energy calculations have not run properly (assuming absence of experimental affinities)}
+        \begin{itemize}
+                \item Standard error (\textsigma) should be \textless1 kcal·mol-1 
+    \item Simulated systems have not converged 
+    \newline\newline\textit{Relative:}
+    \item If you observe hysteresis in perturbations and incorrect cycle closures
+    \item Energy differences \textgreater15 kcal·mol-1  are unreliable
+    \newline\newline\textit{Absolute:}
+    \item Energies below -15 kcal·mol-1  are unreliable
+    \item The ligand has not sampled most of the intended region after the vanishing step
+    \item The ligand is drifting out of the intended region after the vanishing step
+        \end{itemize}
+\end{checklist}
+
+\begin{checklist}{Why are they not reliable}
+    \textbf{Suggestions for finding out why your alchemical free energy calculations may not be reliable}
+\begin{itemize}
+    \item Check again whether dummy atoms were assigned correctly
+    \item Inspect the trajectories across the λ-schedule (particularly the endpoints)
+    \item Inspect the overlap matrices
+\end{itemize}
+\end{checklist}
+
+\begin{checklist}{Data Analysis}
+    \textbf{Steps to analyzing your output data correctly}
+\begin{itemize}
+    \item Make sure you have run enough replicates to ensure statistical reliability (\textgreater3)
+    \item Compute both correlation and ranking coefficients and ranking statistics (e.g. r, \textrho, MUE and \texttau)
+    \item You should be able to explain large energy differences based on your system (trajectory)
+\end{itemize}
+\end{checklist}
+\end{Checklists*}
+\clearpage
 
 
 \section*{Author Contributions}
@@ -1238,16 +1325,15 @@ Merck  set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 \textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed figures ~\ref{} and created figures \ref{fig:fig_what_is_lambda},~\ref{fig:fig1_what_is_alchemy},~\ref{fig:overlap} and replotted~\ref{fig:automatic-equilibration-detection} and improved ~\ref{fig:fig_types_of_networks}.\\
 \textbf{JS}: created figures \ref{fig:fig_what_is_alchemy},~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, the data representation section, the checklist and contributed to general formatting discussions and editing.\\
 \textbf{MK}: Contributed to the Data Analysis section, provided the data for figure~\ref{fig:overlap} and helped edit the paper.\\
-DLM: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.\\
+\textbf{DLM}: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.\\
 \textbf{GT}: Contributed to introduction and drug discovery sections, and helped edit the paper.\\
 \textbf{AR}: Created figure~\ref{fig:freeenergytrajectories}, contributed to section \ref{sec:simulation_protocol_choice}, and helped edit the paper.\\
 \textbf{MRS}: Helped create figure~\ref{fig:fig_what_is_lambda}, wrote sections describing choices for alchemical pathways and analysis for free energy calculations.\\
 \textbf{LNN}: Helped write the simulation length, stopping conditions, and information saving section.\\
-\textbf{BA}: Helped write the uncertainty estimation, stopping conditions, and output analysis sections and created figure ~\ref{fig:convergence_forward_reverse}.
+\textbf{BA}: Helped write the uncertainty estimation, stopping conditions, and output analysis sections and created figure ~\ref{fig:convergence_forward_reverse}.\\
 \textbf{JM}: Contributed to sections~\ref{subsec:reproducible},~\ref{sec:prerequisites},~\ref{} 4.2, 5.3, 6, 8.3.1, 8.3.2\\
-\textbf{JDC}: Wrote section~\ref{sec:decorrelating-samples} and~\ref{sec:automatic-equilibration-detection} discussed structure and design of the whole document, suggested Figs.~\ref{fig:fig_what_is_alchemy} and~\ref{fig:fig_sampling_scheme} \todo[inline, color={red!20}]{@JDC check info}\\
-\textbf{HX}: Contributed section~\ref{subsec:accuracy}, to section~\ref{sec:relative-fe-protocol}, and to section~\ref{sec:are-they-good}.
-
+\textbf{JDC}: Wrote section~\ref{sec:decorrelating-samples} and~\ref{sec:automatic-equilibration-detection} discussed structure and design of the whole document, suggested Figs.~\ref{fig:fig_what_is_alchemy} and~\ref{fig:fig_sampling_scheme} \\
+\textbf{HX}: Contributed section~\ref{subsec:accuracy}, to section~\ref{sec:relative-fe-protocol}, and to section~\ref{sec:are-they-good}.\\
 % We suggest you preserve this comment:
 For a more detailed description of author contributions,
 see the GitHub issue tracking and changelog at \githubrepository.
