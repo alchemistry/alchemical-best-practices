@@ -228,14 +228,14 @@ where $k_B$ is the Boltzmann constant and $T$ the temperature of the system.
 One way to estimate the equilibrium constant is by computing the probability of finding the molecular system in the bound state ($PL$) or the unbound state ($P+L$), making use of partition function ratios, and assuming that the contribution of water compressibility at 1 atm has a negligible effect on the free energy of binding~\cite{shirts2012best, gilson1997statisticalthermodynamic} i.e. 
 
 \begin{equation}
-    \Delta G_{\mathrm{bind}} \cong \Delta F= -k_BT\ln\frac{\int_\mathrm{bound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}}{\int_\mathrm{unbound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}},
+    \Delta G_{\mathrm{bind}} \cong \Delta F= -k_BT\ln\frac{\int_\mathrm{bound} \exp(-\beta U(\vec{q}))d\vec{q}}{\int_\mathrm{unbound} \exp(-\beta U(\vec{q}))d\vec{q}},
 \end{equation}
 where $\beta = \frac{1}{k_BT}$ and $F$ is the Helmholtz free energy. 
 Or more generally in a simplified form the free energy difference ($\Delta f$) between the bound and unbound states is:
 \begin{equation}
 \Delta f \equiv f(\mathrm{bound}) - f(\mathrm{unbound}) = -\ln\frac{Z(\mathrm{unbound})}{Z({\mathrm{bound}})},
 \end{equation}
-where $Z = \int_\mathrm{bound} \exp(-\beta U(\mathbf{x}))d\mathbf{x}$ represents the configurational integral. 
+where $Z = \int_\mathrm{bound} \exp(-\beta U(\vec{q}))d\vec{q}$ represents the configurational integral. 
 Unfortuantely it is not possible to evaluate the integral required for the configurational integral exactly, but can be approximated using molecular dynamics simulations. 
 So, how can we compute $\Delta G_{\mathrm{bind}}$ from a molecular dynamics simulation? Running a direct simulation of the binding events is too computationally costly, meaning we cannot easily estimate the configurational integrals of the bound and unbound state from the simulation, as typically binding events happen at a $\mu$s scale, and simulations reach around 1 $\mu$s/day. For a reliable estimate of a single free energy of binding many days of simulations would be required, making these type of calculations uninteresting at a pharamaceutical timescale. Instead, we can run alchemical free energy simulations, by making use of the fact that free energy is a state function. We can write down a thermodynamic cycle as seen in ~\ref{fig:fig_binding_thermodynamic_cycle}, for a relative free energy simulation. Based on this cycle we can compute the relative free energy of binding between two compounds $A$ and $B$, by going along the arrow of $\Delta G_{\mathrm{bound}}$, where we introduce a second compound that is similar to the first one. Now $\Delta G_{\mathrm{bound}}$ can be expressed as a ratio of partition functions of toluene (A) and benzyl alcohol (B). 
 The defining characteristic of alchemical free energy calculations is the use of a series of alchemically-modified potential functions $U(x; \lambda)$ in which an alchemical parameter $\lambda$ modulates interactions in a manner that cannot occur in real chemical systems.
