@@ -147,16 +147,15 @@ As the field of molecular simulation moves towards millisecond timescales, accur
     \label{fig:fig_what_is_alchemy}
     }
 \end{figure}
-%
+
 %%%%%%%%%%%%%%%%%%%%
 % Prerequesites    %
 %%%%%%%%%%%%%%%%%%%%
 \section{Prerequisites and Scope}
 \label{sec:pre}
-\todo[inline, color=green!20]{ASJSM: @everyone This section is up for review to also check flow with intro and rest of document.}
-This guide is meant to serve as a comprehensive starting point for new practitioners of free energy calculations.  However, it assumes moderate experience with molecular simulation packages and concepts.  It is also intended to serve as a reference guide with a convenient checklist (Section~\ref{sec:checklist}) for more seasoned practitioners, to help ensure their calculations meet standard alchemical simulation and analysis practices. It can also serve as a set of best practices to ensure simulation robustness and reproducibility which reviewers may wish to consider as they evaluate papers. Importantly, it is not, a review of all free energy calculation methods at the cutting edge of current research.
-
-This guide aims to answer the following questions:
+What can be expected from this Best Practice guide is a good starting point for new practitioners and a reference for experience practitioners. For this propose we provide a convenient checklist (Section~\ref{sec:checklist}) to help ensure all calculations meet standard alchemical simulation and analysis practices. It can also serve as a set of best practices to ensure simulation robustness and reproducibility which reviewers may wish to consider as they evaluate papers.
+What we assume from a novice practitioner is a moderate experience with molecular simulation packages and concepts. Furthermore basic familiarity with the principles of molecular mechanics, molecular dynamics simulations, statistical mechanics, and the biophysics of protein-ligand association are essential. If you feel unfamiliar with some of these concepts, good starting points can be found in these references~\cite{braun2019best, grossfield2018best, klimovich2015guidelines, shirts2012best}. While reading this Best Practice document, it is important to bare in mind \emph{this is not a review} of all free energy calculation methods at the cutting edge of current research.
+Instead the guide aims to answer the following questions:
 \begin{itemize}
     \item Is my problem suitable for an alchemical free energy calculation? 
     \item How do I choose the right free energy protocol and run it? 
@@ -164,24 +163,24 @@ This guide aims to answer the following questions:
     \item What software tools are available to perform alchemical free energy calculations? 
 \end{itemize}
 %
-We assume the reader possesses a basic familiarity with the principles of molecular mechanics, molecular dynamics simulations, statistical mechanics, and the biophysics of protein-ligand association. If you feel unfamiliar with some of these concepts, good starting points can be found in these references~\cite{braun2019best, grossfield2018best, klimovich2015guidelines, shirts2012best}. 
 
-Other background information may be needed depending on the project. For example, often, if binding poses are not known, docking calculations can be used to generate an initial small molecule binding pose to start alchemical calculations, thus some basic familiarity on how to perform docking is also necessary for such projects~\cite{grinter2014challenges}. 
+
+Some other background information may be needed depending on the nature of the alchemical project. For example, often, if binding poses are not known, docking calculations can be used to generate an initial small molecule binding pose to start alchemical calculations. This will require some basic familiarity on how to perform docking calculations to generate reasonable simulation starting points~\cite{grinter2014challenges}. 
 %
-As some of the theoretical background can seem daunting, in this best practices description, we do provide a guide to the essential theory behind alchemical free energy calculations in Section~\ref{sec:theory}.
+As some of the theoretical background can seem daunting, we do, however, provide a guide to the essential theory behind alchemical free energy calculations in Section~\ref{sec:theory}.
 
-In the remainder of this paper, we will cover topics that are key to the preparation~(\ref{sec:prerequisites}), choice and use of correct protocols~(\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used for the analysis of alchemical calculations~(\ref{sec:data_analysis}). 
+In the remainder of this paper, we will cover topics that are key to the preparation~(\ref{sec:prerequisites}), choice and use of correct protocols~(\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used in the analysis of alchemical calculations~(\ref{sec:data_analysis}). 
 Particular focus will be given to aspects of the molecular simulations which are unique to alchemical calculations---these include the calculation of transfer free energies (hydration free energies, partition coefficients, etc.), and binding free energies (absolute and relative).
 %
 
-While we try to address as many methods and practices as possible, the field of free energy calculations is broad, and there are many advanced topics that are left to future best practices documents focusing on specific issues. 
+While we try to address as many methods and practices as possible, the field of free energy calculations is broad, and there are many advanced topics that are left to future Best Practices documents focusing on specific issues. 
 Below, we provide a non-exhaustive list of topics we have not addressed with some references to provide starting points on these more advanced topics:
 \begin{itemize}
-\item covalent inhibition
-\item free energies of mutation of protein side chains
-\item nonspecific binding or multiple binding sites.
+\item covalent inhibition~\cite{lameira2019predicting}
+\item free energies of mutation of protein side chains~\cite{gapsys2016accurate, aldeghi2018accurate}
+\item nonspecific binding or multiple binding sites~\cite{gill2018binding}
 \item complex association stoichiometry (beyond simple 1:1 association).
-\item approximate endpoint free energy methods such as MM-PBSA~\cite{genheden2015mm} and LIE~\cite{gutierrez-de-teran2012linear}
+\item approximate and often less accurate endpoint free energy methods such as MM-PBSA~\cite{genheden2015mm} and LIE~\cite{gutierrez-de-teran2012linear}
 \item Free energy methods that extract the ligand using geometric order parameters and potential of mean force methods~\cite{heinzelmann2017attachpullrelease}
 \item forcefield dependence for protein, ligand, ions, co-solvents, and co-factors. A number of different studies have looked at the influence of force fields and it is assumed the user has made an adequate choice for the system under study~\cite{loeffler2018reproducibility, vassetti2019assessment, lopes2015current}. 
 \end{itemize}
@@ -202,7 +201,8 @@ For convenience we have also compiled a list of common acronyms, common symbols 
     \textit{SAR} -- Structure-Activity Relationships\\
     \textit{TI} -- Thermodynamic Integration
 \end{tcolorbox}
-%\label{sec:abbreviations}
+
+
 \begin{tcolorbox}[title=List of Symbols, colback=green!10!white]
 $U$ -- potential energy\\
 $u$ -- reduced potential energy \\
@@ -218,12 +218,13 @@ $\Gamma$ -- conformation space accessible by simulations \\
 $\vec{q}$ -- single configuration\\
 $g$ -- statistical inefficiency
 \end{tcolorbox}
+
 \begin{tcolorbox}[title=Common terminology, colback=yellow!10!white]
     \emph{ligand} - small molecule binding to a larger host molecule such as a protein (receptor).\\ 
     \emph{lead optimization} - process of designing a drug candidate from an initial lead compound, usually involving optimizing its affinity, possibly selectivity, and various pharmacokinetic parameters.\\
     \emph{thermodynamic cycle} - sequence of thermodynamic processes (like changes in temperature, volume or pressure) in which the initial and final state are equal.\\
 \end{tcolorbox}
-%
+
 %%%%%%%%%%%%%%%%%%%%
 % Theory basics    %
 %%%%%%%%%%%%%%%%%%%%
