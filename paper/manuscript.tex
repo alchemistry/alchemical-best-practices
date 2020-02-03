@@ -126,15 +126,15 @@ Alchemical calculations can be used in a variety of scenarios, such as:
 Furthermore, alchemical calculations are frequently used to estimate changes in free energies upon modifying a ligand or protein: 
 \begin{itemize}
 \item a protein residue can be alchemically mutated to probe the impact on binding affinity (Fig.~\ref{fig:fig_what_is_alchemy} \textbf{D})\cite{hauser2018predicting,aldeghi2018accurate} or changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}; 
-\item the entire ligand can be alchemical transferred from protein to solvent in an absolute binding free energies (Fig.~\ref{fig:fig_what_is_alchemy} \textbf{E})~\cite{mobley2007predicting,aldeghi2015accurate,aldeghi2017predictions}; 
-\item and small alchemical modifications can be made between chemically related ligands to estimate differences in binding free energies (Fig.~\ref{fig:fig_what_is_alchemy} \textbf{F})~\cite{wang2015accurate,mey2016blinded,gapsys2020large}.
+\item the entire ligand can be alchemical transferred from protein to solvent in an absolute binding free energy calculation (Fig.~\ref{fig:fig_what_is_alchemy} \textbf{E})~\cite{mobley2007predicting,aldeghi2015accurate,aldeghi2017predictions}; 
+\item and small alchemical modifications can be made between chemically related ligands to estimate relative differences in binding free energies (Fig.~\ref{fig:fig_what_is_alchemy} \textbf{F})~\cite{wang2015accurate,mey2016blinded,gapsys2020large}.
 \end{itemize}
 %
 
 Once an alchemical simulation procedure is performed (which usually involves more than one simulation), the data must be analyzed to estimate the free energy for the transformation of interest.
-Early work used simple but statistically suboptimal estimators for this: free energy perturbation (FEP) using the Zwanzig relation~\cite{zwanzig1954hightemperature} or thermodynamic integration (TI), for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamics, merz1989free}. %
+Early work used simple but statistically suboptimal estimators for this: free energy perturbation (FEP) using the Zwanzig relation~\cite{zwanzig1954hightemperature} or thermodynamic integration (TI), for which the theory dates back decades but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamicsa, merz1989free}. %
 More recent developments have seen new, highly efficient statistical estimators that make better use of all the data, often building on the Bennett acceptance ratio (BAR)~\cite{bennett1976efficient}, producing multistate generalizations~\cite{shirts2008statisticallya} or removing the need for global equilibrium~\cite{wu2016multiensemble, mey2014xtram, wu2014statistically}.
-\todo[inline, color={yellow!20}]{JDC: The key pivotal moment was the Shirts paper on extremely precise free energy calculations, which demonstrated that a combination of technologies can produce robust estimates with useful precision. MRS: aw, shucks! added.}
+
 Important studies continued during the 2000's often leading to improved implementation of the methods in common simulation software~\cite{shirts2003extremely,shirts2005solvation,vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, hedges2019biosimspace}. 
 This foundational work, combined with the methodological, technological, and hardware improvements of the last 5--10 years, have led to an explosion of interest and direct commercial application of the technologies~\cite{wang2015accurate, fratev2019improved, schindler2020largescale, cournia2017relative, sherborne2016collaborating}.
 %
