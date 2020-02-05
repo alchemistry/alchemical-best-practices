@@ -388,9 +388,9 @@ Furthermore, perturbations for the same chemotype in different pockets of the BA
 
 \subsection{How reproducible are alchemical free energy calculations?}
 \label{subsec:reproducible}
-Finite computing resources necessarily limit the generated number of uncorrelated samples of potential energy surfaces, and therefore alchemical free energy calculations only give free energy estimates to within finite precision. An important consideration is how reproducible alchemical free energy calculations are in practice. In simple cases such as absolute hydration free energies of small organic molecules, or relative hydration free energy calculations between structurally similar small organic molecules, it should be possible to obtain highly precise estimates with a given software package (with a sample standard deviation under 0.01 kcal/mol). [DO WE HAVE A CIATION FOR THIS?]
+Finite computing resources necessarily limit the generated number of uncorrelated samples of potential energy surfaces, and therefore alchemical free energy calculations only give free energy estimates to within finite precision. An important consideration is how reproducible alchemical free energy calculations are in practice. In simple cases such as absolute hydration free energies of small organic molecules, or relative hydration free energy calculations between structurally similar small organic molecules, it should be possible to obtain highly precise estimates with a given software package (with a sample standard deviation under 0.01 kcal/mol)~\cite{rizzi2019sampl6}.
 
-For more complex use cases such as protein-ligand binding free energies the repeatability is often substantially worse. A good practice is to perform two or three runs of the same perturbation to assess repeatability with a given protocol. The sample standard deviation will give a crude estimate of the reliability of the estimates, and whether the precision is sufficient for the problem at hand. Where this is practical, a more stringent test is to use different input coordinates for each repeat run. 
+For more complex use cases such as protein-ligand binding free energies the repeatability is often substantially worse~\cite{rizzi2019sampl6}. A good practice is to perform two or three runs of the same perturbation to assess repeatability with a given protocol. The sample standard deviation will give a crude estimate of the reliability of the estimates, and whether the precision is sufficient for the problem at hand. Where this is practical, a more stringent test is to use different input coordinates for each repeat run. 
 
 Note that these issues concern calculations carried out with a single software package, but simulation package variations can introduce additional issues. Such issues of reproducibility of free energy calculations across different simulation packages have attracted attention recently. Greater variability is expected due to methodological differences such as integrators, thermostats, barostats, treatment of long-range electrostatics, and potentially other factors. For absolute and relative hydration free energies of small organic molecules a variability of ca. 0.2 kcal/mol between popular simulation packages has been reported, even after fixes to the underlying simulation packages~\cite{loeffler2018reproducibility}. In the recent SAMPL6 SAMPLing challenge a larger variability of 0.3 to 1.0 kcal/mol was noted in the computed absolute binding free energies of host/guest systems even though similar input and simulation parameters were used~\cite{rizzi2019sampl6} and, in many cases, single-point energies were identical or nearly so. Further work is needed to ensure reproducibility of alchemical free energy calculations across implementations to guarantee that force-field development efforts lead to transferable potential energy functions. 
 
@@ -407,6 +407,7 @@ compounds might be easily and quickly available commercially for
 testing and free energy calculations could consume far more resources. Free energy calculations thus typically only
 appeal when (slow or costly) synthesis would be required or experiments are otherwise cost-prohibitive.
 
+\todo[inline, color={green!20}]{ASJSM: @JDC, Can you check the issues below? }
 Sometimes free energy calculations can provide answers that are not
 readily available from experiments.  For example, type II kinase
 inhibitors selectively bind to different kinases in the so-called
@@ -422,16 +423,15 @@ binding constant of this inhibitor against this kinase is then
   K_D = K_D^\ast \frac{1 + K_C}{K_C}
   \label{eqn:conformational-binding}
 \end{equation}
-%
+
 Since binding experiments cannot resolve $K_D^\ast$ and $K_C$ individually, such experiments cannot address the basis of selectivity of the type II inhibitors.  Absolute binding free energy calculations, in contrast, can take advantage of the slow kinetics of DFG-in/out conversion, and estimate the conformation-specific binding constant $K_D^\ast$, thus yielding clues as to the source of selectivity.
-%
+
 \subsection{Is the expected accuracy of the computation sufficient?}
 \label{subsec:accuracy}
 The requisite level of accuracy is another important consideration ---if the
 goal is to guide lead optimization when many compounds will be
 synthesized, free energy calculations can be appealing even with
-accuracy in the 1--2 kcal/mol range~\cite{mobley2012perspective}, but if the number of compounds to be synthesized is very small, this accuracy may not be enough to provide
-much value.
+accuracies in the 1--2 kcal/mol range~\cite{mobley2012perspective}, but if the number of compounds to be synthesized is very small, this accuracy may not be enough to provide much value.
 
 Here we provide a simple estimate of the value provided by alchemical
 free energy calculations in lead optimization.  Let $P(\Delta\Delta
@@ -456,7 +456,7 @@ In lead optimization guided by free energy calculations, we will likely only
 synthesize and experimentally test molecules that are predicted to
 have favorable free energy changes.  We are thus interested in how
 often that a molecule predicted to bind stronger actually turns out to
-bind stronger.  In other words, we are interested in the conditional
+bind stronger. In other words, we are interested in the conditional
 probability:
 \begin{equation}
   P(\Delta\Delta G<0|\Delta\Delta G^\dagger<0).
@@ -471,8 +471,7 @@ distribution, that the standard deviation in the changes is $RT\ln 5$
 \leq 0$).  Under such assumptions, the conditional probability in
 Eq.~\ref{eqn:true-positive} can be easily computed. 
 
-If the accuracy
-of free energy calculations is $\sigma = 1$ kcal/mol, $P(\Delta\Delta
+If the accuracy of free energy calculations is $\sigma = 1$ kcal/mol, $P(\Delta\Delta
 G<0|\Delta\Delta G^\dagger<0) = 0.35$, which means that out of every
 10 molecules selected for predicted favorable free energy change, on
 average 3.5 molecules will have actual favorable free energy change.
@@ -488,17 +487,16 @@ capture the relevant motions in the system. If such motions are
 microsecond events or longer, the computational cost of running 20-40
 microsecond or longer simulations for each of $N$ ligands may become
 prohibitive, or at least should be carefully considered. Alternatively, if key motions are fast and minimal, only much shorter simulations may be necessary. 
-%
+
 \subsection{Can I afford the calculation?}
 \label{subsec:affordability}
-Furthermore, are available computational resources sufficient that throughput will be
-reasonable compared to needs of experimental collaborators working on
+Furthermore, are available computational resources sufficient that throughput will be reasonable compared to needs of experimental collaborators working on
 this system? How many ligands ($N$) can you afford to handle given
 your computational resources? As cloud computing becomes more available, in-house GPU clusters may not be necessary if calculations are not run on a regular basis.
-This analysis should be done up front, part of ``counting the cost''
+This analysis should be done up front as part of ``counting the cost''
 of involvement in a particular project. In some cases, the analysis may conclude that free energy calculations will not be feasible for the proposed problem.
 Here, by ``cost'', we refer not just to financial cost of the calculations relative to experiments, but also time -- can the calculations be run faster than experiments are done? How will the relevant resource and opportunity costs factor in? Both computation and experiment require human time, supplies (of different sorts), and equipment. In the extreme limit, for example, it would not make sense to spend a month running a binding free energy calculation if the equivalent experiment could be done in a day with resources already on hand. Such issues should be considered before deciding to conduct binding free energy calculations.
-%
+
 \subsection{Is an exploratory study what I want?}
 \label{subsec:exploration}
 An additional consideration is how much is known about your particular
@@ -513,29 +511,28 @@ proposed target.
 %
 \section{How should alchemical simulations be applied to drug discovery?}
 \label{sec:drugdiscovery}
-%
-Many practitioners expect alchemical methods to provide valuable guidance for drug discovery, and to exhibit accuracy superior to most  alternative approaches for suitable targets~\cite{kuhn2017prospective}. Successful application in industry may require considerable knowledge of the "domain of applicability" of free energy calculations -- where they work well and where they will not~\cite{sherborne2016collaborating}. Successful application also requires robust protocols for preparing, submitting and analysing alchemical calculations. In this regard, the issues mentioned in the previous section such as understanding the suitability and timescales to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. Without venturing too far into details of system setup, which is beyond the scope of this article, we highlight some critical factors affecting accuracy and successful application. 
+Many practitioners expect alchemical methods to provide valuable guidance for drug discovery, and to exhibit accuracy superior to most alternative approaches for suitable targets~\cite{kuhn2017prospective}. Successful application in industry may require considerable knowledge of the ``domain of applicabilit'' of free energy calculations -- where they work well and where they will not~\cite{sherborne2016collaborating}. Successful application also requires robust protocols for preparing, submitting and analysing alchemical calculations. In this regard, the issues mentioned in the previous section such as understanding the suitability and timescales to capture the structure activity relationships (SAR), and performing up-front tests of performance are all relevant to drug discovery applications. Without venturing too far into details of system setup, which is beyond the scope of this article, we highlight some critical factors affecting accuracy and successful application. 
 %
 \subsection{Capturing experimental conditions}
 The calculations aim to capture the alchemical change from one ligand to another as accurately as possible. Therefore, it is necessary to consider details of the experimental setup, such as pH. Biological assays are usually run at neutral pH but this is not always the case, and protein and ligand preparation protocols should reflect experimental pH. 
 
 The formal charge and/or tautomeric state of the small molecules can change within a series of analogs, necessitating care in treatment. Additionally, medicinal chemistry efforts might deliberately modify the pKa of a series to modify drug properties, requiring explicit efforts to incorporate these changes into alchemical calculations.
 
-To ensure modeling matches experiment, we also need to accurately model and  simulate the same system -- which requires understanding what protein construct is used in the bioassay. For instance, does the X-ray structure that is to be used for the calculations match the construct used for screening (i.e. catalytic vs full length, monomer vs dimer etc)~\cite{perez-benito2018predicting}? Also, were certain co-factors or partner proteins required in the bioassay? 
+To ensure modeling matches experiment, we also need to accurately prepare and  simulate the same system -- which requires understanding what protein construct is used in the bioassay. For instance, does the X-ray structure that is to be used for the calculations match the construct used for screening (i.e. catalytic vs full length, monomer vs dimer etc)~\cite{perez-benito2018predicting}? Also, were certain co-factors or partner proteins required in the bioassay? 
 %
 \subsection{Is my binding mode accurate?}
-As also mentioned, good performance of alchemical FE calculations requires an accurate representation of the ligand binding mode, usually from a high quality X-ray crystal structure. If more than one structure is available, the modeler should pay attention to choose the most suitable. The quality of the structure can be a concern, and the reader is referred to work of Warren et al. for a detailed discussion of choosing optimal structures for structure-based modeling~\cite{warren2012essential}. 
+As also mentioned, good performance of alchemical FE calculations requires an accurate representation of the ligand binding mode, usually from a high quality X-ray crystal structure. If more than one structure is available, the modeler should pay attention to choose the most suitable. The quality of the structure can be a concern, and the reader is referred to work of Warren et al. for a detailed discussion of choosing optimal structures for structure-based modeling~\cite{warren2012essential}.
 
 It is also useful to study the structure activity relationship and understand the expected impact in the binding site, whether side chain movement in the protein will be required, and whether there is evidence of this in any alternative X-ray structures of the same protein. Often, only one protein and water configuration is used for a series of alchemical FE calculations, so this needs to be capable of accommodating the smallest through to largest ligands in a way that allows stable and well behaved simulations. This can provide a practical limit on the alchemical changes that are feasible, though a simple work-around can be to separate compounds into sub-series for different calculations. 
 
-If multiple structures are available there is some evidence the higher affinity complex can give better performance~\cite{perez-benito2019predicting}, at least in some cases. However, ligands and proteins can also undergo unexpected changes in binding mode for related ligands, which can make these issues more complex to deal with.
+If multiple structures are available there is some evidence the higher affinity complex can give better performance~\cite{perez-benito2019predicting}, at least in some cases. However, ligands and proteins can also undergo unexpected changes in binding mode for related ligands, which can make these issues more complex to deal with~\cite{mey2016blinded}.
 
 \subsection{Input setup and scale of calculations}
 In a drug discovery setting it is normal to consider dozens (or more) of ligands and it is necessary to align them in the binding site. There is no detailed study of how different alignment approaches may affect results, but the user should be aware of some practical considerations. Tools are available to compare the ligands and build the hybrid topologies that define the changes between one ligand and another~\cite{loeffler2015fesetup,hedges2019biosimspace,gapsys2015pmx}. In simple terms, providing poor alignment to these tools will make this job harder. Therefore, docking ligands with no restraints is not usually the best method for defining the ligand inputs, instead a core restrained docking can provide satisfactory outcomes, but in this case one still should pay careful attention to consistency of alignment for identical substituents. Another alternative is to manually edit the same core and add/modify the changing substituents. This provides assurances that coordinates for the non-perturbed portion of the structure  remain identical and aromatic substituents for instance have consistent dihedral angles but is not feasible for many compounds and therefore automation can be desirable. 
 
-Finally, the role of water in ligand binding is not always well understood and it can be crucial to capture the changes in binding site solvation during ligand binding. Can crystallographic waters be retained? Do they clash with some of the larger ligands used in the FEP? If so, how will the solvent be incorporated for smaller ligands that require the water – consider pre-solvation methods such as GCMC steps~\cite{michel2010prediction}. Other tools such as WaterMap or open source equivalents (SSTmap, others) can be used to define water structure for systems with no experimental evidence of water sites. Before launching large numbers of alchemical free energy calculations it is recommended to test the system using classical MD simulations and limited numbers of alchemical perturbations. Metrics such as ligand and protein RMSD and RMSF can be inspected, along with visual inspection of simulations, to ensure the system is stable and likely to be suitable for FE calculations. 
+Finally, the role of water in ligand binding is not always well understood and it can be crucial to capture the changes in binding site solvation during ligand binding. Can crystallographic waters be retained? Do they clash with some of the larger ligands used in the alchemical perturbation? If so, how will the solvent be incorporated for smaller ligands that require the water -- consider pre-solvation methods such as GCMC steps~\cite{michel2010prediction}. Other tools such as WaterMap or open source equivalents (SSTmap, others) can be used to define water structure for systems with no experimental evidence of water sites. Before launching large numbers of alchemical free energy calculations it is recommended to test the system using classical MD simulations and limited numbers of alchemical perturbations. Metrics such as ligand and protein RMSD and RMSF can be inspected, along with visual inspection of simulations, to ensure the system is stable and likely to be suitable for alchemical calculations. 
 
-Running binding FE calculations in a drug discovery application will typically require the use of software or tools to facilitate the large number of calculations. The commercial implementation from Schr\"{o}dinger, FEP+, uses a graphical user interface and once the user has calculated any missing force field parameters, calculations can be prepared and submitted within minutes. The software builds the network of perturbations, connecting similar compounds based on LOMAP methodology~\cite{liu2013lead}, all inputs for the Desmond simulations are built automatically and the job can be saved or run immediately on available GPUs. Commercial tools can be expensive in some cases, but alternative tools are becoming available to allow relatively straightforward alchemical FE calculations with other software~\cite{gapsys2015pmx, loeffler2015fesetup, song2019using, gapsys2020large,  jespers2019qligfep}.
+Running free energy of binding calculations in a drug discovery application will typically require the use of software or tools to facilitate the large number of calculations. The commercial implementation from Schr\"{o}dinger, FEP+, uses a graphical user interface and once the user has calculated any missing force field parameters, calculations can be prepared and submitted within minutes. The software builds the network of perturbations, connecting similar compounds based on LOMAP methodology~\cite{liu2013lead}, all inputs for the Desmond simulations are built automatically and the job can be saved or run immediately on available GPUs. Commercial tools can be expensive in some cases, but alternative tools are becoming available to allow relatively straightforward alchemical FE calculations with other software~\cite{gapsys2015pmx, loeffler2015fesetup, song2019using, gapsys2020large,  jespers2019qligfep}.
 
 For relative free energy calculations, various graph topologies or maps of calculations are possible, and choices may depend on the target application. For instance, if the goal is to accurately assess the relative binding energy of a small number of compounds, possibly with challenging synthesis, the map of perturbations should contain as many connections between compounds as affordable. However, when running calculations on hundreds of compounds a so called ‘star-map’ can be used that just contains one connection per compound: perturbing every compound to a central ligand, typically the crystal structure ligand~\cite{konze2019reactionbased}. In this way the top-ranking examples can be readily identified and submitted to additional calculations in a second round. Alternatively, if the goal is to achieve the smallest possible error with minimal computational expense, certain graph topologies provide benefits~\cite{https://doi.org/10.1002/jcc.26095, https://doi.org/10.1021/acs.jcim.9b00528}
 
