@@ -46,6 +46,7 @@ y_data = np.append(y_data_raw, [-8.3, -9])
 ###############################################
 # figure plotting:
 
+plt.figure(figsize=(10,10))
 sns.set(font='sans-serif', style="ticks")
 plt.tick_params(labelsize=18)
 
@@ -104,25 +105,64 @@ plt.errorbar(x_data, y_data,
 # compute statistics on the datapoints and insert via pandas:
 # take datasets without the inserted outliers:
 
-r, p_ignore = scipy.stats.pearsonr(x_data_raw, y_data_raw)
-r2 = r**2
-mue = mean_absolute_error(x_data_raw, y_data_raw)
-rho, p_ignore = scipy.stats.spearmanr(x_data_raw, y_data_raw)
-tau, p_ignore = scipy.stats.kendalltau(x_data_raw, y_data_raw)
+def boostrap_statistic(x_data, y_data, n = 10000):
+    n_samples = len(x_data)
+
+    all_stats = {'r2': [],
+                 'mue':[],
+                 'rho':[],
+                 'tau':[]}
+    for i in range(n):
+        if i == 0:
+            x_samples = x_data
+            y_samples = y_data
+        else:
+            samples = np.random.choice(range(n_samples), size=n_samples) # sampling with replacement
+            x_samples = [x_data[i] for i in samples]
+            y_samples = [y_data[i] for i in samples]
+        
+        r, _ = scipy.stats.pearsonr(x_samples, y_samples)
+        all_stats['r2'].append(r**2)
+        mue = mean_absolute_error(x_samples, y_samples)
+        all_stats['mue'].append(mue)
+        rho, _ = scipy.stats.spearmanr(x_samples, y_samples)
+        all_stats['rho'].append(rho)
+        tau, _ = scipy.stats.kendalltau(x_samples, y_samples)
+        all_stats['tau'].append(tau)
+
+    results = {'r2': {},
+               'mue':{},
+               'rho':{},
+               'tau':{}}
+    low_frac = 0.05/2.0 # 95% CI
+    high_frac = 1.0 - low_frac
+    for stat in all_stats.keys():
+        results[stat]['real'] = all_stats[stat][0]
+        all_stats[stat] = sorted(all_stats[stat])
+        results[stat]['mean'] = np.mean(all_stats[stat])
+        results[stat]['low'] = all_stats[stat][int(n*low_frac)]
+        results[stat]['high'] = all_stats[stat][int(n*high_frac)]
+ 
+    return results
+
+stats = boostrap_statistic(x_data_raw, y_data_raw)
 
 df = pd.DataFrame(np.array([
-							[r"R$^2$", round(r2, 2)],
-							[r"MUE (kcal$\cdot$mol$^{-1}$)", round(mue, 2)],
-							[r"Spearman $\rho$", round(rho, 2)],
-							[r"Kendall $\tau$", round(tau, 2)],
-
+							[r"R$^2$", "{:.2f} ({:.2f} - {:.2f})".format(stats['r2']['real'],stats['r2']['low'], stats['r2']['high'])],
+							[r"MUE (kcal$\cdot$mol$^{-1}$)", "{:.2f} ({:.2f} - {:.2f})".format(stats['mue']['real'],stats['mue']['low'], stats['mue']['high'])],
+							[r"Spearman $\rho$", "{:.2f} ({:.2f} - {:.2f})".format(stats['rho']['real'],stats['rho']['low'], stats['rho']['high'])],
+							[r"Kendall $\tau$", "{:.2f} ({:.2f} - {:.2f})".format(stats['tau']['real'],stats['tau']['low'], stats['tau']['high'])],
 							]),
 				columns=["Metric", "Value"])
-plt.table(cellText=df.values, colLabels=df.columns, 
+
+table = plt.table(cellText=df.values, colLabels=df.columns, 
 				bbox=[0.6,0.05, 0.4,0.3], 
-				fontsize=6,
-				colWidths=[0.75, 0.25],
+				colWidths=[0.5, 0.5],
 				zorder=-20)
+
+table.auto_set_font_size(False)
+table.set_fontsize(12)
+table.scale(1,1)
 
 # some final formatting:
 sns.despine()
