@@ -1227,95 +1227,88 @@ Reporting the results of relative free energy calculations requires care. As sho
 %
 
 \paragraph{Presenting your data}
-As essentially all alchemical free energy prediction schemes are regression problems, the preferred type of plot is a scatter plot (see Figure \ref{fig:scatterplot_analysis}). Most alchemical FE projects will concern 10-50 ligands; any study with \textless10 ligands is more suitable for bar plots (with inclusion of error bars). Any study with \textgreater50 ligands should be trellised to not overestimate statistics. Because of this, it is bad practice to place multiple datasets on the same plot, because this can suggest high model accuracy even though the individual models perform less well \cite{walterthoughts}.
+As essentially all alchemical free energy prediction schemes are regression problems, the preferred type of plot is a scatter plot (see Figure \ref{fig:scatterplot_analysis}). Most alchemical free energy projects will look at 10-50 ligands; any study with \textless10 ligands is more suitable for bar plots (with inclusion of error bars), and will unlikely provide meaningful statistics. Any study with \textgreater50 ligands should be trellised to not overestimate statistics. Because of this, it is bad practice to place multiple datasets on the same plot, because this can suggest high model accuracy even though the individual models perform less well~\cite{walterthoughts}.
 %
 
-Because we are interested mainly in the linear relationship between the alchemical FE predictions and the experimentally-determined affinity values, plots should be depicted with the same range on both axes (i.e. $x=y$) with a 1:1 aspect ratio, with units for both experiment and simulation converted to be the same. Furthermore, bounds should be depicted for the 1- and 2-kcal/mol confidence regions. These regions can serve as tools to communicate your model performance: any predictions inside the 1 kcal/mol region can be seen as highly reliable, any predictions inside the 2 kcal/mol region should be seen as somewhat reliable, and any predictions outside the confidence regions should be expected to be unreliable (and handled as outliers). In a drug discovery context, this type of data depiction may suggest the reliability of alchemical FE predictions in the project, and can give an idea of how trustworthy predictions can be for synthesis ideas. 
+Because we are interested mainly in the linear relationship between the alchemical free energy predictions and the experimentally-determined affinity values, plots should be depicted with the same range on both axes (i.e. $x=y$) with a 1:1 aspect ratio, with units for both experiment and simulation converted to be the same. If this is skews the plot to a point where it is difficult to read of information, using the same dimensions, such that e.g. 1 cm is 1 kcal/mol is acceptable.  Furthermore, bounds should be depicted for the 1- and 2-kcal/mol confidence regions. These regions can serve as tools to communicate your model performance: any predictions inside the 1 kcal/mol region can be seen as highly reliable, any predictions inside the 2 kcal/mol region should be seen as somewhat reliable, and any predictions outside the confidence regions should be expected to be unreliable (and handled as outliers). In a drug discovery context, this type of data depiction may suggest the reliability of alchemical FE predictions in the project, and can give an idea of how trustworthy predictions can be for synthesis ideas. 
+
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig13_analysis_practices/Figure.pdf}
-    \caption{Example of a well-depicted alchemical free energy prediction showing the relation between predicted and experimentally-determined Gibbs free energy in kcal/mol with standard errors as error bars. The two outliers (underestimations) are shown in red; the dark and light-orange regions depict the 1- and 2-kcal per mol confidence bounds.}
+    \caption{\textbf{An example of recommended practices for graphing alchemical free energy predictions.} This figure shows the relation between predicted and experimentally-determined Gibbs free energy in kcal/mol with standard errors as error bars. The dark and light-orange regions depict the 1- and 2-kcal per mol confidence bounds. Extra care should be taken when investigating potential outliers further.}
     \label{fig:scatterplot_analysis}
 \end{figure}
+
 An example of a best practice scatter comparison between computed and experimental values is shown in Fig.~\ref{fig:scatterplot_analysis}, highlighting outliers, error bars and confidence intervals. The data for this plot is artificially generated for illustration purposes.
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Conclusions                 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Conclusions}
 \label{sec:conclusion}
-Alchemical free energy calculations have seen a vast increase in popularity also in the pharmaceutical industry for structure based drug discovery~\cite{schindler2020largescale, sherborne2016collaborating, wagner2017computational}. Commercial products such as FEP+ and Flare, which provide a convenient user interface make the setup and use of these methods a lot easier~\cite{wang2015accurate, kuhn2020automated}, but this convenience comes with less flexibility on the simulation protocols. It is also important to understand the current limitations of the methodology to recognise when automated workflow tools can be used effectively for a given protein target. Prospective prediction challenges such as the drug design data resource grand challenges provide a community driven platform to evaluate different free energy protocols against each other on unknown targets~\cite{gaieb2018d3r, gaieb2019d3r}.Such efforts have highlighted that selection of seemingly identical or similar potential energy function or simulation package does not guarantee production of similar free energies owing to differences in simulation protocols. 
-(SUGGEST REMOVING THIS SENTENCE What has come out of these in the past is that Schrödinger's FEP+, performs similar when run by different participant groups~\cite{gaieb2018d3r}, but may not give the desired accuracy with RMSE errors larger than 1 kcal/mol. Other alchemical protocols performed similarly well.(CITE GAPSYS PMX paper for large FEP+ comparison) We hope that the best practice guide provides a set of tools that allow a better understanding of how to setup, run and interpret reliably alchemical free energy calculations. 
-%
+Alchemical free energy calculations have seen a vast increase in popularity both in academic research as well as  pharmaceutical industry applications in structure based drug discovery~\cite{schindler2020largescale, sherborne2016collaborating, wagner2017computational}. Commercial products such as FEP+ and Flare, which provide a convenient user interface make the setup and use of these methods a lot easier~\cite{wang2015accurate, kuhn2020automateda}, but this convenience comes with less flexibility in terms of choice of simulation protocols. It is also important to understand the current limitations of the methodology to recognise when automated workflow tools can be used effectively for a given protein target and when they are likely to fail still. Prospective prediction challenges such as the Drug Design Data resource grand challenges provide a community driven platform to evaluate different free energy protocols against each other on blinded targets~\cite{gaieb2018d3r, gaieb2019d3r}. Such efforts have highlighted that selection of seemingly identical or similar potential energy function or simulation package does not guarantee production of similar free energies owing to differences in simulation protocols. 
+We hope that the best practice guide provides a set of tools that allow a better understanding of how to setup, run, and reliably interpret alchemical free energy calculations. 
+
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % Software                    %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Available software -- a summary}
-\todo[inline]{ASJSM: Expand and add more references. }
+\section{Non-exhaustive overview of available software packages}
+
 \label{sec:software}
-There are several softwares availble for carrying out alchemical free energy calculations. In this section we discuss some of the popular commercial and free tools along with their features. 
+There are many different software solutions available for the setup, running, and analysis of alchemcial free energy calculations. These will vary in customizability and ways in which they are ran, e.g. graphical user interface versus command line tool or python script. The following provides a non-exhaustive list of commercial and noncommercial tools available for conducting alchemical free energy calculations. 
 \begin{itemize}
-\item Commercial:
+
+\item [] \textbf{Simulation software: Commercial}
    \begin{itemize}
-    \item \href{https://www.schrodinger.com/fep}{FEP+} is a tool offered by Schr\"{o}dinger Inc. under a commercial license. It has an intuitive GUI which makes it easier for non-experts to run alchemical free energy calculations and analyze the results. It runs the DESMOND MD package under the hood and hence parallelizes well on GPUs. 
-    \item \href{https://www.cresset-group.com/software/flare/}{Flare} is a commercial structure-based drug design software offered by Cresset. Similar to FEP+ it has an easily accessible user interface and strives to facilitate free energy calculations for non-experts while offering advanced users full control via a Python API. It only runs on GPUs, using CUDA or OpenCL.
+    \item \href{https://www.schrodinger.com/fep}{FEP+} is a tool offered by Schr\"{o}dinger Inc. under a commercial license. It has an intuitive GUI which makes it easier for non-experts to run alchemical free energy calculations and analyze the results. It runs the DESMOND MD package under the hood and hence parallelizes well on GPUs~\cite{wang2015accurate}. 
+    \item \href{https://www.cresset-group.com/software/flare/}{Flare} is a commercial structure-based drug design software offered by Cresset. Similar to FEP+ it has an easily accessible graphical user interface and strives to facilitate free energy calculations for non-experts while offering advanced users full control via a Python API. It only runs on GPUs, using CUDA or OpenCL~\cite{kuhn2020assessmenta}.
     \item The molecular operating environment (\href{https://www.chemcomp.com/Products.htm}{MOE}) offered by the Chemical Computing Group (CCG) has a tool for performing free energy calculations. It is built on AMBER-TI (cf. below).
     \end{itemize}
-\item Free or low-cost for academics / commercial for industry:
+    \item[]All the above tools also provide a convenient setup and analysis suite and are really a one in all product. 
+\item [] \textbf{Simulation software: Free/low cost academic and Commercial}
 	\begin{itemize}
 	\item \href{https://www.charmm.org/}{CHARMM} has a variety of tools developed over the years. The PERT module can be used to define initial and final states and define the intermediate lambda points. FREN and BAR modules can be used to analyze the data after the MD run. Lambda-dynamics-based free energy calculation can be carried out using the BLOCK module.  
-	\item \href{https://ambermd.org/}{AMBER}, including its new pmemd.cuda version supports free energy calculations. 
+	\item \href{https://ambermd.org/}{AMBER}, including its new pmemd.cuda version supports free energy calculations~\cite{salomon-ferrer2013overview}. 
 	\end{itemize}
-\item Free (libre) open source:
+\item [] \textbf{Simulation software: Open Source}
 	\begin{itemize}
-	\item \href{https://www.plumed.org/}{PLUMED} is an open source tool which enables the usage of a variety of MD engines. It is designed as a plugin for MD packages such that it analyzes the trajectory on the fly. It also offers a VMD based plugin for the computation of collective variables.   	
-	\item \href{https://siremol.org/}{SIRE}  is a free, open source, multiscale molecular simulation framework, written to allow computational modellers to quickly prototype and develop new algorithms for molecular simulation and molecular design. 
-	\item \href{http://getyank.org/latest/index.html}{YANK} is a tool developed by John Chodera and group on the top of OpenMM MD package. It allows the users to write their inputs in easy-to-use YAML format.
+	\item \href{https://www.plumed.org/}{PLUMED} is an open source tool which enables the usage of a variety of MD engines. It is designed as a plugin for MD packages such that it analyzes the trajectory on the fly. It also offers a VMD based plugin for the computation of collective variables~\cite{bonomi2019promoting}.   	
+	\item \href{https://biosimspace.org/}{BioSimSpace}  is a free, open source, multiscale molecular simulation framework, written to allow computational modellers to quickly prototype and develop new algorithms for molecular simulation and molecular design~\cite{hedges2019biosimspace}. 
+	\item \href{http://getyank.org/latest/index.html}{YANK} is a tool developed by John Chodera and group on the top of OpenMM MD package. It allows the users to write their inputs in easy-to-use YAML format\cite{}.
 	\item \href{http://www.gromacs.org/}{GROMACS} is a molecular simulation package with a significant number of free energy methods implementations. The LiveCOMS GROMACS tutorial has an example free energy calculation~\cite{lemkul2018From}.
-	\item \href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}, an add-on to GROMACS, offers a mutation free energy calculation module.
-	\item \href{https://github.com/qusers/Q6}{Q} is MD code for performing FEP calculations using a variety of force fields. 
+	\item \href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}, an add-on to GROMACS, offers a mutation free energy calculation module\cite{abraham2015gromacs}.
+	\item \href{https://github.com/qusers/Q6}{Q} is MD code for performing FEP calculations using a variety of force fields~\cite{aqvistjohan2017q6}. 
 	\end{itemize}
-\item Setup tools
+\item[] \textbf{Setup tools:}
 	\begin{itemize}
-	\item \href{https://fesetup.readthedocs.io/en/latest/introduction.html}{FESetup} has been developed primarily to setup calculations in AMBER, GROMACS and SIRE.
 	\item href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}: GROMACS \url{https://github.com/deGrootLab/pmx}.
-	\item \href{https://github.com/MobleyLab/Lomap}{Lomap/Lomap2} : Relative alchemical transformation graph planning for setting up perturbation networks.
-	\item \href{http://www.charmm-gui.org/}{CHARMM-GUI} is a web-based tool for setting up a variety of MD simulations. It can be used to generate CHARMM scripts for solvation and ligand-binding free energy calculations.
-	\item \href{https://github.com/qusers/qligfep}{QligFEP} offers robust and fast setup of FEP calculations for the software package Q
+	\item \href{https://github.com/MobleyLab/Lomap}{Lomap/Lomap2} : Relative alchemical transformation graph planning for setting up perturbation networks~\cite{liu2013lead}.
+	\item \href{http://www.charmm-gui.org/}{CHARMM-GUI} is a web-based tool for setting up a variety of MD simulations. It can be used to generate CHARMM scripts for solvation and ligand-binding free energy calculations~\cite{jo2008charmmgui}.
+	\item \href{https://github.com/qusers/qligfep}{QligFEP} offers robust and fast setup of FEP calculations for the software package Q~\cite{jespers2019qligfep}.
+	\item ProtoCaller, a setup tool for the automation of Gromacs free energy calculations. \href{https://github.com/protocaller/ProtoCaller}{ProtoCaller}~\cite{suruzhon2020protocaller}
+	\item \href{https://fesetup.readthedocs.io/en/latest/introduction.html}{FESetup} has been developed primarily to setup calculations in AMBER, GROMACS and SIRE~\cite{loeffler2015fesetup}
 	\end{itemize}
-\item Analysis tools:
+\item []\textbf{Analysis tools:}
 	\begin{itemize}
-	\item Free Energy Workflows: Sire-specific free energy map analysis using weighted path averages
-	\url{https://github.com/michellab/freenrgworkflows}.
+
 	\item Alchemlyb: Multipackage free energy analysis
-	\url{https://github.com/alchemistry/alchemlyb}.
+	\url{https://github.com/alchemistry/alchemlyb}~\cite{daviddotson2020alchemistry}.
 	\item pymbar: MBAR implementation, but have to roll your own analysis wrapper
-	\url{https://github.com/choderalab/pymbar}.
+	\url{https://github.com/choderalab/pymbar}~\cite{shirts2008statistically}.
+	\item Beryllium: Standardising alchemical free energy analysis \url{https://github.com/openforcefield/beryllium}
+	\item Free Energy Workflows: Sire-specific free energy map analysis using weighted path averages \url{https://github.com/michellab/freenrgworkflows}.
 	\end{itemize}
 \item[] Generally, commercial software will offer more complete pipelines in which standalone analysis applications are not necessarily needed; free and open source packages often require manual analysis.
 \end{itemize}
 
 
-%%%%%%%%%%%%%%%%%%%%%%%%
-%  Online resources    %
-%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Online resources}
-\todo[inline]{Do we really need this section? Everything has been referenced.  Seems like these could be listed at the beginning.  If this stays here, it would be more useful if they had some description of what the different references contain.}
-\begin{itemize}
-\item \url{http://www.ks.uiuc.edu/Training/Workshop/Urbana_2010A/lectures/TCBG-2010.pdf}
-\item Basic Ingredients of Free Energy Calculations: A Review (\url{DOI: 10.1002/jcc.21450})
-\item Good Practices in Free-Energy Calculations (\url{DOI: 10.1021/jp102971x})
-\item Alchemical Free Energy Methods for Drug Discovery: Progress and Challenges (\url{doi: 10.1016/j.sbi.2011.01.011})
-\item Alchemistry wiki: \url{http://www.alchemistry.org/wiki/Best_Practices}
-\end{itemize}
-
-\clearpage
-%%%%%%%%%%%%%%%%%%%%%%%%
-%  Benchmark information    %
-%%%%%%%%%%%%%%%%%%%%%%%%
-\section{Benchmark Datasets}
-Several other case studies of alchemical calculations can be found in the review by Williams-Noonan et al.~\cite{williams-noonan2018free}. For comparison of FEP+ and Gromacs (using the AMBER99SB-ILDN and GAFF2 force field), cf. the recently published study by Pérez-Benito et al.~\cite{perez-benito2019predicting}.
-An overview of further suggested benchmark sets can be found in the review by Mobley and Gilson~\cite{mobley2017predicting} or on \url{alchemistry.org}~\cite{alchemistry}. These include cyclodextrins, the Cytochrome C peroxidase (CCP) protein model binding site, thrombin and bromodomains as well as solvation benchmark sets~\cite{paliwal2011benchmark}. Further work on shared protein-ligand benchmark sets is ongoing at \url{https://github.com/openforcefield/PLBenchmarks}.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%  Benchmark information  %
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+\section{Alchemical free energy datasets: an overview}
 \label{sec:benchmark}
-\vspace{5mm}
+The following contains a non-exhaustive summary of alchemical free energy datasets that can serve as a starting point to review approaches or test new implementations. The field is moving towards a more standardised way of generating protein-ligand benchmark datasets and the progress of these efforts can be tracked here: \url{https://github.com/openforcefield/FE-Benchmarks-Best-Practices}. Currently lacking an exhaustive set of benchmark datasets, the review by Williams-Noonan et al.~\cite{williams-noonan2018free} contains an overview of recently published alchemical free energy studies. For comparison of FEP+ and Gromacs (using the AMBER99SB-ILDN and GAFF2 force field), cf. the recently published study by Pérez-Benito et al.~\cite{perez-benito2019predicting}.
+An overview of further suggested benchmark sets can be found in the review by Mobley and Gilson~\cite{mobley2017predicting} or on \url{alchemistry.org}~\cite{alchemistry}. These include cyclodextrins, the Cytochrome C peroxidase (CCP) protein model binding site, thrombin and bromodomains as well as solvation benchmark sets~\cite{paliwal2011benchmark}. Please refere to ~\ref{tab:benchmarks}, for a small overview of datasets, what forcefields they used, and what the original study was it came from. 
 \begin{table}
 \caption{Overview of benchmark datasets}
 \begin{tabular}{cccc}
@@ -1374,7 +1367,7 @@ Merck  set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
     \item What simulation protocol will provide the most evidence to answer my hypothesis?
     \item Are the projected computational expense and runtime realistic for my goals?
     \item Will my protocol be reproducible? 
-    \item Will my statistics be reliable? If not, would more replicates solve the problem? Three replicates is the minimal number of replicates that should be run
+    \item Will my statistics be reliable? If not, would more replicates solve the problem? 
     \item Can I open-source my data?
 \end{itemize}
 \end{checklist}
@@ -1407,7 +1400,7 @@ Merck  set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
    \item Your ligands should have the same, biologically correct binding pose
         \item Make sure your λ-scheduling is set correctly
         \item Make sure your molecular transformations are realistic (1-5 heavy atoms for reliable computations)
-        \item Generate a perturbation network by your method of choice; check whether you have enough cycle closures to check consistency in the results (preferably, every ligand should be in a cycle)
+        \item Generate a perturbation network by your method of choice; check whether you have enough cycle closures to check consistency in the results
         \item Check whether dummy atoms were assigned correctly
         \item Make sure you subsample the data in your free energy estimation protocol
         \item Apply the 
@@ -1463,9 +1456,7 @@ Merck  set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 % See the policies ``Policies on Authorship'' section of https://livecoms.github.io
 % for more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%%
-\todo[inline, color={green!20}]{ASJSM: @everyone, can you check your contribution is acknowledge and if not add the appropriate information. }
-(Explain the contributions of the different authors here)
-\textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed figures ~\ref{} and created figures \ref{fig:fig_what_is_lambda},~\ref{fig:fig1_what_is_alchemy},~\ref{fig:overlap} and replotted~\ref{fig:automatic-equilibration-detection} and improved ~\ref{fig:fig_types_of_networks}.\\
+\textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed figures~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis},and created figures \ref{fig:fig_what_is_lambda},~\ref{fig:fig1_what_is_alchemy},~\ref{fig:overlap} and replotted~\ref{fig:automatic-equilibration-detection} and improved ~\ref{fig:fig_types_of_networks}.\\
 \textbf{JS}: created figures \ref{fig:fig_what_is_alchemy},~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, the data representation section, the checklist and contributed to general formatting discussions and editing.\\
 \textbf{MK}: Contributed to the Data Analysis section, provided the data for figure~\ref{fig:overlap} and helped edit the paper.\\
 \textbf{DLM}: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.\\
