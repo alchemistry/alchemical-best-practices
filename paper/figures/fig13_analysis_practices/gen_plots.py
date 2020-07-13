@@ -88,8 +88,8 @@ plt.fill_between(
 yerr = np.random.uniform(low=0.1, high=0.4, size=(num_points,))
 # append high errors for the outliers and plot them in a different colour:
 yerr = np.append(yerr, [0.7, 0.9])
-plt.scatter(x=-11, y=-8.3, color="crimson")
-plt.scatter(x=-12, y=-9, color="crimson")
+plt.scatter(x=-11, y=-8.3, color='#1f77b4')
+plt.scatter(x=-12, y=-9, color='#1f77b4')
 
 
 plt.errorbar(x_data, y_data, 
@@ -169,7 +169,7 @@ sns.despine()
 plt.xlim(-12.9, -7.1)
 plt.ylim(plt.xlim())
 plt.xlabel(r"Experimental $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
-plt.ylabel(r"AFE-predicted $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
+plt.ylabel(r"Computed $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
 plt.tight_layout()
 
 
