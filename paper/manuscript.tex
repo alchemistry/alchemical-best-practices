@@ -1051,10 +1051,10 @@ $U_0(\vec{q})$ and $U_1(\vec{q})$ over coordinate space $\vec{q}$ can be calcula
 and the average is over all samples from the simulation performed with $u_0$. In the case of NVT (canonical) sampling and assuming the masses do not change, then $u$ is just $U/k_BT$, and $f$ is $F/k_BT$, but it can be generalized to other ensembles with the proper definition of $f$ and $u$.
 Described in words, we take the samples generated during our run with the potential energy function $U_0(\vec{q})$, recalculate what the energy difference would be if we switched to potential energy function $U_1(\vec{q})$, and average the exponential of the -1 times the energy difference to get -1 times the exponential of the free energy difference. The original distributions (P($U_0$) as generated at $\vec{\lambda}=0$ and P($U_1$) would look like the ones seen in figure~\ref{fig:fig_sampling_scheme} (A)-(C)on the left hand side. Reevaluating  requires almost no extra code functionality to perform; one need only to save a full precision trajectory, and run an unmodified molecular simulation code using the $U_1$ in order to calculate the new energies of stored snapshots. The analysis can be written in a line of code.  We note that this method is even more general, in that the instantaneous work to change the potential energy function from $U_0$ to $U_1$ can be replaced by the non-reversible work $W$ to make the same change under the same equilibrium conditions at either end state~\cite{jarzynski1997nonequilibrium,jarzynski1998equilibrium,crooks2000pathensemble}, though we do not go into all of the details of non-equilibrium transformations here, and refer the reader to more advanced treatments~\cite{maragakis2008bayesian,oberhofer2005biased,procacci2015unbiased,shirts2003equilibriuma,ytreberg2004singleensemble}
 %
-Although the Zwanzig equation is formally correct (as long as the two states considered sample the same phase space volume, which is true for standard molecular models), it has some very important numerical issues that mean that it often performs badly for standard free energy calculations, even for small molecules~\cite{shirts2005comparison,lu2003appropriate}.  One can show that if the standard deviation of the difference $\Delta U(\vec{q}) = U_1(vec{q})-U_2(\vec{q})$ over all sampled $\vec{q}$ is large (which in this case, means only several times $k_BT)$, then very few samples contribute to the average, and the answer will be both biased and extremely noisy~\cite{lelievre2010free}. Essentially, the method is dominated by contributions of rare snapshots\cite{jarzynski2006rare, wu2005phasespaceb, wu2005phasespacec}. There are a number of applications where this expression is nevertheless useful, but those usually involve investigating the dependence of the free energy on small changes in parameters, not changing molecules or even single atoms in molecules~\cite{xx}
-%
+Although the Zwanzig equation is formally correct (as long as the two states considered sample the same phase space volume, which is true for standard molecular models), it has some very important numerical issues that mean that it often performs badly for standard free energy calculations, even for small molecules~\cite{shirts2005comparison,lu2003appropriate}.  One can show that if the standard deviation of the difference $\Delta U(\vec{q}) = U_1(vec{q})-U_2(\vec{q})$ over all sampled $\vec{q}$ is large (which in this case, means only several times $k_BT)$, then very few samples contribute to the average, and the answer will be both biased and extremely noisy~\cite{lelievre2010free}. Essentially, the method is dominated by contributions of rare snapshots\cite{jarzynski2006rare, wu2005phasespaceb, wu2005phasespacec}. 
+
+
 \paragraph{The Bennett Acceptance Ratio (BAR)}
-%
 If we have the differences in the potential energy sampled from the distribution defined by $U_0$ to the state defined by $U_1$, and we also have the differences in potential energies from the distribution sampled by $U_1$ to the state defined by $U_0$, we can obtain a significantly improved estimate of the
 free energy difference compared to that obtained by EXP. 
 This estimate was first derived by Bennett and is hence generally called the Bennett Acceptance Ratio (BAR).  It is solved by finding the reduced free energy $f_{ij}$ that satisfied the following implicit equation:
@@ -1064,15 +1064,15 @@ This estimate was first derived by Bennett and is hence generally called the Ben
  =\sum_{i=1}^{n_j} \frac{1}{1 + \exp[\ln(\frac{n_i}{n_j}) - U_{ij}(\vec{q}) + f_ij)]},
 \end{eqnarray}
 where $n_i$ and $n_j$ are the number of samples from each state. We
-will refer to this method as BAR. More recent derivations show that this formula is the maximum likelihood estimate of the free energy difference given sets of samples from the two states~\cite{bennett1976efficient,shirts2003equilibriuma}. 
+will refer to this method as BAR. More recent derivations show that this formula is the maximum likelihood estimate of the free energy difference given sets of samples from the two states~\cite{shirts2003equilibriuma}. 
 
 Many studies have demonstrated both the theoretical and practical superiority of BAR over EXP in molecular
 simulations~\cite{shirts2005comparison,lu2003appropriate}, and BAR converges to EXP in the limit that all samples are from a single state~\cite{bennett1976efficient,bennett1976efficient,shirts2003equilibriuma}. BAR also requires significantly less overlap between the configurational space of each state to converge than EXP, though some overlap must still exist.
-%
+
 The Bennett acceptance ratio is only defined between two states. Usually, the endpoints of interest in a free energy calculation are sufficiently different that we will need a chain of states that gradually change the potential energy function from $U_0$to $U_1$, as discussed in Section~\ref{sec:important_path}. You can simply carry out BAR between each pair of states $\Delta G_{1 \rightarrow N} = \Delta {G_{1\rightarrow 2}} + \Delta {G_{2\rightarrow 3}} +  \ldots + \Delta G_{N-1\rightarrow N}$.
-%
+
 There is one important thing to note about the uncertainty estimates when summing multiple free energies together to calculate an overall free energy estimate. Although BAR itself gives a free energy estimate that is asymptotically correct in and is much less biased than the uncertainty estimate for EXP, the uncertainties in $\Delta {G_{i-1\rightarrow i}}$ and $\Delta {G_{i\rightarrow i+1}}$ are not uncorrelated, because they both involve the energies $U_i(\vec{q})$. The variances of each of the free energies will \textit{not} propagate as variances usually do (in quadrature) to the variance of the overall free energy. Instead, some other method for propagating the uncertainty, such as bootstrapping~\cite{grossfield2018best} must be used.
-%
+
 \paragraph{Thermodynamic integration (TI)}
 By taking the derivative of the free energy with respect to the
 variable $\vec{\lambda}$, we find that:
@@ -1086,27 +1086,27 @@ And than we can then numerically integrate $df/d\vec{\lambda}$ over an alchemica
 \end{equation}
 This approach to calculating the free energy is called thermodynamic integration (TI). Averaging over $\expect{\frac{du}{d\vec{\lambda}}}$ requires fewer uncorrelated samples to reach a given level of relative error
 than averaging $e^{-u(\vec{q})}$, as the range is usually narrower with a more Gaussian distribution. Rather than being limited by overlap, as in the case of BAR and MBAR (see below), we are instead limited by the bias in the numerical quadrature, which must be minimized sufficiently to be beneath the level of statistical noise.
-%
+
 Various numerical integration schemes are possible, but the trapezoid
 rule provides a simple and robust scheme.  All types of numerical integration can be written as:
 \[ \Delta f \approx \sum_{k=1}^{K} w_k
 \expect{\frac{du(\vec{\lambda},\vec{q})}{d\vec{\lambda}}}_{k} \] where the weights $w_k$ correspond to a particular choice of numerical integration.
 Researchers have tried a large number of different integration schemes~\cite{resat1993studies,jorge2010effect,shyu2009reducing}. However, many other integration choices require specific choices of $\vec{\lambda}$ to minimize bias, which makes them unsuitable when the intermediates
 have widely-varying levels of uncertainty. For example, integrating a cubic spline interpolation provided negligible benefits~\cite{paliwal2011benchmark}. For starting researchers, we therefore recommend a simple trapezoid rule scheme, as it allows for maximal flexibility in which values of $\vec{\lambda}$ are simulated.  Because fitting to higher order polynomials can have numerical instabilities for some energy functions, and because alternate functional forms might only be appropriate with some types of transformations, expertise and experience is required to perform such numerical integration modifications. In practice, adding 2-3 more intermediate states is typically sufficient to match the performance of these more complicated numerical quadrature schemes.
-%
+
 One drawback of TI is that it requires derivatives with respect to $\vec{\lambda}$ to be calculated directly in the code. Unfortunately, many problems of interest require using pathways (such as the soft-core pathways, for removing repulsive interactions) that are not linear, as we discuss, making this more complex. Still, if the code of interest does compute $\frac{du}{d\vec{\lambda}}$, then TI is perhaps the simplest method to use, as it involves a very little post-processing.
-%
+
 \paragraph{The multistate Bennett acceptance ratio (MBAR)}
 One can generalize Bennett's logic from two states to multiple states to obtain a free energy estimator that uses energy differences between all intermediate states. MBAR gives a system of implicit equations for the free energies $f_i$:
 \begin{equation}
 f_i = - \ln \sum_{n=1}^{N} \frac{\exp(-u_i(\vec{q}_n))}{\sum_{k=1}^K N_k \exp(f_k-u_k(\vec{q}_n))}
 \end{equation}
 where there are $N_k$ samples from each of $K$ states, with $\sum_k N_k=N$ the total number of samples. Thus, we need to evaluate the energy function $U_i$ for all samples obtained at all states in the transformation. The equations can be solved by a number of different standard routines. We note that there are only $K-1$ independent equations, so only K-1 of the free energies are independent variables, and one of the $f_i$ must be specified (usually, without loss of generality, setting it to zero).
-%
+
 MBAR is provably the lowest variance asymptotically unbiased estimator of the free energies given the energies of the samples~\cite{tan2004likelihood}, which means that BAR is also for the free energy difference between only 2 states, as it is mathematically exactly the same as MBAR in this case. MBAR also provides an uncertainty estimate, derived from standard error propagation methods, which has been shown to be accurate as long as there are sufficient samples at each state~\cite{paliwal2011benchmark}.
-%
+
 MBAR can also be thought of as the Zwanzig estimator of the free energy to state $i$ where the sampled distribution is the \textit{mixture distribution} of all the other samples thrown together in one ``pot'', defined by $p_m(\vec{q}) = N^{-1} \sum_k  N_k \exp(f_k-u_k\vec{q})$, the weighted average of all the individual normalized probability distributions that are performed.~\cite{shirts2017reweighting}.
-%
+
 \paragraph{Recommendations}
 \begin{itemize}
 \item We recommend MBAR if all energy differences are available. It is probably the lowest variance free energy estimate given samples from multiple states.
@@ -1115,7 +1115,7 @@ MBAR can also be thought of as the Zwanzig estimator of the free energy to state
 \item WHAM is an approximation to MBAR, and there are no compelling reasons it should be used. 
 \item Other variants, especially ones that adaptively determine the free energies can be  useful in certain circumstances but beyond the scope of a Best Practices article.
 \end{itemize}
-%
+
 \subsection{Uncertainty estimation}
 \label{subsec:uncertainty}
 It is important to consider the variation in your computed free energies from your equilibrium simulations, in order  to  obtain an estimate of  uncertainty of the obtained value for the free energies of interest. A recent best practices paper by Grossfield et. al~\cite{grossfield2018best} provides substantial detail on how to estimate uncertainties from molecular simulations and is a good starting point for this topic. 
@@ -1125,22 +1125,22 @@ The computation of free energies using TI (section~\ref{subsec:estimators}) is s
 The determination of regions of high curvature when estimating the integral is helpful to determine regions of phase space where more sampling and/or more $\vec{\lambda}$ states are necessary to obtain the best approximation of the integral. Generally a plot of $\vec{\lambda}$ with respect to the gradients at each of the $\vec{\lambda}$ values can be helpful here. 
 Additionally, computation of the overall variance of TI requires the calculation of the overall variance of integration, rather than each individual $\Delta$G$_{i,i+1}$ and assuming variances add independently. 
 Therefore, $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}w_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$.
-%
+
 For alchemical changes that result in smooth, low curvature sets of $\expect{\frac{dU}{d\vec{\lambda}}}$, a relatively small number of $\vec{\lambda}$ states is necessary for sufficient accuracy and low variance in the free energy estimate. 
 However, with increasing numbers of perturbed atoms, the bias introduced by discretization of the integral can become large due to increased curvature, and more $\vec{\lambda}$ intermediate states become necessary to reduce error.
 It is recommended that researchers verify that a sufficient number of states are included such that the free energy is essentially invariant to the number of lambda intermediate states chosen.
-%
+
 Compared with TI, the MBAR method (section~\ref{subsec:estimators}) discussed above provides uncertainty estimation directly from solving a set of linear equations to compute the variances between all states. 
 The number of states and amount of sampling should be optimized to minimize the uncertainty in the MBAR free energy estimate, while balancing other key considerations such as computational expense. 
-%
+
 In some cases, several analysis methods can be employed to analyze the same set of simulations, providing an opportunity for synergy. Specifically, agreement in the free energy across different estimators can be compared and discrepancy between estimates used to assess convergence.
 For example, differences between free energy estimates computed with BAR, MBAR, and TI correlated with larger errors in a set of MCL1 inhibitors.
 Those perturbations where free energies across different estimators shared high agreement with each other (variance less than 0.1 kcal/mol) had a r$^2$ of 0.623 and mean unsigned error (MUE) of 0.787 kcal/mol (N=17) compared with a r$^2$ of 0.295 and MUE of 1.49 kcal/mol (N=23) (unpublished results).
-%
+
 Uncertainty can also be assessed for a particular perturbation by repeating calculations with slight changes in initial configurations, forcefield parameters, and different random seeds in the MD engine. 
 The assessment of variability in free energy calculations due to repeating simulations has been previously reported~\cite{aldeghi2019accurate,paliwal2011benchmark,mey2016blinded,mey2018impact}, and large variance in free energies estimated from simulations with different random seeds should be flagged as issues with convergence. 
 Other sources that may show up as suspicious uncertainties may in fact be system set up errors. Common issues include poor ligand or protein preparation, atom mapping for relative calculations, or forcefield parameters as described above.
-%
+
 For relative binding free energy calculations, additional sensitivity analysis can be performed by changing the initial configurations of non-core regions of the perturbation topology and determining if this change in configurations results in a large differences in the computed relative free energy, indicating poor sampling of ligand configuration.
 The proposed changes in configuration are increasingly relevant if no experimental evidence is available to reduce uncertainty in where the changing atoms should be positioned.
 %
@@ -1234,7 +1234,7 @@ As essentially all alchemical free energy prediction schemes are regression prob
 Because we are interested mainly in the linear relationship between the alchemical free energy predictions and the experimentally-determined affinity values, plots should be depicted with the same range on both axes (i.e. $x=y$) with a 1:1 aspect ratio, with units for both experiment and simulation converted to be the same. If this is skews the plot to a point where it is difficult to read of information, using the same dimensions, such that e.g. 1 cm is 1 kcal/mol is acceptable.  Furthermore, bounds should be depicted for the 1- and 2-kcal/mol confidence regions. These regions can serve as tools to communicate your model performance: any predictions inside the 1 kcal/mol region can be seen as highly reliable, any predictions inside the 2 kcal/mol region should be seen as somewhat reliable, and any predictions outside the confidence regions should be expected to be unreliable (and handled as outliers). In a drug discovery context, this type of data depiction may suggest the reliability of alchemical FE predictions in the project, and can give an idea of how trustworthy predictions can be for synthesis ideas. 
 
 \begin{figure}
-    \includegraphics[width=0.95\linewidth]{figures/fig13_analysis_practices/Figure.pdf}
+    \includegraphics[width=0.95\linewidth]{figures/fig13_analysis_practices/FigureHBMedit.png}
     \caption{\textbf{An example of recommended practices for graphing alchemical free energy predictions.} This figure shows the relation between predicted and experimentally-determined Gibbs free energy in kcal/mol with standard errors as error bars. The dark and light-orange regions depict the 1- and 2-kcal per mol confidence bounds. Extra care should be taken when investigating potential outliers further.}
     \label{fig:scatterplot_analysis}
 \end{figure}
@@ -1469,7 +1469,7 @@ Merck  set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 \textbf{JM}: Contributed to sections~\ref{subsec:reproducible},~\ref{sec:prerequisites},~\ref{} 4.2, 5.3, 6, 7.2.3, 8.3.1, 8.3.2, 9\\
 \textbf{JDC}: Wrote section~\ref{sec:decorrelating-samples} and~\ref{sec:automatic-equilibration-detection} discussed structure and design of the whole document, suggested Figs.~\ref{fig:fig_what_is_alchemy} and~\ref{fig:fig_sampling_scheme} \\
 \textbf{HX}: Contributed section~\ref{subsec:accuracy}, to section~\ref{sec:relative-fe-protocol}, and to section~\ref{sec:are-they-good}.\\
-\textbf{HBM} Contributed to section \ref{sec:plot_data}and Figure {fig:scatterplot_analysis}.
+\textbf{HBM} Contributed to section \ref{sec:plot_data}and Figure \ref{fig:scatterplot_analysis}.\\
 % We suggest you preserve this comment:
 For a more detailed description of author contributions,
 see the GitHub issue tracking and changelog at \githubrepository.
