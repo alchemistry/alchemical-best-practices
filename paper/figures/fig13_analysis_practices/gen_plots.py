@@ -148,28 +148,28 @@ def boostrap_statistic(x_data, y_data, n = 10000):
 stats = boostrap_statistic(x_data_raw, y_data_raw)
 
 df = pd.DataFrame(np.array([
-							[r"R$^2$", "{:.2f} ({:.2f} - {:.2f})".format(stats['r2']['real'],stats['r2']['low'], stats['r2']['high'])],
-							[r"MUE (kcal$\cdot$mol$^{-1}$)", "{:.2f} ({:.2f} - {:.2f})".format(stats['mue']['real'],stats['mue']['low'], stats['mue']['high'])],
-							[r"Spearman $\rho$", "{:.2f} ({:.2f} - {:.2f})".format(stats['rho']['real'],stats['rho']['low'], stats['rho']['high'])],
-							[r"Kendall $\tau$", "{:.2f} ({:.2f} - {:.2f})".format(stats['tau']['real'],stats['tau']['low'], stats['tau']['high'])],
+							[r"R$^2$", f"{stats['r2']['real']:.2f}$^{{{stats['r2']['high']:.2f}}}_{{{stats['r2']['low']:.2f}}}$"],
+							["MUE", f"{stats['mue']['real']:.2f}$^{{{stats['mue']['high']:.2f}}}_{{{stats['mue']['low']:.2f}}}$"],
+							[r"Spearman $\rho$", f"{stats['rho']['real']:.2f}$^{{{stats['rho']['high']:.2f}}}_{{{stats['rho']['low']:.2f}}}$"],
+							[r"Kendall $\tau$", f"{stats['tau']['real']:.2f}$^{{{stats['tau']['high']:.2f}}}_{{{stats['tau']['low']:.2f}}}$"]
 							]),
 				columns=["Metric", "Value"])
 
 table = plt.table(cellText=df.values, colLabels=df.columns, 
-				bbox=[0.6,0.05, 0.4,0.3], 
-				colWidths=[0.5, 0.5],
+				bbox=[0.55,0.05, 0.45,0.3], 
+				colWidths=[0.3, 0.2],
 				zorder=-20)
 
 table.auto_set_font_size(False)
-table.set_fontsize(12)
-table.scale(1,1)
+table.set_fontsize(25)
+table.scale(1.,1.)
 
 # some final formatting:
 sns.despine()
 plt.xlim(-12.9, -7.1)
 plt.ylim(plt.xlim())
-plt.xlabel(r"Experimental $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
-plt.ylabel(r"Computed $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=18)
+plt.xlabel(r"Experimental $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=25)
+plt.ylabel(r"Computed $\Delta$G [kcal$\cdot$mol$^{-1}$]", fontsize=25)
 plt.tight_layout()
 
 
@@ -179,8 +179,3 @@ plt.tight_layout()
 plt.savefig("Figure.png", dpi=300)
 
 plt.show()
-
-
-
-
-
