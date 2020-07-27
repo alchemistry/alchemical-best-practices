@@ -85,7 +85,7 @@
 %%% ARTICLE START
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-%
+
 \begin{frontmatter}
 \maketitle
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -1220,14 +1220,13 @@ Reporting the results of relative free energy calculations requires care. As sho
 \paragraph{Presenting your data}
 As essentially all alchemical free energy prediction schemes are regression problems, the preferred type of plot is a scatter plot (see Fig.~\ref{fig:scatterplot_analysis}). Most alchemical free energy projects will look at 10-50 ligands; any study with \textless10 ligands is more suitable for bar plots (with inclusion of error bars), and will unlikely provide meaningful statistics. Any study with \textgreater50 ligands often contains multiple protein targets to which alchemical free energies may perform better on some targets than others. Because of this, it is bad practice to place multiple datasets on the same plot as this can suggest high model accuracy even though the individual models perform less well~\cite{walterthoughts}.
 
-
-As we are interested mainly in the linear relationship between the alchemical free energy predictions and the experimentally-determined affinity values, plots should be depicted with the same range on both axes (i.e. $x=y$) with a 1:1 aspect ratio, with units for both experiment and simulation converted to be the same. If this skews the plot to a point where it is difficult to read of information, using the same dimensions, such that e.g. 1 cm is 1 kcal/mol is acceptable. Furthermore, bounds should be depicted for the 1- and 2-kcal/mol confidence regions. These regions can serve as tools to communicate your model performance: any predictions inside the 1 kcal/mol region can be seen as highly reliable, any predictions inside the 2 kcal/mol region should be seen as somewhat reliable, and any predictions outside the confidence regions should be expected to be unreliable (and handled as outliers). In a drug discovery context, this type of data depiction may suggest the reliability of alchemical FE predictions in the project, and can give an idea of how trustworthy predictions can be for synthesis ideas. 
-
 \begin{figure}
   \includegraphics[width=0.95\linewidth]{paper/figures/fig13_analysis_practices/Figure.png}
   \caption{\textbf{An example of recommended practices for graphing alchemical free energy predictions.} This figure shows the relation between predicted and experimentally-determined Gibbs free energy in kcal/mol with standard errors as error bars. The dark and light-orange regions depict the 1- and 2-kcal/mol confidence bounds. Statistical metrics for the data are reported, with 95\% confidence intervals determined by bootstrapping analysis. Extra care should be taken when investigating potential outliers further.}
    \label{fig:scatterplot_analysis}
 \end{figure}
+
+As we are interested mainly in the linear relationship between the alchemical free energy predictions and the experimentally-determined affinity values, plots should be depicted with the same range on both axes (i.e. $x=y$) with a 1:1 aspect ratio, with units for both experiment and simulation converted to be the same. If this skews the plot to a point where it is difficult to read of information, using the same dimensions, such that e.g. 1 cm is 1 kcal/mol is acceptable. Furthermore, bounds should be depicted for the 1- and 2-kcal/mol confidence regions. These regions can serve as tools to communicate your model performance: any predictions inside the 1 kcal/mol region can be seen as highly reliable, any predictions inside the 2 kcal/mol region should be seen as somewhat reliable, and any predictions outside the confidence regions should be expected to be unreliable (and handled as outliers). In a drug discovery context, this type of data depiction may suggest the reliability of alchemical FE predictions in the project, and can give an idea of how trustworthy predictions can be for synthesis ideas. 
 
 An example of a best practice scatter comparison between computed and experimental values is shown in Fig.~\ref{fig:scatterplot_analysis}, highlighting outliers, error bars and confidence intervals. The data for this plot is artificially generated for illustration purposes.
 
@@ -1300,6 +1299,7 @@ There are many different software solutions available for the setup, running, an
 \label{sec:benchmark}
 The following contains a non-exhaustive summary of alchemical free energy datasets that can serve as a starting point to review approaches or test new implementations. The field is moving towards a more standardised way of generating protein-ligand benchmark datasets and the progress of these efforts can be tracked here: \url{https://github.com/openforcefield/FE-Benchmarks-Best-Practices}. Currently lacking an exhaustive set of benchmark datasets, the review by Williams-Noonan et al.~\cite{williams-noonan2018free} contains an overview of recently published alchemical free energy studies. For comparison of FEP+ and Gromacs (using the AMBER99SB-ILDN and GAFF2 force field), cf. the recently published study by Pérez-Benito et al.~\cite{perez-benito2019predicting}.
 An overview of further suggested benchmark sets can be found in the review by Mobley and Gilson~\cite{mobley2017predicting} or on \url{alchemistry.org}~\cite{alchemistry}. These include cyclodextrins, the Cytochrome C peroxidase (CCP) protein model binding site, thrombin and bromodomains as well as solvation benchmark sets~\cite{paliwal2011benchmark}. Please refere to ~\ref{tab:benchmarks}, for a small overview of datasets, what forcefields they used, and what the original study was it came from. 
+
 \begin{table}
 \caption{Selection of example datasets}
 \begin{tabular}{cccc}
@@ -1344,7 +1344,7 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 
 
 
-\clearpage
+
 
 \section{Checklist}
 \label{sec:checklist}
@@ -1450,7 +1450,7 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 % See the policies ``Policies on Authorship'' section of https://livecoms.github.io
 % for more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%%
-\textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed Figs.~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis},and created Figs.~\ref{fig:fig_what_is_lambda},~\ref{fig:fig_what_is_alchemy},~\ref{fig:overlap},~\ref[fig:pmf} and replotted~\ref{fig:automatic-equilibration-detection} and~\ref{fig:fig_types_of_networks}.\\
+\textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed Figs.~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis},and created Figs.~\ref{fig:fig_what_is_lambda},~\ref{fig:fig_what_is_alchemy},~\ref{fig:overlap},~\ref{fig:pmf} and replotted~\ref{fig:automatic-equilibration-detection} and~\ref{fig:fig_types_of_networks}.\\
 \textbf{JS}: Created Figs~ \ref{fig:fig_what_is_alchemy},~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, and an initial draft of~\ref{fig:fig_types_of_networks}. Wrote Sec.~\ref{sec:plot_data}, the checklist Sec.~\ref{sec:checklist}, and contributed to general formatting discussions and editing.\\
 \textbf{MK}: Contributed to Sec.~\ref{sec:data_analysis}, provided the data for figure~\ref{fig:overlap}, compiled the dataset for Sec.~\ref{sec:benchmark} and helped edit the paper.\\
 \textbf{DLM}: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.\\
