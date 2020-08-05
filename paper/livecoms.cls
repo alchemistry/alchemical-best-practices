@@ -26,7 +26,7 @@
 \DeclareOption{lineno}{\@reqslinenotrue}
 
 %% the type of document this is.  The current types:
-% bestpractices, editorial, tutorial, review, comparison, lessons
+% bestpractices, editorial, tutorial, review, software, lessons
 \newif\if@bestpractices
 \DeclareOption{bestpractices}{\@bestpracticestrue}
 
@@ -39,8 +39,8 @@
 \newif\if@review
 \DeclareOption{review}{\@reviewtrue}
 
-\newif\if@comparison
-\DeclareOption{comparison}{\@comparisontrue}
+\newif\if@software
+\DeclareOption{software}{\@softwaretrue}
 
 \newif\if@lessons
 \DeclareOption{lessons}{\@lessonstrue}
@@ -48,6 +48,9 @@
 %Publication Information
 \newif\if@pubversion
 \DeclareOption{pubversion}{\@pubversiontrue}
+
+\newif\if@ASAPversion
+\DeclareOption{ASAPversion}{\@ASAPversiontrue}
 
 %% Linespacing.
 \newif\if@onehalfspacing
@@ -89,6 +92,8 @@
 \linespread{1.2}
 \if@onehalfspacing\linespread{1.5}\fi
 \if@doublespacing\linespread{2.0}\fi
+
+\emergencystretch 3em
 
 \RequirePackage{graphicx,xcolor}
 \definecolor{LiveCoMSDarkBlue}{HTML}{273B81}
@@ -208,9 +213,9 @@
 % nothing
 \fi
 
-\if@comparison
+\if@software
 \documenttypetrue
-\newcommand{\documenttype}{Molecular Simulation Comparison}
+\newcommand{\documenttype}{Software Analysis}
 \else
 % nothing
 \fi
@@ -245,6 +250,9 @@
 \newcommand{\pubvolume}[1]{%
   \appto{\@publishedvolume}{#1}{}{}
 }
+\newcommand{\pubissue}[1]{%
+  \appto{\@publishedissue}{#1}{}{}
+}
 \newcommand{\pubyear}[1]{%
   \appto{\@publishedyear}{#1}{}{}
 }
@@ -258,24 +266,42 @@
   \appto{\@publisheddateaccepted}{#1}{}{}
 }
 
+%--------------------------------------------------------
 % Footers
+% 1. Error Check for conflicting class options
 \if@pubversion
-\lfoot{\ifthenelse{\value{page}=1}
-  {\small\color{LiveCoMSMediumGrey}Received: \@publisheddatereceived \\ Accepted: \@publisheddateaccepted}
-  {~\\~}
-}%
-%\lfoot{\small\color{LiveCoMSMediumGrey}Received: \@publisheddatereceived \\
-%  Accepted: \@publisheddateaccepted}%
-\cfoot{\small\color{white} \vspace{\baselineskip} \small\color{LiveCoMSMediumGrey} \thepage\space of\space\pageref{LastPage}}%
-\rfoot{\small\color{LiveCoMSMediumGrey}DOI: \href{https://dx.doi.org/\@publishedDOI}{\@publishedDOI}\\
-  {\it Living J. Comp. Mol. Sci.} \@publishedyear, \@publishedvolume, \@publishedarticlenum }%
-\else
-\cfoot{\small\color{white} \vspace{\baselineskip} \small\color{LiveCoMSMediumGrey} \thepage\space of\space\pageref{LastPage}}%
-%\rfoot{\small\color{LiveCoMSMediumGrey}Page \thepage\space of\space\pageref{LastPage}}%
+  \if@ASAPversion
+      \ClassError{livecoms}
+      {Nope nope nope, you cannot invoke 'pubversion' and 'ASAPversion' simultaneously. Please correct the class options.}
+  \fi
 \fi
+% 2. Publication Version: put submission/acceptance dates in left footer and citation information in right footer
+%%% DWS NOTE: would be nice if the left footer was in an if A-or-B type logical statement
+\if@pubversion
+  \lfoot{\ifthenelse{\value{page}=1}
+    {\small\color{LiveCoMSMediumGrey}Received: \@publisheddatereceived \\ Accepted: \@publisheddateaccepted}
+    {~\\~}
+  }%
+  \rfoot{\small\color{LiveCoMSMediumGrey}\href{https://doi.org/\@publishedDOI}{https://doi.org/\@publishedDOI}\\
+    {\it Living J. Comp. Mol. Sci.} \@publishedyear, \@publishedvolume\nobreak\hspace{.05em}(\@publishedissue), \@publishedarticlenum
+  }%
+\fi
+% 3. ASAP Version: put submission/acceptance dates in left footer and "ASAP Version" in right footer
+\if@ASAPversion
+  \lfoot{\ifthenelse{\value{page}=1}
+    {\small\color{LiveCoMSMediumGrey}Received: \@publisheddatereceived \\ Accepted: \@publisheddateaccepted}
+    {~\\~}
+  }%
+  \rfoot{\small\color{LiveCoMSMediumGrey}\href{https://doi.org/\@publishedDOI}{https://doi.org/\@publishedDOI}\\
+    {\it Living J. Comp. Mol. Sci.} ASAP Version
+  }%
+\fi
+% 4. Page Number in center of footer
+\cfoot{\small\color{white} \vspace{\baselineskip} \small\color{LiveCoMSMediumGrey} \thepage\space of\space\pageref{LastPage}}%
 \preto{\footrule}{\color{LiveCoMSMediumGrey}}
 \renewcommand{\headrulewidth}{0pt}% % No header rule
 \renewcommand{\footrulewidth}{0.4pt}% % No footer rule
+%----------------------------------------------------------
 
 %
 % section/subsection/paragraph set-up
@@ -317,6 +343,7 @@
 \def\@deceased{}
 % Added blurb for LiveComs
 \def\@blurb{}
+\def\@orcidblock{}
 
 
 \newcommand{\corr}[2]{%
@@ -346,6 +373,16 @@
 
 % Added for LiveComs
 \newcommand{\blurb}[1]{\def\@blurb{#1}}
+
+\newcommand{\orcid}[2]{%
+  \ifx\empty\@orcidblock\else\appto{\@orcidblock}{\\}{}{}\fi
+  \appto{\@orcidblock}{%
+    #1:\space%
+    \ifx\empty#2\else\href{https://orcid.org/#2}{#2} \fi
+  }{}{}%
+}
+
+
 
 \reversemarginpar
 
@@ -378,7 +415,7 @@
 
 %% Abstract outside frontmatter will throw an error!
 \RenewEnviron{abstract}{%
-  \ClassError{livecome}
+  \ClassError{livecoms}
   {Nope nope nope, please put the abstract inside the frontmatter environment.}
   {Please put the abstract inside the frontmatter environment.}
 }
@@ -418,6 +455,12 @@
   \vskip16pt
   {\@author\par}
   \vskip8pt
+}
+
+\newcommand{\makeorcid}{%
+  % \textbf{*For correspondence:\\}  \@correspondence\par
+  % \textbf{ORCID:\\}  \@correspondence\par
+  \textbf{ORCID:\\}  \@orcidblock\par
 }
 
 %% Insert a grey line to separate floats from main text

@@ -28,19 +28,19 @@
 \usepackage{textgreek}
 \usepackage{changepage}
 
-\newcommand{\versionnumber}{0.1} % you should update the minor version number in preprints and major version number of submissions.
+\newcommand{\versionnumber}{1.0} % you should update the minor version number in preprints and major version number of submissions.
 \newcommand{\githubrepository}{\url{https://github.com/michellab/alchemical-best-practices}} %this should be the main github repository for this article
 \newcommand{\expect}[1]{\left\langle{#1}\right\rangle}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-\title{Best Practices for Alchemical Free Energy Calculations: v\versionnumber}
+\title{Best Practices for Alchemical Free Energy Calculations [Article v \versionnumber]}
 \author[1*]{Antonia S. J. S. Mey}
 \author[7]{Bryce K. Allen}
 \author[2]{Hannah E. Bruce Macdonald}
 \author[2*]{John D. Chodera}
 \author[1,10]{Maximilian Kuhn}
-\author[1*]{Julien Michel}
+\author[1]{Julien Michel}
 \author[3*]{David L. Mobley}
 \author[11]{Levi N. Naden}
 \author[4]{Samarjeet Prasad}
@@ -61,12 +61,26 @@
 \affil[10]{Cresset, Cambridgeshire, UK}
 \affil[11]{Molecular Sciences Software Institute, Blacksburg VA, USA}
 %
+\corr{antonia.mey@ed.ac.uk}{ASJSM}
 \corr{john.chodera@choderalab.org}{JDC}
 \corr{dmobley@mobleylab.org}{DLM}
-\corr{antonia.mey@ed.ac.uk}{ASJSM}
-\corr{mail@julienmichel.net}{JM}
 \corr{michael.shirts@colorado.edu}{MRS}
-%
+
+\orcid{Antonia S. J. S. Mey}{0000-0001-7512-5252}
+\orcid{Bryce Allen}{0000-0002-0804-8127}
+\orcid{Hannah E. Bruce Macdonald}{0000-0002-5562-6866}
+\orcid{John D. Chodera}{0000-0003-0542-119X}
+\orcid{Maximilian Kuhn}{0000-0002-2811-3934}
+\orcid{Julien Michel}{0000-0003-0360-1760}
+\orcid{David L. Mobley}{0000-0002-1083-5533}
+\orcid{Levi N. Naden}{0000-0002-3692-5027}
+\orcid{Samarjeet Prasad}{0000-0001-8320-6482}
+\orcid{Andrea Rizzi}{0000-0001-7693-2013}
+\orcid{Jenke Scheen}{0000-0001-9781-0445}
+\orcid{Michael R. Shirts}{0000-0003-3249-1097}
+\orcid{Gary Tresadern}{0000-0002-4801-1644}
+\orcid{Huafeng Xu}{0000-0001-5447-0452}
+
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
 %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -587,7 +601,7 @@ Congeneric series can contain stereoisomers or enantiomers which can bind very d
 Binding site water molecules may form water mediated protein-ligand interactions which can pose challenges whenever exchange with bulk water is slow compared to simulation timescales. This happens typically in buried binding sites. Overlaying multiple protein X-ray structures can identify conserved or additional water molecules that can be useful to include in calculations. In cases where water molecules are known to play an important role in the binding, software implementations that use water sampling facilitated by Grand Canonical Monte Carlo methods may be useful, i.e. consider pre-solvation methods such as GCMC steps~\cite{michel2010prediction}. Other tools such as WaterMap or open source equivalents (SSTMap, GIST, and others) can be used to define water structure for systems with no experimental evidence of water sites~\cite{wang2011ligand}. Well known protein systems with water mediated ligand interactions are for example: HSP90 which formed part of the D3R grand challenge 2015~\cite{mey2016blinded}, A2A~\cite{brucemacdonald2018ligand}, MUP~\cite{ross2015water}, ~\cite{deflorian2020accurate}, and others~\cite{michel2009energetics}.
 
 \paragraph{Protonation states depend on the pH of the experimental assay}
-Care should be taken when preparing ligands and proteins to match the pH of the experimental assay, if known. As mentioned above in Sec.~\ref{subsec:exp_condition}, the pH of the assay can differ from neutral pH and will determine the protonation states of the proteins and ligands. Since the pKa of reference amino acid sidechain residues is known, but can vary in the protein environment, many different tools have emerged for predicting sidechain pKa in proteins, such as the H++ server, ProPKa, APBS, and Maestro ~\cite{anandakrishnan2012automating, sondergaard2011improved, jurrus2018improving, 2020schrodinger}. Strongly acidic (Glu, Asp) or basic (Arg, Lys) sidechains can reliably predicted to be ionised, but care is still needed as the local environment can modify expected ionization states (for instance the catalytic Asp dyad in proteases). Histidine is notoriously more difficult to predict as its pKa suggests it ionizes closer to the experimental pH range. For ligands often the pKa needs to be determined, if not known experimentally. There are many different available tools for this purpose, but common choices may be propKa~\cite{olsson2011propka3,sondergaard2011improved}, Chemicalize (\url{https://chemicalize.com/welcome}), or Maestro~\cite{2020schrodinger}. Still, accurate pKa prediction for small molecules remains a challenging problem, even with dedicated tools~\cite{isik2018pka}. While often it can be assumed that the protonation state of a ligand and protein will remain the same as a ligand binds, some care needs to be taken with systems where the protonation state may change upon binding~\cite{onufriev2013protonation}. BACE, for example, famously undergoes a protonation state change on ligand binding.
+Care should be taken when preparing ligands and proteins to match the pH of the experimental assay, if known. As mentioned above in Sec.~\ref{subsec:exp_condition}, the pH of the assay can differ from neutral pH and will determine the protonation states of the proteins and ligands. Since the pKa of reference amino acid sidechain residues is known, but can vary in the protein environment, many different tools have emerged for predicting sidechain pKa in proteins, such as the H++ server, ProPKa, APBS, and Maestro ~\cite{anandakrishnan2012automating, sondergaard2011improved, jurrus2018improvements, 2020schrodinger}. Strongly acidic (Glu, Asp) or basic (Arg, Lys) sidechains can reliably predicted to be ionised, but care is still needed as the local environment can modify expected ionization states (for instance the catalytic Asp dyad in proteases). Histidine is notoriously more difficult to predict as its pKa suggests it ionizes closer to the experimental pH range. For ligands often the pKa needs to be determined, if not known experimentally. There are many different available tools for this purpose, but common choices may be propKa~\cite{olsson2011propka3,sondergaard2011improved}, Chemicalize (\url{https://chemicalize.com/welcome}), or Maestro~\cite{2020schrodinger}. Still, accurate pKa prediction for small molecules remains a challenging problem, even with dedicated tools~\cite{isik2018pka}. While often it can be assumed that the protonation state of a ligand and protein will remain the same as a ligand binds, some care needs to be taken with systems where the protonation state may change upon binding~\cite{onufriev2013protonation}. BACE, for example, famously undergoes a protonation state change on ligand binding.
 
 
 \paragraph{Congeneric series often need alignment}
@@ -714,7 +728,7 @@ If this is not the case, a simple entropic correction is needed.
 For binding, however, the situation is more complex and requires special care.
 Because the simulations are typically performed using restraints and at concentrations that are different from 1 M, the expression of the free energy requires the following correction~\cite{gilson1997statisticalthermodynamic} (see an example of such a thermodynamic cycle in Fig.~\ref{fig:fig_absolute_thermodynamic_cycle})
 \begin{equation}\label{eq:restraint-correction}
-    \Delta G^{\circ}_{\mathrm{restr}} = -k_BT ~ \ln \left( \frac{c^{\circ}}{V_L} \right) -k_BT ~ \ln \left( \frac{\xi_L}{8 \pi^2} \right)
+    \Delta G^{\circ}_{\mathrm{restr}} = -k_BT ~ \ln \left( \frac{c^{\circ}}{V_L} \right) -k_BT ~ \ln \left( \frac{\xi_L}{8 \pi^2} \right),
 \end{equation}
 where $V_L$ and $\xi_L$ are respectively the volume of the translational and rotational degrees of freedom of the non-interacting ligand in the simulation box.
 When no restraints are used, the non-interacting ligand is free to translate and rotate in the simulation box (i.e., $V_L = V_{\mathrm{box}}$ and $\xi_L = 8\pi^2$), and the rotational term is zero.
@@ -949,7 +963,7 @@ This approach necessitates a separate binding free energy calculation for each p
 If relative populations of different stable binding modes were available from some other technique, it could make this separation of states approach considerably more efficient~\cite{mobley2012perspective, gill2018binding}.
 
 \paragraph{Handling multiple potential binding modes within relative calculations.}
-Multiple potential binding modes pose particular problems for relative free energy calculations, as having multiple starting structures for these calculations could yield substantially different calculated relative binding free energies for the same transformation due to kinetic trapping, and, without additional information (specifically, the free energy of binding mode interconversion or, equivalently, the relative populations of different binding modes) it becomes impossible to sort out which of the multiple answers is in fact the correct relative binding free energy~\cite{}.
+Multiple potential binding modes pose particular problems for relative free energy calculations, as having multiple starting structures for these calculations could yield substantially different calculated relative binding free energies for the same transformation due to kinetic trapping, and, without additional information (specifically, the free energy of binding mode interconversion or, equivalently, the relative populations of different binding modes) it becomes impossible to sort out which of the multiple answers is in fact the correct relative binding free energy.
 
 To deal with this, some practitioners have actually computed relative binding free energies of different binding modes of the same ligand~\cite{palma2012computation}.
 For example, a perturbation which adds a methyl to an aromatic ring of a larger ligand might yield one result if the methyl points in one direction, and a different value if it points in the other due to slow ring motions~\cite{lincoff2016comparing, sasmal2020sampling}.
@@ -1235,7 +1249,7 @@ As essentially all alchemical free energy prediction schemes are regression prob
    \label{fig:scatterplot_analysis}
 \end{figure}
 
-As we are interested mainly in the linear relationship between the alchemical free energy predictions and the experimentally -determined affinity values, plots should be depicted with the same range on both axes (i.e. $x=y$) with a 1:1 aspect ratio, with units for both experiment and simulation converted to be the same. If this skews the plot to a point where it is difficult to read of information, using the same dimensions, such that e.g. 1 cm is 1 kcal/mol is acceptable. Furthermore, bounds should be depicted for the 1- and 2-kcal/mol confidence regions. These regions can serve as tools to communicate your model performance: any predictions inside the 1 kcal/mol region can be seen as highly reliable, any predictions inside the 2 kcal/mol region should be seen as somewhat reliable, and any predictions outside the confidence regions should be expected to be unreliable (and handled as outliers). In a drug discovery context, this type of data depiction may suggest the reliability of alchemical FE predictions in the project, and can give an idea of how trustworthy predictions can be for synthesis ideas. 
+As we are interested mainly in the linear relationship between the alchemical free energy predictions and the experimentally -determined affinity values, plots should be depicted with the same range on both axes (i.e. $x=y$) with a 1:1 aspect ratio, with units for both experiment and simulation converted to be the same. If this skews the plot to a point where it is difficult to read of information, using the same dimensions, such that e.g. 1 cm is 1 kcal/mol is acceptable. Furthermore, bounds should be depicted for the 1- and 2-kcal/mol confidence regions. These regions can serve as tools to communicate your model performance: any predictions inside the 1 kcal/mol region can be seen as highly reliable, any predictions inside the 2 kcal/mol region should be seen as somewhat reliable, and any predictions outside the confidence regions should be expected to be unreliable (and handled as outliers). In a drug discovery context, this type of data depiction may suggest the reliability of alchemical FE predictions in the project, and can give an idea of how trustworthy predictions can be for synthesis ideas. It is also recommended to included experimental error bars in all plots.
 
 An example of a best practice scatter comparison between computed and experimental values is shown in Fig.~\ref{fig:scatterplot_analysis}, highlighting outliers, error bars and confidence intervals. The data for this plot is artificially generated for illustration purposes.
 
@@ -1383,12 +1397,12 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 \end{itemize}
 \end{checklist}
 
-\begin{checklist}{Running absolute simultions}
+\begin{checklist}{Running absolute simulations}
         \textbf{Steps to running your absolute alchemical free energy calculations}
 \begin{itemize}
  \item Check your ligands have the same, biologically correct binding pose
         \item Make sure your \textlambda-scheduling is set appropriately
-        \item Check if your ligands are discharging and vanishing correctly
+        \item Check if your ligands are discharging and decoupling correctly
         \item Set up your restraints correctly
         \item Make sure you subsample the data in your free energy estimation protocol
         \item Apply the appropriate correction terms
@@ -1403,7 +1417,7 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
         \item Make sure your molecular transformations are realistic (1-5 heavy atoms for reliable computations)
         \item Generate a perturbation network by your method of choice; check whether you have enough cycle closures to check consistency in the results
         \item Check whether dummy atoms were assigned correctly
-        \item Make sure you subsample the data in your free energy estimation protocol
+        \item Consider subsampling the data in your free energy estimation protocol
         \item Apply the 
         appropriate correction terms
 \end{itemize}
@@ -1416,14 +1430,14 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
     \textbf{Situations suggesting your relative alchemical free energy calculations have not run properly (assuming absence of experimental affinities)}
         \begin{itemize}
                 \item Standard error (\textsigma) should not be \textgreater1 kcal·mol$^{-1}$ 
-    \item Simulated systems have not converged - this
+    \item Simulated systems have not converged - trajectories should be manually checked for consistency; other methods such as generating RMSD plots are also recommended
     \newline\newline\textit{Relative:}
     \item If you observe hysteresis in perturbations and incorrect cycle closures
-    \item Energy differences \textgreater15 kcal$\cdot$mol$^{-1}$  are unreliable
+    \item Energy differences \textgreater$\sim$15 kcal$\cdot$mol$^{-1}$  are likely unreliable
     \newline\newline\textit{Absolute:}
-    \item Energies below -15 kcal$\cdot$mol$^{-1}$  are unreliable
-    \item The ligand has not sampled most of the intended region after the vanishing step
-    \item The ligand is drifting out of the intended region after the vanishing step
+    \item Energies \textless$\sim$-15 kcal$\cdot$mol$^{-1}$  are likely unreliable
+    \item The ligand has not sampled most of the intended region after the decoupling step
+    \item The ligand is drifting out of the intended region after the decoupling step
         \end{itemize}
 \end{checklist}
 
@@ -1441,7 +1455,7 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 \begin{itemize}
     \item Make sure you have run enough replicates to ensure statistical reliability (\textgreater3)
     \item Compute both correlation and ranking coefficients and ranking statistics (e.g. r, \textrho, MUE and \texttau)
-    \item You should be able to explain large energy differences based on your system (trajectory)
+    \item Include error bars in all your visual analyses
 \end{itemize}
 \end{checklist}
 \end{Checklists*}
@@ -1510,8 +1524,10 @@ ASJSM and JM acknowledge funding through an EPSRC flagship software grant: EP/P0
 MK and JM acknowledge funding through Innovate UK by KTP partnership 011120.
 AR acknowledges partial support from the Tri-Institutional Program in Computational Biology and Medicine and the Sloan Kettering Institute.
 HEBM acknowledges support from a Molecular Sciences Software Institute Investment Fellowship and Relay Therapeutics.
-JDC is a current member of the Scientific Advisory Board of OpenEye Scientific Software and a consultant to Foresite Laboratories. A complete funding history for the Chodera lab can be found at http://choderalab.org/funding. DLM appreciates financial support from the National Institutes of Health (1R01GM108889-01, 1R01GM124270-01A1 and R01GM132386), and the National Science Foundation (CHE 1352608).
+JDC is a current member of the Scientific Advisory Board of OpenEye Scientific Software and a consultant to Foresite Laboratories. A complete funding history for the Chodera lab can be found at \url{http://choderalab.org/funding}. DLM appreciates financial support from the National Institutes of Health (1R01GM108889-01, 1R01GM124270-01A1 and R01GM132386), and the National Science Foundation (CHE 1352608).
 
+\section*{Author Information}
+\makeorcid
 \bibliography{alchemical,manual}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
