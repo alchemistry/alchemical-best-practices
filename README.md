@@ -17,17 +17,24 @@ Preparation (focused on aspects unique to alchemical free energies), execution, 
 ## List of Authors
 (alphabetical order -- attended meeting at NIST Aug. 2017)
 
-- John Chodera
-- Toni Mey
-- David Mobley
-- Conor Parks
-- Julia Rice
-- Samarjeet
-- Michael Shirts
+- Antonia S. J. S. Mey
 - Bryce Allen
+- Hannah E. Bruce Macdonald
+- John D. Chodera
+- Maximilian Kuhn
+- Julien Michel
+- David L. Mobley
+- Levi N. Naden
+- Samarjeet Prasad
+- Andrea Rizzi 
+- Jenke Scheen
+- Michael R. Shirts
+- Gary Tresadern
+- Huafeng Xu
 
-##List of Contributors
+## List of Contributors
 (non-author list of people who contributed to document)
+- Julia Rice
 
 ## Paper Writing as Code Development
 <!-- This discussion is so that people know how to contribute to your document. -->
@@ -41,4 +48,4 @@ Specific changes can be proposed [via pull requests](https://help.github.com/art
 Original brainstorming document: (https://docs.google.com/document/d/1h7GIyOJykBWz-GPKtYZK-Pv7cbLbX8XTM2xLUpSppoE)
 
 ## List of Released Versions
-still working on first release
+revisions for v 1.0
