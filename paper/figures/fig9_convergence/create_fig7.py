@@ -24,6 +24,9 @@ DDG_KEY = 'd$\Delta$G [kcal/mol]'
 # Path to the directory containing the Pandas Dataframe.
 DATA_DIR_PATH = 'figure7_data'
 
+# Thermal energy at 300K in kcal/mol.
+KT = 0.5961612775922496
+
 
 # =============================================================================
 # UTILITY FUNCTIONS
@@ -116,17 +119,17 @@ def plot_mean_free_energy(t, mean_free_energy_trajectory, ci_trajectory, ax,
     ax.plot(t, mean_free_energy_trajectory, color=color_mean, alpha=1.0, **plot_kwargs)
 
 
-def plot_yank_trajectories(data):
+def plot_yank_trajectories(data, forward_reverse_data):
     """Plot the mean free energy trajectory and uncertainty of the YANK calculations."""
     sns.set_style('whitegrid')
     sns.set_context('paper')
-    system_colors = {'CB8-G3': 'C0', 'OA-G6': 'C1'}
+    system_colors = {'CB8-G3': 'C0', 'OA-G6': 'C2'}
 
     # -------------------- #
     # Plot submission data #
     # -------------------- #
 
-    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(3.8, 2.4))
+    fig, ax = plt.subplots(nrows=1, ncols=1, figsize=(3.8, 3.4))
 
     # for system_name in unique_system_names:
     for system_name, system_data in data.items():
@@ -147,7 +150,31 @@ def plot_yank_trajectories(data):
         # Plot asymptotic free energy.
         asymptotic_DG = mean_free_energy_trajectory[-1]
         print(system_name, t[-1], 'ns')
-        ax.plot(t, [asymptotic_DG for _ in t], color='black', ls='--', alpha=0.8, zorder=1)
+        ax.plot(t, [asymptotic_DG for _ in t], color='black', ls='-.', alpha=0.8, zorder=1)
+
+    # Plot forward/reverse estimates.
+    for system_name in forward_reverse_data:
+        # First build the overall free energy from complex/solvent data.
+        system_fr_data = {k: np.array(v) for k, v in forward_reverse_data[system_name]['solvent'].items()}
+        for k in system_fr_data:
+            system_fr_data[k] -= np.array(forward_reverse_data[system_name]['complex'][k])
+            system_fr_data[k] -= forward_reverse_data[system_name]['standard_state_correction']
+        t = np.array(forward_reverse_data[system_name]['n_energy_evaluations']) / 500 / 1000
+
+        # Plot forward/reverse free energy trajectories.
+        for direction, color in zip(['forward', 'reverse'], ['blue', 'red']):
+            # Add only one time the reverse/forward labels for the legend.
+            if 'CB8' in system_name:
+                label = direction
+            else:
+                label = None
+
+            # plt.plot(system_fr_data['simulation_percentage'], system_fr_data[phase_name][direction], color=color)
+            ax.plot(
+                t, system_fr_data[direction + '_f'],
+                # yerr=system_fr_data[direction + '_df'],
+                color=color, ls='--', alpha=0.65, label=label
+            )
 
     # Set limits.
     ax.set_xlim((0, 2500))
@@ -155,10 +182,12 @@ def plot_yank_trajectories(data):
     ax.set_xlabel('total simulation time [ns]')
     ax.set_ylabel(DG_KEY)
 
-    plt.tight_layout()
+    plt.tight_layout(rect=[0, 0, 1, 0.9])
 
     # Create legend.
-    ax.legend(loc='lower right', ncol=3, borderpad=0.5, borderaxespad=0.2)
+    ax.legend(loc='upper left', ncol=4, borderpad=0.5, borderaxespad=0.2,
+              bbox_to_anchor=(-0.13, 1.2),
+              labelspacing=0.8, handletextpad=0.5, columnspacing=1.2)
 
     # Save figure.
     plt.savefig('free_energy_trajectories.pdf')
@@ -200,5 +229,9 @@ if __name__ == '__main__':
     # Read the data.
     data = load_data()
 
+    import json
+    with open('figure7_data/forward_reverse_data.json', 'r') as f:
+        forward_reverse_data = json.load(f)
+
     # Plot YANK calculations on a single graphics.
-    plot_yank_trajectories(data)
+    plot_yank_trajectories(data, forward_reverse_data)
