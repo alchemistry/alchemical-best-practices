@@ -29,37 +29,39 @@
 \usepackage{changepage}
 
 \newcommand{\versionnumber}{1.0} % you should update the minor version number in preprints and major version number of submissions.
-\newcommand{\githubrepository}{\url{https://github.com/michellab/alchemical-best-practices}} %this should be the main github repository for this article
+\newcommand{\githubrepository}{\url{https://github.com/alchemistry/alchemical-best-practices}} %this should be the main github repository for this article
 \newcommand{\expect}[1]{\left\langle{#1}\right\rangle}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% ARTICLE SETUP
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \title{Best Practices for Alchemical Free Energy Calculations [Article v \versionnumber]}
 \author[1*]{Antonia S. J. S. Mey}
-\author[7]{Bryce K. Allen}
-\author[2]{Hannah E. Bruce Macdonald}
-\author[2*]{John D. Chodera}
+\author[2]{Bryce K. Allen}
+\author[3]{Hannah E. Bruce Macdonald}
+\author[3*]{John D. Chodera}
+\author[9]{David F. Hahn}
 \author[1,10]{Maximilian Kuhn}
 \author[1]{Julien Michel}
-\author[3*]{David L. Mobley}
-\author[11]{Levi N. Naden}
-\author[4]{Samarjeet Prasad}
-\author[2,8]{Andrea Rizzi}
+\author[4*]{David L. Mobley}
+\author[5]{Levi N. Naden}
+\author[6]{Samarjeet Prasad}
+\author[2,7]{Andrea Rizzi}
 \author[1]{Jenke Scheen}
-\author[6*]{Michael R. Shirts}
+\author[8*]{Michael R. Shirts}
 \author[9]{Gary Tresadern}
-\author[7]{Huafeng Xu}
+\author[2]{Huafeng Xu}
 %
 \affil[1]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
-\affil[2]{Computational and Systems Biology Program, Sloan Kettering Institute, Memorial Sloan Kettering Cancer Center, New York NY, USA}
-\affil[3]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine, USA}
-\affil[4]{National Institutes of Health, Bethesda, MD, USA}
-\affil[6]{University of Colorado Boulder, Boulder, CO, USA}
-\affil[7]{Silicon Therapeutics, Boston, MA, USA}
-\affil[8]{Tri-Institutional Training Program in Computational Biology and Medicine, New York, NY, USA}
+\affil[2]{Silicon Therapeutics, Boston, MA, USA}
+\affil[3]{Computational and Systems Biology Program, Sloan Kettering Institute, Memorial Sloan Kettering Cancer Center, New York NY, USA}
+\affil[4]{Departments of Pharmaceutical Sciences and Chemistry, University of California, Irvine, USA}
+\affil[5]{Molecular Sciences Software Institute, Blacksburg VA, USA}
+\affil[6]{National Institutes of Health, Bethesda, MD, USA}
+\affil[7]{Tri-Institutional Training Program in Computational Biology and Medicine, New York, NY, USA}
+\affil[8]{University of Colorado Boulder, Boulder, CO, USA}
 \affil[9]{Computational Chemistry, Janssen Research \& Development, Turnhoutseweg 30, Beerse B-2340,Belgium}
 \affil[10]{Cresset, Cambridgeshire, UK}
-\affil[11]{Molecular Sciences Software Institute, Blacksburg VA, USA}
+
 %
 \corr{antonia.mey@ed.ac.uk}{ASJSM}
 \corr{john.chodera@choderalab.org}{JDC}
@@ -80,9 +82,10 @@
 \orcid{Michael R. Shirts}{0000-0003-3249-1097}
 \orcid{Gary Tresadern}{0000-0002-4801-1644}
 \orcid{Huafeng Xu}{0000-0001-5447-0452}
+\orcid{David F. Hahn}{0000-0003-2830-6880}
 
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
-%
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PUBLICATION INFORMATION
 %%% Fill out these parameters when available
@@ -111,7 +114,7 @@ The hallmark of these methods is the use of "bridging" potential energy function
 
 While these methods are highly flexible, care must be taken in avoiding common pitfalls to ensure that computed free energy differences can be robust and reproducible for the chosen force field, and that appropriate corrections are included to permit direct comparison with experimental data.
 
-In this paper, we review current best practices for several popular application domains of alchemical free energy calculations, including relative and absolute small molecule binding free energy calculations to biomolecular targets.
+In this paper, we review current best practices for several popular application domains of equilibrium alchemical free energy calculations, including relative and absolute small molecule binding free energy calculations to biomolecular targets.
 %\todo[inline, color=green!20]{JDC: Should we migrate this document to \url{https://github.com/alchemistry}? ASJSM: Let's migrate with the submitted version, but leave it here for now?}
 \end{abstract}
 \end{frontmatter}
@@ -149,7 +152,7 @@ After an alchemical calculation is performed (which generally involves multiple 
  Early work used simple but statistically suboptimal estimators for this: free energy perturbation (FEP) used a simple (but highly biased) estimator based on the Zwanzig relation~\cite{zwanzig1954hightemperature} or numerical quadrature via thermodynamic integration (TI), for which the theory dates back the better part of a century but with the first computational applications emerging in the 1980's and 90's~\cite{kirkwood1935statistical, jorgensen1985monte, kollman1993free, wong1986dynamicsa, merz1989free}. %
  More recent developments have seen new, highly efficient statistical estimators that make better use of all the data, often building on the more efficient and less biased Bennett acceptance ratio (BAR)~\cite{bennett1976efficient}, producing multistate generalizations~\cite{shirts2008statisticallya} or removing the need for global equilibrium~\cite{wu2016multiensemble, mey2014xtram, wu2014statistically}.
 
-Subsequent work in the 2000s led to improved implementations of alchemical methods in popular biomolecular simulation packages~\cite{shirts2003extremely,shirts2005solvation,vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, hedges2019biosimspace}. 
+Subsequent work in the 2000s led to improved implementations of alchemical methods in popular biomolecular simulation packages~\cite{shirts2003extremely,shirts2005solvation,vanderspoel2005gromacs, mermelstein2018fast, wang2015accurate, hedges2019biosimspace, riniker2011calculation}. 
  This foundational work, combined with the methodological, technological, and hardware improvements of the last 5--10 years, has led to an explosion of interest and direct commercial application of these technologies~\cite{wang2015accurate, fratev2019improved, schindler2020largescale, cournia2017relative, sherborne2016collaborating, kuhn2020assessment}.
 
 
@@ -189,8 +192,8 @@ Instead this guide aims to answer the following questions:
 Some other background information may be needed depending on the nature of the alchemical project. For example, often, if binding poses are not known, docking calculations can be used to generate an initial small molecule binding pose to start alchemical simulations. This will require some basic familiarity on how to perform docking to generate reasonable simulation starting points~\cite{grinter2014challenges}. 
 
 As some of the theoretical background can seem daunting, we do, however, provide a guide to the essential theory behind alchemical free energy calculations in Sec.~\ref{sec:theory}.
-In the remainder of this paper, we will cover topics that are key to the preparation( Sec.~\ref{sec:prerequisites}), choice and use of correct protocols (Sec.~\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used in the analysis of alchemical calculations (Sec.~\ref{sec:data_analysis}). 
-Particular focus will be given to aspects of the molecular simulations which are unique to alchemical calculations---these include the calculation of transfer free energies (hydration free energies, partition coefficients, etc.), and binding free energies (absolute and relative).
+In the remainder of this paper, we will cover topics that are key to the preparation (Sec.~\ref{sec:prerequisites}), choice and use of correct protocols (Sec.~\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used in the analysis of alchemical calculations (Sec.~\ref{sec:data_analysis}). 
+Particular focus will be given to aspects of the molecular simulations which are unique to alchemical calculations---these include the calculation of transfer free energies (hydration free energies, partition coefficients, etc.), and binding free energies (absolute and relative). We primarily focus on \emph{equilibrium} free energy calculations in this best practices guide, as best practices for these are more developed, and nonequilibrium techniques may warrant their own guide as such practices evolve. 
 
 
 While we try to address as many methods and practices as possible, the field of free energy calculations is broad, and there are many advanced topics that are left to future Best Practices documents focusing on specific issues. 
@@ -202,6 +205,9 @@ Below, we provide a non-exhaustive list of topics we have \emph{not} addressed, 
 \item approximate and often less accurate endpoint free energy methods such as MM-PBSA~\cite{genheden2015mm} and LIE~\cite{gutierrez-de-teran2012linear}
 \item Free energy methods that extract the ligand using geometric order parameters and potential of mean force methods~\cite{heinzelmann2017attachpullrelease}
 \item forcefield dependence for protein, ligand, ions, co-solvents, and co-factors. A number of different studies have looked at the influence of force fields and it is assumed the user has made an adequate choice for the system under study~\cite{loeffler2018reproducibility, vassetti2019assessment, lopes2015current}. 
+\item nonequilibrium free energy calculations~\cite{gapsys2020large}
+\item Free energy calculations using QM/MM methods~\cite{beierlein2011simple,dybeck2016comparison,cave-ayland2015direct}.
+\item Free energy calculations using Machine learning methods~\cite{rufa2020chemical, scheen2020hybrid, cole2020machine}
 \end{itemize}
 
 For convenience we have also compiled a list of common acronyms and common symbols used throughout this paper.
@@ -215,7 +221,7 @@ For convenience we have also compiled a list of common acronyms and common symbo
      {\bf MCSS} --- Maximum Common Substructure\\
      {\bf MD} --- Molecular Dynamics\\
      {\bf RMSE} --- Root Mean Square Error\\
-     {\bf MUE} --- Mean unsigned error\\
+     {\bf MUE} --- Mean Unsigned Error\\
      {\bf SAR} --- Structure-Activity Relationships\\
      {\bf TI} --- Thermodynamic Integration
 \end{tcolorbox}
@@ -227,11 +233,11 @@ $K_b^{\circ}$ --- binding  constant \\
 $c^{\circ}$ --- standard state concentration \\
 $U$ --- potential energy\\
 $u$ --- reduced potential describing a thermodynamic state \\
-$\Delta G$ --- Gibbs free energy (isothermal isobaric ensemble)\\
-$\Delta A$ --- Helmholtz free energy (canonical ensemble)\\
+$\Delta G$ --- Gibbs free energy (isothermal isobaric ensemble), Gibbs function, or free enthalpy, though the most common term Gibbs free energy is used in the text\\
+$\Delta A$ --- Helmholtz free energy (canonical ensemble) or Helmholtz function, with Helmholtz free energy used in the text.\\
 $\Delta f$ --- reduced (dimensionless) free energy \\
 $\Delta \hat{f}$ --- estimate from an estimator for the reduced free energy\\
-$\Gamma$ --- conformation space accessible by simulations \\
+$\Gamma$ --- configurational space accessible by simulations \\
 $\vec{q}$ --- vector of a single configuration, i.e. $x$, $y$, $z$ coordinates of the simulation system\\
 $k_B$ --- Boltzmann constant \\
 $Z$ --- partition function \\
@@ -263,33 +269,36 @@ Suppose you want to compute the binding affinity, or free energy of binding, of 
 R+L \leftrightharpoons RL.
 \end{equation}
 The binding constant ($K_b^{\circ}$) is given by the law of mass action as the ratio of concentrations of product $[RL]$ and reactants $[R]$, $[L]$:
-\begin{equation}
+\begin{equation}\label{eq:law-mass-action}
  K_b^{\circ} = c^{\circ}\frac{[RL]}{[L][R]}.
 \end{equation}
-The standard state concentration $c^\circ$ depends on the reference state, but it is usually set to $1\,\mathrm{mol}/\mathrm{L}$ assuming a constant pressure of $1\,\mathrm{atm}$ (see also Sec.~\ref{sec:standardstate-restraints}).
-Thus, the Gibbs free energy of binding $\Delta G_{\mathrm{bind}}$ is given by:
+The standard state concentration $c^\circ$ depends on the reference state, but it is usually set to $1\,\mathrm{mol}/\mathrm{L}$ assuming a constant pressure of $1\,\mathrm{atm}$ (see also Sec.~\ref{sec:standardstate-restraints}), but also holds for dilute solutions if thermodynamic activities can be approximated by concentrations~\cite{gilson1997statisticalthermodynamic}.
+Thus, the standard Gibbs free energy of binding $\Delta G_{\mathrm{bind}}$ is given by:
 \begin{equation}
     \Delta G_{\mathrm{bind},L} = -k_BT\ln K_b^{\circ},
 \end{equation}
 where $k_B$ is the Boltzmann constant and $T$ the temperature of the system.
+Note that, unless otherwise specified, we use $\Delta G$ throughout the paper to refer to the \textit{standard} free energy of binding (or solvation) (see also Sec.~\ref{sec:standardstate-restraints}), which is often indicated in other works with $\Delta G^{\circ}$ to differentiate it from non-standard free energies.
+This is in line with current literature on alchemical calculations, where the standard free energy is normally the only quantity of interest. Furthermore, we will use the term configuration for a single set of position vectors and occasionally use the term conformation to refer to a set of configurations that represent a metastable state. 
 
 \paragraph{The free energy of binding can be expressed as a ratio of partition functions}
-A natural, though generally very computationally expensive, way to estimate the equilibrium constant is by directly simulating several binding and unbinding events and computing the probability of finding the receptor-ligand system in the bound state, $P(RL)$, or the unbound state, $P(R+L)$.
+The law of mass action in Eq.~\ref{eq:law-mass-action} is not directly applicable to typical molecular simulations as they normally include a single receptor/ligand in a small box (i.e., using large concentrations)~\cite{jong2011determining}.
+Instead, a natural, though generally very computationally expensive, way to estimate the equilibrium constant is by directly simulating several binding and unbinding events and computing the probability of finding the receptor-ligand system in the bound state, $P(RL)$, or the unbound state, $P(R+L)$.
 Assuming the volume change upon binding to be negligible, which is often the case at $1~\mathrm{atm}$ due to the incompressibility of water, then the Gibbs free energy $\Delta G_{\mathrm{bind}, L}$ is approximately equal to the Helmholtz free energy $\Delta A_{\mathrm{bind}, L}$, and we can simulate the system in a box of volume $V$ to obtain~\cite{jong2011determining}
 \begin{equation}\label{eq:binding-free-energy-from-bound-unbound-probability-ratio}
     \Delta G_{\mathrm{bind},L} \approx \Delta A_{\mathrm{bind}, L} = - k_B T  \left( \mathrm{ln} \frac{P(RL)}{P(R+L)} + \ln \left( c^\circ N_{\mathrm{Av}} V \right) \right) \, ,
 \end{equation}
 where $N_{\mathrm{Av}}$ is the Avogadro number, and the last term corrects for the simulated concentration being different than the standard concentration.
-Let $\Gamma_{\mathrm{bound}}$ and $\Gamma_{\mathrm{unbound}}$ be the set of receptor-ligand conformations $\vec{q}$ that we consider bound and unbound respectively.
-The probability of a conformation $\vec{q}$ is given by the Boltzmann probability density function
+Let $\Gamma_{\mathrm{bound}}$ and $\Gamma_{\mathrm{unbound}}$ be the set of receptor-ligand configurations $\vec{q}$ that we consider bound and unbound respectively.
+The probability of a configuration $\vec{q}$ is given by the Boltzmann probability density function
 \begin{equation}
-    P(\vec{q}) = \frac{\exp\left( \beta U(\vec{q}) \right)}{\int_{\Gamma} \exp\left( \beta U(\vec{q}) \right) \, d\vec{q}} \, ,
+    P(\vec{q}) = \frac{\exp\left( -\beta U(\vec{q}) \right)}{\int_{\Gamma} \exp\left( -\beta U(\vec{q}) \right) \, d\vec{q}} \, ,
     \label{eq:conf_probability}
 \end{equation}
-where $\beta = (k_B T)^{-1}$ is the inverse temperature, $U(\vec{q})$ is the potential energy of conformation $\vec{q}$, and the integration is over the set of all possible conformations accessible in the simulation box volume $\Gamma$, with $\Gamma_{\mathrm{bound}},\Gamma_{\mathrm{unbound}} \subset \Gamma$.
-If the simulation is long enough, we expect the fraction of conformations $\vec{q}$ found in the bound state to converge to
+where $\beta = (k_B T)^{-1}$ is the inverse temperature, $U(\vec{q})$ is the potential energy of configuration $\vec{q}$, and the integration is over the set of all possible configurations accessible in the simulation box volume $\Gamma$, with $\Gamma_{\mathrm{bound}},\Gamma_{\mathrm{unbound}} \subset \Gamma$.
+If the simulation is long enough, we expect the fraction of configurations $\vec{q}$ found in the bound state to converge to
 \begin{equation}
-    P(RL) = \int_{\Gamma_{\mathrm{bound}}} P(\vec{q}) \, d\vec{q} = \frac{\int_{\Gamma_{\mathrm{bound}}} \exp\left( \beta U(\vec{q}) \right) \, d\vec{q}}{\int_{\Gamma} \exp\left( \beta U(\vec{q}) \right) \, d\vec{q}} \, .
+    P(RL) = \int_{\Gamma_{\mathrm{bound}}} P(\vec{q}) \, d\vec{q} = \frac{\int_{\Gamma_{\mathrm{bound}}} \exp\left( -\beta U(\vec{q}) \right) \, d\vec{q}}{\int_{\Gamma} \exp\left( -\beta U(\vec{q}) \right) \, d\vec{q}} \, .
 \end{equation}
 After similar considerations for $P(R+L)$, we find that the ratio of visited bound and unbound conformations, in the limit of long simulations, should converge to
 \begin{equation}\label{eq:bound-unbound-probability-ratio}
@@ -298,13 +307,13 @@ After similar considerations for $P(R+L)$, we find that the ratio of visited bou
 where we have defined the \textit{configurational integral} or \textit{configurational partition function} as $Z(\mathrm{state}) \equiv \int_{\Gamma_{\mathrm{state}}} \exp\left(-\beta U(\vec{q})\right) \, d\vec{q}$.
 
 \paragraph{Simulating binding events is computationally expensive}
-While simulating binding events has been used to estimate binding affinities~\cite{jong2011determining,pan2017quantitative} or to get insights into the binding pathways and kinetics of receptor-ligand systems~\cite{teo2016adaptive,votapka2017seekr,doerr2014onthefly,plattner2015protein,dixon2018predicting}, the computational cost of these calculations is usually dominated by the rate of dissociation, which can be on the microsecond timescale even for millimolar binders~\cite{pan2017quantitative} and reaches the micosecond to second timescale for a typical drug~\cite{basavapathruni2012conformational,hyre2006cooperative}.
+While simulating binding events has been used to estimate binding affinities~\cite{jong2011determining,pan2017quantitative} or to get insights into the binding pathways and kinetics of receptor-ligand systems~\cite{teo2016adaptive,votapka2017seekr,doerr2014onthefly,plattner2015protein,dixon2018predicting}, the computational cost of these calculations is usually dominated by the rate of dissociation, which can be on the microsecond timescale even for millimolar binders~\cite{pan2017quantitative} and reaches the microsecond to second timescale for a typical drug~\cite{basavapathruni2012conformational,hyre2006cooperative}.
 Depending on system size and simulation settings, common molecular dynamics software packages can reach a few hundreds of ns/day using currently available high-end GPUs~\cite{eastman2017openmm,kutzner2019more}, making these type of calculations unappealing and irrelevant on a pharmaceutical drug discovery timescale.
 Other methods compute the free energy of binding by building potential of mean force profiles along a reaction coordinate~\cite{woo2005calculationa,velez-vega2013overcoming,limongelli2013funnel,heinzelmann2017attachpullrelease}, but these methods require prior knowledge of a high-probability binding pathway, which is not easily available, especially in the prospective scenarios typical of the drug development process.
 
 \subsection{Alchemical free energy calculations yield predictions that do not require direct simulation of binding/unbinding events}
 
-In many cases, the quantity of interest is the change in binding affinity between a compound $A$ and a related compound $B$ (e.g., by modifying one the drug scaffold's substituents, see (Fig.~\ref{fig:fig_what_is_alchemy} \textbf{F}), which, by using Eq.~\ref{eq:binding-free-energy-from-bound-unbound-probability-ratio} and \ref{eq:bound-unbound-probability-ratio} is given by
+In many cases, the quantity of interest is the change in binding affinity between a compound $A$ and a related compound $B$ (e.g., by modifying one of the drug scaffold's substituents, see (Fig.~\ref{fig:fig_what_is_alchemy} \textbf{F}), which, by using Eq.~\ref{eq:binding-free-energy-from-bound-unbound-probability-ratio} and \ref{eq:bound-unbound-probability-ratio} is given by
 \begin{equation}\label{eq:delta-delta-G-physical}
 \begin{split}
     \Delta \Delta G_{\mathrm{bind}, AB} &= \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A} \\
@@ -325,13 +334,12 @@ This is apparent after rewriting Eq.~\ref{eq:delta-delta-G-physical} as
 where $\Delta G_{\mathrm{bound/unbound}}$ is the free energy of mutating $A$ to $B$ in the bound/unbound state.
 Eq.~\ref{eq:delta-delta-G-alchemical} and Fig.~\ref{fig:fig_binding_thermodynamic_cycle} tell us that the difference in free energy of binding between toluene ($A$) and benzyl alcohol ($B$) can be computed by running two independent calculations estimating the free energy cost of mutating $A$ into $B$ in the binding pocket ($\Delta G_{\mathrm{bound}}$) and in solvent ($\Delta G_{\mathrm{unbound}}$), saving us the need to simulate the physical binding process of the two compounds.
 In particular, the second line of Eq.~\ref{eq:delta-delta-G-alchemical} is a consequence of $\Delta G_{\mathrm{unbound}}$ being independent of the presence of the receptor in the simulation box as the definition of the unbound state assumes receptor and ligand to be at a sufficient distance for them to have no energetic interactions.
-Note that, when $A$ and $B$ have different number of atoms, Eq.~\ref{eq:delta-delta-G-alchemical} implies the presence of a factor having units of volume entering both logarithms, which require unitless arguments.
-However, the value of this factor is inconsequential as it cancels out in practice.
+Note that, when $A$ and $B$ have different number of atoms, the factors $ \ln \frac{Z(RB)}{Z(RA)}$ and $\ln \frac{Z(B)}{Z(A)}$ in   Eq.~\ref{eq:delta-delta-G-alchemical} appear both to have factors with units of volume in the logarithms, but these factors exactly cancel between the terms.
 
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig2_therm_cyc/Figure.pdf}
     \caption{{\bf Thermodynamic cycle for computing the relative free energy of binding ($\Delta \Delta G$) between two related small molecules to a supramolecular host or a rigid receptor.}
-    The relative binding free energy difference between two small molecules, $\Delta \Delta G_{\mathrm{bind}, A \rightarrow B} \equiv \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A}$---here benzyl alcohol (top) to toluene (bottom)---can be computed as a difference between two alchemical transformations, $\Delta G_\mathrm{bound} - \Delta G_\mathrm{solvated}$, where $\Delta G_\mathrm{bound}$ represents the free energy change of transforming $A \rightarrow B$ in complex, i.e. bound to a host molecule, and $\Delta G_\mathrm{solvated}$ the free energy change of transforming $A \rightarrow B$ in solvent, typically water.}
+    The relative binding free energy difference between two small molecules, $\Delta \Delta G_{\mathrm{bind}, A \rightarrow B} \equiv \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A}$---here benzyl alcohol (top) to toluene (bottom)---can be computed as a difference between two alchemical transformations, $\Delta G_\mathrm{bound} - \Delta G_\mathrm{solvated}$, where $\Delta G_\mathrm{bound}$ represents the free energy change of transforming $A \rightarrow B$ in complex, i.e. bound to a host molecule, and $\Delta G_\mathrm{unbound}$ the free energy change of transforming $A \rightarrow B$ in solvent, typically water.}
     \label{fig:fig_binding_thermodynamic_cycle}
 \end{figure}
 
@@ -351,15 +359,15 @@ The free energy of mutating $A$ to $B$ in any environment (e.g., binding site, s
 \begin{equation}\label{eq:delta-G-env}
     \Delta G_{\mathrm{env}} = - k_BT \ln \frac{Z(\vec{\lambda}_B)}{Z(\vec{\lambda}_A)} = - k_BT \ln \frac{\int_{\Gamma_{\mathrm{env}}} \exp\left( u(\vec{q}; \vec{\lambda}_B) \right) \, d\vec{q}}{\int_{\Gamma_{\mathrm{env}}} \exp\left( u(\vec{q}; \vec{\lambda}_A) \right) \, d\vec{q}} \, .
 \end{equation}
-While it is generally not feasible to compute the two partition functions $Z(\vec{\lambda})$, several estimators have been devised to robustly estimate the ratio of partition functions in Eq.~\ref{eq:delta-G-env} (see Sec.~\ref{subsec:estimators}) from a set of conformations usually collected with MD simulations from the thermodynamic states defined at $\vec{\lambda}_A$ and $\vec{\lambda}_B$ and intermediates thereof.
+While it is generally not feasible to compute the two partition functions $Z(\vec{\lambda})$, several estimators have been devised to robustly estimate the ratio of partition functions in Eq.~\ref{eq:delta-G-env} (see Sec.~\ref{subsec:estimators}) from a set of configurations usually collected with MD simulations from the thermodynamic states defined at $\vec{\lambda}_A$ and $\vec{\lambda}_B$ and intermediates thereof.
 
 \paragraph{Why do alchemical calculations need unphysical intermediate states?}
 While it is theoretically possible to estimate the ratio of partition functions from samples collected only at states $\vec{\lambda}_A$ and $\vec{\lambda}_B$, the efficiency of the free energy estimators rapidly decreases as the phase-space overlap between the two states also decreases~\cite{wu2005phasespaceb,wu2005phasespacec}.
-Roughly, the phase-space overlap between two thermodynamic states measures the degree to which high-probability conformations (i.e., those with very negative potential energy) in one state are also high-probability conformations in the other state (see Sec.~\ref{sec:are-they-good} and Fig.~\ref{fig:fig_what_is_lambda}).
+Roughly, the phase-space overlap between two thermodynamic states measures the degree to which high-probability configurations (i.e., those with very negative potential energy) in one state are also high-probability configurations in the other state (see Sec.~\ref{sec:are-they-good} and Fig.~\ref{fig:fig_what_is_lambda}).
 
-To solve the problem of having poor overlap between the states of interest, multiple intermediate alchemical states are introduced at values $\vec{\lambda}_A = \vec{\lambda}_0, \vec{\lambda}_1, \cdots, \vec{\lambda}_K = \vec{\lambda}_B$ so that each pair of consecutive states $\vec{\lambda}_k, \vec{\lambda}_{k+1}$ share good overlap.
+Equilibrium free energy calculations, our focus here, solve the problem of having poor overlap between the states of interest, multiple intermediate alchemical states are introduced at values $\vec{\lambda}_A = \vec{\lambda}_0, \vec{\lambda}_1, \cdots, \vec{\lambda}_K = \vec{\lambda}_B$ so that each pair of consecutive states $\vec{\lambda}_k, \vec{\lambda}_{k+1}$ share good overlap.
 Each intermediate state models a ligand that is neither $A$ nor $B$ but a mix of the two.
-Many estimators (e.g., exponential reweighting (EXP)~\cite{zwanzig1954hightemperature} and Bennet's acceptance ratio (BAR)~\cite{bennett1976efficient,shirts2003equilibriuma}) can then be used to compute the free energy as
+Many estimators (e.g., exponential reweighting (EXP)~\cite{zwanzig1954hightemperature} and Bennett's acceptance ratio (BAR)~\cite{bennett1976efficient,shirts2003equilibriuma}) can then be used to compute the free energy as
 \begin{equation}
     \Delta G_{\mathrm{env}} = k_BT \sum_{k=0}^{K-1} \Delta f(\vec{\lambda}_k, \vec{\lambda}_{k+1})
 \end{equation}
@@ -367,7 +375,9 @@ from samples collected at all the alchemical states $\{\vec{\lambda}_k \}$, wher
 \begin{equation}
     \Delta f(\vec{\lambda}_k, \vec{\lambda}_{k+1}) = f(\vec{\lambda}_{k+1}) - f(\vec{\lambda}_k) = - \ln \frac{Z(\vec{\lambda}_{k+1})}{Z(\vec{\lambda}_k)} \, .
 \end{equation}
-While this strategy usually results in sampling thermodynamic states whose Boltzmann distributions are very similar, thus collecting information that is to some degree redundant, some estimators such as the Multistate Bennett acceptance ratio (MBAR)~\cite{shirts2008statisticallya} can exploit similarities between states to improve the precision of the estimates. This is achieved by using the conformations sampled at all alchemical states $\{\vec{\lambda}_k \}$ to compute the free energy difference $\Delta f(\vec{\lambda}_i, \vec{\lambda}_{j})$ between any pair of states $i,j$ (see Sec.~\ref{subsec:estimators}).
+While this strategy usually results in sampling thermodynamic states whose Boltzmann distributions are very similar, thus collecting information that is to some degree redundant, some estimators such as the Multistate Bennett acceptance ratio (MBAR)~\cite{shirts2008statisticallya} can exploit similarities between states to improve the precision of the estimates. This is achieved by using the configurations sampled at all alchemical states $\{\vec{\lambda}_k \}$ to compute the free energy difference $\Delta f(\vec{\lambda}_i, \vec{\lambda}_{j})$ between any pair of states $i,j$ (see Sec.~\ref{subsec:estimators}).
+
+Nonequilibrium free energy techniques provide an alternate approach to this problem, driving $\lambda$ between states, but these are not our focus here.~\cite{jarzynski1997nonequilibrium,jarzynski1998equilibrium,crooks2000pathensemble, gapsys2020large}
 
 \paragraph{How do absolute free energy calculations differ from relative?}
 
@@ -392,20 +402,25 @@ be worth it in terms of human and computational cost?
 
 \subsection{How accurate are alchemical free energy calculations?}
 \label{subsec:expectation}
-Current alchemical free energy calculations involving small molecules seem to achieve, in favorable cases, root mean square (RMS) errors around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative. A small selection of example datasets and case studies can be found in Sec.~\ref{sec:benchmark} at the end of this document.
+We first note that the accuracy of any free energy calculation method will be dependent on the quality of the underlying force field.  Therefore, any description of the force field for the molecules under study must be carefully checked to be sufficiently accurate to experiment. In particular, one must make sure that if using automatically generated molecular descriptions from either one's own workflow or some other computational chemistry program, there are not obvious problems in these files either through errors in the workflow, or lack of chemical coverage in the data used to construct the molecular description. Torsional parameters, in particular can be misassigned or improperly parameterized. 
+
+Given reasonably accurate, current generation force fields correctly implemented, alchemical free energy calculations involving small molecules seem to achieve, in favorable cases, root mean square (RMS) errors relative to experiment around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative. A small selection of example datasets and case studies can be found in Sec.~\ref{sec:benchmark} at the end of this document.
 However, the domain of applicability is a significant concern~\cite{sherborne2016collaborating, cournia2017relative}, especially for relative calculations, which typically require a high quality and usually experimental bound structure of a closely
 related ligand as a starting point. Additional factors such as slow protein or ligand rearrangements, uncertainties in ligand binding mode, or charged ligands can make these calculations far less reliable and more of a research effort.
 
 
 It is worth noting that the accuracy of free energy calculations is highly variable across different protein targets, and likely across different ligand chemotypes as well.
 For instance, FEP+ with OPLS3 achieves an RMSE of 0.62 kcal/mol for a set of 21 compounds binding to JNK1 kinase, but an RMSE of 1.05 kcal/mol for a set of 34 compounds binding to P38$\alpha$ kinase~\cite{harder2016opls3}.
-Furthermore, perturbations for the same chemotype in different pockets of the BACE enzyme gave varied errors~\cite{keranen2017acylguanidine}. Here the errors refer to the difference in $\Delta G$ derived by fitting the $\Delta \Delta G$'s to the known experimental binding free energies~\cite{wang2015accurate}. This prompts us to consider another important aspect. It is important to be clear on what error to report: $\Delta G$ after shifting by a constant to minimize the RMSE, unshifted $\Delta G$, $\Delta \Delta G$ of computed edges, or $\Delta \Delta G$ of all edges. (See recommendations for reporting best practices, Sec.~\ref{sec:plot_data}.) Additionally, as it is possible to perform calculations on a set of ligands using different pairwise comparisons of molecules, the performance of the method may be biased based on which pairs of comparisons are performed. Additionally, it is possible that the error associated to the relative free energy between a two ligands that was not directly computed (however can be deduced using thermodynamic paths involving other ligands) will likely be more uncertain \url{https://github.com/jchodera/jacs-dataset-analysis}.
+Furthermore, perturbations for the same chemotype in different pockets of the BACE enzyme gave varied errors~\cite{keranen2017acylguanidine}. Here the errors refer to the difference in $\Delta G$ derived from calculated $\Delta \Delta G$'s while fitting a constant offset to best reproduce the experimental binding free energies for known compounds~\cite{wang2015accurate}. Each $\Delta \Delta G$ is associated with a particular free energy calculation or transformation, which can be thought of as an edge in the graph spanning the compound series, see examples of such graphs in Fig.~\ref{fig:fig_types_of_networks}.
+
+The fact that we can analyze both $\Delta G$ values and $\Delta \Delta G$ values raises an important question about analysis -- which calculated values should we assess? It is important to be clear on what error to report: $\Delta G$ after shifting by a constant to minimize the RMSE, unshifted $\Delta G$, $\Delta \Delta G$ of computed edges, or $\Delta \Delta G$ of all edges. (See recommendations for reporting best practices, Sec.~\ref{sec:plot_data}.) Additionally, as it is possible to perform calculations on a set of ligands using different pairwise comparisons of molecules, the performance of the method may be biased based on which pairs of comparisons are performed. Additionally, it is possible that the error associated with the relative free energy between a two ligands that was not directly computed (however can be deduced using thermodynamic paths involving other ligands) will likely be more uncertain.
 Given the need to understand the performance of the system with alchemical free energy calculations, we recommend that retrospective studies for a particular target and a particular chemical series be performed for each application case.
 
 \subsection{How reproducible are alchemical free energy calculations?}
 \label{subsec:reproducible}
-Finite computing resources necessarily limit the generated number of uncorrelated samples of potential energy surfaces, and therefore alchemical free energy calculations only give free energy estimates to within finite precision. An important consideration is how reproducible alchemical free energy calculations are in practice. In simple cases such as absolute hydration free energies of small organic molecules, or relative hydration free energy calculations between structurally similar small organic molecules, it should be possible to obtain highly precise estimates with a given software package (with a sample standard deviation under 0.01 kcal/mol)~\cite{rizzi2019sampl6}.
-For more complex use cases such as protein-ligand binding free energies the repeatability is often substantially worse~\cite{rizzi2019sampl6}. A good practice is to perform two or three runs of the same perturbation to assess precision with a given protocol. The sample standard deviation will give a crude estimate of the reliability of the estimates, and whether the precision is sufficient for the problem at hand. When practical, a more stringent test is to use different input coordinates for each repeat run. 
+We restrict our analysis here to repetitions of the same calculation performed with precisely the same force field - different force fields used to describe the same molecule can lead in some cases to wide difference in free energies.  Even within this restriction,
+finite computing resources necessarily limit the generated number of uncorrelated samples of potential energy surfaces, and therefore alchemical free energy calculations only give free energy estimates to within finite precision. An important consideration is how reproducible alchemical free energy calculations are in practice. In simple cases such as absolute hydration free energies of small organic molecules, or relative hydration free energy calculations between structurally similar small organic molecules, it should be possible to obtain highly precise estimates with a given software package (with a sample standard deviation under 0.01 kcal/mol)~\cite{rizzi2019sampl6}.
+For more complex use cases such as protein-ligand binding free energies the repeatability is often substantially worse~\cite{rizzi2019sampl6}. A good practice is to perform two or three runs of the same perturbation to assess precision with a given protocol, using different initial conditions (i.e. velocities). The sample standard deviation will give a crude estimate of the reliability of the estimates, and whether the precision is sufficient for the problem at hand. When practical, a more stringent test is to use different input coordinates for each repeat run. 
 
 Note that these issues concern calculations carried out with a single software package, but simulation package variations can introduce additional issues. Such issues of reproducibility of free energy calculations across different simulation packages have attracted attention recently. Greater variability is expected due to methodological differences such as integrators, thermostats, barostats, treatment of long-range electrostatics, and potentially other factors. For absolute and relative hydration free energies of small organic molecules a variability of ca. 0.2 kcal/mol between popular simulation packages has been reported~\cite{loeffler2018reproducibility}. In the recent SAMPL6 SAMPLing challenge a larger variability of 0.3 to 1.0 kcal/mol was noted in the computed absolute binding free energies of host/guest systems even though the study sought to use identical input and simulation parameters~\cite{rizzi2019sampl6} and, in many cases, single-point energies were identical or nearly so. Further work is needed to ensure reproducibility of alchemical free energy calculations across different software implementations to guarantee that force-field development efforts lead to transferable potential energy functions. 
 
@@ -436,7 +451,7 @@ conformations of one kinase, and $K_D^\ast$ be the dissociation
 constant of a type II inhibitor against this kinase, the apparent
 binding constant of this inhibitor against this kinase is then
 \begin{equation}
-  K_D = K_D^\ast \frac{1 + K_C}{K_C}
+  K_b = K_D^\ast \frac{1 + K_C}{K_C}
   \label{eqn:conformational-binding}
 \end{equation}
 
@@ -480,13 +495,13 @@ probability:
 \end{equation}
 
 For illustrative purposes, consider a proposed set of new molecules, and assume that the changes proposed in these molecules yield a set of relative binding free energies that follow a normal
-distribution. That is, assume that the standard deviation in the relative binding free enrgies for the changes represented is $RT\ln 5$
+distribution. That is, assume that the standard deviation in the relative binding free energies for the changes represented is $RT\ln 5$
 (corresponding to a 5-fold change in the binding affinities), and that
 1 in 10 new molecules have increased binding affinity ($\Delta\Delta G
 \leq 0$). Under such assumptions, the conditional probability in
 Eq.~\ref{eqn:true-positive} can be easily computed. 
 
-If the accuracy of free energy calculations is $\sigma = 1$ kcal/mol, $P(\Delta\Delta
+If the accuracy of a collection of free energy calculations is $\sigma = 1$ kcal/mol, $P(\Delta\Delta
 G<0|\Delta\Delta G^\dagger<0) = 0.35$, which means that out of every
 10 molecules selected for predicted favorable free energy change, on
 average 3.5 molecules will have actual favorable free energy change.
@@ -544,7 +559,7 @@ It is also useful to study the structure activity relationship and understand th
 If multiple structures are available there is some evidence the higher affinity complex can give better performance~\cite{perez-benito2019predicting}, at least in some cases. However, ligands and proteins can also undergo unexpected changes in binding mode for related ligands, which can make these issues more complex to deal with~\cite{mey2016blinded}.
 
 \subsection{Input setup and scale of calculations}
-In a drug discovery setting it is normal to consider dozens (or more) of ligands and it is necessary to align them in the binding site. There is no detailed study of how different alignment approaches may affect results, but the user should be aware of some practical considerations. Tools are available to compare the ligands and build the hybrid topologies that define the changes between one ligand and another~\cite{loeffler2015fesetup,hedges2019biosimspace,gapsys2015pmx}. In simple terms, providing poor alignment to these tools will make this job harder. Docking with restraints is often beneficial in this regard. Particularly, fixing the 3D spatial position of the scaffold using maximal common substructure (MCSS) restrained docking can help provide well aligned input for the topology generation. Nevertheless, in this case careful attention is still needed to ensure consistency of alignment for identical substituents. Another alternative is to manually edit the same core and add/modify the changing substituents. This provides assurances that coordinates for the non-perturbed portion of the structure remain identical and aromatic substituents, for instance, have consistent dihedral angles. However, it is not feasible for many compounds and therefore automation is desirable. 
+In a drug discovery setting it is normal to consider dozens (or more) of ligands and it is necessary to align them in the binding site. There is no detailed study of how different alignment approaches may affect results, but the user should be aware of some practical considerations. Tools are available to compare the ligands and build the combined topologies that define the changes between one ligand and another~\cite{loeffler2015fesetup,hedges2019biosimspace,gapsys2015pmx}. In simple terms, providing poor alignment to these tools will make this job harder. Docking with restraints is often beneficial in this regard. Particularly, fixing the 3D spatial position of the scaffold using maximal common substructure (MCSS) restrained docking can help provide well aligned input for the topology generation. Nevertheless, in this case careful attention is still needed to ensure consistency of alignment for identical substituents. Another alternative is to manually edit the same core and add/modify the changing substituents. This provides assurances that coordinates for the non-perturbed portion of the structure remain identical and aromatic substituents, for instance, have consistent dihedral angles. However, it is not feasible for many compounds and therefore automation is desirable. 
 
 Finally, the role of water in ligand binding is not always well understood and it can be crucial to capture the changes in binding site solvation during ligand binding. Can crystallographic waters be retained? Do they clash with some of the larger ligands used in the alchemical perturbation? See Sec.~\ref{subsec:binding} for different strategies that can be applied to dealing with waters. Generally, before launching large numbers of alchemical free energy calculations it is always recommended to test the system using classical MD simulations and limited numbers of alchemical perturbations. Metrics such as ligand and protein RMSD and RMSF can be inspected, along with visual inspection of simulations, to ensure the system is stable and likely to be suitable for alchemical calculations. 
 
@@ -557,12 +572,12 @@ For relative free energy calculations, various graph topologies or maps of calcu
 \label{subsec:predictions}
 For prospective drug discovery applications there are several other considerations including understanding likely errors and taking selection bias into account. 
 
-It is crucial when proposing compounds for synthesis to have some idea of the underlying error or uncertainty in the predictions. A retrospective assessment can give an indication of prospective performance for similar molecules~\cite{ciordia2016application}. Beyond this, several parameters provide useful indicators of performance. For example error estimates provided by free energy estimators that are too large can highlight poorly converged simulations~\cite{perez-benito2019predicting}. Hysteresis, within cycles in the perturbation network or between forward and backward perturbations can be checked~\cite{wang2013modeling} to indicate problematic perturbations involved in cycles connecting many compounds (See also Secs.~\ref{sec:relative-fe-protocol} and~\ref{sec:are-they-good}). Once synthesis and testing of compounds is complete a standard strategy is to look back at how the calculations performed. In this regard it is important to consider the issue of selection bias upfront. It is tempting to only synthesize the compounds predicted to be most active, thus a narrow range of calculated activity is tested that imposes limits on the statistical assessment of performance, ideally example molecules from across the range of predicted activity can be assessed or corrections can be applied based on previous recommendations~\cite{abel2017critical}. For a more detailed discussion on checking the robustness of your alchemcial free energy calculation see also Sec.~\ref{sec:are-they-good}.
+It is crucial when proposing compounds for synthesis to have some idea of the underlying error or uncertainty in the predictions. A retrospective assessment can give an indication of prospective performance for similar molecules~\cite{ciordia2016application}. Beyond this, several parameters provide useful indicators of performance. For example error estimates provided by free energy estimators that are too large can highlight poorly converged simulations~\cite{perez-benito2019predicting}. Hysteresis, within cycles in the perturbation network or between forward and backward perturbations can be checked~\cite{wang2013modeling} to indicate problematic perturbations involved in cycles connecting many compounds (See also Secs.~\ref{sec:relative-fe-protocol} and~\ref{sec:are-they-good}). Once synthesis and testing of compounds is complete a standard strategy is to look back at how the calculations performed. In this regard it is important to consider the issue of selection bias upfront. It is tempting to only synthesize the compounds predicted to be most active, thus a narrow range of calculated activity is tested that imposes limits on the statistical assessment of performance, ideally example molecules from across the range of predicted activity can be assessed or corrections can be applied based on previous recommendations~\cite{abel2017critical}. For a more detailed discussion on checking the robustness of your alchemical free energy calculation see also Sec.~\ref{sec:are-they-good}.
 
 In summary, the successful use of alchemical calculations not only in, but particularly for drug discovery requires working in the domain of applicability, using a high quality X-ray structure of the target bound to compounds in the series, and testing the approach retrospectively to ensure the system setup is well-behaved. Always assess your confidence in the resulting predictions and communicate this when discussing with experimentalists. Consider performing repeat calculations for at least some of the perturbations in the study. 
- There are many accounts of success of alchemical calculations, the methods show good performance towards the goal of binding energy prediction. However, it is important to have realistic expectations. 
+ There are many accounts of success of alchemical calculations, the methods show good performance towards the goal of binding free energy prediction. However, it is important to have realistic expectations. 
 
-Structure based drug design projects are often capable of improving potency relatively quickly, even with only limited application of computational approaches and the range of activity narrows to just two-to-three log units. It may seem hard to have impact with substantially different, more potent, stand-out compounds in this scenario, but binding energy prediction can still be extremely useful for ensuring activity is maintained as other properties are optimized. An interesting cost benefit analysis has shown the value of activity prediction, see discussion above and articles such as~\cite{mobley2012perspective}. 
+Structure based drug design projects are often capable of improving potency relatively quickly, even with only limited application of computational approaches and the range of activity narrows to just two-to-three log units. It may seem hard to have impact with substantially different, more potent, stand-out compounds in this scenario, but binding free energy predictions can still be extremely useful for ensuring activity is maintained as other properties are optimized. An interesting cost benefit analysis has shown the value of activity prediction, see discussion above and articles such as~\cite{mobley2012perspective}. 
 From a drug discovery point of view, alchemical calculations are expanding their domain of applicability, and there are reports of success using homology models~\cite{cappel2016relative} and GPCRs~\cite{deflorian2020accurate,lenselink2016predicting} for instance, as well as enabling charge change and scaffold hopping~\cite{chen2018accurate, wang2017accurate}, but these systems are undoubtedly more difficult. In the meantime, the use cases are expanding to resistance prediction, selectivity prediction , solubility prediction – an exciting future for alchemical calculations~\cite{hauser2018predicting, albanese2020structure, mondal2019free}. 
 
 %
@@ -576,7 +591,7 @@ Alchemical free energy protocols as discussed below (Sec.~\ref{sec:simulation_pr
 
 \subsection{Free energies of binding}
 \label{subsec:binding}
-In principle, in the limit of sufficient conformational sampling, the free energy changes estimated from an alchemical free energy calculation should be independent of the system's initial coordinates. However, in practice, because simulations are of finite duration (typically 1-100 ns per state at present), this is only true for certain classes of alchemical free energy calculations such as relative or absolute free energies of hydration of small and relatively rigid organic molecules. Protein-ligand complexes typically exhibit slowly relaxing degrees of freedom that significantly exceed the duration of an alchemical free energy calculation, and host-guest calculations can be susceptible to these issues as well, depending on timescale and system. It is therefore generally important to carefully select input coordinates to obtain satisfactory results. 
+In principle, in the limit of sufficient configurational sampling, the free energy changes estimated from an alchemical free energy calculation should be independent of the system's initial coordinates. However, in practice, because simulations are of finite duration (typically 1-100 ns per state at present), this is only true for certain classes of alchemical free energy calculations such as relative or absolute free energies of hydration of small and relatively rigid organic molecules. Protein-ligand complexes typically exhibit slowly relaxing degrees of freedom that significantly exceed the duration of an alchemical free energy calculation, and host-guest calculations can be susceptible to these issues as well, depending on timescale and system. It is therefore generally important to carefully select input coordinates to obtain satisfactory results. 
 The following questions may be relevant before diving into the simulation setup.
 
 \begin{itemize}
@@ -589,12 +604,12 @@ The following questions may be relevant before diving into the simulation setup.
 \paragraph{Are there good X-ray structures available?}
 As with any simulation, care should be taken in selecting available X-ray structures in the Protein DataBank~\cite{berman2003announcing}. In some cases it may be wise to choose multiple starting structures to account for variability in receptor conformations as well as the accuracy of available X-ray structures. Typically, clustering of receptor structures can be used to identify different receptor conformations near the binding site, as well as assessing relevant side chain placements from the X-ray structure, see for example~\cite{mey2016blinded}. In terms of set up and other choices, following general best practice guidelines is advisable~\cite{braun2019best}.
 
-Many free energy calculations focus on a congeneric series of ligands, which can make these calculations suitable for relative free energy protocols (see Sec.~\ref{sec:simulation_protocol_choice}). For relative calculations, some care has to be taken selecting binding poses for these ligands. Generally, a common assumption for a congeneric series is that the binding mode is conserved. Therefore, if an X-ray structure of one of the ligands is available, this should be used to position the ligands in the putative binding site in an energetically reasonable conformation without steric or electrostatic mismatch with the receptor. Checking the X-ray structure versus the experimental electron densities is important, as the position of part of the ligand or important sidechains may be based on the interpretation of the crystallographer rather than the available electron density, especially in cases of missing density. For example, looking at a cyclohexane ring density, a chair conformation is vastly more likely than that of a boat and, if a boat conformation is present in the structure, it may be worth inspecting the density to ensure it adequately supports this choice. 
+Many free energy calculations focus on a congeneric series of ligands, which can make these calculations suitable for relative free energy protocols (see Sec.~\ref{sec:simulation_protocol_choice}). For relative calculations, some care has to be taken selecting binding poses for these ligands. Generally, a common assumption for a congeneric series is that the binding mode is conserved. Therefore, if an X-ray structure of one of the ligands is available, this should be used to position the ligands in the putative binding site in an energetically reasonable conformation without steric or electrostatic mismatch with the receptor. Checking the X-ray structure versus the experimental electron densities is important, as the position of part of the ligand or important sidechains may be based on the interpretation of the crystallographer rather than the available electron density, especially in cases of missing density. For example, looking at a cyclohexane ring density, a chair configuration is vastly more likely than that of a boat and, if a boat configuration is present in the structure, it may be worth inspecting the density to ensure it adequately supports this choice. 
 
 \paragraph{Are you prepared to deal with any binding mode challenges?}
 Generally, binding modes within congeneric series are conserved~\cite{wacker2010conserved}, however, exceptions exist~\cite{brandt2011congeneric,nazare2005probing}, as discussed in more detail in Sec.~\ref{sec:multiple_binding_modes}. Certain functional groups may be particularly prone to this due to symmetries or near symmetries. One such issue involves a 180 degree flip in the dihedral angle of an aromatic ring, or five-membered ring leading to a different spatial position of ortho- or meta- substituents that otherwise should overlap within a series. The 180 degree flip of the ring may not occur enough during simulations (due to steric obstructions) to overcome bias due to the starting configuration. Another scenario may be equatorial and axially substituted saturated rings (e.g. cyclohexane derivatives). This situation may be addressed by explicitly modelling different binding modes of the same ligand and combining later computed free energy differences for different binding modes into a relative free energies of binding~\cite{kaus2015how}.
 
-\paragraph{Have you considered sterioisomers and enantiomers?}
+\paragraph{Have you considered stereoisomers and enantiomers?}
 Congeneric series can contain stereoisomers or enantiomers which can bind very differently, resulting in large errors if treated incorrectly. For racemates, the relative abundance of each stereoisomer is normally not known. Therefore, the experimental activity associated with just one stereoisomer/enantiomer is more uncertain. However, the modeling typically uses just the bioactive conformation that best fits the active site. Clearly this introduces potential for larger errors compared to experiment. Nevertheless, if all compounds in the congeneric series are racemic, originating from similar synthetic procedures with an expected similar abundance of stereoisomers, then the differences may cancel and the trend in calculated and observed binding energies may be robust. Despite this, we can see that care and further testing is needed in this scenario, and the quality of the predictions may suffer. Additionally, unexpected changes in what stereoisomer binds experimentally, if they occur, could pose significant challenges for modelling efforts.
 
 \paragraph{Conserved binding site waters can play an important role in binding free energies}
@@ -634,24 +649,29 @@ Many of the issues around simulation setup and protocol choice for alchemical ca
 \label{sec:relative-fe-protocol}
 
 \paragraph{Topologies} 
-A critical first step in relative calculations is to select an approach to these calculations, determining whether to use a \emph{dual topology}, \emph{single topology}, or \emph{hybrid topology} approach to relative calculations.
+A critical first step in relative calculations is to select the approach to be used for these calculations and determine what this means for atom mapping (though this may sometimes be dictated by the requirements of the chosen simulation package. Sometimes this approach is described in terms of a \emph{dual topology} versus \emph{single topology} approach to relative calculations.
 
-The distinction between these can be illustrated by considering a hypothetical transformation from molecule A to molecule B, where both atoms share a common substructure but differ in their substituents; e.g. consider a transformation of benzene to benzyl alcohol Fig.~\ref{fig:fig_topology}.
+The distinction between single and dual topology can be illustrated by considering a hypothetical transformation from molecule A to molecule B, where both atoms share a common substructure but differ in their substituents; e.g. consider a transformation of benzene to benzyl alcohol Fig.~\ref{fig:fig_topology}.
 In this case the common substructure is the benzene ring, though the substructure may be larger depending on how it is defined, as we discuss below.
 
 In single topology calculations, the overall transformation is set up to involve as few additional atoms as possible, so benzene would be typically changed into benzyl alcohol by changing one of the hydrogens into a carbon. This site will also be the future home of two additional hydrogen atoms bound to the new carbon, so these must initially be present as non-interacting atoms called ``dummy atoms'', which retain their bonded interactions but do not interact with the rest of the system.  Bond parameters as well as partial charges between the changing atoms are adjusted accordingly between the initial and final state. 
-Thus, in a single topology calculation, atoms may change their type, ensuring minimal  dummy atoms are created. This is illustrated in the left arm of Fig.~\ref{fig:fig_topology}. 
+Thus, in a single topology calculation, atoms may change their type, ensuring minimal dummy atoms are created. This is illustrated in the left arm of Fig.~\ref{fig:fig_topology}. 
 
-In contrast, in a dual topology alchemical free energy calculation, no atoms are allowed to change type~\cite{shirts2012best}. This means that the benzene to benzyl alcohol transformation involves starting with benzene plus the non-interacting dummy atoms making up the hydroxy methyl group, then passing through an intermediate state where some atoms are partially interacting--- particularly, those atoms which are becoming dummy atoms or ceasing to be dummy atoms~\cite{mobley2014blind}. The transformation finally culminates in a state where benzyl alcohol is present along with the additional dummy atom which was previously a corresponding hydrogen of the benzene. Fig.~\ref{fig:fig_topology}'s right branch depicts how such a dual topology works. 
+In contrast, in a dual topology alchemical free energy calculation, no atoms are allowed to change type~\cite{Boresch:1999:J.Phys.Chem.A, shirts2012best}. This means that the benzene to benzyl alcohol transformation involves starting with benzene plus the non-interacting dummy atoms making up the hydroxy methyl group, then passing through an intermediate state where some atoms are partially interacting--- particularly, those atoms which are becoming dummy atoms or ceasing to be dummy atoms~\cite{mobley2014blind}. The transformation finally culminates in a state where benzyl alcohol is present along with the additional dummy atom which was previously a corresponding hydrogen of the benzene. Fig.~\ref{fig:fig_topology}'s right branch depicts how such a dual topology works. 
+
 \begin{figure}
     \includegraphics[width=0.95\columnwidth]{figures/fig3_topol/Figure.pdf}
-    \caption{\textbf{Two common topologies for alchemical calculations: single and dual topology.} \textbf{Left}: A single topology uses softcore potentials to convert from one type of atom to an other. Dummy atoms (Du) are used when there is no corresponding maximum common substructure match between the two molecules for certain atoms. \textbf{Right}: The dual topology does not convert one species to another, but only converts between Du atoms and an interacting species, but usually uses softcore potentials for this. The 'mixed' intermediate atoms are used in both dual and single topology approaches. Only the way the transformation occurs and the end states differ. Following the arrow along the left and right illustrate the differences. Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
+    \caption{\textbf{Two common topologies for alchemical calculations: single and dual topology.} \textbf{Left}: A single topology uses softcore potentials to convert from one type of atom to an other. Dummy atoms (Du) are used when there is no corresponding maximum common substructure match between the two molecules for certain atoms. \textbf{Right}: The dual topology does not convert one species to another, but only converts between Du atoms and an interacting species, but usually uses softcore potentials for this. The 'mixed' intermediate atoms (M) are used in both dual and single topology approaches. Only the way the transformation occurs and the end states differ. Following the arrow along the left and right illustrate the differences. Figure adapted from \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}}
     \label{fig:fig_topology}
 \end{figure} 
 
-Hybrid topology calculations have seen much less use but essentially consist of two absolute free energy calculations in opposite directions at the same time, turning one molecule's interactions with the environment off, while turning the other molecule's interaction on~\cite{jiang2019computing, rocklin2013separated}.
+As far as we are aware, the distinction between single and dual topology approaches is made primarily for two main reasons. First, this choice affects the alchemical pathway followed, and thus may affect convergence properties -- though we are not yet aware of a study of the relative efficiency and merits of these two approaches. Additionally, historically, some simulation packages one approach and not the other, meaning that the distinction was functional. 
 
-Most existing software implementations currently use single or dual topology approaches; for example, AMBER TI uses a dual topology approach, while BioSimSpace uses a single topology approach. Please make sure to check what approach is used with your software package of choice, or whether it supports your choice of approach (GROMACS, for example, supports both). 
+Some additional terms are also employed. Particularly, some studies refer to a ``hybrid'' topology approach to free energy calculations~\cite{gapsys2015pmx, gapsys2016accurate, gapsys2020large}, though this term may not have yet achieved widespread use. In this case, "hybrid" seems to indicate that the set up of these free energy calculations involves a hybrid of the two molecules, and much of what is done in these studies uses a single topology approach~\cite{gapsys2020large}.
+
+One final approach, so far in its infancy, has been called ``separated topologies'' and essentially consist of two absolute free energy calculations in opposite directions at the same time, turning one molecule's interactions with the environment off, while turning the other molecule's interaction on~\cite{jiang2019computing, rocklin2013separated}.
+
+Software packages vary in their use single or dual topology approaches; for example, AMBER TI uses a dual topology approach, while BioSimSpace uses a single topology approach. Please make sure to check what approach is used with your software package of choice, or whether it supports your choice of approach (GROMACS and GROMOS, for example, support both). 
 To our knowledge efficiency differences have not been thoroughly explored, though conventional wisdom suggests that fewer dummy atoms are better, as introducing or removing atomic sites is usually more difficult, requiring more intermediate steps ~\cite{liu2013lead, mobley2012perspective}.
 
 \paragraph{Atom mapping}
@@ -660,16 +680,16 @@ Rigorously, this process typically comprises a MCSS search of the molecules invo
 Specifically, with a single topology approach in mind, atom types are allowed to change, so a permissive MCSS search can be done, whereas with dual topology a more strict search is required.
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig4_mcs/Figure.pdf}
-    \caption{\textbf{Illustration of maximum common substructure matches} MCSS is shown in green for when (\textbf{A}) a restrictive MCSS match is used and in (\textbf{B}) ring breaking is allowed.}
+    \caption{\textbf{Illustration of maximum common substructure matches} MCSS is shown in green for when (\textbf{A}) a restrictive MCSS match is used and in (\textbf{B}) ring breaking is allowed, meaning there is no MCSS match between the two compounds.}
     \label{fig:fig_mcss}
 \end{figure} 
 
-There are different tools that allow the generation of MCSS matches as well as single topology input. A large number of software tools can compute MCSS matches using different cheminformatics packages. Some rely on RDKit~\cite{rdkit2019Dec}, such as LOMAP~\cite{liu2013lead}, FESetup~\cite{loeffler2015fesetup} and partially BioSimSpace~\cite{hedges2019biosimspace}, while others such as fkckombu~\cite{kawabata20143d} are standalone tools. Schr\"{o}dinger's FEP+ planning tool was originally based on a version of LOMAP, and it also uses MCSS matching as well as 3D considerations to plan the network of single topology calculations between molecules~\cite{wang2015accurate}. 
+There are different tools that allow the generation of MCSS matches as well as single topology input. A large number of software tools can compute MCSS matches using different cheminformatics packages. Some rely on RDKit~\cite{rdkit2019Dec}, such as pmx~\cite{gapsys2015pmx}, LOMAP~\cite{liu2013lead}, FESetup~\cite{loeffler2015fesetup} and partially BioSimSpace~\cite{hedges2019biosimspace}, while others such as fkckombu~\cite{kawabata20143d} are standalone tools. Schr\"{o}dinger's FEP+ planning tool was originally based on a version of LOMAP, and it also uses MCSS matching as well as 3D considerations to plan the network of single topology calculations between molecules~\cite{wang2015accurate}. 
 
-MCSS searches can be relatively time consuming, so if the goal is to assess a library of ligands to identify promising pairs for relative calculations, it can be helpful to use faster approaches such as shape similarity to perform an initial similarity assessment and then use MCSS only to identify final mappings for relative calculations~\cite{raymond2002maximum,klabunde2012mars,jones2009elucidating}. The MCSS approach, though relatively standard, takes into account only topological similarity. It is possible that changes in binding mode could actually require a different choice of mapping, so in some cases mappings may need to be planned differently depending on 3D positioning of atoms in space.
+MCSS searches can be relatively time consuming, so if the goal is to assess a library of ligands to identify promising pairs for relative calculations, it can be helpful to use faster approaches such as shape similarity to perform an initial similarity assessment and then use MCSS only to identify final mappings for relative calculations~\cite{raymond2002maximum,klabunde2012mars,jones2009elucidating}. The MCSS approach, though relatively standard, takes into account only topological similarity. It is possible that changes in binding mode could actually require a different choice of mapping, so in some cases mappings may need to be planned differently depending on 3D positioning of atoms in space. It is worth visual inspection prior to simulation to ensure that the mapping criteria corresponds to the expected binding mode. If the mapping protocol returns simulations that correspond to different binding modes of a ligand within a perturbation map, which can cause large hysteresis.
 
 Single topology relative calculations, and calculations based on substructure searches, only work if in fact the ligands share a common substructure, e.g. are part of a congeneric series, see Fig.~\ref{fig:fig_mcss}.
-If no common substructure is shared, then alternative dual or hybrid topology free energy calculations are needed, where one would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
+If no common substructure is shared, then alternative dual or separated topology free energy calculations are needed, where one would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
 To our knowledge no general pipeline for such calculations yet exists and this would likely remain a research problem. Using an absolute free energy approach instead seems more promising in such a case. 
 
 \paragraph{Ring breaking and forming.} Relative free energy calculations for ring breaking and forming are particularly challenging/problematic (see Fig.~\ref{fig:fig_mcss} \textbf{B}), in part because relative calculations rely on the free energy contributions of dummy atoms canceling between different legs of the thermodynamic cycle, which may not be true whenever dummy atoms are involved in rings~\cite{liu2015ring}.
@@ -694,8 +714,8 @@ Methods in experimental design have been applied to the construction of the pert
 One issue which requires particular care is the use of constraints.
 Commonly, bonds involving hydrogen are constrained to a fixed length using algorithms such as SHAKE or LINCS, allowing the use of longer timesteps~\cite{krautler2001fast}.
 However, in single topology relative free energy calculations, the atoms involved might be mutated to other atom types -- for example, in a mutation of methane to methanol, one hydrogen might become an oxygen atom.
-Typical molecular dynamics engines are not set up to recognize this change, or at least not to correctly include contributions to the free energy from changing constraints/constraint length, so results for a transformation would usually be erroneous.
-At present the most general solution to this problem is simply to avoid the use of constraints (and thus use a smaller timestep if necessary, usually of around 1 fs) in any relative free energy calculation involving a transformation of a constrained bond. When using TI in GROMACS $\frac{dH}{d\lambda}$ calculations have contribution from the LINCS constrained bonds, thus transforming constrained bonds in GROMACS is possible.
+Some molecular dynamics engines are not set up to recognize this change, or at least not to correctly include contributions to the free energy from changing constraints/constraint length, so results for a transformation can be erroneous.
+At present the most general solution to this problem is simply to avoid the use of constraints (and thus use a smaller timestep if necessary, usually of around 1 fs) in any relative free energy calculation involving a transformation of a constrained bond. Individual software programs and settings can handle such issues. For example, bonds can be transformed in both GROMACS and GROMOS, because contributions of LINCS (GROMACS) and SHAKE (GROMOS) contrained bonds are added to the $\frac{dH}{d\lambda}$ term~\cite{pearlman1993determining, straatsma1992holonomica, pearlman1991overlooked, gunsteren1997computer}. However, the constraints are not taken into account when calculating energy differences to other intermediate states (as the effect is entropic, not energetic). User manuals should carefully checked for how these effects are included if a constrained bond changes in length. We do note that if one performs calculations of the changing constraint in both solution and in the binding site, then the errors often cancel substantially, but the cancellation is not guaranteed.
 
 \subsubsection{Absolute free energy calculations must handle the standard state and use restraints}
 \label{sec:standardstate-restraints}
@@ -717,7 +737,7 @@ The role of the standard state is particularly evident from the expression of th
 \end{equation}
 Here, the reference state concentration $c^{\circ}$ converts the binding constant $K_b$ into a dimensionless quantity expressed in reference concentration units.
 It should be noted that ignoring the term $c^{\circ}$ is equivalent to assuming a reference concentration of 1~D$^{-1}$, where D are the units used to express $K_b$, and would thus cause the value of $\Delta G$ to vary with the choice of the units.
-It is convenient to define a standard state at a constant pressure of 1~atm and where each chemical species (i.e., A, B, and AB) in the reaction solvent has a concentration of $c^{\circ}$~=~1~M~=~1~molecule/1660~\r{A}$^3$ but do not interact with other molecules of $R$, $B$, or $RL$.
+It is convenient to define a standard state at a constant pressure of 1~atm and where each chemical species (i.e., R, L, and RL) in the reaction solvent has a concentration of $c^{\circ}$~=~1~M~=~1~molecule/1660~\r{A}$^3$ but do not interact with other molecules of $R$, $L$, or $RL$.
 
 \paragraph{Handling the standard state in absolute free energy calculations.}
 For solvation free energy calculations, handling the standard state is typically straightforward, and treating it correctly simply means ensuring that the non-interacting solute is taken to the same (or equivalent) final reference state in both environments, e.g. that the transformation involves a 1 M to 1 M equivalent transfer free energy (where the non-interacting solute still occupies essentially the same volume as the solute in the interacting system).
@@ -727,7 +747,7 @@ If this is not the case, a simple entropic correction is needed.
 For binding, however, the situation is more complex and requires special care.
 Because the simulations are typically performed using restraints and at concentrations that are different from 1 M, the expression of the free energy requires the following correction~\cite{gilson1997statisticalthermodynamic} (see an example of such a thermodynamic cycle in Fig.~\ref{fig:fig_absolute_thermodynamic_cycle})
 \begin{equation}\label{eq:restraint-correction}
-    \Delta G^{\circ}_{\mathrm{restr}} = -k_BT ~ \ln \left( \frac{c^{\circ}}{V_L} \right) -k_BT ~ \ln \left( \frac{\xi_L}{8 \pi^2} \right),
+    \Delta G^{\circ}_{\mathrm{restr}} = -k_BT ~ \ln \left( c^{\circ}{V_L} \right) -k_BT ~ \ln \left( \frac{\xi_L}{8 \pi^2} \right),
 \end{equation}
 where $V_L$ and $\xi_L$ are respectively the volume of the translational and rotational degrees of freedom of the non-interacting ligand in the simulation box.
 When no restraints are used, the non-interacting ligand is free to translate and rotate in the simulation box (i.e., $V_L = V_{\mathrm{box}}$ and $\xi_L = 8\pi^2$), and the rotational term is zero.
@@ -735,7 +755,7 @@ A sufficiently thorough exploration of the simulation box by the non-interacting
 This is typically hard to achieve as the exploration process is governed by diffusion.
 The addition of a restraint limits the volume available to the non-interacting ligand, thus speeding the convergence of the sampling.
 In addition, when enhanced sampling methods such as Hamiltonian $\lambda$ exchange are used (see Sec.~\ref{sec:sampling_schemes}), the use of a restraint is typically necessary as it keeps the ligand in the binding site in the interacting state (see also Sec.~\ref{sec:weak-binders}) and generally reduce the round-trip time of replicas.
-When restraint are employed, the values of $V_L$ and $\xi_L$ are restraint-dependent, but for commonly employed restraints, these can be usually easily computed analytically or numerically by solving the relevant integral.
+When restraints are employed, the values of $V_L$ and $\xi_L$ are restraint-dependent, but for commonly employed restraints, these can be usually easily computed analytically or numerically by solving the relevant integral.
 
 \paragraph{Several choices of restraints are possible.}
 In practice, a variety of types of restraints are common, from simple harmonic distance restraints between the ligand and the protein~\cite{mobley2006use}, to flat-bottom restraints which work similarly but only exert a force if the ligand leaves a specific region~\cite{chen2007can}.
@@ -763,14 +783,15 @@ This strategy, however, can fail when the dissociation rate of the ligand has th
 This is typical of weak binders such as fragments binding shallow pockets with $\mu$M-mM affinities~\cite{georgiou2017pushing,pan2017quantitative}.
 In this case, using a flat-bottom or harmonic restraint between receptor and ligand in the bound state(s) can prevent dissociations~\cite{georgiou2017pushing,rizzi2019sampl6}.
 We stress that this is normally avoided as it generally introduces bias in the free energy estimate, which is why the restraint is usually activated only in the intermediate states in absolute calculations.
-The bias can be corrected through reweighting schemes~\cite{rizzi2019sampl6}, but this post-processing step can be avoided if a flat-bottom restraint is used and the ligand never hits the potential wall during the simulation in the bound state.
+The bias can be corrected through reweighting schemes~\cite{rizzi2019sampl6}, but this post-processing step can be avoided if a flat-bottom restraint is used and the ligand is never sampled while hitting the potential wall during the simulation in the bound state as the numerical correction will be exactly zero.
 It is important to note that the spring constant and/or radius parameters of the restraint effectively determine which conformations are considered to be bound.
 As a consequence, these parameters must be tuned to the system so that only the binding site is accessible to the ligand.
 Again, this step is particularly important for weak binders as their free energy of binding is known to be more sensitive to the definition of the binding site~\cite{gilson1997statisticalthermodynamic}.
 
 In absolute calculations, this restraint can substitute or be added to the restraint used to handle the standard state correction (Sec.~\ref{sec:standardstate-restraints}).
-In the latter case, to compute the standard state correction analytically, the bound-state restraint must be turned off in the decoupled state.
-Alternatively, a flat-bottom restraint can be activated also in the decoupled state as long as the second restraint (e.g., a harmonic or Boresch restraint) prevents the ligand to hit the wall of the flat-bottom potential~\cite{rizzi2019sampl6}.
+In the latter case, however, care must be taken when computing the standard state correction.
+When multiple restraining potentials are active in the non-interacting state, the correction can generally be computed only through numerical integration.
+Alternatively, one can adopt a protocol that removes the bound-state restraint in the non-interacting state.
 Finally, even for tight binders, dissociation events can be enhanced by methods such as Hamiltonian replica exchange~\cite{sugita2000multidimensionala,chodera2011replica,wang2013identifying} and expanded ensemble~\cite{lyubartsev1992newa,li2007simulated}, especially in absolute free energy calculations using harmonic or flat-bottom restraints.
 In the latter case, dissociations can be averted simply by increasing the spring constant and/or reducing the radius of the restraint potential to prevent the exploration of ligand conformations outside the binding site in the decoupled state (bottom-right state in Fig.~\ref{fig:fig_absolute_thermodynamic_cycle}) that could be propagated to the bound state.
 
@@ -781,7 +802,7 @@ Specifically, finite-size effects can introduce significant charge-dependent art
 There are two main potential solutions to avoid artifacts due to changes in net charge: Correcting for the introduced artifacts, or avoiding changing the net charge.
 
 Many relative free energy planning tools have been set up to avoid changing the net charge of the systems considered, including LOMAP~\cite{liu2013lead} and Schr\"{o}dinger's FEP+~\cite{wang2015accurate}. Absolute free energy calculations can also potentially avoid changing the charge of the system by making a charge perturbation of equal and opposite sign elsewhere in the system; for example, as a charged ligand is removed, a charged counterion of opposite sign could also be removed, or one of the same sign could be inserted. This is sometimes referred to as an "alchemical ion" approach for dealing with the needed charge change, and is also employed by the Yank free energy package~\cite{wang2013identifying}.
-Charge corrections have also been explored, and are potentially a viable solution to this problem~\cite{mey2018impact} where artifacts introduced by finite-size effects are corrected numerically~\cite{chen2018accurate, ohlknecht2020correcting}. However, application of such corrections typically remains less common than the use of a co-alchemical ion.
+Charge corrections have also been explored, and are potentially a viable solution to this problem~\cite{mey2018impact} where artifacts introduced by finite-size effects are corrected numerically~\cite{chen2018accurate, ohlknecht2020correcting}. However, application of such corrections typically remains less common than the use of a co-alchemical ion. A third approach has been proposed by Gapsys et al.~\cite{gapsys2015calculation} which uses a double-system/single box setup. 
 
 When free energy calculations \emph{do} need to change the charge of a ligand or solute, the literature does not yet seem to indicate what approach should be preferable, so considerable care should be taken.
 We are not yet aware of a careful comparison of charge corrections versus other approaches such as decoupling an ion at the same time, so in our view the issue of proper handling of charge mutations in the context of alchemical calculations remains a research problem.
@@ -805,22 +826,22 @@ Another way of stating this is that intermediate states should sample molecular 
 
 So what are the options to adjust the potentials between the two end states based on $\vec{\lambda}$? The simplest possible alchemical pathway is a \textit{linear} pathway:
 \begin{equation}
-U(\vec{q},\vec{\lambda}) = \vec{\lambda} U_0(\vec{q}) + (1-\vec{\lambda})U_1(\vec{q}) \end{equation}
+U(\vec{q},\vec{\lambda}) = (1-\vec{\lambda}) U_0(\vec{q}) + \vec{\lambda}U_1(\vec{q}) \end{equation}
 
 so-called because the dependence on $\vec{\lambda}$ is linear. This clearly satisfies the basic requirement that it gives the initial endpoint potential energy $U_0(\vec{q})$ when $\vec{\lambda}=0$ and final endpoint energy $U_1(\vec{q})$ when $\vec{\lambda}=1$. 
 
 For many energy terms, \textit{as long as a repulsive core remains on}, this is a very good approach. For example, it can be shown that if van der Waals repulsions are left on, then the linear approach is very nearly the optimal path possible for changing, removing, or inserting the electrostatic energy terms, with the path being within about 10--20\% of the minimum possible uncertainty~\cite{naden2015linear} for a fixed amount of simulation, as well as being nearly optimally efficient for van der Waals attractive terms with repulsion terms turned on~\cite{naden2014linear}. Although we are not aware of any quantitative tests for dipolar or higher multipole terms, theoretically it should behave equally well for those systems.
 
-However, this approach ends up being terrible for removing or adding repulsive potentials that go to infinity quickly at or near the origin. One way to look at this is to examine how low $\vec{\lambda}$ values must go to reduce the energy at $0.5\sigma$ (the atomic size parameter) down to 1 $k_BT$, where thermal fluctuations make it possible for other atomic sites to penetrate routinely that deep. If we are trying to go from a particle being present, and desire to make it disappear alchemically, then if the repulsive terms are of the form $\epsilon\frac{\sigma}{r}^{12}$, then if $\epsilon$ was 1 $k_BT$ at the temperature of interest, and we start with the particle present, then solving for $(1-\vec{\lambda})(1 kB_T)\left(\frac{\sigma}{\frac{1}{2}\sigma}\right)^{12} = 1 k_B T$ we get $\vec{\lambda} = 1-2^{-12} \sim 0.999976$. At this point,  we have gone virtually all the way to the end of the transformation, but there is still an impenetrable post in the middle of our simulation! This is not very much like the desired final state of no interactions between the particle and its environment. We can play around with a few ways of modifying this, like simulating many more intermediate states near $\vec{\lambda}=1$. However, various analyses have shown that this is not a very good strategy~\cite{pham2011identifying, beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble, gapsys2012new}.
+However, this approach ends up being terrible for removing or adding repulsive potentials that go to infinity quickly at or near the origin. One way to look at this is to examine how low $\vec{\lambda}$ values must go to reduce the energy at $0.5\sigma$ (the atomic size parameter) down to 1 $k_BT$, where thermal fluctuations make it possible for other atomic sites to penetrate routinely that deep. Assume we are trying to go from a particle being present, and desire to make it disappear alchemically. If the repulsive terms are of the form $\epsilon(\frac{\sigma}{r})^{12}$, and if $\epsilon$ is 1 $k_BT$ at the temperature of interest, and we start with the particle present, we may solve for $(1-\vec{\lambda})(1 k_B T)\left(\frac{\sigma}{\frac{1}{2}\sigma}\right)^{12} = 1 k_B T$. This yields $\vec{\lambda} = 1-2^{-12} \sim 0.999976$. At this point,  we have gone virtually all the way to the end of the transformation, but there is still an impenetrable post in the middle of our simulation! This is not very much like the desired final state of no interactions between the particle and its environment. We can play around with a few ways of modifying this, like simulating many more intermediate states near $\vec{\lambda}=1$. However, various analyses have shown that this is not a very good strategy~\cite{pham2011identifying, beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble, gapsys2012new}.
 
-What we need instead is a function that smoothly gets rid of this infinity. A large number of schemes have been tried~\cite{beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble, pham2011identifying, pham2012optimal, naden2014linear, donnini2005molecular}, but the most common strategy that appears to be the best practice is to use a "soft-core" potential, of the form:
+What we need instead is a function that smoothly gets rid of this infinity. A large number of schemes have been tried~\cite{beutler1994avoiding, zacharias1994separationshifted, blondel2004ensemble, pham2011identifying, pham2012optimal, naden2014linear, donnini2005incorporating}, but the most common strategy that appears to be the best practice is to use a "soft-core" potential, of the form:
 
 \begin{equation}
     U(\vec{r_{ij}},\vec{\lambda}) = 4\epsilon_{ij} \vec{\lambda} \left(\frac{1}{(\alpha(1-\vec{\lambda}) + (r_{ij}/\sigma_{ij})^6)^2} -  \frac{1}{\alpha(1-\vec{\lambda}) + (r_{ij}/\sigma_{ij})^6}\right)
     \label{eq:softcore},
 \end{equation}
 
-where $r_{ij}$ is the distance between two particles $i$ and $j$, $\epsilon_{ij}$ and $\sigma_{ij}$ are the Lennard-Jones parameters corresponding to the interaction between particles $i$ and $j$, and $\alpha$ is a constant (0.5 is optimal for the specific functional form shown above). This functional form has exactly the property we are looking for: it recovers the Lennard-Jones potential when $\vec{\lambda}=1$, and the other endpoint ($\vec{\lambda}=0$), it is exactly zero for all $r_{ij}$ everywhere, and as $\vec{\lambda}$ goes to zero, the $\alpha(1-\vec{\lambda})$ term lowers the infinite energy in the core. There are several different variants of the same functional form~\cite{zacharias1994separationshifted, beutler1994avoiding,pham2011identifying}, but the one given in eq.~\ref{eq:softcore} is easy to understand and implement and fairly numerically stable. This functional form is shown in \textbf{C} and \textbf{D} of Fig.~\ref{fig:fig_what_is_lambda}.
+where $r_{ij}$ is the distance between two particles $i$ and $j$, $\epsilon_{ij}$ and $\sigma_{ij}$ are the Lennard-Jones parameters corresponding to the interaction between particles $i$ and $j$, and $\alpha$ is a constant (0.5 is optimal for the specific functional form shown above). This functional form has exactly the property we are looking for: it recovers the Lennard-Jones potential when $\vec{\lambda}=1$, and the at other endpoint ($\vec{\lambda}=0$), it is exactly zero for all $r_{ij}$ everywhere, and as $\vec{\lambda}$ goes to zero, the $\alpha(1-\vec{\lambda})$ term lowers the infinite energy in the core. There are several different variants of the same functional form~\cite{zacharias1994separationshifted, beutler1994avoiding,pham2011identifying}, but the one given in eq.~\ref{eq:softcore} is easy to understand and implement and fairly numerically stable. This functional form is shown in \textbf{C} and \textbf{D} of Fig.~\ref{fig:fig_what_is_lambda}.
 
 It has been shown that more complicated forms are not significantly more efficient than eq.~\ref{eq:softcore}~\cite{pham2012optimal}. We therefore recommend using the softcore potential given in eq.~\ref{eq:softcore}, unless there is a compelling reason otherwise. Using a similar equation to eq.~\ref{eq:softcore} may be acceptable in most circumstances if that is what is supported in your chosen software. However, if you are inserting or removing entire atomic sites, we heavily recommend against using the linear approach; it will be very difficult to get correct and converged results. 
 
@@ -833,26 +854,34 @@ through either annihilation~\cite{hermans1997inclusiona, mann2000modelinga, bore
 
 Relative calculations introduce additional choices, such as the order in which to modify nonbonded interactions.
 A common process in single topology relative calculations is to first remove electrostatic interactions of any atoms which will be deleted, then modify other non-bonded interactions, then restore electrostatic interactions of any atoms which are being inserted. Although this is a simpler path to understand cognitively and can take advantage of the soft-core potential from eq~\ref{eq:softcore}, this can lead to more intermediate steps and thus be more computationally expensive.
-Other schemes, such as simultaneously changing electrostatic and Lennard-Jones interactions with electrostatic ``soft-core'' potentials~\cite{steinbrecher2007nonlinear} may be implemented with fewer intermediate but could require fine-tuning of electrostatic and Lennard-Jones softcore parameters to avoid numerical instabilities. 
+Other schemes, such as simultaneously changing electrostatic and Lennard-Jones interactions with electrostatic ``soft-core'' potentials~\cite{steinbrecher2007nonlinear} may be implemented with fewer intermediate states but could require fine-tuning of electrostatic and Lennard-Jones softcore parameters to avoid numerical instabilities. 
 At the time of writing, there has not been conclusive evidence to suggest one approach is better in general than the other, so discretion should be left up to the user as to what is viable from both hardware resources, and what the simulation software supports.
 
 A key additional consideration in choosing the alchemical pathway is the choice of spacing of intermediate states.
 The spacing depends to some extent on the choice of analysis method, though states should essentially be spaced equidistant in the relevant thermodynamic length~\cite{crooks2007measuringa, sivak2012thermodynamic}.
-For BAR/MBAR techniques this means that states should be spaced so that the statistical uncertainties between neighboring states be equal;~\cite{pham2012optimal, shenfeld2009minimizing}
+For BAR/MBAR techniques this means that states should be spaced so that the statistical uncertainties between neighboring states be approximately equal~\cite{pham2012optimal, shenfeld2009minimizing}, where "approximately" is roughly within 30-50\% in magnitude. 
 Some schemes to adaptively optimize the spacing of intermediate states based on initial exploratory simulations have been proposed~\cite{hayes2017adaptive}. For molecules changing in dense solvent, then the best path is roughly independent of molecule size and shape, so what works for one molecular transformation is likely to be relatively efficient for another~\cite{monroe2014converging}.
+
+
+Some approaches have attempted to find alternative pathways to improve efficiency or find paths of low thermodynamic length~\cite{naden2014linear,naden2015linear,pham2012optimal}. For example, the enveloping distribution sampling (EDS) approach, and its multiple-replica and accelerated variant, attempts to improve efficiency by creating a single artificial intermediate state which simultaneously samples all end state phase spaces~\cite{perthold2018accelerateda,sidler2017efficientb, christ2007envelopinga}. When this can be done, it provides an extremely efficient way to calculate the relative free energy difference between multiple ligands from a single simulation. However, it can often fail whenever the simulation of this intermediate state ends up trapped in configurations characteristic of only one end state. Thus, successful use of EDS can require system-dependent tuning making it difficult to implement in an automated and reliable way, but when successful it can be very efficient.
+
+In our view, there is still some room for further exploration of how to best choose transformation pathways, especially for relative binding calculations or more complex molecules, as most existing studies focused on smaller molecules. In principle, any pathway that connects the desired end states is rigorously correct, but as discussed above, different paths may differ dramatically in thermodynamic length and therefore efficiency. Additionally, some paths simply may not converge due to issues noted above such as those encountered without soft core potentials. However, the recommendations above are reasonable, reliable, and are likely not be that much less efficient than potentially more optimal choices~\cite{naden2014linear,naden2015linear,pham2012optimal}, as the real problems with low efficiency are lack of sampling of slow conformational modes. 
+
+It is however important to note that different packages also differ in how they handle implementation of alchemical transformations, making it difficult to give rules of thumb concerning specific efficient transformations which work equally well across simulation packages. Thus we are hesitant to recommend best practices within specific software packages at point in time, although any good transformation pathway will conform to the guidelines we have outlined above.
+
 
 
 \subsubsection{Which sampling scheme will work best for my problem?}
 \label{sec:sampling_schemes}
-Though all alchemical simulations must sample from multiple $\vec{\lambda}$ states, different approaches can be used to achieve this. Fig.~\ref{fig:fig_sampling_scheme} illustrates the four most common schemes. The simplest approach involves running an independent simulation at each of the predefined $\vec{\lambda}$ values (see Fig.~\ref{fig:fig_sampling_scheme} \textbf{A}). This type of scheme is currently used for AMBER TI calculations~\cite{song2019using} and for Sire as implemented in BioSimSpace~\cite{hedges2019biosimspace}. However, if these simulations can be run simultaneously with communication between them, a simple extension allows mixing between these replicas. In this approach, the simulation at each $\vec{\lambda}$ can undergo periodic exchanges with neighboring $\vec{\lambda}$ values. This form of replica exchange (Hamiltonian replica exchange) is based on ideas developed from Monte Carlo simulations of spin glasses by Swendsen and Wang~\cite{swendsen1986replica}. With the Metropolis-Hastings acceptance criterion for exchanges, the generated ensemble of all replicas still samples from the Boltzmann distribution, thus this approach has been used in many different contexts for molecular simulations~\cite{sugita2000multidimensionala,sugita1999replicaexchangea, woods2003developmenta, jiang2010free}. The basic idea of the replica exchange scheme is shown in Fig.~\ref{fig:fig_sampling_scheme} \textbf{B}. It is supported in various software packages that provide alchemical implementations, such as GROMACS~\cite{aldeghi2015accurate}, FEP+~\cite{wang2015accurate}, and NAMD~\cite{jiang2019computing}. A third approach borrows ideas from simulated tempering~\cite{marinari1992simulateda}. In this scheme a single replica rapidly explores all of $\vec{\lambda}$ space by working out optimal weights that allow switching between different intermediate $\vec{\lambda}$ values, as seen in Fig.~\ref{fig:fig_sampling_scheme} \textbf{C} . This approach is also referred to as self adjusted mixture sampling~\cite{lyubartsev1992newa, li2007simulated, tan2017optimally} and while promising, has so far only been supported in OpenMM Tools~\cite{andrearizzi2019choderalab}. The last approach makes use of non-equilibrium simulations~\cite{aldeghi2018accurate}. In this approach, only end state $\vec{\lambda}$ replicas ($\vec{\lambda}$=0, $\vec{\lambda}=1$) are simulated at equilibrium; intermediate information is generated from non-equilibrium simulations that rapidly transition between end-states. This approach is available in GROMACS and appears to be coming online in several other packages. A schematic of this approach is shown in Fig.~\ref{fig:fig_sampling_scheme} \textbf{D}. 
+Though all alchemical simulations must sample from multiple $\vec{\lambda}$ states, different approaches can be used to achieve this. Fig.~\ref{fig:fig_sampling_scheme} illustrates the four most common schemes. The simplest approach involves running an independent simulation at each of the predefined $\vec{\lambda}$ values (see Fig.~\ref{fig:fig_sampling_scheme} \textbf{A}). This type of scheme is currently used for AMBER TI calculations~\cite{song2019using} and for Sire as implemented in BioSimSpace~\cite{hedges2019biosimspace}. However, if these simulations can be run simultaneously with communication between them, a simple extension allows mixing between these replicas. In this approach, the simulation at each $\vec{\lambda}$ can undergo periodic exchanges with neighboring $\vec{\lambda}$ values. This form of replica exchange (Hamiltonian replica exchange) is based on ideas developed from Monte Carlo simulations of spin glasses by Swendsen and Wang~\cite{swendsen1986replica}. With the Metropolis-Hastings acceptance criterion for exchanges, the generated ensemble of all replicas still samples from the Boltzmann distribution, thus this approach has been used in many different contexts for molecular simulations~\cite{sugita2000multidimensionala,sugita1999replicaexchangea, woods2003developmenta, jiang2010free}. The basic idea of the replica exchange scheme is shown in Fig.~\ref{fig:fig_sampling_scheme} \textbf{B}. It is supported in various software packages that provide alchemical implementations, such as GROMACS~\cite{aldeghi2015accurate}, GROMOS~\cite{hritz2008hamiltoniana,hritz2007optimizationa}, FEP+~\cite{wang2015accurate}, and NAMD~\cite{jiang2019computing}. A third approach borrows ideas from simulated tempering~\cite{marinari1992simulateda}. In this scheme a single replica rapidly explores all of $\vec{\lambda}$ space by working out optimal weights that allow switching between different intermediate $\vec{\lambda}$ values, as seen in Fig.~\ref{fig:fig_sampling_scheme} \textbf{C} . This approach is also referred to as self adjusted mixture sampling~\cite{lyubartsev1992newa, li2007simulated, tan2017optimally} and while promising, has so far only been supported in OpenMM Tools~\cite{andrearizzi2019choderalab}. The last approach makes use of non-equilibrium simulations~\cite{aldeghi2018accurate}. In this approach, only end state $\vec{\lambda}$ replicas ($\vec{\lambda}$=0, $\vec{\lambda}=1$) are simulated at equilibrium; intermediate information is generated from non-equilibrium simulations that rapidly transition between end-states. This approach is available in GROMACS and appears to be coming online in several other packages. A schematic of this approach is shown in Fig.~\ref{fig:fig_sampling_scheme} \textbf{D}. 
 
 \begin{figure}
     \includegraphics[width=0.88\columnwidth]{figures/fig8_sampl_scheme/Figure.pdf}
-    \caption{\textbf{Four most common sampling strategies.} (\textbf{A}): Multiple replicas in parallel at different lambda states. Each arrow symbolises an independent $\vec{\lambda}$ simulation. (\textbf{B}): Hamiltonian replica exchange scheme. Each arrow represents a short simulation interval before an exchange through Metropolis Hastings acceptance (dice) is attempted. A tick means an accepted exchange a cross a rejected exchange. (\textbf{C}): Single replica scheme sampling from all $\vec{\lambda}$ states. After a short simulation time symbolised by the arrow, the lambda-state is attempted to change until all N lambda states will be sampled. (\textbf{D}): Non-equilibrium sampling scheme, where two equilibrium simulations at the end-states are run as indicated by the blue and pink arrow. Non-equilibrium simulations are attempted at intervals to switch between the two end-states.}
+    \caption{\textbf{Four most common sampling strategies.} (\textbf{A}): Multiple replicas in parallel at different lambda states. Each arrow symbolises an independent $\vec{\lambda}$ simulation. (\textbf{B}): Hamiltonian replica exchange scheme. Each arrow represents a short simulation interval before an exchange through Metropolis Hastings acceptance (dice) is attempted. A tick means an accepted exchange, a cross a rejected exchange. (\textbf{C}): Single replica scheme sampling from all $\vec{\lambda}$ states. After a short simulation time symbolised by the arrow, the lambda-state is attempted to change until all N lambda states will be sampled. (\textbf{D}): Non-equilibrium sampling scheme, where two equilibrium simulations at the end-states are run as indicated by the blue and pink arrow. Non-equilibrium simulations are attempted at intervals to switch between the two end-states.}
     \label{fig:fig_sampling_scheme}
 \end{figure} 
 
-Currently, we recommend using Hamiltonian replica exchange type sampling schemes (Fig.~\ref{fig:fig_sampling_scheme} \textbf{B}). If these are not available in the code of choice, running independent simulations at different $\vec{\lambda}$ values can be acceptable, especially when conformational sampling is fast (Fig.~\ref{fig:fig_sampling_scheme} \textbf{A}). Single replica schemes and non-equilibrium schemes are not as established yet, but are very promising.
+Currently, we recommend using Hamiltonian replica exchange type sampling schemes (Fig.~\ref{fig:fig_sampling_scheme} \textbf{B}). If these are not available in the code of choice, running independent simulations at different $\vec{\lambda}$ values can be acceptable, especially when configurational sampling is fast (Fig.~\ref{fig:fig_sampling_scheme} \textbf{A}). Single replica schemes and non-equilibrium schemes are not as established yet, but are very promising.
 
 
 \subsubsection{How long should I run my simulation for and what information should be saved?}
@@ -864,21 +893,21 @@ However, this is not the only metric which should be used, as the uncertainty on
 For example, convergence of relative free energy calculations in predictive simulations where the entire phase space is not known in advance, requires sampling the different kinetically stable states~\cite{mobley2012perspective}. 
 This highlights the importance of choosing the correct thermodynamic path to ensure you sample the required thermodynamic states as discussed in Sec.~\ref{sec:important_path}.
 
-The condition of minimizing the statistical uncertainty of different free energy estimators below a sufficient threshold should be one metric monitored over the simulation. This can be done through the uncertainty estimator built into certain analysis tools such as MBAR, or can be done though more general statistical tools like bootstrap sampling. 
-A target statistical uncertainty should be chosen at the onset of the simulation to avoid excessively long simulations, or falling into the trap of running until the free energy estimate is "good enough," which is subjective and has no defined criteria. This could be a fixed value such as $0.20 \mathrm{kcal/mol}$, or a functional quantity such as "below $0.5 \mathrm{kcal/mol}$ and $10\%$ of the free energy estimate." The user does not need to monitor this information in real-time and can choose to run simulations for fixed duration (either time or number of samples) and run analysis on the data collected thus far. If more samples are needed, the simulations can be resumed, or, started again in different initial conditions. 
+The condition of minimizing the statistical uncertainty of different free energy estimators below a sufficient threshold should be one metric monitored over the simulation. This can be done through the uncertainty estimator built into certain analysis tools such as MBAR, or can be done through more general statistical tools like bootstrap sampling. It should be noted however, that uncertainty estimates have the same limitations as other metrics of convergence, as they are only an uncertainty based on the phase space sampled so far in a simulation, and cannot account for states not sampled, and it is worth considering that they will be an underestimation of the true uncertainty.
+A target statistical uncertainty should be chosen at the onset of the simulation to avoid excessively long simulations, or falling into the trap of running until the free energy estimate is "good enough," which is subjective and has no defined criteria. This could be a fixed value such as $0.20$ $\mathrm{kcal/mol}$, or a functional quantity such as "below $0.5$ $\mathrm{kcal/mol}$ and $10\%$ of the free energy estimate." The user does not need to monitor this information in real-time and can choose to run simulations for fixed duration (either time or number of samples) and run analysis on the data collected thus far. If more samples are needed, the simulations can be resumed, or, started again in different initial conditions. 
 
-Convergence in other alchemical observables should also be monitored to determine if the defined phase space has been sufficiently sampled and enough decorrelated samples have been drawn. These additional observables include, but are not limited to, the variance in $\frac{dU}{d\vec{\lambda}}$ across all $\vec{\lambda}$ values, calculating the variance in free energy using bootstrap analysis, and comparing differences in free energies calculated using different percentages of the simulation in both the forward and reverse directions ( see Fig. ~\ref{fig:convergence_forward_reverse}).
+Convergence in other alchemical observables should also be monitored to determine if the defined phase space has been sufficiently sampled and enough decorrelated samples have been drawn. These additional observables include, but are not limited to, the variance in $\frac{dU}{d\vec{\lambda}}$ across all $\vec{\lambda}$ values, calculating the variance in free energy using bootstrap analysis, and comparing differences in free energies calculated using different percentages of the simulation in both the forward and reverse directions~\cite{klimovich2015guidelines} (see Fig. ~\ref{fig:convergence_forward_reverse}).
 
 \begin{figure}
     \centering
     \includegraphics[width=0.95\linewidth]{figures/fig10_forward_reverse/Figure.pdf}
-    \caption{\textbf{Free energy (in k$_{B}$T) for two different relative binding free energy perturbations.} 
+    \caption{\textbf{Free energy (in $k_{B}T$) for two different relative binding free energy perturbations.} 
     Each plot shows the estimated free energy change using a varying fraction of total simulation time (up to 5 ns total). 
-    Subplots (\textbf{A}), (\textbf{C}), and (\textbf{E}) show a three step protocol for a perturbation involving 3 perturbed atoms, while (\textbf{B}), (\textbf{D}), and (\textbf{F}) shows the same protocol for a perturbation involving 10 perturbed atoms. The first step of the protocol is the decharging then removing van der Waals interactions and then recharging. The difference in energy between the forward (blue) and reverse (red) free energy calculations at the midpoint of the simulation time gives an indication of the overall convergence of the simulation, with differences over 1 k$_{B}$T indicating poor convergence.}
+    Subplots (\textbf{A}), (\textbf{C}), and (\textbf{E}) show a three step protocol for a perturbation involving 3 perturbed atoms, while (\textbf{B}), (\textbf{D}), and (\textbf{F}) shows the same protocol for a perturbation involving 10 perturbed atoms. The first step of the protocol is the decharging then removing van der Waals interactions and then recharging. The difference in energy between the forward (blue) and reverse (red) free energy calculations at the midpoint of the simulation time gives an indication of the overall convergence of the simulation, with differences over 1 $k_{B}T$ indicating poor convergence.}
     \label{fig:convergence_forward_reverse}
 \end{figure}
 
-Each of these metrics have demonstrated promising results for diagnosing when a simulation has a convergence issue beyond simple convergence of uncertainty estimate. 
+Each of these metrics shows some promise for diagnosing when a simulation has a convergence issue beyond simple convergence of uncertainty estimates. 
 Results obtained from calculations with convergence issues should be checked for errors or run for longer before any confidence should be placed in conclusions drawn from their analysis.
 In relative calculations that share similar binding modes, for example, and do not induce large conformational changes when in complex with protein, the need to sample exhaustively to converge estimates in free energy differences is often not necessary due to the locality of sampling changes in the molecular topology and shared phase space of the core atoms.
 However, even subtly induced changes in protein binding configuration will require more sampling or cause local convergence to a free energy estimate that has high error.
@@ -893,7 +922,7 @@ The confidence a user should have in a free energy estimate is significantly imp
     \label{fig:pmf}
 \end{figure}
 
-The uncertainty in the free energy, for example, has multiple ways to be estimated, e.g. through standard error propagation methods (including MBAR's estimator, which is based on the same principles as standard error propagation), through bootstrap methods, through multiple independent runs, etc. 
+The uncertainty in the free energy, for example, can be estimated in multiple ways, e.g. through standard error propagation methods (including MBAR's estimator, which is based on the same principles as standard error propagation), through bootstrap methods, through multiple independent runs, etc. 
 Independent of how the property is estimated, its important to remember that they are \textit{estimations of the property}, not the true underlying property itself. 
 These estimators are usually consistent estimators, meaning they will converge to the true answer in the limit of sufficient sampling, not necessarily unbiased ones though.
 As such, it is a good idea to subject different estimators to the same data to see if they yield either the same estimate (within error and bias), or if they fluctuate wildly. See for example the potential of mean force with respect to $\vec{\lambda}$ estimated from a bound simulation of a Tyk2 ligand pair of Wang et al.~\cite{wang2015accurate} for both the MBAR and TI estimators, as seen in Fig.~\ref{fig:pmf}.
@@ -921,7 +950,9 @@ Free energy information should generally be saved more frequently than coordinat
 The on-disk size of the data for free energy estimation is often significantly smaller than full atomic coordinates, so the information should be collected frequently. 
 However, the information should not be collected \textit{every} time step, as most free energy techniques are operated at equilibrium, and need equilibrated \textit{and decorrelated} samples for an unbiased estimate.
 A sample collected every time step will likely result in most samples being discarded due to decorrelation routines in the analysis. However, if it is computationally cheap and disk space is plentiful, do save often. One may safely assume that the correlation time is greater than 100-200 fs even for relatively simple systems such as small molecules in solvent, so saving no more frequently than every 50-100 steps is recommended. 
-How decorrelation impacts calculations, and how to compute it is discussed in Sec.~\ref{sec:decorrelating-samples}. 
+How decorrelation impacts calculations, and how to compute it is discussed in Sec.~\ref{sec:decorrelating-samples}.
+
+In general, uncertainties can be assumed to decrease as $1/\sqrt(N)$ where $N$ is the number of uncorrelated samples, for all standard free energy calculation methods~\cite{shirts2005comparison}. However, this carries the notable caveat that such estimates require accurate estimation of the correlation time which, if important motions are slow compared to simulation timescales, can be difficult. Still, this metric provides a good rule of thumb, and as long as conformational transitions are captured by the simulation, increasing the aggregate simulation time by a factor of $T$ will reduce the uncertainty by a factor of approximately $\sqrt(T)$.
 
 \subsubsection{Multiple or uncertain binding modes may require considerable care}
 \label{sec:multiple_binding_modes}
@@ -932,11 +963,11 @@ This is not necessarily always the case~\cite{kaus2015how}, as reviewed elsewher
 Binding modes also tend to be particularly variable in the case of fragments, which often may have multiple relevant binding modes~\cite{steinbrecher2015accurate}.
 
 
-Absolute free energy calculations for dissimilar ligands can have particular challenges because the (potentially incorrect) assumption of consistent binding modes across a series of similar ligands is likely to be even less robust than the in the case of relative calculations.
+Absolute free energy calculations for dissimilar ligands can have particular challenges because the (potentially incorrect) assumption of consistent binding modes across a series of similar ligands is likely to be even less robust than in the case of relative calculations.
 This means that researchers performing absolute binding free energy calculations will have to pay particular attention to generating reasonable putative binding modes.
 
 In some cases, it is tempting to simply use docking techniques to generate initial bound structures for starting molecular dynamics simulations.
-However, timescales for binding mode interconversion are usually slow compared to MD/free energy timescales, meaning that simulations started from different potential binding modes are likely to yield disparate computed binding free energies~\cite{mobley2006use, palma2012computation, mobley2012perspective, gill2018binding} .
+However, timescales for binding mode interconversion are usually slow compared to MD/free energy timescales, meaning that simulations started from different potential binding modes are likely to yield disparate computed binding free energies~\cite{mobley2006use, palma2012computation, mobley2012perspective, gill2018binding}.
 And docking techniques are good at identifying sterically reasonable potential binding modes, but still perform relatively poorly at identifying a single dominant binding mode \emph{a priori}. 
 
 
@@ -954,7 +985,7 @@ Routes to handle multiple potential binding modes are different depending on whe
 Within absolute binding free energy calculations, multiple potential binding modes can be handled by two main strategies: Consider each binding mode separately (a separation of states strategy) or sample all binding modes within a single simulation~\cite{mobley2012perspective}.
 This couples to the choice of restraints selected, as some restraints will allow transitions between binding modes and even binding sites (Sec.~\ref{sec:standardstate-restraints}), and others do not.
 
-Sampling all potential lignad binding modes within a single free energy calculation is usually impractical without some form of enhanced sampling or at least Hamiltonian replica exchange~\cite{wang2013identifying} because barriers for binding mode interconversion result in kinetics which are too slow compared to simulation timescales~\cite{mobley2006use, palma2012computation,mobley2012perspective, gill2018binding}.
+Sampling all potential ligand binding modes within a single free energy calculation is usually impractical without some form of enhanced sampling or at least Hamiltonian replica exchange~\cite{wang2013identifying} because barriers for binding mode interconversion result in kinetics which are too slow compared to simulation timescales~\cite{mobley2006use, palma2012computation,mobley2012perspective, gill2018binding}.
 Hamiltonian exchange, coupled with appropriate restraints, can allow the ligand to relatively rapidly exchange between potential binding modes when non-interacting, accelerating sampling of binding modes~\cite{wang2013identifying}. However, it is not always clear that this is desirable, since this also increases the size of the configuration space which must be sampled even if the binding mode is known.
 
 Separation of states provides a simple though potentially expensive alternative, where each stable binding mode is considered separately with a binding free energy calculation restricted to that binding mode, and then (as long as the binding modes are non-overlapping) the resulting component binding free energies can be combined into a total~\cite{mobley2006use, mobley2012perspective}.
@@ -971,12 +1002,15 @@ While this approach has precedent, it is relatively difficult to automate at pre
 
 Overall, this likely means that relative free energy calculations will be susceptible to problems resulting from uncertainty in ligand binding modes until more robust approaches are available to determine dominant binding modes, or the relative populations of different potential binding modes, in advance.
 
+\subsection{General simulation setting choices that could affect free energy calculations.}
+There are many parameter choices that are common to standard MD simulations. Optimal choices may depend on the simulation package and it is best to consult the manual of each package to make the right choices. One particular parameter we want to draw attention to which is often overlooked is the timestep. The choice of integrator can drastically affect the accuracy of a given calculation depending on the timestep~\cite{leimkuhler2016efficient}. Using a 1.0 fs timestep near the limit of stability without any constraints can lead to non-negligible statistical mechanical errors. However, from various previous free energy studies using 1 fs integration timesteps it is not clear that a significant error would be introduced into a free energy estimate and may warrant some further investigation.  
+
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Data Analysis               %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \section{Data analysis}
 \label{sec:data_analysis}
-Once data has been collected from alchemical intermediates, it must be analyzed to produce an estimate of the free energy change (and its associated statistical uncertainty) for each leg of the thermodynamic cycle.
+Once equilibrium data has been collected from alchemical intermediates, it must be analyzed to produce an estimate of the free energy change (and its associated statistical uncertainty) for each leg of the thermodynamic cycle.
 While a number of different estimators are available that will give consistent results under optimal circumstances, some approaches are recommended over others due to their robustness and ability to provide information on poor convergence.
 
 \subsection{Detecting the boundary between equilibrated and production regions}
@@ -1020,7 +1054,7 @@ Note that the use of the effective reduced potential is not guaranteed to pick u
 
 \paragraph{Cautions in automating equilibration detection}
 For simulations that are simply not long enough to contain a large number of samples from true equilibrium either because they are very short or contain slow processes, this procedure cannot completely remove the bias.
-In such cases, this approach simply selects the final portion of the the simulation, which may be contained in a single substate of conformational space, and may itself lead to biased estimates. 
+In such cases, this approach simply selects the final portion of the the simulation, which may be contained in a single substate of configurationaal space, and may itself lead to biased estimates. 
 This situation can be detected if the equilibration boundary $t_0$ is a significant fraction of the total simulation length $T$, with a good rule of thumb being that $T \gtrsim 20 t_0$.
 If this is not possible, advanced analysis techniques that assume only local equilibrium (rather than global equilibrium) such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate, but are beyond the scope of this paper. 
 
@@ -1051,7 +1085,7 @@ Once the statistical inefficiency $g$ has been estimated, it is straightforward 
 Suppose the correlated timeseries is $\{a_t\}_{t=1}^T$; we can form a new timeseries of $N_{\mathrm{eff}} \approx T / g$ effectively uncorrelated samples by selecting a subset of indices $\{ \: t = \mathrm{round}((n-1) \, g) \: | \: n \in \mathrm{range}(1,\ldots ,N) \: \}$ where $\mathrm{round(x)}$ denotes rounding to the nearest integer.
 
 If independent simulations are used, the alchemical state $\vec{\lambda}$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficinecy $g$ for each alchemical state.
-If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state.
+If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state.
 Conveniently, the approach described above for automated equilibration detection produces an appropriate estimate of $g$ over the production region for automating this process.
 
 \paragraph{Cautions and considerations}
@@ -1074,7 +1108,7 @@ $u_0(\vec{q})$ and $u_1(\vec{q})$ over coordinate space $\vec{q}$ can be calcula
 \Delta f_{01} & = & \ln \expect{e^{-(u_1(\vec{q}) - u_0(\vec{q}))}}_0 =  \ln \expect{e^{-\Delta u(\vec{q})} }_0
 \end{eqnarray}\label{eqn.zwanzig}
 and the average is over all samples from the simulation performed with $u_0$. In the case of NVT (canonical) sampling and assuming the masses do not change, then $u$ is simply $U/k_BT$, and $f$ is $F/k_BT$, but it can be generalized to other ensembles with the proper definition of $f$ and $u$.
-Described in words, we take the samples generated during our run with the potential energy function $u_0(\vec{q})$ and calculate what the difference in energy would be if we switched to potential energy function $u_1(\vec{q})$, and average the exponential of the negative energy difference to get the negative of the exponential of the free energy difference. The original distributions, P($u_0$) as generated at $\vec{\lambda}=0$ and P($u_1$) would look like those seen in Fig.~\ref{fig:fig_sampling_scheme} \textbf{A}-\textbf{C} on the left hand side. Reevaluating requires almost no extra code functionality to perform; one need only to save a full precision trajectory, and run an unmodified molecular simulation code using the $u_1$ in order to calculate the new energies of stored snapshots. The analysis can be written in a line of code. We note that this method is even more general, in that the instantaneous work to change the potential energy function from $u_0$ to $u_1$ can be replaced by the non-reversible work $W$ to make the same change under the same equilibrium conditions at either end state~\cite{jarzynski1997nonequilibrium,jarzynski1998equilibrium,crooks2000pathensemble}, though we do not go into all of the details of non-equilibrium transformations here, and refer the reader to more advanced treatments~\cite{maragakis2008bayesian,oberhofer2005biased,procacci2015unbiased,shirts2003equilibriuma,ytreberg2004singleensemble}.
+Described in words, we take the samples generated during our run with the potential energy function $u_0(\vec{q})$ and calculate what the difference in energy would be if we switched to potential energy function $u_1(\vec{q})$, and average the exponential of the negative energy difference to get the negative of the exponential of the free energy difference. The original distributions, P($u_0$) as generated at $\vec{\lambda}=0$ and P($u_1$) would look like those seen in Fig.~\ref{fig:fig_sampling_scheme} \textbf{A}-\textbf{C} on the right hand side. Reevaluating requires almost no extra code functionality to perform; one need only to save a full precision trajectory, and run an unmodified molecular simulation code using the $u_1$ in order to calculate the new energies of stored snapshots. The analysis can be written in a line of code. We note that this method is even more general, in that the instantaneous work to change the potential energy function from $u_0$ to $u_1$ can be replaced by the non-reversible work $W$ to make the same change beginning from the same equilibrium conditions at either end state~\cite{jarzynski1997nonequilibrium,jarzynski1998equilibrium,crooks2000pathensemble}, allowing for non-equilibrium free energy calculations, an alternate approach. We do not detail non-equilibrium transformations here, and refer the reader to more advanced treatments~\cite{maragakis2008bayesian,oberhofer2005biased,procacci2015unbiased,shirts2003equilibriuma,ytreberg2004singleensemble, gapsys2020large}, as our focus here is on equilibrium free energy techniques.
 
 Although the Zwanzig equation is formally correct (as long as the two states considered sample the same phase space volume, which is true for standard molecular models), it has some very important numerical issues that mean that it often performs badly for standard free energy calculations, even for small molecules~\cite{shirts2005comparison,lu2003appropriate}. One can show that if the standard deviation of the difference $\Delta u(\vec{q}) = u_1(\vec{q})-u_2(\vec{q})$ over all sampled $\vec{q}$ is large (which in this case, means only several times $k_BT)$, then very few samples contribute to the average, and the answer will be both biased and extremely noisy~\cite{lelievre2010free}. Essentially, the method is dominated by contributions of rare snapshots~\cite{jarzynski2006rare, wu2005phasespaceb, wu2005phasespacec}. 
 
@@ -1086,7 +1120,7 @@ This estimate was first derived by Bennett and is hence generally called the Ben
 \begin{eqnarray}
  \sum_{i=1}^{n_i} \frac{1}{1 + \exp[\ln(\frac{n_i}{n_j}) + u_{ij}(\vec{q}) - f_{ij})
  ]} \nonumber \\
- =\sum_{i=1}^{n_j} \frac{1}{1 + \exp[\ln(\frac{n_i}{n_j}) - u_{ij}(\vec{q}) + f_ij)]},
+ =\sum_{i=1}^{n_j} \frac{1}{1 + \exp[\ln(\frac{n_i}{n_j}) - u_{ij}(\vec{q}) + f_{ij})]},
 \end{eqnarray}
 where $n_i$ and $n_j$ are the number of samples from each state. More recent derivations show that this formula is the maximum likelihood estimate of the free energy difference given sets of samples from the two states~\cite{shirts2003equilibriuma}. 
 
@@ -1095,7 +1129,7 @@ simulations~\cite{shirts2005comparison,lu2003appropriate}, and BAR converges to 
 
 The Bennett acceptance ratio is only defined between two states. Usually, the endpoints of interest in a free energy calculation are sufficiently different that we will need a chain of states that gradually change the potential energy function from $u_0$ to $u_1$, as discussed in Sec.~\ref{sec:important_path}. You can simply carry out BAR between each pair of states $\Delta f_{1 \rightarrow N} = \Delta {f_{1\rightarrow 2}} + \Delta {f_{2\rightarrow 3}} +  \ldots + \Delta f_{N-1\rightarrow N}$.
 
-There is one important thing to note about the uncertainty estimates when summing multiple free energies together to calculate an overall free energy estimate. Although BAR itself gives a free energy estimate that is asymptotically correct in and is much less biased than the uncertainty estimate for EXP, the uncertainties in $\Delta {f_{i-1\rightarrow i}}$ and $\Delta {f_{i\rightarrow i+1}}$ are not uncorrelated, because they both involve the energies $u_i(\vec{q})$. The variances of each of the free energies will \textit{not} propagate as variances usually do (in quadrature) into the variance of the overall free energy. Instead, some other method for propagating the uncertainty, such as bootstrapping~\cite{grossfield2018best} must be used.
+There is one important thing to note about the uncertainty estimates when summing multiple free energies together to calculate an overall free energy estimate. Although BAR itself gives a free energy estimate that is asymptotically correct and is much less biased than the uncertainty estimate for EXP, the uncertainties in $\Delta {f_{i-1\rightarrow i}}$ and $\Delta {f_{i\rightarrow i+1}}$ are not uncorrelated, because they both involve the energies $u_i(\vec{q})$. The variances of each of the free energies will \textit{not} propagate as variances usually do (in quadrature) into the variance of the overall free energy. Instead, some other method for propagating the uncertainty, such as bootstrapping~\cite{grossfield2018best} must be used.
 
 \paragraph{Thermodynamic integration (TI)}
 By taking the derivative of the free energy with respect to the
@@ -1104,7 +1138,7 @@ variable $\vec{\lambda}$, we find that:
 \frac{df}{d\vec{\lambda}} = \frac{d}{d\vec{\lambda}} \left[-\ln \int \frac{\exp{-u(\vec{\lambda},\vec{q})}}{Z(\vec{\lambda})} d\vec{q}\right] = \expect{\frac{du(\vec{\lambda},\vec{q})}{d\vec{\lambda}}\
 }_{\vec{\lambda}} .
 \end{equation}
-And than we can then numerically integrate $df/d\vec{\lambda}$ over an alchemical transformation, using a range of different well-established techniques, to obtain:
+And then we can numerically integrate $df/d\vec{\lambda}$ over an alchemical transformation, using a range of different well-established techniques, to obtain:
 \begin{equation}
 \Delta f    = \int_{0}^{1} \expect{\frac{du(\vec{\lambda},\vec{q})}{d\vec{\lambda}}}_{\vec{\lambda}}  d\vec{\lambda}.    
 \end{equation}
@@ -1116,7 +1150,7 @@ rule provides a simple and robust scheme. All types of numerical integration can
 \[ \Delta f \approx \sum_{k=1}^{K} w_k
 \expect{\frac{du(\vec{\lambda},\vec{q})}{d\vec{\lambda}}}_{k}, \] where the weights $w_k$ correspond to a particular choice of numerical integration.
 Researchers have tried a large number of different integration schemes~\cite{resat1993studies,jorge2010effect,shyu2009reducing}. However, many other integration choices require specific choices of $\vec{\lambda}$ to minimize bias, which makes them unsuitable when the intermediates
-have widely-varying levels of uncertainty. For example, integrating a cubic spline interpolation provided negligible benefits over a simple trapezoid rule~\cite{paliwal2011benchmark}. For starting researchers, we therefore recommend the simple trapezoid rule scheme, as it allows for maximal flexibility in which values of $\vec{\lambda}$ are simulated. As fitting to higher order polynomials can have numerical instabilities for some energy functions, and because alternate functional forms might only be appropriate with some types of transformations, expertise and experience is required to perform such numerical integration modifications. In practice, adding 2-3 more intermediate states is typically sufficient to match the performance of these more complicated numerical quadrature schemes.
+have widely-varying levels of uncertainty. For example, integrating a cubic spline interpolation provided negligible benefits over a simple trapezoid rule~\cite{paliwal2011benchmark}. For starting researchers, we therefore recommend the simple trapezoid rule scheme, as it allows for maximal flexibility in which values of $\vec{\lambda}$ are simulated. As fitting to higher order polynomials can have numerical instabilities for some energy functions, and because alternate functional forms might only be appropriate with some types of transformations, expertise and experience is required to perform such numerical integration modifications. In practice, adding 2-3 more intermediate states is typically sufficient to match the performance of these more complicated numerical quadrature schemes. It is also possible to calculate the $\lambda$-derivatives at non-simulated states from simulated states in a scheme named extended TI~\cite{ruiter2016extended} which reduces the integration error.
 
 One drawback of TI is that it requires derivatives with respect to $\vec{\lambda}$ to be calculated directly in the code. Unfortunately, many problems of interest require using pathways (such as the soft-core pathways, for removing repulsive interactions) that are not linear, as we discuss, making this more complex. Still, if the code of interest does compute $\frac{du}{d\vec{\lambda}}$, then TI is perhaps the simplest method to use, as it involves a very little post-processing effort.
 
@@ -1135,7 +1169,7 @@ MBAR can also be thought of as the Zwanzig estimator of the free energy to state
 \begin{itemize}
 \item We recommend MBAR if all energy differences are available. It is the lowest variance unbiased free energy estimate given samples from multiple states.
 \item BAR is essentially just as good as MBAR for highly optimized $\vec{\lambda}$ intermediates. Specifically, if the $\vec{\lambda}$s are chosen such that intermediate states have moderate overlap with their neighbors (i.e. between $i$ and $i+1$ and between $i$ and $i-1$, they will \textit{not} have significant overlap with their next nearest neighbors $i+2$ and $i-2$. Thus MBAR does not actually get significant information from these energy differences, so one might as well not even calculate them, and just perform BAR between nearest neighbors.~\cite{paliwal2011benchmark} 
-\item TI usually gives similar values as MBAR implemented with sufficient numbers of intermediates, but quadrature errors are hard to estimate beforehand  can occur if one is not careful.~\cite{paliwal2011benchmark}
+\item TI usually gives similar values as MBAR implemented with sufficient numbers of intermediates, but quadrature errors that are hard to estimate beforehand  can occur if one is not careful.~\cite{paliwal2011benchmark}
 \item WHAM is an approximation to MBAR, and there are no compelling reasons it should be used. If careful, it is not necessarily much worse than the other methods, but it always introduces some degree if binning error.
 \item Other variants, especially ones that adaptively determine the free energies can be useful in certain circumstances but beyond the scope of a Best Practices article.
 \end{itemize}
@@ -1143,6 +1177,7 @@ MBAR can also be thought of as the Zwanzig estimator of the free energy to state
 \subsection{Uncertainty estimation}
 \label{subsec:uncertainty}
 It is important to consider the variation in your computed free energies from your equilibrium simulations, in order to obtain an estimate of uncertainty of the obtained value for the free energies of interest. A recent best practices paper by Grossfield et al.,~\cite{grossfield2018best} provides substantial detail on how to estimate uncertainties from molecular simulations and is a good starting point for this topic. 
+The uncertainty of a free energy estimate is limited however, as it is only an estimate of the configurations sampled and cannot contain any information from the phase space not sampled during a simulation. As a consequence, the variance in free energy afforded by any estimator will always be an underestimate of the true uncertainty.
 In general, the quantification of different error metrics depends on both data generation and analysis methods used from the ones discussed above. 
 
 The computation of free energies using TI (Sec.n~\ref{subsec:estimators}) is straightforward and the trapezoidal rule is often recommended since it allows unequal spacing of $\vec{\lambda}$ states, which is required to minimize the variance in the free energy estimate, but in principle any good numerical integration method can be used. 
@@ -1172,10 +1207,13 @@ In addition to statistical uncertainty and sampling, a variety of other factors 
 There are different easily measurable indicators that can test how well converged simulations are, and if all alchemical states have been sufficiently sampled for a rigorous analysis. Furthermore, once you have established that individual perturbations are well behaved, there are some tricks to ensure the overall perturbation network gives reliable results.
 
 \paragraph{Convergence of simulations}
-Fig.~\ref{fig:freeenergytrajectories} illustrates how looking at the convergence of your data may be important. In this example, the guest G3 shows different convergence behaviour for two different hosts. The CB8 host with guest G3 has a longer correlation time than the octa acid (OA) host. In some cases, slow correlation time may not be expected and therefore not a feature known in advance. To this end, you should always look at all simulation data available check convergence behaviour for each free energy estimate and if need be extend existing simulations or try an approach that requires simulations in two separate binding modes where they interconvert at very slow timescales.  
+Fig.~\ref{fig:freeenergytrajectories} illustrates how looking at the convergence of your data may be important. In this example, the guest G3 shows different convergence behaviour for two different hosts. The CB8 host with guest G3 has a longer correlation time than the octa acid (OA) host. In some cases, slow correlation time may not be expected and therefore not a feature known in advance. To this end, you should always look at all simulation data available and check convergence behaviour for each free energy estimate.
+Comparing the free energy trajectories as a function of the simulation time in the forward and reverse time direction is a useful convergence test~\cite{klimovich2015guidelines}.
+As shown in Fig.~\ref{fig:freeenergytrajectories}, disagreements larger than 1~$k_{B}T$ in the final part of the forward and reverse trajectories can be useful to detect unconverged results (see also Fig.~\ref{fig:convergence_forward_reverse}).
+In this case, one can extend the simulations or try an approach that requires simulations in two separate binding modes where they interconvert at very slow timescales.  
 \begin{figure}
     \includegraphics[width=0.90\linewidth]{figures/fig9_convergence/Figure.pdf}
-    \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dashed lines show the final binding free energy prediction of the two calculations after a total of 5230 ns for OA-G3 and 6650 ns for CB8-G3. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/samplchallenges/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
+    \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dash-dot lines show the final binding free energy prediction of the two calculations after a total of 5230 ns for OA-G3 and 6650 ns for CB8-G3. Dashed lines are the free energy trajectories computed in the forward (blue) and reverse (red) time direction for a single replicate calculation. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/samplchallenges/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
 }
     \label{fig:freeenergytrajectories}
 \end{figure}
@@ -1216,10 +1254,10 @@ It is important to carefully examine output data for common problems. Some of th
 \item \textbf{Consistency of free energy estimates across different estimators} Significant discrepancies (further outside the error estimates than would be plausible) between free energies calculated with different free energy estimators such as TI, BAR, and MBAR. All of these estimators converge to the same results with sufficient sampling. Differences between them indicate poor overlap or errors in processing.
 \item \textbf{Have replicas mixed well?} Poor replica mixing (for replica-exchange) or $\lambda$-space sampling for single-replica methods. If the system is not mixing between states, then the states are insufficiently close for mixing, or else there are bottlenecks in the configurational sampling that limit the accuracy.
 \item \textbf{Behaviour of correlation times:} Correlation time that does not vary relatively smoothly as a function of $\vec{\lambda}$. Discontinuities indicate that the system is sampling significantly different configurations with only small changes to the Hamiltonian changes. This usually indicates sampling problems.
-\item \textbf{Dependence of the free energy on initial conformation of the system.} Ensemble average properties should not depend on the starting point.
-\item \textbf{Torsional sampling} Torsions with multiple low-energy minima where some of these minima are that are visited rarely or not at all. Which torsions have low energy minima can best be found by comparing to the simulation in the solvent. There should be clear physical reasons that simulation in the complex has different torsional distributions that the ligand in the solvent. 
+\item \textbf{Dependence of the free energy on initial configuration of the system.} Ensemble average properties should not depend on the starting point.
+\item \textbf{Torsional sampling} Torsions with multiple low-energy minima where some of these minima are visited rarely or not at all. Which torsions have low energy minima can best be found by comparing to the simulation in the solvent. There should be clear physical reasons that simulation in the complex has different torsional distributions that the ligand in the solvent. 
 \item \textbf{Free energy dependence on $\vec{\lambda}$} The free energy should vary relatively smoothly with $\vec{\lambda}$. If it varies drastically, then either there need to be finer sampling in $\vec{\lambda}$ in this region, or there are sampling problems there.
-\item \textbf{Convergence of free energy} The free energy should clearly converge as a function or of simulation time (Fig. ~\ref{fig:convergence_forward_reverse}).
+\item \textbf{Convergence of free energy} The free energy should clearly converge as a function of simulation time (Fig. ~\ref{fig:convergence_forward_reverse}).
 \item If using nonequilbirum methods, is the result independent of the speed at which the nonequilibrium change is performed? Nonequilibrium methods are in theory independent of the switching time in the limit of good sampling unless the switching time is simply too short. 
 %\item Other Diagnostics for non-equilibrium methods, robustness for switching time etc.?
 \item \textbf{Visualization of data} In general, inspect output data such as energies and visualize the simulation trajectories and assess if they match your expectations. Many issues can be spotted by a straight forward visualiztion. 
@@ -1234,7 +1272,7 @@ As with any modelling technique, misuse of statistical analysis can skew the per
 
 As alchemical free energy methods are used in drug discovery to quantify and rationalise structure activity relationships (SAR), the models ability to (a) correlate well with experiment and (b) rank-order the molecules by affinity, should both be computed. Conventionally, this means including an R\textsuperscript{2} (or Pearson's R), where $R=+1$ means high correlation, $R=0$ means no correlation, and $R=-1$ means high anti-correlation) and a Kendall \texttau{} (with perfect ranking agreement when \texttau=1 and perfect disagreement when \texttau=-1) metric in your results. Additionally, practitioners may choose to include a Spearman \textrho{} as well. Brown et al.~\cite{brown2009healthy} have provided a useful analysis in terms of upper bounds of expected possible correlations between experiment and computation with a given potency range for the compounds. For example, for potency ranges of 2 log units it would be impossible to get a higher correlation in R than 0.8 because of experimental uncertainties~\cite{brown2009healthy}. What often is neglected to include is an error analysis on correlation statistics that arise from the errors of both experimental and computed data. One way to include such error analysis for correlation metrics is using bootstrapping on the datasets. The D3R community challenges follows best practices on their data evaluation with readily available python scripts online~\cite{2018drugdata}, based on work by Pat Walters~\cite{walters2013what}. Other analysis software also provide similar functionality for bootstrapping datasets~\cite{antonia2019michellab}. 
 
-Mean unsigned error (MUE, also called mean absolute error/MAE) is another key statistic to include in your results. Even though some models' near-perfect correlation and ranking statistics might suggest excellent accuracy, MUE values can still have errors of show multiple kcal/mol of error, providing important additional insight into performance. Furthermore, MUE allows for unbiased comparisons between predictive models as it is less sensitive to dataset size. Other metrics such as Gaussian Random Affinity Model (GRAM)~\cite{cui2020gram}, Predictive Interval (PI) and Relative Absolute Error (RAE), attempt to correct for the inherent potency range of a dataset, which can aid in comparing success between different targets. We recommend further reading on evaluation of computational models~\cite{jain2008recommendations, walters2013what, brown2009healthy, walterthoughts}.
+Mean unsigned error (MUE, also called mean absolute error/MAE) is another key statistic to include in your results. Even though some models' near-perfect correlation and ranking statistics might suggest excellent accuracy, MUE values can still have errors of multiple kcal/mol, providing important additional insight into performance. Furthermore, MUE allows for unbiased comparisons between predictive models as it is less sensitive to dataset size. Other metrics such as Gaussian Random Affinity Model (GRAM)~\cite{cui2020gram}, Predictive Interval (PI) and Relative Absolute Error (RAE), attempt to correct for the inherent potency range of a dataset, which can aid in comparing success between different targets. We recommend further reading on evaluation of computational models~\cite{jain2008recommendations, walters2013what, brown2009healthy, walterthoughts}.
 
 Reporting the results of relative free energy calculations requires care. As shown in Fig.~\ref{fig:fig_types_of_networks}, relative free energies can be performed arbitrarily as a forward or a reverse process, and thus relative free energies may be reported as either positively or negatively valued. The consequence of the two possible signs for relative free energies is that correlation statistics (such as Pearson's R and Kendall \texttau{}) can be skewed depending on which sign is analysed. The issue of this inconsistency can be circumvented by either plotting all datapoints within a consistent quadrant~\cite{perez-benito2019predicting}, or by avoiding the use of correlation statistics for assessment of relative free energy calculations and instead measuring accuracy using RMSE and MUE which are unaffected by choice of sign.
 
@@ -1267,7 +1305,7 @@ We hope that the best practice guide provides a set of tools that allow a better
 \section{Selection of available software packages}
 
 \label{sec:software}
-There are many different software solutions available for the setup, running, and analysis of alchemcial free energy calculations. These will vary in customizability and ways in which they are ran, e.g. graphical user interface versus command line tool or python script. The following provides a non-exhaustive list of commercial and noncommercial tools available for conducting alchemical free energy calculations. 
+There are many different software solutions available for the setup, running, and analysis of alchemical free energy calculations. These will vary in customizability and ways in which they are ran, e.g. graphical user interface versus command line tool or python script. The following provides a non-exhaustive list of commercial and noncommercial tools available for conducting alchemical free energy calculations. 
 \begin{itemize}
 
 \item [] \textbf{Simulation software: Commercial}
@@ -1281,6 +1319,7 @@ There are many different software solutions available for the setup, running, an
 	\begin{itemize}
 	\item \href{https://www.charmm.org/}{CHARMM} has a variety of tools developed over the years. The PERT module can be used to define initial and final states and define the intermediate lambda points. FREN and BAR modules can be used to analyze the data after the MD run. Lambda-dynamics-based free energy calculation can be carried out using the BLOCK module.  
 	\item \href{https://ambermd.org/}{AMBER}, including its new pmemd.cuda version supports free energy calculations~\cite{salomon-ferrer2013overview}. 
+	\item \href{http://www.gromos.net/}{GROMOS} offers an extensive and flexible molecular dynamics and simulations analysis suites with free energy calculation functionalities including customizable alchemical paths and various sampling protocols~\cite{schmid2012architecture, kunz2012new, eichenberger2011gromos}.
 	\end{itemize}
 \item [] \textbf{Simulation software: Open Source}
 	\begin{itemize}
@@ -1289,12 +1328,12 @@ There are many different software solutions available for the setup, running, an
 	\item \href{https://siremol.org/}{Sire} is a multiscale, molecular simulation framework that provides several applications, including SOMD, an MD/MC code for performing FEP calculations via an interface to OpenMM. 
 	\item \href{http://getyank.org/latest/index.html}{YANK} is a tool developed by John Chodera and group on the top of OpenMM MD package. It allows the users to write their inputs in easy-to-use YAML format.
 	\item \href{http://www.gromacs.org/}{GROMACS} is a molecular simulation package with a significant number of free energy methods implementations. The LiveCOMS GROMACS tutorial includes an example free energy calculation~\cite{lemkul2018From}.
-	\item \href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}, an add-on to GROMACS, offers a mutation free energy calculation module\cite{abraham2015gromacs}.
-	\item \href{https://github.com/qusers/Q6}{Q} is MD code for performing FEP calculations using a variety of force fields~\cite{aqvistjohan2017q6}. 
+	\item \href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}, an add-on to GROMACS, offers a mutation free energy calculation module~\cite{abraham2015gromacs}.
+	\item \href{https://github.com/qusers/Q6}{Q} is MD code for performing FEP calculations using a variety of force fields~\cite{aqvistj.2017q6}. 
 	\end{itemize}
 \item[] \textbf{Setup tools:}
 	\begin{itemize}
-	\item \href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}: GROMACS \url{https://github.com/deGrootLab/pmx}.
+	\item \href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}: Setup of perturbation maps, perturbed topologies and input coordinates for GROMACS simulations\url{https://github.com/deGrootLab/pmx}.
 	\item \href{https://github.com/MobleyLab/Lomap}{Lomap/Lomap2} : Relative alchemical transformation graph planning for setting up perturbation networks~\cite{liu2013lead}.
 	\item \href{http://www.charmm-gui.org/}{CHARMM-GUI} is a web-based tool for setting up a variety of MD simulations. It can be used to generate CHARMM scripts for solvation and ligand-binding free energy calculations~\cite{jo2008charmmgui}.
 	\item \href{https://github.com/qusers/qligfep}{QligFEP} offers robust and fast setup of FEP calculations for the software package Q~\cite{jespers2019qligfep}.
@@ -1412,7 +1451,7 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
         \textbf{Steps to running your relative alchemical free energy calculations}
 \begin{itemize}
    \item Check your ligands  have the same, biologically correct binding pose
-        \item Make sure your λ-scheduling is set correctly
+        \item Make sure your $\lambda$-scheduling is set correctly
         \item Make sure your molecular transformations are realistic (1-5 heavy atoms for reliable computations)
         \item Generate a perturbation network by your method of choice; check whether you have enough cycle closures to check consistency in the results
         \item Check whether dummy atoms were assigned correctly
@@ -1444,7 +1483,7 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
     \textbf{Suggestions for finding out why your alchemical free energy calculations may not be reliable}
 \begin{itemize}
     \item Check again whether dummy atoms were assigned correctly
-    \item Inspect the trajectories across the λ-schedule (particularly the endpoints) for problems described in the text
+    \item Inspect the trajectories across the $\lambda$-schedule (particularly the endpoints) for problems described in the text
     \item Inspect the overlap matrices for lack of overlap
 \end{itemize}
 \end{checklist}
@@ -1473,7 +1512,7 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 % See the policies ``Policies on Authorship'' section of https://livecoms.github.io
 % for more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%%
-\textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed Figs.~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis},and created Figs.~\ref{fig:fig_what_is_lambda},~\ref{fig:fig_what_is_alchemy},~\ref{fig:overlap},~\ref{fig:pmf} and replotted~\ref{fig:automatic-equilibration-detection} and~\ref{fig:fig_types_of_networks}.\\
+\textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed Figs.~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, and created Figs.~\ref{fig:fig_what_is_lambda},~\ref{fig:fig_what_is_alchemy},~\ref{fig:overlap},~\ref{fig:pmf} and replotted~\ref{fig:automatic-equilibration-detection} and~\ref{fig:fig_types_of_networks}.\\
 \textbf{JS}: Created Figs.~ \ref{fig:fig_what_is_alchemy},~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, and an initial draft of~\ref{fig:fig_types_of_networks}. Wrote Sec.~\ref{sec:plot_data}, the checklist Sec.~\ref{sec:checklist}, and contributed to general formatting discussions and editing.\\
 \textbf{MK}: Contributed to Sec.~\ref{sec:data_analysis}, provided the data for figure~\ref{fig:overlap}, compiled the dataset for Sec.~\ref{sec:benchmark} and helped edit the paper.\\
 \textbf{DLM}: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.\\
@@ -1486,6 +1525,8 @@ Merck set~\cite{MCompChem2019Sep} & 5 & 169 & OPSL3 \\
 \textbf{JDC}: Wrote Sec.~\ref{sec:decorrelating-samples} and~\ref{sec:automatic-equilibration-detection} discussed structure and design of the whole document, suggested Figs.~\ref{fig:fig_what_is_alchemy} and~\ref{fig:fig_sampling_scheme} \\
 \textbf{HX}: Contributed Sec.~\ref{subsec:accuracy}, to Sec.~\ref{sec:relative-fe-protocol}, and to Sec.~\ref{sec:are-they-good}.\\
 \textbf{HBM} Contributed to Sec.~\ref{sec:plot_data} and Fig.~ \ref{fig:scatterplot_analysis} and helped edit the paper.\\
+\textbf{SP} Wrote Sec.~\ref{sec:software}.
+\textbf{DFH} Contributed to Sec.~\ref{sec:software} and helped edit the paper.
 % We suggest you preserve this comment:
 For a more detailed description of author contributions,
 see the GitHub issue tracking and changelog at \githubrepository.
@@ -1512,8 +1553,8 @@ see the GitHub issue tracking and changelog at \githubrepository.
 %Declare any potentially competing interests, financial or otherwise
 %%%%%%%
 JM is a current member of the Scientific Advisory Board of Cresset. 
-MK is employed by Cresset who commercially distribute a software for performing alchemical free energy calculations. MRS is a Open Science Fellow and consultant for Silicon Therapeutics. JDC is a current member of the Scientific Advisory Board of OpenEye Scientific Software and a consultant to Foresite Laboratories. 
-
+MK is employed by Cresset who commercially distribute a software for performing alchemical free energy calculations. MRS is a Open Science Fellow and consultant for Silicon Therapeutics.
+JDC is a current member of the Scientific Advisory Board of OpenEye Scientific Software and a consultant to Foresite Laboratories.
 \section*{Funding Information}
 %%%%%%%
 % Authors should acknowledge funding sources here. Reference specific grants.
@@ -1522,9 +1563,9 @@ ASJSM and JM acknowledge funding through an EPSRC flagship software grant: EP/P0
 MK and JM acknowledge funding through Innovate UK by KTP partnership 011120.
 AR acknowledges partial support from the Tri-Institutional Program in Computational Biology and Medicine and the Sloan Kettering Institute.
 HEBM acknowledges support from a Molecular Sciences Software Institute Investment Fellowship and Relay Therapeutics.
-A complete funding history for the Chodera lab can be found at \url{http://choderalab.org/funding}. 
 DLM acknowledges support from the National Institutes of Health (R01GM108889, R01GM124270, and R01GM132386), and the National Science Foundation (CHE 1352608).
 JDC acknowledges support from the National Institutes of Health (NIH P30 CA008748, NIH R01 GM121505, R01 GM132386).
+A complete funding history for the Chodera lab can be found at \url{http://choderalab.org/funding}.
 The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
 
 \section*{Author Information}
