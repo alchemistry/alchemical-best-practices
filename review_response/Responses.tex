@@ -1,348 +1,489 @@
-\documentclass[10pt,stdletter]{newlfm}
-\usepackage{charter}
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% Professional Formal Letter
+% LaTeX Template
+% Version 1.0 (28/12/13)
+%
+% This template has been downloaded from:
+% http://www.LaTeXTemplates.com
+%
+% Original author:
+% Brian Moses (http://www.ms.uky.edu/~math/Resources/Templates/LaTeX/)
+% with extensive modifications by Vel (vel@latextemplates.com)
+%
+% Further modifications including UoY specific changes by George Tsoulas 
+% (george.tsoulas@gmail.com}
+%
+% A simple letter template with the University of York Logo mostly meant for % personal rather than departmental letters.
+%
+% License:
+% CC BY-NC-SA 3.0 (http://creativecommons.org/licenses/by-nc-sa/3.0/)
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%---------------------------------------------
+% PACKAGES AND OTHER DOCUMENT CONFIGURATIONS |
+%---------------------------------------------
+
+\documentclass[11pt,a4paper]{letter} % Specify the font size (10pt, 11pt and 12pt) and paper size (letterpaper, a4paper, etc)
+
+\usepackage{graphicx} % Required for including pictures
+\usepackage{microtype} % Improves typography
+\usepackage[T1]{fontenc} % Required for accented characters
+\usepackage{fbb} %Use the free version of the Bembo font Family
 \usepackage{xcolor}
+\usepackage{hyperref}
+%\usepackage{gfsdidot} % Use the GFS Didot font: http://www.tug.dk/FontCatalogue/gfsdidot/
+%\usepackage{lipsum}
+% Create a new command for the horizontal rule in the document which allows thickness specification
+\makeatletter
+\def\vhrulefill#1{\leavevmode\leaders\hrule\@height#1\hfill \kern\z@}
+\makeatother
 
-\widowpenalty=1000
-\clubpenalty=1000
+%-------------------
+% DOCUMENT MARGINS |
+%-------------------
 
-\newsavebox{\Luiuc}
-\sbox{\Luiuc}{%
-    \parbox[b]{1.75in}{%
-        \vspace{0.5in}%
-        \includegraphics[scale=0.2,ext=.pdf]
-        {logo.pdf}%
-    }%
-}%
+\usepackage[left=1.2in,
+top=1.25in,
+right=1.25in,
+bottom=1.25in,
+headsep=0.25in,
+headheight=20pt,
+heightrounded]
+{geometry}
 
-\makeletterhead{Uiuc}{\Lheader{\usebox{\Luiuc}}}
+%---------------------
+% SENDER INFORMATION |
+%---------------------
 
-\newlfmP{headermarginskip=5pt}
-\newlfmP{sigsize=5pt}
-\newlfmP{dateskipafter=20pt}
-\newlfmP{addrfromphone}
-\newlfmP{addrfromemail}
-\PhrPhone{Phone}
-\PhrEmail{Email}
+\def\Who{Antonia Mey} % Your name
+\def\What{Dr } % Your title
+\def\Where{School of Chemistry} % Your department/institution
+\def\Address{University of Edinburgh} % Your address
+\def\Address{David Brewster Road, EH9 3FJ} % Your address
+\def\CityZip{} % Your city, zip code, country, etc
+\def\Email{antonia.mey@ed.ac.uk} % Your email address
+\def\URL{http://www.mey-research.org} % Your URL
 
-\lthUiuc
+%------------------------------------
+% HEADER AND FROM ADDRESS STRUCTURE |
+%------------------------------------
 
-\namefrom{Antonia Mey}
-\addrfrom{%
-    University of Edinburgh\\
-    David Brewster Road\\
-    Edinburgh\\
-    EH9 3FJ, UK\\ 
+\address{\vspace*{-2.3cm}
+  \includegraphics[width=1in]{Ylogo.png} %Include the logo of your institution
+\hspace*{5in} % Position of the institution logo, increase to move left, decrease to move right
+\hspace{-3in} \hfill \normalsize % Second line of institution name, adjust hspace if your logo is wide
+\makebox[0ex][r]{\bf \What \Who }\hspace{0.08in} % Print your name and title with a little whitespace to the right
+~\\[-0.03in] % Reduce the whitespace above the horizontal rule
+\vspace*{-.08in}\hspace{.1in}\vhrulefill{1pt} \\ % Horizontal rule, adjust hspace if your logo is wide and \vhrulefill for the thickness of the rule
+\hspace{\fill}\parbox[t]{2.85in}{ % Create a box for your details underneath the horizontal rule on the right
+\footnotesize % Use a smaller font size for the details
+% \Who \\ Your name if you want it again there
+\em % all text after this will be italicized
+\Where\\ % Your department
+\Address\\ % Your address
+%\CityZip\\ % Your city and zip code
+\TEL\\ % Your phone number
+\Email\\ % Your email address
+\URL % Your URL
+}
+\hspace{-1.4in} % Horizontal position of this block, increase to move left, decrease to move right
+\vspace{-1in} % Move the letter content up for a more compact look
 }
 
-\phonefrom{ +44 131 651 3309}
-\emailfrom{antonia.mey@ed.ac.uk}
+%-----------------------
+% TO ADDRESS STRUCTURE |
+%-----------------------
 
-\addrto{%
-Living Journal of Computational Molecular Science}
+\def\opening#1{\thispagestyle{empty}
+{\centering\fromaddress \vspace{1.2in} \\ % Print the header and from address here, add whitespace to move date down
+\hspace*{}\today\hspace*{\fill}\par} % Print today's date, remove \today to not display it
+{\raggedright \toname \\ \toaddress \par} % Print the to name and address
+\vspace{0.4in} % White space after the to address
+\noindent #1 % Print the opening line
+% Uncomment the 4 lines below to print a footnote with custom text
+%\def\thefootnote{}
+%\def\footnoterule{\hrule}
+%\footnotetext{\hspace*{\fill}{\footnotesize\em Footnote text}}
+%\def\thefootnote{\arabic{footnote}}
+}
 
-\greetto{Dear Prof Oostenbrink,}
-\closeline{Sincerely,}
+%----------------------
+% SIGNATURE STRUCTURE |
+%----------------------
+
+\signature{\What \Who} % The signature is a combination of your name and title
+
+\long\def\closing#1{
+\vspace{0.1in} % Some whitespace after the letter content and before the signature
+\noindent % Stop paragraph indentation
+\hspace*{\longindentation} % Move the signature right
+\parbox{\indentedwidth}{\raggedright
+#1 % Print the signature text
+\vskip 0.65in % Whitespace between the signature text and your name
+\fromsig}} % Print your name and title
+
+%--------------------------------------------------------------------------
+
 \begin{document}
-\begin{newlfm}
+
+%-------------
+% TO ADDRESS |
+%-------------
+
+\begin{letter}
+{Living Journal of Computational Molecular Sciences\\
+}
+%% Add more lines as you wish
+
+%
+%-----------------
+% LETTER CONTENT |
+%-----------------
 
 
-[fix me]
+\opening{Dear Professor Oostenbrink,}
 
 
-\textbf{Reviewer 1 comments:}
-The best practices guide “Best Practices for Alchemical Free Energy Calculations” by Mey et al. gives an extensive introduction to the field of alchemical free energy calculations. After a general introduction, the reader is introduced to the statistical mechanics foundations needed to understand the concepts introduced later, followed by general discussions on applicability and prerequisites of free energy calculations. The authors then continue to discuss practical methodologies and issues and guide the reader towards a general understanding on how such calculations can be performed, including proper data analysis. It is then concluded that it is important to understand the functionalities and limitations of today’s often highly automated free energy workflows and that blind prediction challenges help to understand the used algorithms and issues related to reproducibility better.
+We would like to thank the reviewers for having taken the time to read the manuscript and to give such excellent feedback. Below we endeavor to address each of the comments in detail. All the suggestions and references from you, the editor, have also been included now, giving Gromos equally prominent space as other software packages in the manuscript.  
 
-The manuscript is very well-written and concepts of alchemical free energy calculations are clearly presented. The provided checklist can be a useful tool and can serve as initial orientation, especially for scientists who are new to the field.
+
+\textbf{Reviewer 1 comments:}\\
+(...)
 
 However, I would like to make some comments to the manuscript:
 
-Figure 1: For me there is no intrinsic difference between the free energy calculations shown in panel D and F, both transformations should be performed in the bound and unbound states to obtain meaningful results, and both should be termed relative calculations (ΔΔG). Maybe it could be more clearly indicated in general if a whole molecule is decoupled and if only a part of a molecule is transformed?
-\textcolor{red}{JS: swapped dG to ddG; swapped E and F, made 'Host' and 'membrane' text larger, added interaction schematic (green) in D}
+Figure 1: For me there is no intrinsic difference between the free energy calculations shown in panel D and F, both transformations should be performed in the bound and unbound states to obtain meaningful results, and both should be termed relative calculations ($\Delta \Delta$ G). Maybe it could be more clearly indicated in general if a whole molecule is decoupled and if only a part of a molecule is transformed?
+
+\textcolor{red}{We used  $\Delta\Delta G$ instead of  $\Delta$ G; swapped E and F, made 'Host' and 'membrane' text larger and added interaction schematic (green) in D.}
 
 Section 4.1, line 3: RMS errors to experiment? This should be clearly stated.
 
-Section 4.1, line 30: it is not entirely clear to me what the authors mean by “edges”. This should be better explained in the text.
+\textcolor{red}{We added a clarification to this in Sec. 4.1.}
+
+Section 4.1, line 30: it is not entirely clear to me what the authors mean by "edges". This should be better explained in the text.
+
+\textcolor{red}{We added a sentence in Sec. 4.1 to clarify this.}
 
 Section 4.1, end: There is a github URL in the text which is not referenced or explained directly. What can the reader expect to find on this git?
 
+\textcolor{red}{We removed this link, as it didn't really add anything useful.}
+
 Equations 14 and 2: I would suggest using either KD or Kb consistently to improve readability.
 
-Section 5.4, last paragraph: I would call it “binding free energy prediction”, not “binding energy prediction”
+\textcolor{red}{Using $K_b$ consistently now.}
+
+Section 5.4, last paragraph: I would call it "binding free energy prediction", not "binding energy prediction"
+
+\textcolor{red}{Fixed.}
 
 Constraints and relative free energy calculations: for me, a timestep of 1 fs is more an upper limit for MD simulations involving non-constrained bonds, I would rather suggest a value of 0.5 fs.
-\textcolor{MRS: This is a valuable point to raise. Certainly 1.0 fs is near the limit of stability without any constraints with standard fields, and there are studies showing there are nonnegligible statistical mechanical errors with timesteps of 1.0 fs. However, many studies with free energy calculations have been done with these parameters and it's not clear they have statistically significant deviation from simulations without simulations. We have added a discussion of timestep to section XXXX with a tentative recommendation that 1.0 fs may be sufficient, but some warnings there may be potentially be issues}
+
+\textcolor{red}{ This is a valuable point to raise. Certainly 1.0 fs is near the limit of stability without any constraints with standard fields, and there are studies showing there are non-negligible statistical mechanical errors with timesteps of 1.0 fs. However, many studies with free energy calculations have been done with these parameters and it's not clear they have statistically significant deviation from simulations with smaller timesteps. We have added a discussion on timesteps to section 7.3 with a tentative recommendation that 1.0 fs may be acceptable.}
 
 Section 7.2.1: Using a flat-bottom restraining potential in which the ligand never hits the potential wall is similar to using no restraining potential at all. I would not suggest skipping a reweighting step; if the energetic contribution of the restraint is little, the reweighting will not introduce much noise and is technically easy to perform.
 
-\textcolor{red}{AR: We changed the wording to clarify this point. The reweighting can be skipped if the ligand is never \textit{sampled} while hitting the wall because, in this case, the numerical correction is exactly zero. Using the restraint is different from using no restraining potential at all because during the MD simulation the ligand might still very occasionally hit the wall (thus limiting its volume to the binding site) even if we these events are not observed after subsampling the trajectory.}
+\textcolor{red}{We changed the wording to clarify this point. The reweighting can be skipped if the ligand is never \textit{sampled} while hitting the wall because, in this case, the numerical correction is exactly zero. Using the restraint is different from using no restraining potential at all because during the MD simulation the ligand might still very occasionally hit the wall (thus limiting its volume to the binding site) even if we these events are not observed after subsampling the trajectory.}
 
 Section 7.2.5 and Figure 9: The concept of evaluating both forward and reverse cumulative averages is nicely described in reference 42. I would cite the reference in this section.
 
-\textcolor{red}{AR: We added the reference to the text.}
+\textcolor{red}{We added the reference to the text.}
 
 Section 8.5 and Figure 12: Here I would again mention the use of both forward and reverse cumulative averages and plot them explicitly in Figure 12.
 
-\textcolor{red}{AR: Both the text in the section and the figure were updated to include the forward/reverse convergence test.}
+\textcolor{red}{Both the text in the section and the figure were updated to include the forward/reverse convergence test.}
 
 Section 10: GROMOS is a simulation package with very extensive (alchemical) free energy calculation capabilities and free for academic use. I think it should be mentioned here.
 
+\textcolor{red}{We have added Gromos to the software section and also added appropriate references to it throughout the manuscript.}
 
-\textbf{Reviewer 2 Comments}
--Much of the discussion is related to alchemical free-energy calculations in drug design. I think that the success of such calculations is also very dependent on the force field. Although not a topic of the present manuscript, the authors may want to issue a recommendation/warning regarding the validation of automatically generated ligand topologies. I guess, many practitioners just take such topologies for granted.
+\textbf{Reviewer 2 Comments:}\\
+Much of the discussion is related to alchemical free-energy calculations in drug design. I think that the success of such calculations is also very dependent on the force field. Although not a topic of the present manuscript, the authors may want to issue a recommendation/warning regarding the validation of automatically generated ligand topologies. I guess, many practitioners just take such topologies for granted.
 
-\color[red]{We have added explicit comments in section 4.1 with respect to the need for using reasonable parameter/topology input files that have been inspected to make sure the molecular description has no obvious errors, or lack of chemical coverage in the method used to generate them}
+\textcolor{red}{We have added explicit comments in section 4.1 with respect to the need for using reasonable parameter/topology input files that have been inspected to make sure the molecular description has no obvious errors, or lack of chemical coverage in the method used to generate them}
 
--In the list of more advanced topics on page 3 the application to QM/MM simulations may be mentioned as well, since this seems to be an area of growing importance
+In the list of more advanced topics on page 3 the application to QM/MM simulations may be mentioned as well, since this seems to be an area of growing importance.
 
-\color[red]{MRS: we have added QM/MM explicitly in that list as an advanced topic beyond the scope of this document.}  
+\textcolor{red}{We have added QM/MM and ML topics explicitly in that list and added some starting point references.}  
 
--At the end of section 7.1.1 on pages 15/16 the following statement appears: “Typical molecular dynamics engines are not set up to recognize this change, or at least not to correctly include contributions to the free energy from changing constraints/constraint length, so results for a transformation would usually be erroneous.” This statement is a bit surprising since methods to calculate the contribution of the work done by constraint forces have been described a few times, e.g.: 
--Van Gunsteren, W.F., In van Gunsteren W.F. and Weiner, P.K. (Eds.) Computer Simulation of Biomolecular Systems: Theoretical and Experimental Applications, ESCOM, Leiden, 1989, pp. 1-26. 
+At the end of section 7.1.1 on pages 15/16 the following statement appears: "Typical molecular dynamics engines are not set up to recognize this change, or at least not to correctly include contributions to the free energy from changing constraints/constraint length, so results for a transformation would usually be erroneous." This statement is a bit surprising since methods to calculate the contribution of the work done by constraint forces have been described a few times, e.g.: 
+\begin{itemize}
 
--Pearlman, D.A., Kollman, P.A., The overlooked bond-stretching contribution in free energy perturbation calculations, J. Chem. Phys. 1991, 94(6), 4532-4545.
+    \item Van Gunsteren, W.F., In van Gunsteren W.F. and Weiner, P.K. (Eds.) Computer Simulation of Biomolecular Systems: Theoretical and Experimental Applications, ESCOM, Leiden, 1989, pp. 1-26. 
 
--Straatsma, T.P., Zacharias, M., McCammon, J.A., Holonomic constraint contribution to free energy differences from thermodynamic integration molecular dynamics simulations, Chem. Phys. Lett., 1992, 196(3-4), 297-302.
+    \item Pearlman, D.A., Kollman, P.A., The overlooked bond-stretching contribution in free energy perturbation calculations, J. Chem. Phys. 1991, 94(6), 4532-4545.
 
--Pearlman, D.A., Determining the contributions of constraints in free energy calculations: Development, characterization, and recommendations, J. Chem. Phys. 1993, 98(11), 8964-8957.
+    \item Straatsma, T.P., Zacharias, M., McCammon, J.A., Holonomic constraint contribution to free energy differences from thermodynamic integration molecular dynamics simulations, Chem. Phys. Lett., 1992, 196(3-4), 297-302.
 
+    \item Pearlman, D.A., Determining the contributions of constraints in free energy calculations: Development, characterization, and recommendations, J. Chem. Phys. 1993, 98(11), 8964-8957.
+ 
+\end{itemize}
 One implementation, based on integrating over the constraint forces, can for example be found in the MD code GROMOS. I suggest to mention the availability of both the theory and also practical implementations in the manuscript.
 
-\color[red]{We have revised this text in 7.1, making it clear that the corrections are known, that different programs vary in their implementation of the corrections, and that users should check the user manuals if they have bond lengths that both change and are constrainted}
+\textcolor{red}{We have revised this text in 7.1, making it clear that the corrections are known, that different programs vary in their implementation of the corrections, and that users should check the user manuals if they have bond lengths that both change and are constrainted. We also added the suggested references.}
 
--In section 7.2.2, when discussing changes in net charge the “Double-system/single-box” setup described by Gapsys et al. may be mentioned. It is related to the alchemical ion approach but can be mentioned here for completeness and to help newcomers to the field in sorting the various approaches. Gapsys, V., Michielssens, S., Peters, J. H., DeGroot, B. L., Leonov, H. Calculation of Binding Free Energies, In Andreas Kukol (ed.), Molecular Modeling of Proteins, Methods in Molecular Biology, vol. 1215, doi: 10.1007/978-1-4939-1465-4\_9, Springer Science+Business Media New York 2015.
+In section 7.2.2, when discussing changes in net charge the "Double-system/single-box" setup described by Gapsys et al. may be mentioned. It is related to the alchemical ion approach but can be mentioned here for completeness and to help newcomers to the field in sorting the various approaches. Gapsys, V., Michielssens, S., Peters, J. H., DeGroot, B. L., Leonov, H. Calculation of Binding Free Energies, In Andreas Kukol (ed.), Molecular Modeling of Proteins, Methods in Molecular Biology, vol. 1215, doi: 10.1007/978-1-4939-1465-4\_9, Springer Science+Business Media New York 2015.
+
+\textcolor{red}{We made appropriate corrections to this. }
 
 SOME TECHNICAL ISSUES
 
--In the list of symbols on page 4, the quantity $\Delta G$ is denoted as Gibbs free energy while $\Delta A$ is denoted as Helmholtz free energy. However, according to IUPAC or IUPAP these quantities are referred to as Gibbs energy or Helmholtz energy (see \url{https://doi.org/10.1039/9781847557889} or \url{https://doi.org/10.1016/0378-4371(78)90209-1}) or sometimes also as “Gibbs function” or “Helmholtz function” or as “free enthalpy” or “free energy” respectively. Of course, the nomenclature used by authors is very common in the field. Therefore, one solution would be to use the IUPAC nomenclature in the List of Symbols along with a footnote explaining that here a different nomenclature is used (or the other way round).
+In the list of symbols on page 4, the quantity $\Delta G$ is denoted as Gibbs free energy while $\Delta A$ is denoted as Helmholtz free energy. However, according to IUPAC or IUPAP these quantities are referred to as Gibbs energy or Helmholtz energy (see \url{https://doi.org/10.1039/9781847557889} or \url{https://doi.org/10.1016/0378-4371(78)90209-1}) or sometimes also as "Gibbs function" or "Helmholtz function" or as "free enthalpy" or "free energy" respectively. Of course, the nomenclature used by authors is very common in the field. Therefore, one solution would be to use the IUPAC nomenclature in the List of Symbols along with a footnote explaining that here a different nomenclature is used (or the other way round).
 
-\color[red]{MRS: we have added the less-commonly used but also correct terms as alternate names for these quantities in the list of symbols.}
+\textcolor{red}{We have added the less-commonly used but also correct terms as alternate names for these quantities in the list of symbols.}
 
--Eq. (2) holds for dilute solutions if thermodynamic activities can be approximated by concentrations. This is also stated in the classical Gilson paper but I guess repeating it here, could be useful.
+Eq. (2) holds for dilute solutions if thermodynamic activities can be approximated by concentrations. This is also stated in the classical Gilson paper but I guess repeating it here, could be useful.
 
--Page 5: In statistical mechanics nomenclature the term “configuration” is usually used for q ⃑. In chemistry and biology, the term “conformation” is probably more common. In the context of the present manuscript “configuration” fits better in my opinion.
+\textcolor{red}{We now state this explicitly referencing the Gilson paper.}
 
--The quantity $\Delta G_{solvated}$ in Figure 2 is called $\Delta G_{unbound}$ in Eq. (9).
+Page 5: In statistical mechanics nomenclature the term "configuration" is usually used for $\vec{q}$. In chemistry and biology, the term "conformation" is probably more common. In the context of the present manuscript "configuration" fits better in my opinion.
 
--In the first paragraph of section 4.2 it is mentioned that a good practice is to perform two or three runs of the same perturbation. Here one might add that the initial conditions (i.e. velocities) should be different.
+\textcolor{red}{We updated this to use configuration consistently and explained that a conformation can be a set of configurations that can be grouped together into a metastable state.}
 
--Page 17, line 9 under Eq. (17): A, B, and AB may be replaced by R, L, and RL.
+The quantity $\Delta G_{solvated}$ in Figure 2 is called $\Delta G_{unbound}$ in Eq. (9).
 
--In the paragraph of author contributions, the description of the contribution of Samarjeet Prasad seems to be missing.
+\textcolor{red}{We updated the labelling to make it consistent. }
+
+In the first paragraph of section 4.2 it is mentioned that a good practice is to perform two or three runs of the same perturbation. Here one might add that the initial conditions (i.e. velocities) should be different.
+
+\textcolor{red} {We have added this.}
+
+Page 17, line 9 under Eq. (17): A, B, and AB may be replaced by R, L, and RL.
+
+\textcolor{red} {We have fixed this.}
+
+In the paragraph of author contributions, the description of the contribution of Samarjeet Prasad seems to be missing.
+
+\textcolor{red} {The contributions were added.}
 
 TYPOS OR OTHER EDITORIAL ISSUES
+\begin{itemize}
+  
 
--Page 3, right column, line 5 in third paragraph: preparation( Sec. 6) -> preparation (Sec. 6) 
+   \item Page 3, right column, line 5 in third paragraph: preparation( Sec. 6) $\rightarrow$ preparation (Sec. 6)    
+   \item Page 4, left column, list of acronyms: "unsigned error" should be written in upper case to be consistent with the other entries.
 
-\textcolor{red}{JS: Fixed.}
+   \item Page 5, left column: In the nominator and denominator of Eqs (5) and (6) the minus sign is missing in the exponentials.
 
--Page 4, left column, list of acronyms: “unsigned error” should be written in upper case to be consistent with the other entries.
+    \item Page 5, right column, first line: "one of the ..."
 
-\textcolor{red}{JS: Fixed.}
+   \item Page 6, right column, two lines above Eq. 12: Bennet's $\rightarrow$ Bennett's
 
--Page 5, left column: In the nominator and denominator of Eqs (5) and (6) the minus sign is missing in the exponentials.
+   \item Page 8, right column, fifth line below Eq. 16: enrgies  $\rightarrow$ energies
+\end{itemize}
+\textcolor{red}{All above have been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 8, right column, 10th line below Eq 16: Perhaps the line break in the unit can be avoided.
 
--Page 5, right column, first line: “one of the …”
+\textcolor{red}{Fixed by changing line to ..If the accuracy of \textit{a collection of} free energy calculations is..}
 
-\textcolor{red}{JS: Fixed.}
+Page 11, left column, paragraph 5.4: there are two occurrences of the term "binding energy prediction". Is "binding free energy prediction" meant?
 
--Page 6, right column, two lines above Eq. 12: Bennet’s -> Bennett’s
+\textcolor{red}{We have fixed these.}
 
-\textcolor{red}{JS: Fixed.}
+Page 12, left column: "stereoisomers" is misspelled.
 
--Page 8, right column, fifth line below Eq. 16: enrgies -> energies
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 15, Figure 4: the right structure in the lower part has no green area. Is that intended?
 
--Page 8, right column, 10th line below Eq 16: Perhaps the line break in the unit can be avoided.
+\textcolor{red}{We updated the caption to explain this further. }
 
-\textcolor{red}{JS: Fixed by changing line to ..If the accuracy of \textit{a collection of} free energy calculations is..}
+Page 17, Eq. 18: the ratio of $c^o/V_L$ seems not correct. It should be either $V^o/V_L$ where $V^o$ is the volume corresponding to $c^o$, or, when sticking to $c^o$: $c^o * V_L$
 
--Page 11, left column, paragraph 5.4: there are two occurrences of the term “binding energy prediction”. Is “binding free energy prediction” meant?
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 17, line 14: "restraints" (s was missing)
 
--Page 12, left column: “stereoisomers” is misspelled.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 19, Figure 7: The axis labels are hard to read.
 
--Page 15, Figure 4: the right structure in the lower part has no green area. Is that intended?
+\textcolor{red}{This has been fixed.}
 
-\textcolor{green}{JS: Yes, as this structure does not match the MCS. Could perhaps be explained more clearly in the text?(subsection "ring breaking and forming"}
+Page 19, Eq. 19: I think it should be $(1-\lambda)U_0 + \lambda U_1$ to fit to the text below the equation
 
--Page 17, Eq. 18: the ratio of $c^o/V_L$ seems not correct. It should be either $V^o/V_L$ where $V^o$ is the volume corresponding to $c^o$, or, when sticking to $c^o$: $c^o * V_L$
+\textcolor{red}{Correct. This has been fixed.}
 
-\textcolor{green}{JS: leaving this up to Toni"}
+Page 20, left column, line 14: $\sigma/r$ should be written in parenthesis.
 
--Page 17, line 14: “restraints” (s was missing)
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 20, left column, line 16: B in $k_{B}T$ should be in subscript and T not.
 
--Page 19, Figure 7: The axis labels are hard to read.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed in PR.}
+Page 20, left column, line 10 from the bottom: is there an "at" missing in "and at the other endpoint ..."?
 
--Page 19, Eq. 19: I think it should be $(1-\lambda)U_0 + \lambda U_1$ to fit to the text below the equation
+\textcolor{red}{ Yes, this has been fixed.}
 
-\textcolor{green}{JS: leaving this up to Toni"}
+Page 22, left column, caption of Figure 8 (line 6): should there be a comma after "exchang"?
 
--Page 20, left column, line 14: σ/r should be written in parenthesis.
+\textcolor{red}{this has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 22, right column, line 2: though $\rightarrow$ through
 
--Page 20, left column, line 16: B in $k_BT$ should be in subscript and T not.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 22, right column, lines 8 and 9: Please add a blank between value and unit.
 
--Page 20, left column, line 10 from the bottom: is there an “at” missing in “and at the other endpoint …”?
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Yes, fixed.}
+Page 22, right column, last line of second paragraph: Please remove blank between "(" and "see"
 
--Page 22, left column, caption of Figure 8 (line 6): should there be a comma after “exchange”?
+\textcolor{red}{This has been fixed.}
 
-\textcolor{green}{JS: I don't see it?}
+Page 23, left column, caption of Figure 9 (first and last lines): k and T should be written in italic.
 
--Page 22, right column, line 2: though -> through
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 24, right column, line 4 in second paragraph: There seems to be a non-fitting "the" in the sentence.
 
--Page 22, right column, lines 8 and 9: Please add a blank between value and unit.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Seems to have been fixed by DM.}
+Page 24, right column, line 7 in third paragraph: Please remove blank between "]" and "."
 
--Page 22, right column, last line of second paragraph: Please remove blank between “(“ and “see”
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Seems to have been fixed by DLM.}
+Page 25, left column, first line in second paragraph of section "Handling multiple ...": lignad  $\rightarrow$ ligand
 
--Page 23, left column, caption of Figure 9 (first and last lines): k and T should be written in italic.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 26, right column, figure 11: The "u" on the y-axis in the second panel might also be written in italics.
 
--Page 24, right column, line 4 in second paragraph: There seems to be a non-fitting “the” in the sentence.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 27, right column, line 8 in second paragraph of section "Subsampling data to ...": "can be" appears twice.
 
--Page 24, right column, line 7 in third paragraph: Please remove blank between “]” and “.”
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 28, left column, line 21: should it be the "right hand side" instead of "left hand side"?
 
--Page 25, left column, first line in second paragraph of section “Handling multiple …”: lignad -> ligand
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 28, right column, Eq. (27): the $j$ in $f_ij$ should be subscript.
 
--Page 26, right column, figure 11: The “u” on the y-axis in the second panel might also be written in italics.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{green}{JS: Should be fixed by the creator of the figure.}
+Page 28, right column, line 4 in paragraph 4: "that is asymptotically correct in ...". Is the "in" correct?
 
--Page 27, right column, line 8 in second paragraph of section “Subsampling data to …”: “can be” appears twice.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 28, right column, second last line from bottom: "than" should be "then"
 
--Page 28, left column, line 21: should it be the “right hand side” instead of “left hand side”?
+\textcolor{red}{This has been fixed.}
 
-\textcolor{green}{JS: Should be fixed by JDC/JM/DLM.}
+Page 29, right column, line 4 from the bottom: is there a "that" missing in "... errors that are hard to estimate ..."
 
--Page 28, right column, Eq. (27): the $j$ in $f_ij$ should be subscript.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 31, left column, line 2: is there a comma missing after "available"?
 
--Page 28, right column, line 4 in paragraph 4: “that is asymptotically correct in …”. Is the “in” correct?
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 33, left column, line 8 from bottom: "... minima are that are visited ..." needs revision
 
--Page 28, right column, second last line from bottom: “than” should be “then”
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 33, right column, line 4: The "or" does not fit here.
 
--Page 29, right column, line 4 from the bottom: is there a “that” missing in “… errors that are hard to estimate …”
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 34, left column, line 5 in second paragraph: "... have errors of show multiple ..." needs revision.
 
--Page 31, left column, line 2: is there a comma missing after “available”?
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 35, right column, line 6 from bottom: Please add blank between "module" and "[".
 
--Page 33, left column, line 8 from bottom: “… minima are that are visited …” needs revision
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 39, left column: line 3: Please add blank after "14,"
 
--Page 33, right column, line 4: The “or” does not fit here.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 40, ref [10]: Please abbreviate the journal name.
 
--Page 34, left column, line 5 in second paragraph: “… have errors of show multiple …” needs revision.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 45, ref [131]: Please abbreviate the journal name.
 
--Page 35, right column, line 6 from bottom: Please add blank between “module” and “[“.
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 45, ref [155]: This paper has the title: "Incorporating the effect of ionic strength in free energy calculations using explicit ions".
 
--Page 39, left column: line 3: Please add blank after “14,”
+\textcolor{red}{This has been fixed.}
 
-\textcolor{red}{JS: Fixed.}
+Page 47, ref [189]: Please abbreviate the journal name.
 
--Page 40, ref [10]: Please abbreviate the journal name.
+\textcolor{red}{This has been fixed.}
 
+Page 48, ref [216]: Please provide a link here.
 
-\textcolor{green}{JS: leaving refs up to Toni"}
+\textcolor{red}{This has been fixed.}
 
--Page 45, ref [131]: Please abbreviate the journal name.
+Page 48, ref [224]: Please use abbreviations for the author names.
 
--Page 45, ref [155]: This paper has the title: “Incorporating the effect of ionic strength in free energy calculations using explicit ions”.
+\textcolor{red}{This has been fixed.}
 
--Page 47, ref [189]: Please abbreviate the journal name.
-
--Page 48, ref [216]: Please provide a link here.
-
--Page 48, ref [224]: Please use abbreviations for the author names.
-
-\textbf{Reviewer 3 Comments}
+\textbf{Reviewer 3 Comments:}
 
 This is a comprehensive, very systematic, and well-written best practice guide that will be of immense help both new and advanced practitioners. I found the checklist for novice practitioners particularly appealing. It definitely should be published, and I only have a few remarks that may help clarification or avoid misconceptions. I also added a few suggestions of issues I personally would find also helpful to new practitioners, but I would leave it at the discretion of the authors whether they want to include those or not.
 
-For the amusement of the authors I should mention that while reading the following occurred to me four times in a row: at some point I thought: Hey, the following issue should be mentioned, took a note, did read on, and found precisely this issue discussed, and thus I deleted my note. I think that shows that the manuscript is really very well structured, always fulfilling the reader’s expectation what should come next!
+For the amusement of the authors I should mention that while reading the following occurred to me four times in a row: at some point I thought: Hey, the following issue should be mentioned, took a note, did read on, and found precisely this issue discussed, and thus I deleted my note. I think that shows that the manuscript is really very well structured, always fulfilling the reader's expectation what should come next!
 
-(1) In Chap 3.1 Eq suggests that the law of mass action can be applied to calculate K_b and Delta G_B from MD simulations. I am aware the authors just mean to provide the conceptual background here, but I am similarly aware of a few groups that actually have used the LMA. This is very dangerous. As shown in [54], the LMA does not strictly hold for systems with very few particles, and it contradicts in fact the more fundamental and general eq (7). E.g., if a simulation system just contains one L and one R molecule, and these bind and unbind many times during the simulation, eq (7) would (correctly) predict that $\Delta G = -kT log Z(RL)/Z(R+L) \approx -kT log T(RL)/T(R+L)$, where the latter means the time fraction of the trajectory where the system is bound / unbound. In contrast, the LMA would (wrongly) claim that $\Delta G = -kT log [RL]/[R][L] \approx -kT log T(RL)/(T(R+L))^2$. The authors might want to add a word of caution to this not so well-known fact.
+(1) In Chap 3.1 Eq suggests that the law of mass action can be applied to calculate $K_b$ and Delta $G_B$ from MD simulations. I am aware the authors just mean to provide the conceptual background here, but I am similarly aware of a few groups that actually have used the LMA. This is very dangerous. As shown in [54], the LMA does not strictly hold for systems with very few particles, and it contradicts in fact the more fundamental and general eq (7). E.g., if a simulation system just contains one L and one R molecule, and these bind and unbind many times during the simulation, eq (7) would (correctly) predict that $\Delta G = -kT \log Z(RL)/Z(R+L) \approx -kT log T(RL)/T(R+L)$, where the latter means the time fraction of the trajectory where the system is bound / unbound. In contrast, the LMA would (wrongly) claim that $\Delta G = -kT log [RL]/[R][L] \approx -kT log T(RL)/(T(R+L))^2$. The authors might want to add a word of caution to this not so well-known fact.
 
-\textcolor{red}{AR: The referee raises a valid concern, and we have made the warning explicit in Section 3.2.}
+\textcolor{red}{The referee raises a valid concern, and we have made the warning explicit in Section 3.2.}
 
 (2) Eq (4) is a bit confusing, at least to a physicist. Naively, I would say it would be correct without the concentration term: $\Delta G$ then simply means the free energy difference for the concentration used in the simulation. Apparently, this is not meant here, but then I would refer to Delta G as the standard free energy, $\Delta G^0$.
 
-\textcolor{red}{AR: The standard free energy is indeed what we are referring to throughout the paper. We have adopted the convention of using \Delta G (without the ^o) to refer to the standard free energy. This is common practice in the alchemical calculations literature as the standard free energy is typically the only quantity of interest and the one reported and compared to experiments. We agree this might create some confusion, and we have thus added a comment in Section 3.1 to clarify the notation.}
+\textcolor{red}{The standard free energy is indeed what we are referring to throughout the paper. We have adopted the convention of using $\Delta G$ (without the $^o$) to refer to the standard free energy. This is common practice in the alchemical calculations literature as the standard free energy is typically the only quantity of interest and the one reported and compared to experiments. We agree this might create some confusion, and we have thus added a comment in Section 3.1 to clarify the notation.}
 
-(3) In Sec 3.2, the issue of a Delta G (Delta Delta G) between states with different number of atoms is touched upon. This issue is more subtle than the text suggests, and the authors might want to spend a few more sentences to explain under which conditions the ‘unit-of-volume-factor’ actually cancels out and when not. There’s chances for pitfalls for new practitioners!
+(3) In Sec 3.2, the issue of a $\Delta G$ ($\Delta \Delta G$) between states with different number of atoms is touched upon. This issue is more subtle than the text suggests, and the authors might want to spend a few more sentences to explain under which conditions the 'unit-of-volume-factor' actually cancels out and when not. There's chances for pitfalls for new practitioners!
 
-(4) I agree with the notes in 7.2.2. that no agreed upon way to handle changes in total charges is available. The authors might consider adding (if they agree) that whenever there is a change of total charge, direct comparison to experiment is meaningless, because in experiments the total charge is always conserved (otherwise the test tube would explode). One might even go so far as to say that any calculation with change in total charge is meaningless…which kind of solves the problem from an unexpected angle.
+\textcolor{red}{We addressed this in an updated version of Sec 3.2., clarifying under what conditions the equality holds.}
+
+
+(4) I agree with the notes in 7.2.2. that no agreed upon way to handle changes in total charges is available. The authors might consider adding (if they agree) that whenever there is a change of total charge, direct comparison to experiment is meaningless, because in experiments the total charge is always conserved (otherwise the test tube would explode). One might even go so far as to say that any calculation with change in total charge is meaningless...which kind of solves the problem from an unexpected angle.
+
+\textcolor{red}{We have rephrased parts of this section. }
 
 (5) Can the authors give some rules of thumb how fast the accuracy increases with simulation length? Is it always as simple as /sqrt(N)?
 
-\color[red]{MRS: This is a point to raise. The analytical estimators for free energy calculations do have variance formulae that do scale with $1/N$ (See Shirts and Pande, 2005, among others), where $N$ is the number of uncorrelated samples, so the uncertainty will indeed scale as $N^{-1/2}$ as the simulation length increases, as long as it has already sampled several uncorrelated samples. We have added a bit more discussion and context in section 7.2.5}.
+\textcolor{red}{This is a point to raise. The analytical estimators for free energy calculations do have variance formulae that do scale with $1/N$ (See Shirts and Pande, 2005, among others), where $N$ is the number of uncorrelated samples, so the uncertainty will indeed scale as $N^{-1/2}$ as the simulation length increases, as long as it has already sampled several uncorrelated samples. We have added a bit more discussion and context in section 7.2.5.}
 
 (6) Non-equilibrium (Crooks) based calculations have been shown to be quite efficient, and IMHO should also be included (I did see it briefly mentioned in 7.2.4).
 
+\textcolor{red}{
 Our feeling is that these simulation techniques, while they have the potential to be very efficient, can be tricky in implementation that keep them from being best practice yet (likely a chance for a future LiveCoMS paper!); this is not intended as comprehensive review.  We have: 
-
 \begin{itemize}
 \item Added word "equilibrium" to abstract to indicate that's our focus
 \item Added two mentions in Scope (Section 2) that we are NOT covering this here, along with one reference to Gapsys et al.
 \item Added a mention in 3.2 that specifies we're talking about equilibrium calculations.
-Added sentence at end of 3.2 mentioning these
-\item, Clarify mention of them in 7.2.4 
+\item Added sentence at end of 3.2 mentioning these
+\item Clarify mention of them in 7.2.4 
 \end{itemize}
+}
 
 (7) What impact does the way of morphing from state A to B have? Rules of thumb what should be avoided, and what helps? I saw sec 7.1.1., but found the focus on dual topology, single topology, or hybrid topology a bit narrow. I do understand that these are the established ones that stood the test of time, but practitioners should also be aware that there is much more out there to choose from, such as enveloping potentials, or variational morphing, which the authors might want to add to their discussion in 7.2.3.
 
-\color[red]{MRS: The section issues with soft core and $\lambda$ examines much of the clear lessons on simulation endpoints and pathways.  We now bring up EDS and enveloping distribution approaches as alternatives in section 7.2, but at least in this paper choose not to recommend them as best practices not because they don't work, but because they at the present time there are issues with kinetic trapping and determining scaling parameters that mean they are not the recommended way to start doing these calculations for non-experts or maximal reliability.} 
+\textcolor{red}{The section issues with soft core and $\lambda$ examines much of the clear lessons on simulation endpoints and pathways. We now bring up EDS and enveloping distribution approaches as alternatives in section 7.2, but at least in this paper, choose not to recommend them as best practices not because they don't work, but because at present there are issues with kinetic trapping and determining scaling parameters that mean they are not the recommended way to start doing these calculations for non-experts or maximal reliability.} 
 
 (8) In 7.2.5, concerning uncertainty estimates. I found it helpful for many students to realize that free energy error estimates often suffer from exactly the same sampling problems as the free energy estimate itself. Specifically, if the free energy estimate is off because an important region in configuration space has not been sampled, the error estimate has no way to indicate this. The authors might want to make this point super-clear.
 
-(10) Use larger fonts in Fig 2 &7, generally try to have equally-sized fonts throughout all Figs.
+\textcolor{red}{We added a couple of sentences to highlight this in section 7.2.5 and 8.4}
 
-\textcolor{red}{JS: PR includes increased font sizes in figs 2 and 7. Additionally, slightly reformatted pane 7B to have a cleaner horizontal line}
+(10) Use larger fonts in Fig 2 and 7, generally try to have equally-sized fonts throughout all Figs.
+
+\textcolor{red}{We increased the font sizes in figs 2 and 7. Additionally, slightly reformatted pane 7B to have a cleaner horizontal line}
 
 
-\end{newlfm}
 
+\closing{Sincerely,\\[2mm]
+% \hspace*{-1cm}\includegraphics[scale=.7]{Your signature}\\ \vspace*{-1.2cm}
+% The command above fits my signature, adjust scaling and spacing depending  on %the size of yours.
+}
+
+%-----------------------------------------------------------------------------
+
+\end{letter}
 \end{document}
