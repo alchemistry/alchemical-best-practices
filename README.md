@@ -15,12 +15,13 @@ Preparation (focused on aspects unique to alchemical free energies), execution, 
 
 
 ## List of Authors
-(alphabetical order -- attended meeting at NIST Aug. 2017)
+(As ordered on the paper)
 
 - Antonia S. J. S. Mey
 - Bryce Allen
 - Hannah E. Bruce Macdonald
 - John D. Chodera
+- David F. Hahn
 - Maximilian Kuhn
 - Julien Michel
 - David L. Mobley
@@ -34,7 +35,7 @@ Preparation (focused on aspects unique to alchemical free energies), execution, 
 
 ## List of Contributors
 (non-author list of people who contributed to document)
-- Julia Rice
+- Julia Rice -- Attended initial discussion meeting at NIST in Aug. 2017
 
 ## Paper Writing as Code Development
 <!-- This discussion is so that people know how to contribute to your document. -->
