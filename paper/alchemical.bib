@@ -13,6 +13,18 @@
   howpublished = {Schr\"odinger, LLC, New York, NY,}
 }
 
+@misc{aaquist2017q6,
+  title = {Q6: {{A}} Comprehensive Toolkit for Empirical Valence Bond and Related Free Energy Calculations},
+  shorttitle = {Q6},
+  author = {\{{\textbackslash}AAquist\}, J. and Kamerlin, S. C. L. and Bauer, P. and Marelius, J.},
+  year = {2017},
+  month = aug,
+  doi = {10.5281/zenodo.1002739},
+  abstract = {Q is a set of Molecular Dynamics (MD) tools tailored to the following specific kinds of free energy calculations: Free Energy Perturbation (FEP) Empirical Valence Bond (EVB) Linear Interaction Energies (LIE) Quantum Classical Path (QCP)},
+  file = {/Users/toni_brain/Zotero/storage/UHBCLNVG/1002739.html},
+  howpublished = {Zenodo}
+}
+
 @article{abel2017advancing,
   title = {Advancing {{Drug Discovery}} through {{Enhanced Free Energy Calculations}}},
   author = {Abel, Robert and Wang, Lingle and Harder, Edward D. and Berne, B. J. and Friesner, Richard A.},
@@ -185,16 +197,17 @@
   journal = {J. Chem. Phys.}
 }
 
-@misc{aqvistj.2017q6,
-  title = {Q6: {{A}} Comprehensive Toolkit for Empirical Valence Bond and Related Free Energy Calculations},
-  shorttitle = {Q6},
-  author = {{\AA}qvist J., Kamerlin S. C. L., Bauer P., Marelius J.},
-  year = {2017},
-  month = aug,
-  doi = {10.5281/zenodo.1002739},
-  abstract = {Q is a set of Molecular Dynamics (MD) tools tailored to the following specific kinds of free energy calculations: Free Energy Perturbation (FEP) Empirical Valence Bond (EVB) Linear Interaction Energies (LIE) Quantum Classical Path (QCP)},
-  file = {/Users/toni_brain/Zotero/storage/UHBCLNVG/1002739.html},
-  howpublished = {Zenodo}
+@book{baron2012computational,
+  title = {Computational {{Drug Discovery}} and {{Design}}},
+  editor = {Baron, Riccardo},
+  year = {2012},
+  publisher = {{Humana Press}},
+  doi = {10.1007/978-1-61779-465-0},
+  abstract = {Due to the rapid and steady growth of available low-cost computer power, the use of computers for discovering and designing new drugs is becoming a central topic in modern molecular biology and medicinal chemistry. In Computational Drug Discovery and Design: Methods and Protocols expert researchers in the field provide key techniques to investigate biomedical applications for drug developments based on computational chemistry. These include methods and techniques from binding sites prediction to the accurate inclusion of solvent and entropic effects, from high-throughput screening of large compound databases to the expanding area of protein-protein inhibition, toward quantitative free-energy approaches in ensemble-based drug design using distributed computing. Written in the highly successful Methods in Molecular Biology\texttrademark{} series format, chapters include introductions to their respective topics, reference to software and open source analysis tools, step-by-step, readily reproducible computational protocols, and key tips on troubleshooting and avoiding known pitfalls. Thorough and intuitive, Computational Drug Discovery and Design: Methods and Protocols aids scientists in the continuing study of state-of-the-art concepts and computer-based methodologies.},
+  file = {/Users/toni_brain/Zotero/storage/TIZH3F6P/9781617794643.html},
+  isbn = {978-1-61779-464-3},
+  language = {en},
+  series = {Methods in {{Molecular Biology}}}
 }
 
 @article{basavapathruni2012conformational,
@@ -975,6 +988,7 @@
   doi = {10.26434/chemrxiv.6204167.v2},
   abstract = {Recent improvements to free energy perturbation (FEP) calculations, especiallyFEP+, established their utility for pharmaceutical lead optimization. However, to dateFEP has typically been helpful only when (1) high-quality X-ray data is available and(2) the target protein does not undergo significant conformational changes.  Also, alack of systematic studies on determining an adequate sampling time is often one ofthe primary limitations of FEP calculations. Herein, we propose a modified versionof the FEP/REST (i.e., replica exchange with solute tempering) sampling protocol,based on systematic studies on several targets by probing a large number of permutations with different sampling schemes. Improved FEP+ binding affinity predictions for regular flexible-loop (F-loop) motions and considerable structural changes can be obtained by extending the pre-REST sampling time from 0.24 ns to 5 ns/{$\lambda$}and 2\texttimes 10 ns/{$\lambda$}, respectively. We obtained much more precise {$\increment\increment$}G calculations of the individual perturbations, including the sign of the transformations and less error. We extended the REST simulations from 5 ns to 8 ns to achieve reasonable free energy convergence.Implementing REST to the entire ligand as opposed to solely the perturbed region, and also some important flexible protein residues (pREST region) in ligand binding domain (LBD) , also considerably improved the FEP+ results in most of the studied cases.  Preliminary molecular dynamics (MD) runs were useful for establishing the correct binding mode of the compounds and thus precise alignment for FEP+.},
   file = {/Users/toni_brain/Zotero/storage/QTWNU4YG/2.pdf},
+  journal = {chemrxiv.org},
   language = {en}
 }
 
@@ -1733,6 +1747,22 @@
   pages = {2670},
   doi = {10.1021/acs.jctc.5b00214},
   journal = {J. Chem. Theory Comput.}
+}
+
+@article{kawabata20143d,
+  title = {{{3D Flexible Alignment Using 2D Maximum Common Substructure}}: {{Dependence}} of {{Prediction Accuracy}} on {{Target}}-{{Reference Chemical Similarity}}},
+  shorttitle = {{{3D Flexible Alignment Using 2D Maximum Common Substructure}}},
+  author = {Kawabata, Takeshi and Nakamura, Haruki},
+  year = {2014},
+  month = jul,
+  volume = {54},
+  pages = {1850--1863},
+  publisher = {{American Chemical Society}},
+  issn = {1549-9596},
+  doi = {10.1021/ci500006d},
+  abstract = {A protein-bound conformation of a target molecule can be predicted by aligning the target molecule on the reference molecule obtained from the 3D structure of the compound\textendash protein complex. This strategy is called ``similarity-based docking''. For this purpose, we develop the flexible alignment program fkcombu, which aligns the target molecule based on atomic correspondences with the reference molecule. The correspondences are obtained by the maximum common substructure (MCS) of 2D chemical structures, using our program kcombu. The prediction performance was evaluated using many target-reference pairs of superimposed ligand 3D structures on the same protein in the PDB, with different ranges of chemical similarity. The details of atomic correspondence largely affected the prediction success. We found that topologically constrained disconnected MCS (TD-MCS) with the simple element-based atomic classification provides the best prediction. The crashing potential energy with the receptor protein improved the performance. We also found that the RMSD between the predicted and correct target conformations significantly correlates with the chemical similarities between target-reference molecules. Generally speaking, if the reference and target compounds have more than 70\% chemical similarity, then the average RMSD of 3D conformations is {$<$}2.0 \AA. We compared the performance with a rigid-body molecular alignment program based on volume-overlap scores (ShaEP). Our MCS-based flexible alignment program performed better than the rigid-body alignment program, especially when the target and reference molecules were sufficiently similar.},
+  journal = {J. Chem. Inf. Model.},
+  number = {7}
 }
 
 @article{keranen2017acylguanidine,
@@ -2514,6 +2544,12 @@
   language = {en}
 }
 
+@misc{modeling,
+  title = {Modeling {{Local Structural Rearrangements Using FEP}}/{{REST}}: {{Application}} to {{Relative Binding Affinity Predictions}} of {{CDK2 Inhibitors}} | {{Journal}} of {{Chemical Theory}} and {{Computation}}},
+  file = {/Users/toni_brain/Zotero/storage/6X4PVNKW/ct300911a.html},
+  howpublished = {https://pubs.acs.org/doi/10.1021/ct300911a}
+}
+
 @article{mondal2019free,
   title = {A {{Free Energy Perturbation Approach}} to {{Estimate}} the {{Intrinsic Solubilities}} of {{Drug}}-like {{Small Molecules}}},
   author = {Mondal, Sayan and Tresadern, Gary and Greenwood, Jeremy and Kim, Byungchan and Kaus, Joe and Wirtala, Matt and Steinbrecher, Thomas and Wang, Lingle and Masse, Craig and Farid, Ramy and Abel, Robert},
@@ -3106,6 +3142,20 @@
   number = {4}
 }
 
+@article{robert2017critical,
+  title = {A {{Critical Review}} of {{Validation}}, {{Blind Testing}}, and {{Real}}- {{World Use}} of {{Alchemical Protein}}-{{Ligand Binding Free Energy Calculations}}},
+  author = {Robert, Abel and Lingle, Wang and David, L. Mobley and Richard, A. Friesner},
+  year = {2017},
+  month = aug,
+  volume = {17},
+  pages = {2577--2585},
+  abstract = {Protein-ligand binding is among the most fundamental phenomena underlying all molecular biology, and a greater ability to more accurately and robustly pred...},
+  file = {/Users/toni_brain/Zotero/storage/5793G9XF/article.html},
+  journal = {Current Topics in Medicinal Chemistry},
+  language = {en},
+  number = {23}
+}
+
 @article{rocklin2013blind,
   title = {Blind {{Prediction}} of {{Charged Ligand Binding Affinities}} in a {{Model Binding Site}}},
   author = {Rocklin, Gabriel J. and Boyce, Sarah E. and Fischer, Marcus and Fish, Inbar and Mobley, David L. and Shoichet, Brian K. and Dill, Ken A.},
@@ -3475,6 +3525,23 @@
   doi = {10.1063/1.2978177},
   journal = {J. Chem. Phys.},
   number = {12}
+}
+
+@incollection{shirts2012best,
+  title = {Best {{Practices}} in {{Free Energy Calculations}} for {{Drug Design}}},
+  booktitle = {Computational {{Drug Discovery}} and {{Design}}},
+  author = {Shirts, Michael R.},
+  editor = {Baron, Riccardo},
+  year = {2012},
+  pages = {425--467},
+  publisher = {{Springer}},
+  address = {{New York, NY}},
+  doi = {10.1007/978-1-61779-465-0_26},
+  abstract = {Free energy calculations are increasingly of interest for computing biophysical properties of novel small molecules of interest in drug design, such as protein\textendash ligand binding affinities and small molecule partition coefficients. However, these calculations are also notoriously difficult to implement correctly. In this article, we review standard methods for computing free energy differences via simulation, discuss current best practices, and examine potential pitfalls for computational researchers without extensive experience in such calculations. We include a variety of examples and tips for how to set up and conduct these calculations, including applications to relative binding affinities and absolute binding free energies.},
+  isbn = {978-1-61779-465-0},
+  keywords = {Alchemical methods,Bennett acceptance ratio,Binding free energy,Drug design,Free energy calculation,MBAR,Thermodynamic integration},
+  language = {en},
+  series = {Methods in {{Molecular Biology}}}
 }
 
 @article{shirts2017reweighting,
