@@ -3,7 +3,7 @@
 %%% ADAPTED FROM ELIFE ARTICLE TEMPLATE (8/10/2017)
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% PREAMBLE
-\documentclass[9pt,bestpractices,ASAPversion]{livecoms}
+\documentclass[9pt,bestpractices,pubversion]{livecoms}
 % Use the 'onehalfspacing' option for 1.5 line spacing
 % Use the 'doublespacing' option for 2.0 line spacing
 % Use the 'lineno' option for adding line numbers.
@@ -28,7 +28,7 @@
 \usepackage{textgreek}
 \usepackage{changepage}
 
-\newcommand{\versionnumber}{0.3} % you should update the minor version number in preprints and major version number of submissions.
+\newcommand{\versionnumber}{1.0} % you should update the minor version number in preprints and major version number of submissions.
 \newcommand{\githubrepository}{\url{https://github.com/alchemistry/alchemical-best-practices}} %this should be the main github repository for this article
 \newcommand{\expect}[1]{\left\langle{#1}\right\rangle}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
@@ -481,7 +481,7 @@ by a normal distribution
 where $\sigma$ signifies the accuracy of free energy calculations.
 Here we assume that there is no systematic bias in the free energy
 calculations, i.e., on average, the free energy change computed by
-free energy calculations agrees with the actual free energy change. Additional analysis of this type is presented in Brown et al.~\cite{brown2010freeenergy}
+free energy calculations agrees with the actual free energy change. Additional analysis of this type is presented in Brown et al.~\cite{brown2010free}
 
 In lead optimization guided by free energy calculations, we will likely only
 synthesize and experimentally test molecules that are predicted to
@@ -1211,13 +1211,13 @@ In addition to statistical uncertainty and sampling, a variety of other factors 
 There are different easily measurable indicators that can test how well converged simulations are, and if all alchemical states have been sufficiently sampled for a rigorous analysis. Furthermore, once you have established that individual perturbations are well behaved, there are some tricks to ensure the overall perturbation network gives reliable results.
 
 \paragraph{Convergence of simulations}
-Fig.~\ref{fig:freeenergytrajectories} illustrates how looking at the convergence of your data may be important. In this example, the guest G3 shows different convergence behaviour for two different hosts. The CB8 host with guest G3 has a longer correlation time than the octa acid (OA) host. In some cases, slow correlation time may not be expected and therefore not a feature known in advance. To this end, you should always look at all simulation data available and check convergence behaviour for each free energy estimate.
+Fig.~\ref{fig:freeenergytrajectories} illustrates how looking at the convergence of your data may be important. The CB8 host with guest G3 has a longer correlation time than the G6 guest in the octa acid (OA) host. In some cases, slow correlation time may not be expected and therefore not a feature known in advance. To this end, you should always look at all simulation data available and check convergence behaviour for each free energy estimate.
 Comparing the free energy trajectories as a function of the simulation time in the forward and reverse time direction is a useful convergence test~\cite{klimovich2015guidelines}.
 As shown in Fig.~\ref{fig:freeenergytrajectories}, disagreements larger than 1~$k_{B}T$ in the final part of the forward and reverse trajectories can be useful to detect unconverged results (see also Fig.~\ref{fig:convergence_forward_reverse}).
 In this case, one can extend the simulations or try an approach that requires simulations in two separate binding modes where they interconvert at very slow timescales.  
 \begin{figure}
     \includegraphics[width=0.90\linewidth]{figures/fig9_convergence/Figure.pdf}
-    \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G3. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dash-dot lines show the final binding free energy prediction of the two calculations after a total of 5230 ns for OA-G3 and 6650 ns for CB8-G3. Dashed lines are the free energy trajectories computed in the forward (blue) and reverse (red) time direction for a single replicate calculation. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/samplchallenges/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
+    \caption{Average binding free energy of 5 replicate Hamiltonian replica exchange calculations as a function of total simulation time (i.e. the sum of the simulation time of all replicas) for the two host-guest systems CB8-G3 and OA-G6. Shaded areas represent 95\% confidence intervals around the mean computed from the 5 replicates data. The horizontal dash-dot lines show the final binding free energy prediction of the two calculations after a total of 5230 ns for OA-G6 and 6650 ns for CB8-G3. Dashed lines are the free energy trajectories computed in the forward (blue) and reverse (red) time direction for a single replicate calculation. Longer correlation times in CB8-G3 cause the calculation to converge more slowly. The original data used to generate the plot can be found at \url{https://github.com/samplchallenges/SAMPL6/blob/master/host_guest/Analysis/SAMPLing/Data/reference_free_energies.csv}.
 }
     \label{fig:freeenergytrajectories}
 \end{figure}
