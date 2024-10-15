@@ -1,5 +1,9 @@
 # Best Practices for Alchemical Free Energy Simulations
 
+## v2.0 Update
+
+The original best practices guide will be split into two documents: the first will gives best practices for running a single calculation (and give details on theory/ system-specific setup), while the second will give best practices for running multiple calculations (with a focus on automation). The first (this manuscript) will become version 2.0 of the current guide, while the second will be submitted as a new manuscript (see [this repo](https://github.com/alchemistry/largescale-alchemy-best-practices)).
+
 ## Goals
 
 - Checklist and background for new practitioners of relative and absolute alchemical free energy calculations: What should you pay attention to in setting up and running calculations in common codes and why.
