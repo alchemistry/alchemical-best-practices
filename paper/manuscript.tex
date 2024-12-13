@@ -463,7 +463,7 @@ In this case, two independent calculations compute the free energy of removing t
 % Step 0   %
 %%%%%%%%%%%%
 \section{\tocorange{What can be expected from alchemical simulations?}}
-\tocsectioncomment{Steering Meeting: @Volunteer Shorten and move most material to second paper. Possibly add a walkthrough of a ``dummy calculation'' (which could be a particular realisation of a general workflow laid out in @Jenke Scheen's figure)? This could lead on to discussion of particular methods.}
+\tocsectioncomment{Steering Meeting: @Volunteer Shorten and move most material to second paper. Possibly add a walkthrough of a ``dummy calculation'' (which could be a particular realisation of a general workflow laid out in @Jenke Scheen's figure)? This could lead on to discussion of particular methods. @Toni Mey I could do this}
 \label{sec:step0}
 When starting an alchemical free energy project, a key first step is to decide whether free energy calculations are really the right tool. Particularly, count the cost of your
 project: Can you even hope to tackle the problem with available resources and, if successful, will it
@@ -535,7 +535,7 @@ Since binding experiments cannot resolve $K_D^\ast$ and $K_C$ individually, such
 \tocsectioncomment{There was substantial interest in expanding this section (see initial suggestions/ discussion).}
 \tocsectioncomment{@Irfan Alibay/ @Volunteer to suggest additional points.}
 \tocsectioncomment{@Irfan Alibay/ @Emilio Gallicchio/ @Volunteer to expand on approaches for explicitly accounting for protonation/ tautomer changes.}
-\tocsectioncomment{@Hannah Bruce Macdonald/ @David Slowchower/ @Volunteer to expand range of systems discussed, e.g. membrane proteins, cofactors, multimers, PPIs.}
+\tocsectioncomment{@Hannah Bruce Macdonald/ @David Slowchower/ @Vytas Gapsys/ @Volunteer to expand range of systems discussed, e.g. membrane proteins, cofactors, multimers, PPIs.}
 \label{sec:prerequisites}
 Alchemical free energy protocols as discussed below (Sec.~\ref{sec:simulation_protocol_choice}) are defined for a specific type of free energy calculation, i.e. a free energy of binding or a free energy of hydration. Different types of simulations require different choices for ligands, solvent, and host molecules (in the case of the estimation of free energies of binding).
 
@@ -591,7 +591,7 @@ Preliminary considerations necessary for using free energy methods to compute pa
 \tocsectioncomment{Steering group: Possibly expand to include other methods group agrees on.}
 \tocsectioncomment{@Stefan Boresch to restructure as per his suggestion to remove single/dual topology section and begin with a more fundamental discussion which might more naturally include all options e.g. ATM. @Stefan Boresch to mention best practices for dummy atoms? This might benefit from following @Emilio Gallicchio's changes to make the theory section more general.}
 \tocsectioncomment{@Sheenam Khuttan / @Emilio Gallicchio to contribute section on ATM.}
-\tocsectioncomment{@Volunteer to add best practices for non-equilibrium calculations.}
+\tocsectioncomment{@Vytas Gapsys / @Volunteer to add best practices for non-equilibrium calculations.}
 \label{sec:simulation_protocol_choice}
 Alchemical free energy calculations can be grouped into two main categories, ``absolute'' (see Fig.~\ref{fig:fig_absolute_thermodynamic_cycle}) and ``relative''\footnote{The distinction is a bit of a misnomer, since both compute ratios of partition functions relative to another state and in that sense are relative, while neither computes an absolute free energy.} (see Fig.~\ref{fig:fig_binding_thermodynamic_cycle}), which differ in whether they compute properties for a single molecule (absolute) or compare properties of different, usually closely related, molecules (relative).
 To use binding as a concrete example, in absolute binding free energy calculations, we compute the binding free energy of a ligand to an individual receptor relative to a standard reference concentration. In contrast, in relative binding free energy calculations, we compare the binding free energy of two related ligands to determine the potency difference.
