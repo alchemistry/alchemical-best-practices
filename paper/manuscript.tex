@@ -322,7 +322,7 @@ $t_0$ --- equilibration time
 % Theory basics    %
 %%%%%%%%%%%%%%%%%%%%
 \section{\tocorange{Statistical mechanics demonstrates why alchemical free energy calculations work}}
-\tocsectioncomment{Steering Meeting: @Emilio Gallicchio to update theory. @Stefan Boresch to comment on dummy atom considerations? Will frame it to be as general as possible, while remaining accessible to beginners. Will align with Gilson et al. 1997 paper. @Darrin York to review.}
+\tocsectioncomment{Steering Meeting: @Emilio Gallicchio to update theory. Will frame it to be as general as possible, while remaining accessible to beginners. Will align with Gilson et al. 1997 paper. @Darrin York to review.}
 \label{sec:theory}
 
 Why would you want to run an alchemical free energy calculation and why do they work?
@@ -834,7 +834,6 @@ Currently, we recommend using Hamiltonian replica exchange type sampling schemes
 
 
 \subsubsection{How long should I run my simulation for and what information should be saved?}
-\tocsubsubsectioncomment{@Volunteer: Move parts of this to analysis section (in Single/ Multiple papers).}
 \label{sec:sim_length_information_kept}
 Before launching alchemical free energy calculations it is wise to consider how convergence and completion will be assessed. Different conditions on when to stop alchemical free energy calculations should be determined, and this may require several iterative checks and therefore modifications to the calculation protocol.
 One useful metric to use for termination is the expected or desired uncertainty of a desired free energy estimate, though care must be exercised should the uncertainty estimate prove unreliable.
@@ -954,6 +953,56 @@ One could compute the free energy of turning off the methyl group in one orienta
 While this approach has precedent, it is relatively difficult to automate at present and requires considerable care.
 
 Overall, this likely means that relative free energy calculations will be susceptible to problems resulting from uncertainty in ligand binding modes until more robust approaches are available to determine dominant binding modes, or the relative populations of different potential binding modes, in advance.
+
+\subsection{Absolute and Relative Binding Free Energies with Multiple Chemical States}
+
+Consider, as an illustration, the binding equilibrium between a receptor $R$ and a ligand $A$ that exists in solution as a mixture of protonated $AH$ and ionized $A^-$ forms. It is often useful to consider the observed equilibrium binding constant between $R$ and the $A$ mixture 
+\begin{equation}
+  K_b(A) = C^\circ \frac{[RA]}{[R][A]}
+  \label{eqn:observed-binding-constant}
+\end{equation}
+where $[A] = [AH] + [A^-]$ and $[RA] = [RAH] + [RA^-]$ are the total equilibrium concentrations of free $A$ and receptor-ligand complexes. The observed equilibrium constant is significant because it corresponds to binding affinity measurements that do not distinguish between the protonation states of the ligand. Inserting the definitions of $[A]$ and $[RA]$ in Eq.~(\ref{eqn:observed-binding-constant}), splitting the sum in the numerator, and multiplying and dividing each term by either $[AH]$ or $[A^-]$ we obtain
+\begin{equation}
+  K_b(A) = \frac{[AH]}{[A]}  K_b(AH) +  \frac{[A^-]}{[A]} K_b(A^-) =  p_0(AH) K_b(AH) +  p_0(A-) K_b(A^-)
+  \label{eqn:observed-binding-constant-split}
+\end{equation}
+where
+\begin{equation}
+  K_b(AH) = C^\circ \frac{[RAH]}{[R][AH]}
+  \label{eqn:observed-binding-constant-prot}
+\end{equation}
+is the specific equilibrium binding constant between the receptor and the protonated form of the ligand, and similarly for $K_b(A^-)$. The specific $K_b$'s are the binding constants that would be obtained from ABFE calculations for those species. Eq.~(\ref{eqn:observed-binding-constant-prot}) states that the observed binding constant is an average of the specific binding constants weighted by the populations, $p_0(AH)$ and  $p_0(A^-)$ of each ligand's chemical form in solution. In this specific example, if the $pKa$ of $AH$ is known and $\alpha = [A^-]/[AH] = 10^{pH-pKa} $ is ionization ratio of $A$ at a a given $pH$, the populations of the ionized and protonated forms are $p_0(A^-) = \alpha/(\alpha+1)$ and $p_0(AH) = 1/(\alpha+1)$, respectively.\cite{champion2024multistate,azimi2022application}
+
+Eq.~(\ref{eqn:observed-binding-constant-split}) is a particular case of a fundamental result that extends to an arbitrary number of chemical forms of a ligand in solution. In general, the observed binding constant of a ligand present in solution in multiple forms $A_i$ (protomers, tautomers, rotamers, etc.) with populations $p_0(A_i)$ is\cite{khuttan2023taming}
+\begin{equation}
+  K_b(A) = \sum_i p_0(A_i) K_b(A_i)
+  \label{eqn:observed-binding-constant-general}
+\end{equation}
+and the corresponding standard binding free energy is
+\begin{equation}
+ \Delta G^\circ_b(A) = -k_B T \ln K_b(A) = -k_B T \ln \sum_i p_0(A_i) e^{-\Delta G^\circ_b(A_i)/k_B T}
+  \label{eqn:observed-binding-free-energy-general}
+\end{equation}
+where
+\begin{equation}
+\Delta G^\circ_b(A_i) = -k_B T \ln K_b(A_i)
+\end{equation}
+is the standard binding free energy of the specific form $A_i$. Eq.~(\ref{eqn:observed-binding-constant-general}) is known as the free energy combination formula, which, in the case of multiple conformational states, can be derived directly from the statistical mechanics definition Eq.~(\ref{eq:DG0-binding-constant-def}).\cite{jayachandran2006parallelized,gallicchio2011recent} It states that the contribution of a chemical or conformational state of the ligand to the observed binding free energy depends on the specific binding free energy of that state and its solution population. A state with a strong specific binding affinity may not contribute significantly to the observed binding free energy if its solution concentration is low. Conversely, a sparsely populated ligand state in solution could be responsible for most of the observed binding free energy if its binding affinity is sufficiently strong relative to the other states.\cite{azimi2022application}   
+
+The result of Eq.~(\ref{eqn:observed-binding-constant-general}), which applies to absolute binding free energy calculations, extends to relative binding free energies or, equivalently, to ratios of observed binding constants for the same receptor of two ligands $A$ and $B$ present in solution in multiple chemical forms:
+\begin{equation}
+  \frac{K_b(B)}{K_b(A)} = \frac{\sum_i p_0(B_i) K_b(B_i)}{\sum_i p_0(A_i) K_b(A_i)}
+  \label{eqn:observed-binding-constant-ratio}
+\end{equation}
+The result above can be expressed in a more computationally tractable form by separating out from the numerator and denominator the specific binding constant of a reference form of each ligand ($A_0$ and $B_0$) to obtain\cite{de2018rigorous}
+\begin{equation}
+ \frac{K_b(B)}{K_b(A)} = \frac{K_b(B_0)}{K_b(A_0)} \frac{
+ p_0(B_0) + \sum_{i=1} p_0(B_i) K_b(B_i)/K_b(B_0)
+ }{
+p_0(A_0) + \sum_{i=1} p_0(A_i) K_b(A_i)/K_b(A_0)
+ }
+\end{equation}
+which involves only quantities obtainable by relative binding free energy calculations--one for the two reference forms of the ligand to get  $K_b(B_0)/K_b(A_0)$ and those of each form of each ligand relative to the reference to get $K_b(B_i)/K_b(B_0)$ and $K_b(A_i)/K_b(A_0)$.
 
 \subsection{General simulation setting choices that could affect free energy calculations.}
 \tocsubsectioncomment{@Volunteer: Add short discussion of recommended integrators? BAOAB?}
