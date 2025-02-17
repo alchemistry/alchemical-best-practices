@@ -1,3 +1,0 @@
-set_bond stick_radius, 0.13, sele
-set sphere_scale, 0.26, sele
-set surface_quality, 1
