@@ -756,10 +756,12 @@ Many of the issues around simulation setup and protocol choice for alchemical ca
 \tocsubsubsectioncomment{Steering Group: @Volunteer to mainly move atom mapping section to second paper and assume that the change is small (and hence atom mapping is trivial). @Benjamin Ries to add discussion of 3D atom mapping in second paper.}
 \label{sec:relative-fe-protocol}
 
-\paragraph{Topologies} 
-A critical first step is to determine which approach to use for atom mapping between end state molecules. Often this is predetermined by the choice of simulation software. Typically it is possible to chose between a \emph{dual topology} versus a \emph{single topology}
+\paragraph{Topologies} In regular biomolecular simulations one studies physical systems; in particular, all entities in the system, e.g., protein, ligand and waters, represent real molecules. For the following, it is helpful to classify such simulation systems as having a {\em chemical} topology. In relative free energy calculations, however, one has to transform, e.g., ligand A into ligand B etc. (see {\bf XXX}). The required alchemical transformations can be realized in several ways, each with distinct advantages and disadvantages. In the first relative free energy calculations, these transformations were achieved with the help of chimeric entities, capable of representing both ligand A or ligand B. The important point here is that there is a single set of coordinates for this chimeric ligand, but its ``topology'' is flexible and can, for the same set of coordinates, represent either end state. We will consider this class of approaches as using an {\em alchemical} topology with a single set of coordinates. The construction of these chimeric intermediates quickly gets complicated and is difficult to automate; therefore, approaches have been developed in which both end states (e.g., ligand A and B) are present simultaneously. Thus, we have dual coordinates, but chemical topologies for each of the entities. In the following, we outline these approaches in more detail, together with additional considerations how the various approaches in practical use differ. While we will point out the respective advantages and disadavantages, we stress that the user's option in practice often are limited by the choice of simulation hardware.
 
-The distinction between single and dual topology can be illustrated by considering a hypothetical transformation from molecule A to molecule B, where both atoms share a common substructure but differ in their substituents; in particular, consider a transformation of benzene to benzyl alcohol shown in Fig.~\ref{fig:fig_topology}.
+\paragraph{Single coordinate approaches --- alchemical topologies}
+
+When operating with a single set of coordinates for the region undergoing the alchemical transformation, an additional distinction between approaches concerns the atom mapping between end state molecules. %Often this is predetermined by the choice of simulation software.
+As first suggested by Pearlman, these have been referred to as \emph{dual topology} versus a \emph{single topology} \cite{Pearlman_1994}. The distinction between single and dual topology can be illustrated by considering a hypothetical transformation from molecule A to molecule B, where both atoms share a common substructure but differ in their substituents; in particular, consider a transformation of benzene to benzyl alcohol shown in Fig.~\ref{fig:fig_topology}.
 In this case the common substructure between the two molecules is the benzene ring, though in practice substructure may be selected to be larger depending the mapping chosen, as we discuss below.
 
 In single topology calculations, the overall transformation is set up to involve as few additional atoms as possible, so benzene would be typically changed into benzyl alcohol by first changing one of the hydrogens into a carbon. The site of this transformation will also be the future home of two additional hydrogen atoms bound to the new carbon, so these must initially be present as non-interacting atoms called ``dummy atoms'', which retain their bonded interactions but do not interact with the rest of the system.  Bond parameters as well as partial charges between the changing atoms are adjusted accordingly between the initial and final state. 
@@ -1657,7 +1659,7 @@ The content is solely the responsibility of the authors and does not necessarily
 
 \section*{Author Information}
 \makeorcid
-\bibliography{alchemical,manual}
+\bibliography{alchemical,manual,sb}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% APPENDICES
