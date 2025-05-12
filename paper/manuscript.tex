@@ -784,7 +784,7 @@ To our knowledge, efficiency differences have not been thoroughly explored, thou
 
 \paragraph{Atom mapping}
 Following the choice of system representation and sampling strategy, it might be required to generate a atom mapping. This is the case especially for system representations using a single coordinate set (Type 1. & 2), however a dual coordinate set approach could use an atom mapping as well, depending on the sampling method, this will be explained in the next steps.
-Once a single coordinate set approach is selected is selected, a crucial next step is to identify the common atoms which will not be perturbedbetween the two molecules (respectivly end-states).
+Once a single coordinate set approach is selected is selected, a crucial next step is to identify the common atoms which will not be perturbed between the two molecules (respectivly end-states).
 Rigorously, this process typically comprises a MCSS search of the molecules involved to identify the common substructure.
 Specifically, with a single coordinate set approach in mind, atom types are allowed to change, so a permissive MCSS search can be done. This however requires either careful implementation of atom mass changes, bond length etc. or accepting the introduction of potential systematic error, that is in many cases negliable due to the cancelation of errors. \cite{ries2024Kartograf}
 
@@ -803,7 +803,7 @@ Still SIS MCSS searches can be relatively time consuming as the algorithmic comp
 Here an alternative way to estimate the MCSS is to calculate a bipartite graph matching based on the 3D positions of two molecules. These approaches tend to be very fast (can have algorithmic complexity of $O(n)=N^3$) and geometric accurate in their mapping (e.g. stereochemistry or binding mode differing).
 The geometric approaches additionally allow mappings of differing binding modes of the same molecule, or can be even used for significant larger molecules like proteins, due to the speed increase.
 A disadvantage of these approaches is the strong dependency on the coordinate sets being well aligned. Another aspect is taking the topology changes of the molecules not into account, which can be done if necessary in a next step with a filtering approach, like checking for changes in ring hybridization or ring breaking (this problem is discusse below)|.
-Tools that can be used to estimate the MCSS this way are contained for example in pmx \cite{gapsys2015pmx} or kartograf \cite{ries2024kartograf}.
+Tools that can be used to estimate the MCSS this way are contained for example in pmx \cite{gapsys2015pmx} or Kartograf \cite{ries2024kartograf}.
 
 In any case Visual inspection prior to simulation is recommended to ensure that the mapping criteria correspond to the expected binding mode. If the mapping protocol returns simulations that correspond to different binding modes of a ligand within a perturbation map, this can cause large hysteresis.
 
@@ -811,11 +811,11 @@ A next step for atom mappings, would be to support multistate methods (e.g. RE-E
 
 Single coordinate set relative calculations and calculations based on substructure searches only work if in fact the ligands share a common substructure, e.g. are part of a congeneric series, see Fig.~\ref{fig:fig_mcss}.
 If no common substructure is shared, then dual coordinate sets methods like linked-dual or separated topology free energy calculations are needed. One would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
-For such approaches it is crucial to find a good set of restraints, that keep the ligands colocalized over the time of the simulation. Few descriptions of the approach can be found for such approaches like the one suggested by Baumann et al.~\cite{baumann2023broadening} based on boresch style restraints~\cite{boresch2003absolute} for seperated topology approach, finding , or Restraintmaker~\cite{ries2022restraintmaker} for the linked-dualtopology approaches, which finds a small set of atoms to be linked via distance restraints, with a small distance to each other. 
+For such approaches it is crucial to find a good set of restraints, that keep the ligands colocalized over the time of the simulation. Few descriptions of the approach can be found for such approaches like the one suggested by \textit{Baumann et al.}~\cite{baumann2023broadening} based on boresch style restraints~\cite{boresch2003absolute}, with an elaborate automatic atom selection approach, for the seperated topology approach, or Restraintmaker~\cite{ries2022restraintmaker} for the linked-dualtopology approaches, which finds a small set of atoms to be linked via distance restraints, with a small distance to each other. 
 However the implementation and testing of an fully automatized dual-topology pipeline for RBFE dual topology approaches is still to our knowledge a remaining research problem and was only tested with small datasets. \cite{jespers2019qligfep, Rieder2022Lev}
 
 \paragraph{Ring breaking and forming.} Relative free energy calculations for ring breaking and forming are particularly challenging/problematic (see Fig.~\ref{fig:fig_mcss}\textbf{B}), in part because relative calculations rely on the free energy contributions of dummy atoms canceling between different legs of the thermodynamic cycle, which may not be true whenever dummy atoms are involved in rings~\cite{liu2015ring}.
-Some approaches have attempted to address thisusing a single coordinate sets and with soft bond approaches ~\cite{clark2019relative,wang2017accurate} or dual coordinate set approach \cite{jespers2019qligfep, ries2022relative} but a general solution is not yet in mainstream use. Still, FEP+ implements one solution\cite{wang2017accurate}.
+Some approaches have attempted to address this using a single coordinate sets and with soft bond approaches ~\cite{clark2019relative,wang2017accurate} or dual coordinate set approach \cite{jespers2019qligfep, ries2022relative} but a general solution is not yet in mainstream use. Still, FEP+ implements one solution\cite{wang2017accurate}.
 
 \paragraph{Constraints and relative free energy calculations}
 One issue which requires particular care is the use of constraints.
