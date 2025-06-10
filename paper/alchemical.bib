@@ -1878,6 +1878,22 @@
   number = {1}
 }
 
+@article{kastenholz2006solvfe,
+    author = {Kastenholz, M. A. and Hünenberger, Philippe H.},
+    title = {Computation of methodology-independent ionic solvation free energies from molecular simulations. I. The electrostatic potential in molecular liquids},
+    journal = {The Journal of Chemical Physics},
+    volume = {124},
+    number = {12},
+    pages = {124106},
+    year = {2006},
+    month = {03},
+    abstract = {The computation of ionic solvation free energies from atomistic simulations is a surprisingly difficult problem that has found no satisfactory solution for more than 15years. The reason is that the charging free energies evaluated from such simulations are affected by very large errors. One of these is related to the choice of a specific convention for summing up the contributions of solvent charges to the electrostatic potential in the ionic cavity, namely, on the basis of point charges within entire solvent molecules (M scheme) or on the basis of individual point charges (P scheme). The use of an inappropriate convention may lead to a charge-independent offset in the calculated potential, which depends on the details of the summation scheme, on the quadrupole-moment trace of the solvent molecule, and on the approximate form used to represent electrostatic interactions in the system. However, whether the M or P scheme (if any) represents the appropriate convention is still a matter of on-going debate. The goal of the present article is to settle this long-standing controversy by carefully analyzing (both analytically and numerically) the properties of the electrostatic potential in molecular liquids (and inside cavities within them). Restricting the discussion to real liquids of “spherical” solvent molecules (represented by a classical solvent model with a single van der Waals interaction site), it is concluded that (i) for Coulombic (or straight-cutoff truncated) electrostatic interactions, the M scheme is the appropriate way of calculating the electrostatic potential; (ii) for non-Coulombic interactions deriving from a continuously differentiable function, both M and P schemes generally deliver an incorrect result (for which an analytical correction must be applied); and (iii) finite-temperature effects, including intermolecular orientation correlations and a preferential orientational structure in the neighborhood of a liquid-vacuum interface, must be taken into account. Applications of these results to the computation methodology-independent ionic solvation free energies from molecular simulations will be the scope of a forthcoming article.},
+    issn = {0021-9606},
+    doi = {10.1063/1.2172593},
+    url = {https://doi.org/10.1063/1.2172593},
+    eprint = {https://pubs.aip.org/aip/jcp/article-pdf/doi/10.1063/1.2172593/15382624/124106\_1\_online.pdf},
+}
+
 @article{kaus2015how,
   title = {How {{To Deal}} with {{Multiple Binding Poses}} in {{Alchemical Relative Protein}}-{{Ligand Binding Free Energy Calculations}}},
   author = {Kaus, J. W. and Harder, E. and Lin, T. and Abel, R. and McCammon, J. A. and Wang, L.},
@@ -3064,6 +3080,19 @@
   pmid = {29669415}
 }
 
+@article{Petrov2024guidelines,
+   author = {Petrov, Drazen and Perthold, Jan Walther and Oostenbrink, Chris and de Groot, Bert L. and Gapsys, Vytautas},
+   doi = {10.1021/acs.jctc.3c00757},
+   issn = {1549-9618},
+   issue = {2},
+   journal = {Journal of Chemical Theory and Computation},
+   month = {1},
+   pages = {914-925},
+   title = {Guidelines for Free-Energy Calculations Involving Charge Changes},
+   volume = {20},
+   year = {2024},
+}
+
 @article{pham2011identifying,
   title = {Identifying Low Variance Pathways for Free Energy Calculations of Molecular Transformations in Solution Phase},
   author = {Pham, Tri T. and Shirts, Michael R.},
@@ -3201,6 +3230,36 @@
   journal = {J. Comput. Aided Mol. Des.},
   language = {en},
   number = {7}
+}
+
+@article{Reif2014chargecorrection,
+   abstract = {The calculation of binding free energies of charged species to a target molecule is a frequently encountered problem in molecular dynamics studies of (bio-)chemical thermodynamics. Many important endogenous receptor-binding molecules, enzyme substrates, or drug molecules have a nonzero net charge. Absolute binding free energies, as well as binding free energies relative to another molecule with a different net charge will be affected by artifacts due to the used effective electrostatic interaction function and associated parameters (e.g., size of the computational box). In the present study, charging contributions to binding free energies of small oligoatomic ions to a series of model host cavities functionalized with different chemical groups are calculated with classical atomistic molecular dynamics simulation. Electrostatic interactions are treated using a lattice-summation scheme or a cutoff-truncation scheme with Barker-Watts reaction-field correction, and the simulations are conducted in boxes of different edge lengths. It is illustrated that the charging free energies of the guest molecules in water and in the host strongly depend on the applied methodology and that neglect of correction terms for the artifacts introduced by the finite size of the simulated system and the use of an effective electrostatic interaction function considerably impairs the thermodynamic interpretation of guest-host interactions. Application of correction terms for the various artifacts yields consistent results for the charging contribution to binding free energies and is thus a prerequisite for the valid interpretation or prediction of experimental data via molecular dynamics simulation. Analysis and correction of electrostatic artifacts according to the scheme proposed in the present study should therefore be considered an integral part of careful free-energy calculation studies if changes in the net charge are involved. © 2013 The Authors Journal of Computational Chemistry Published by Wiley Periodicals, Inc. This work describes free energy calculations involving the binding of small charged molecules to a model host system. The charging free energies of the guest molecules in water and in the host strongly depend on the applied methodology. The thermodynamic interpretation of guest-host interactions is impaired by the neglect of correction terms for the artifacts introduced by the finite size of the simulated system and the use of an effective electrostatic interaction function. © The Authors Journal of Computational Chemistry Published by Wiley Periodicals, Inc.},
+   author = {Reif, Maria M. and Oostenbrink, Chris},
+   doi = {10.1002/jcc.23490},
+   issn = {01928651},
+   issue = {3},
+   journal = {Journal of Computational Chemistry},
+   keywords = {charging free energies,computer simulation,electrostatic artifacts,free-energy calculations,molecular dynamics},
+   month = {1},
+   pages = {227-243},
+   pmid = {24249099},
+   title = {Net charge changes in the calculation of relative ligand-binding free energies via classical atomistic molecular dynamics simulation},
+   volume = {35},
+   year = {2014},
+}
+
+@article{Reif2015onthefly,
+  title = {Toward the correction of effective electrostatic forces in explicit-solvent molecular dynamics simulations: restraints on solvent-generated electrostatic potential and solvent polarization},
+  volume = {134},
+  ISSN = {1432-2234},
+  url = {http://dx.doi.org/10.1007/s00214-014-1600-8},
+  DOI = {10.1007/s00214-014-1600-8},
+  number = {2},
+  journal = {Theoretical Chemistry Accounts},
+  publisher = {Springer Science and Business Media LLC},
+  author = {Reif,  Maria M. and Oostenbrink,  Chris},
+  year = {2015},
+  month = jan 
 }
 
 @article{resat1993studies,
@@ -4746,4 +4805,188 @@
   pages={424--435},
   year={2018},
   publisher={ACS Publications}
+}
+
+@article{hsu2023alchemical,
+  title={Alchemical metadynamics: Adding alchemical variables to metadynamics to enhance sampling in free energy calculations},
+  author={Hsu, Wei-Tse and Piomponi, Valerio and Merz, Pascal T and Bussi, Giovanni and Shirts, Michael R},
+  journal={Journal of Chemical Theory and Computation},
+  volume={19},
+  number={6},
+  pages={1805--1817},
+  year={2023},
+  publisher={ACS Publications}
+}
+
+@article{la2022alchemical,
+  title={Alchemical free energy calculations to investigate protein--protein interactions: the case of the CDC42/PAK1 complex},
+  author={La Serra, Maria Antonietta and Vidossich, Pietro and Acquistapace, Isabella and Ganesan, Anand K and De Vivo, Marco},
+  journal={Journal of Chemical Information and Modeling},
+  volume={62},
+  number={12},
+  pages={3023--3033},
+  year={2022},
+  publisher={ACS Publications}
+}
+
+@article{lagardere2024lambda,
+  title={Lambda-ABF: Simplified, Portable, Accurate, and Cost-Effective Alchemical Free-Energy Computation},
+  author={Lagard{\`e}re, Louis and Maurin, Lise and Adjoua, Olivier and El Hage, Krystel and Monmarch{\'e}, Pierre and Piquemal, Jean-Philip and H{\'e}nin, J{\'e}r{\^o}me},
+  journal={Journal of Chemical Theory and Computation},
+  volume={20},
+  number={11},
+  pages={4481--4498},
+  year={2024},
+  publisher={ACS Publications}
+}
+
+@article{zhou2025zooming,
+  title={Zooming across the Alchemical Space},
+  author={Zhou, Mengchen and Shao, Xueguang and Cai, Wensheng and Chipot, Christophe and Fu, Haohao},
+  journal={The Journal of Physical Chemistry Letters},
+  volume={16},
+  pages={4419--4427},
+  year={2025},
+  publisher={ACS Publications}
+}
+
+@article{suruzhon2021sensitivity,
+  title={Sensitivity of binding free energy calculations to initial protein crystal structure},
+  author={Suruzhon, Miroslav and Bodnarchuk, Michael S and Ciancetta, Antonella and Viner, Russell and Wall, Ian D and Essex, Jonathan W},
+  journal={Journal of Chemical Theory and Computation},
+  volume={17},
+  number={3},
+  pages={1806--1821},
+  year={2021},
+  publisher={ACS Publications}
+}
+
+@article{baumann2024impact,
+  title={Impact of protein conformations on binding free energy calculations in the beta-secretase 1 system},
+  author={Baumann, Hannah M and Mobley, David L},
+  journal={Journal of Computational Chemistry},
+  volume={45},
+  number={23},
+  pages={2024--2033},
+  year={2024},
+  publisher={Wiley Online Library}
+}
+
+@article{cappel2020impact,
+  title={Impact of different automated binding pose generation approaches on relative binding free energy simulations},
+  author={Cappel, Daniel and Jerome, Steven and Hessler, Gerhard and Matter, Hans},
+  journal={Journal of Chemical Information and Modeling},
+  volume={60},
+  number={3},
+  pages={1432--1444},
+  year={2020},
+  publisher={ACS Publications}
+}
+
+@article{barducci2008well,
+  title={Well-tempered metadynamics: a smoothly converging and tunable free-energy method},
+  author={Barducci, Alessandro and Bussi, Giovanni and Parrinello, Michele},
+  journal={Physical review letters},
+  volume={100},
+  number={2},
+  pages={020603},
+  year={2008},
+  publisher={APS}
+}
+
+@article{gokdemir2025machine,
+  title={Machine learning of slow collective variables and enhanced sampling via spatial techniques},
+  author={G{\"o}kdemir, Tu{\u{g}}{\c{c}}e and Rydzewski, Jakub},
+  journal={Chemical Physics Reviews},
+  volume={6},
+  number={1},
+  year={2025},
+  publisher={AIP Publishing}
+}
+
+@article{sidky2020machine,
+  title={Machine learning for collective variable discovery and enhanced sampling in biomolecular simulation},
+  author={Sidky, Hythem and Chen, Wei and Ferguson, Andrew L},
+  journal={Molecular Physics},
+  volume={118},
+  number={5},
+  pages={e1737742},
+  year={2020},
+  publisher={Taylor \& Francis}
+}
+
+@article{bonati2021deep,
+  title={Deep learning the slow modes for rare events sampling},
+  author={Bonati, Luigi and Piccini, GiovanniMaria and Parrinello, Michele},
+  journal={Proceedings of the National Academy of Sciences},
+  volume={118},
+  number={44},
+  pages={e2113533118},
+  year={2021},
+  publisher={National Academy of Sciences}
+}
+
+@article{figueirido1995finite,
+  title={On finite-size effects in computer simulations using the Ewald potential},
+  author={Figueirido, Francisco and Del Buono, Gabriela S and Levy, Ronald M},
+  journal={The Journal of chemical physics},
+  volume={103},
+  number={14},
+  pages={6133--6142},
+  year={1995},
+  publisher={American Institute of Physics}
+}
+
+@article{hummer1996free,
+  title={Free energy of ionic hydration},
+  author={Hummer, Gerhard and Pratt, Lawrence R and Garcia, Angel E},
+  journal={The Journal of Physical Chemistry},
+  volume={100},
+  number={4},
+  pages={1206--1215},
+  year={1996},
+  publisher={ACS Publications}
+}
+
+@article{hub2014pme,
+  title={Quantifying artifacts in Ewald simulations of inhomogeneous systems with a net charge},
+  author={Hub, Jochen S and De Groot, Bert L and Grubmüller, Helmut and Groenhof, Gerrit},
+  journal={Journal of chemical theory and computation},
+  volume={10},
+  number={1},
+  pages={381--390},
+  year={2014},
+  publisher={ACS Publications}
+}
+
+@article{sorensen2024orion,
+  title={Orion{\textregistered} A Cloud-Native Molecular Design Platform},
+  author={S{\o}rensen, Jesper and Bannan, Caitlin C and Calabr{\`o}, Gaetano and Jain, Varsha and Ovanesyan, Grigory and Smith, Addison and Zhang, She and Bayly, Christopher I and Darden, Tom A and Geballe, Matthew T and others},
+  journal={Computational Drug Discovery: Methods and Applications},
+  volume={2},
+  pages={579--615},
+  year={2024},
+  publisher={Wiley Online Library}
+}
+
+@article{crooks1999entropy,
+  title={Entropy production fluctuation theorem and the nonequilibrium work relation for free energy differences},
+  author={Crooks, Gavin E},
+  journal={Physical Review E},
+  volume={60},
+  number={3},
+  pages={2721},
+  year={1999},
+  publisher={APS}
+}
+
+@article{jarzynski1997nonequilibrium,
+  title={Nonequilibrium equality for free energy differences},
+  author={Jarzynski, Christopher},
+  journal={Physical Review Letters},
+  volume={78},
+  number={14},
+  pages={2690},
+  year={1997},
+  publisher={APS}
 }
