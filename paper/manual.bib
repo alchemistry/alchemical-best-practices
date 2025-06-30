@@ -122,6 +122,101 @@
   publisher={National Acad Sciences}
 }
 
+@article{AMBERLipid21,
+year = {2022},
+month = {3},
+title = {{Lipid21: Complex Lipid Membrane Simulations with AMBER}},
+author = {Dickson, Callum J. and Walker, Ross C. and Gould, Ian R.},
+journal = {Journal of Chemical Theory and Computation},
+issn = {1549-9618},
+doi = {10.1021/acs.jctc.1c01217},
+pmid = {35113553},
+pmcid = {PMC9007451},
+abstract = {{We extend the modular AMBER lipid force field to include anionic lipids, polyunsaturated fatty acid (PUFA) lipids, and sphingomyelin, allowing the simulation of realistic cell membrane lipid compositions, including raft-like domains. Head group torsion parameters are revised, resulting in improved agreement with NMR order parameters, and hydrocarbon chain parameters are updated, providing a better match with phase transition temperature. Extensive validation runs (0.9 μs per lipid type) show good agreement with experimental measurements. Furthermore, the simulation of raft-like bilayers demonstrates the perturbing effect of increasing PUFA concentrations on cholesterol molecules. The force field derivation is consistent with the AMBER philosophy, meaning it can be easily mixed with protein, small molecule, nucleic acid, and carbohydrate force fields.}},
+pages = {1726--1736},
+number = {3},
+volume = {18}
+}
+
+
+@article{CHARMMLipidFF,
+year = {2010},
+month = {6},
+title = {{Update of the CHARMM All-Atom Additive Force Field for Lipids: Validation on Six Lipid Types}},
+author = {Klauda, Jeffery B. and Venable, Richard M. and Freites, J. Alfredo and O’Connor, Joseph W. and Tobias, Douglas J. and Mondragon-Ramirez, Carlos and Vorobyov, Igor and MacKerell, Alexander D. and Pastor, Richard W.},
+journal = {The Journal of Physical Chemistry B},
+issn = {1520-6106},
+doi = {10.1021/jp101759q},
+pmid = {20496934},
+pmcid = {PMC2922408},
+abstract = {{A significant modification to the additive all-atom CHARMM lipid force field (FF) is developed and applied to phospholipid bilayers with both choline and ethanolamine containing head groups and with both saturated and unsaturated aliphatic chains. Motivated by the current CHARMM lipid FF (C27 and C27r) systematically yielding values of the surface area per lipid that are smaller than experimental estimates and gel-like structures of bilayers well above the gel transition temperature, selected torsional, Lennard-Jones and partial atomic charge parameters were modified by targeting both quantum mechanical (QM) and experimental data. QM calculations ranging from high-level ab initio calculations on small molecules to semiempirical QM studies on a 1,2-dipalmitoyl-sn-phosphatidylcholine (DPPC) bilayer in combination with experimental thermodynamic data were used as target data for parameter optimization. These changes were tested with simulations of pure bilayers at high hydration of the following six lipids: DPPC, 1,2-dimyristoyl-sn-phosphatidylcholine (DMPC), 1,2-dilauroyl-sn-phosphatidylcholine (DLPC), 1-palmitoyl-2-oleoyl-sn-phosphatidylcholine (POPC), 1,2-dioleoyl-sn-phosphatidylcholine (DOPC), and 1-palmitoyl-2-oleoyl-sn-phosphatidylethanolamine (POPE); simulations of a low hydration DOPC bilayer were also performed. Agreement with experimental surface area is on average within 2\%, and the density profiles agree well with neutron and X-ray diffraction experiments. NMR deuterium order parameters (S CD) are well predicted with the new FF, including proper splitting of the S CD for the aliphatic carbon adjacent to the carbonyl for DPPC, POPE, and POPC bilayers. The area compressibility modulus and frequency dependence of 13C NMR relaxation rates of DPPC and the water distribution of low hydration DOPC bilayers also agree well with experiment. Accordingly, the presented lipid FF, referred to as C36, allows for molecular dynamics simulations to be run in the tensionless ensemble (NPT), and is anticipated to be of utility for simulations of pure lipid systems as well as heterogeneous systems including membrane proteins.}},
+pages = {7830--7843},
+number = {23},
+volume = {114}
+}
+
+
+@article{LipidBestPracticesCOMS,
+year = {2019},
+title = {{Simulation Best Practices for Lipid Membranes [Article v1.0]}},
+author = {Smith, David J and Klauda, Jeffrey B and Sodt, Alexander J},
+journal = {Living Journal of Computational Molecular Science},
+doi = {10.33011/livecoms.1.1.5966},
+pmid = {36204133},
+pmcid = {PMC9534443},
+abstract = {{We establish a reliable and robust standardization of settings for practical molecular dynamics (MD) simulations of pure and mixed (single- and multi-component) lipid bilayer membranes. In lipid membranes research, particle-based molecular simulations are a powerful tool alongside continuum theory, lipidomics, and model, in vitro, and in vivo experiments. Molecular simulations can provide precise and reproducible spatiotemporal (atomic- and femtosecond-level) information about membrane structure, mechanics, thermodynamics, kinetics, and dynamics. Yet the simulation of lipid membranes can be a daunting task, given the uniqueness of lipid membranes relative to conventional liquid-liquid and solid-liquid interfaces, the immense and complex thermodynamic and statistical mechanical theory, the diversity of multiscale lipid models, limitations of modern computing power, the difficulty and ambiguity of simulation controls, finite size effects, competitive continuum simulation alternatives, and the desired application, including vesicle experiments and biological membranes. These issues can complicate an essential understanding of the field of lipid membranes, and create major bottlenecks to simulation advancement. In this article, we clarify these issues and present a consistent, thorough, and user-friendly framework for the design of state-of-the-art lipid membrane MD simulations. We hope to allow early-career researchers to quickly overcome common obstacles in the field of lipid membranes and reach maximal impact in their simulations.}},
+number = {1},
+volume = {1},
+keywords = {},
+}
+
+@article{wu2022correction-51c, 
+  year     = {2022}, 
+  title    = {Correction Schemes for Absolute Binding Free Energies Involving Lipid Bilayers}, 
+  author   = {Wu, Zhiyi and Biggin, Philip C.}, 
+  journal  = {Journal of Chemical Theory and Computation}, 
+  issn     = {1549-9618}, 
+  doi      = {10.1021/acs.jctc.1c01251}, 
+  pmid     = {35315270}, 
+  pmcid    = {{PMC}9082507}, 
+  abstract = {Absolute binding free-energy ({ABFE}) calculations are playing an increasing role in drug design, especially as they can be performed on a range of disparate compounds and direct comparisons between them can be made. It is, however, especially important to ensure that they are as accurate as possible, as unlike relative binding free-energy ({RBFE}) calculations, one does not benefit as much from a cancellation of errors during the calculations. In most modern implementations of {ABFE} calculations, a particle mesh Ewald scheme is typically used to treat the electrostatic contribution to the free energy. A central requirement of such schemes is that the box preserves neutrality throughout the calculation. There are many ways to deal with this problem that have been discussed over the years ranging from a neutralizing plasma with a post hoc correction term through to a simple co-alchemical ion within the same box. The post hoc correction approach is the most widespread. However, the vast majority of these studies have been applied to a soluble protein in a homogeneous solvent (water or salt solution). In this work, we explore which of the more common approaches would be the most suitable for a simulation box with a lipid bilayer within it. We further develop the idea of the so-called Rocklin correction for lipid-bilayer systems and show how such a correction could work. However, we also show that it will be difficult to make this generalizable in a practical way and thus we conclude that the use of a co-alchemical ion is the most useful approach for simulations involving lipid membrane systems.}, 
+  pages    = {2657--2672}, 
+  number   = {4}, 
+  volume   = {18}
+}
+@article{https://doi.org/10.1002/jcc.23702,
+  author   = {Wu, Emilia L. and Cheng, Xi and Jo, Sunhwan and Rui, Huan and Song, Kevin C. and Dávila-Contreras, Eder M. and Qi, Yifei and Lee, Jumin and Monje-Galvan, Viviana and Venable, Richard M. and Klauda, Jeffery B. and Im, Wonpil},
+  title    = {CHARMM-GUI Membrane Builder toward realistic biological membrane simulations},
+  journal  = {Journal of Computational Chemistry},
+  volume   = {35},
+  number   = {27},
+  pages    = {1997-2004},
+  keywords = {cardiolipin, phosphoinositides, sphingolipids, lipid penetration detection},
+  doi      = {https://doi.org/10.1002/jcc.23702},
+  url      = {https://onlinelibrary.wiley.com/doi/abs/10.1002/jcc.23702},
+  eprint   = {https://onlinelibrary.wiley.com/doi/pdf/10.1002/jcc.23702},
+  abstract = {CHARMM-GUI Membrane Builder, http://www.charmm-gui.org/input/membrane, is a web-based user interface designed to interactively build all-atom protein/membrane or membrane-only systems for molecular dynamics simulations through an automated optimized process. In this work, we describe the new features and major improvements in Membrane Builder that allow users to robustly build realistic biological membrane systems, including (1) addition of new lipid types, such as phosphoinositides, cardiolipin (CL), sphingolipids, bacterial lipids, and ergosterol, yielding more than 180 lipid types, (2) enhanced building procedure for lipid packing around protein, (3) reliable algorithm to detect lipid tail penetration to ring structures and protein surface, (4) distance-based algorithm for faster initial ion displacement, (5) CHARMM inputs for P21 image transformation, and (6) NAMD equilibration and production inputs. The robustness of these new features is illustrated by building and simulating a membrane model of the polar and septal regions of E. coli membrane, which contains five lipid types: CL lipids with two types of acyl chains and phosphatidylethanolamine lipids with three types of acyl chains. It is our hope that CHARMM-GUI Membrane Builder becomes a useful tool for simulation studies to better understand the structure and dynamics of proteins and lipids in realistic biological membrane environments. © 2014 Wiley Periodicals, Inc.},
+  year     = {2014}
+}
+@manual{DesmondManual,
+  title   = {Desmond 3.0},
+  author  = {D. E. Shaw Research},
+  year    = 2011,
+  edition = {3.0}
+}
+@article{doi:10.1021/acs.jcim.1c01147,
+  author  = {Dickson, Callum J and Hornak, Viktor and Duca, Jose S},
+  title   = {Relative Binding Free-Energy Calculations at Lipid-Exposed Sites: Deciphering Hot Spots},
+  journal = {Journal of Chemical Information and Modeling},
+  volume  = {61},
+  number  = {12},
+  pages   = {5923-5930},
+  year    = {2021},
+  doi     = {10.1021/acs.jcim.1c01147},
+  note    = {PMID: 34843243},
+  url     = {https://doi.org/10.1021/acs.jcim.1c01147}
+}
+
 @article{Abramyan2025,
   title = {Accurate Physics-Based Prediction of Binding Affinities of RNA- and DNA-Targeting Ligands},
   volume = {65},
