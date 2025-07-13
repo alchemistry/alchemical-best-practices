@@ -1149,7 +1149,7 @@ In particular, if the rate of change in the free energy estimate is significant 
 
 
 However, this is not the only metric which can or should be used, as the uncertainty only captures the information about the sampled phase space, not necessarily the entirety of the phase space.  
-For example, convergence of relative free energy calculations in predictive simulations where the entire phase space is not known in advance, requires sampling the different kinetically stable states~\cite{mobley2012perspective}. 
+For example, convergence of relative free energy calculations in predictive simulations where the entire phase space is not known in advance requires sampling the different kinetically stable states~\cite{mobley2012perspective}. 
 This highlights the importance of choosing the correct thermodynamic path to ensure you sample the required thermodynamic states as discussed in Sec.~\ref{sec:important_path}.
 
 The condition of minimizing the statistical uncertainty of different free energy estimators below a sufficient threshold should be one metric monitored over the simulation. This can be done through the uncertainty estimator built into certain analysis tools such as MBAR, or through more general statistical tools like bootstrap sampling. It should be noted however, that uncertainty estimates have the same limitations as other metrics of convergence, as they are only an uncertainty based on the phase space sampled so far in a simulation, and cannot account for states not sampled, and it is worth considering that they will be an underestimation of the true uncertainty.
@@ -1361,7 +1361,7 @@ simulations~\cite{shirts2005comparison,lu2003appropriate}, and BAR converges to 
 
 The Bennett acceptance ratio is only defined between two states. Usually, the endpoints of interest in a free energy calculation are sufficiently different that we will need a chain of states that gradually change the potential energy function from $u_0$ to $u_1$, as discussed in Sec.~\ref{sec:important_path}. You can carry out a BAR estimate between each pair of states $\Delta f_{1 \rightarrow N} = \Delta {f_{1\rightarrow 2}} + \Delta {f_{2\rightarrow 3}} +  \ldots + \Delta f_{N-1\rightarrow N}$.
 
-There is one important thing to note about the uncertainty estimates when summing multiple free energies together to calculate an overall free energy estimate. Although BAR itself gives a free energy estimate that is asymptotically correct and is much less biased than the uncertainty estimate for EXP, the uncertainties in $\Delta {f_{i-1\rightarrow i}}$ and $\Delta {f_{i\rightarrow i+1}}$ are not uncorrelated, because they both involve the energies $u_i(\vec{q})$. The variances of each of the free energies will \textit{not} propagate as variances usually do (in quadrature) into the variance of the overall free energy. Instead, some other method for propagating the uncertainty, such as bootstrapping~\cite{grossfield2018best} must be used.
+There is one important thing to note about the uncertainty estimates when summing multiple free energy differnces together to calculate an overall estimate of a free energy difference. Although BAR itself gives a free energy estimate that is asymptotically correct and is much less biased than the uncertainty estimate for EXP, the uncertainties in $\Delta {f_{i-1\rightarrow i}}$ and $\Delta {f_{i\rightarrow i+1}}$ are not uncorrelated, because they both involve the energies $u_i(\vec{q})$. The variances of each of the free energies cannot simply be summed together into the variance of the overall free energy. Instead, some other method for propagating the uncertainty, such as bootstrapping~\cite{grossfield2018best} must be used.
 
 \paragraph{Thermodynamic integration (TI)}
 By taking the derivative of the free energy with respect to the
@@ -1454,7 +1454,7 @@ If this is not possible, advanced analysis techniques that assume only local equ
 \subsection{Decorrelating samples for analysis}
 \label{sec:decorrelating-samples}
 \paragraph{Computing the statistical inefficiency}
-Most estimators require an uncorrelated set of samples from the equilibrium distribution to produce (relatively) unbiased estimates of the free energy difference and its statistical uncertainty.
+Most estimators require an uncorrelated set of samples from the equilibrium distribution to produce (relatively) unbiased estimates of the statistical uncertainty, as most estimates of the uncertainty are derived assuming unbiased samples.
 To do this, the production region of the simulation is generally \emph{subsampled} with an interval approximately equal to or greater than the \emph{statistical inefficiency} $g \ge 1$ to produce a set of uncorrelated samples that can be fed to the estimator machinery~\cite{chodera2016simple},
 \begin{eqnarray}
 g &\equiv& 1 + 2 \tau_\mathrm{eq} \label{eq:statistical-inefficiency-definition}
@@ -1477,13 +1477,47 @@ We recommend using the robust statistical inefficiency computation routines avai
 Once the statistical inefficiency $g$ has been estimated, it is straightforward to subsample the correlated timeseries simulation data to produce effectively uncorrelated data that can be fed to the free energy estimators.
 Suppose the correlated timeseries is $\{a_t\}_{t=1}^T$; we can form a new timeseries of $N_{\mathrm{eff}} \approx T / g$ effectively uncorrelated samples by selecting a subset of indices $\{ \: t = \mathrm{round}((n-1) \, g) \: | \: n \in \mathrm{range}(1,\ldots ,N) \: \}$ where $\mathrm{round(x)}$ denotes rounding to the nearest integer.
 
-If independent simulations are used, the alchemical state $\vec{\lambda}$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficiency $g$ for each alchemical state.
-If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state.
-Conveniently, the approach described above for automated equilibration detection produces an appropriate estimate of $g$ over the production region for automating this process.
+However, samples uncorrelated by this procedure are only approximately
+uncorrelated.  Recent careful investigation has shown that the lowest
+uncertainty results can be obtained by using \textit{all} of the data
+to obtain an estimate of the free energy itself, but using only
+subsampled data to calculate error estimates using the formulas or by
+using bootstrapping.  In fact, one can show that the standard
+deviation of the estimate determined by data that has been subsampled
+is the unbiased estimator of the free energy estimate using all the
+data, but is actually an underestimate of the uncertainty of estimate
+using just the subsampled data.
+
+We don't need to use all of the data to recover the remaining
+correlation.  In practice, if one subsamples the data with a
+correlation interval of $g/10$, where $g$ is the correlation
+time. Thus, if $g=3.0$ in units of timesteps, it is best to use all of
+the data.  If $g=100.0$, then one loses essentially no information by
+subsampling with $g=10.0$, and still saves significant time by not
+using all of the now-completely duplicative data.
+
+If independent simulations at each $\lambda$ are used, the alchemical
+state $\vec{\lambda}$ may have a significant impact on the correlation
+time, and these simulations should be subsampled independently using a
+separate estimate of the statistical inefficiency $g$ for each
+alchemical state. If coupled simulations are used (such as a
+Hamiltonian replica exchange simulation), the replicas should undergo
+equivalent random walks in alchemical space, and the replicas can be
+subsampled with the same $g$ to generate an equal number of
+uncorrelated samples at each alchemical state. Conveniently, the
+approach described above for automated equilibration detection
+produces an appropriate estimate of $g$ over the production region for
+automating this process.
+
+Our overall recommendations are therefore to determine the subsampling
+period $g$, subsample data at $g/10$ (i.e. more frequently than
+specified by $g$) to compute the free energy estimates, and then use
+fully subsampled data (with subsampling interval $g$) to estimate the
+uncertainties of the estimates.
 
 \paragraph{Cautions and considerations}
 Reliable estimation of the statistical inefficiency is difficult, and estimates will not generally be as precise (in a relative error sense) as averages.
-To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_{\mathrm{eff}} \ge \approx 50$ if the BAR or MBAR estimators (discussed below in sec~\ref{subsec:estimators}) are used; the number may need to be much higher with alternate estimators.
+To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_{\mathrm{eff}} \ge  \sim 50$ if the BAR or MBAR estimators (discussed below in sec~\ref{subsec:estimators}) are used; the number may need to be much higher with alternate estimators.
 
 
 \subsection{Uncertainty estimation}
@@ -1494,10 +1528,10 @@ It is important to consider the variation in your computed free energies from yo
 The uncertainty of a free energy estimate is limited however, as it is only an estimate of the configurations sampled and cannot contain any information from the phase space not sampled during a simulation. As a consequence, the variance in free energy afforded by any estimator will always be an underestimate of the true uncertainty.
 In general, the quantification of different error metrics depends on both data generation and analysis methods used from the ones discussed above. 
 
-The computation of free energies using TI (Sec.n~\ref{subsec:estimators}) is straightforward and the trapezoidal rule is often recommended since it allows unequal spacing of $\vec{\lambda}$ states, which is required to minimize the variance in the free energy estimate, but in principle any good numerical integration method can be used. 
-The determination of regions of high curvature when estimating the integral is helpful to determine regions of phase space where more sampling and/or more $\vec{\lambda}$ states are necessary to obtain the best approximation of the integral. Plotting $\vec{\lambda}$ with respect to the gradients at each of the $\vec{\lambda}$ values can be a helpful diagnostic. 
-Additionally, computation of the overall variance of TI requires the calculation of the overall variance of integration, rather than each individual $\Delta$G$_{i,i+1}$ and assuming variances add independently. 
-Therefore, $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}w_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$.
+Computating of free energies using TI (Sec.n~\ref{subsec:estimators}) is straightforward and the trapezoidal rule is often recommended. The trapezoid rule easily allows unequal spacing of $\vec{\lambda}$ states, which is often required to minimize the variance in the free energy estimate, but in principle any good numerical integration method can be used if care is taken.  
+Determining of regions of high curvature when estimating the integral is helpful to determine regions of phase space where more sampling and/or more $\vec{\lambda}$ states are necessary to obtain the best approximation of the integral. Plotting $\vec{\lambda}$ with respect to the gradients at each of the $\vec{\lambda}$ values, which can be done automatically with tool such as alchemlyb,  can be a helpful diagnostic. 
+Additionally, computating the overall variance of TI requires the calculation of the overall variance of the integration, rather than each individual $\Delta$G$_{i,i+1}$ and assuming variances add independently. 
+Therefore, $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}w_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$, where the $w_k$ are the integration weights (see Sec~\eref{subsec:estimators} for more discussion of $w_k$).
 
 For alchemical changes that result in smooth, low curvature sets of $\expect{\frac{dU}{d\vec{\lambda}}}$, a relatively small number of $\vec{\lambda}$ states is necessary for sufficient accuracy and low variance in the free energy estimate. 
 Depending on the difficulty of the perturbation, the bias introduced by discretization of the integral can become large due to increased curvature, and more $\vec{\lambda}$ intermediate states become necessary to reduce error.
