@@ -1147,12 +1147,12 @@ Before launching alchemical free energy calculations it is wise to consider how 
 One useful metric to use for termination is the expected or desired uncertainty of a desired free energy estimate, though care must be exercised should the uncertainty estimate prove unreliable.
 In particular, if the rate of change in the free energy estimate is significant when this condition is met, the simulation may not be locally converged, and more sampling may be necessary to determine a stable free energy estimate which is no longer changing significantly over time. 
 
-
 However, this is not the only metric which can or should be used, as the uncertainty only captures the information about the sampled phase space, not necessarily the entirety of the phase space.  
 For example, convergence of relative free energy calculations in predictive simulations where the entire phase space is not known in advance requires sampling the different kinetically stable states~\cite{mobley2012perspective}. 
 This highlights the importance of choosing the correct thermodynamic path to ensure you sample the required thermodynamic states as discussed in Sec.~\ref{sec:important_path}.
 
 The condition of minimizing the statistical uncertainty of different free energy estimators below a sufficient threshold should be one metric monitored over the simulation. This can be done through the uncertainty estimator built into certain analysis tools such as MBAR, or through more general statistical tools like bootstrap sampling. It should be noted however, that uncertainty estimates have the same limitations as other metrics of convergence, as they are only an uncertainty based on the phase space sampled so far in a simulation, and cannot account for states not sampled, and it is worth considering that they will be an underestimation of the true uncertainty.
+
 A target statistical uncertainty should be chosen at the onset of the simulation to avoid excessively long simulations, or falling into the trap of running until the free energy estimate is "good enough," which is subjective and has no defined criteria. This could be a fixed value such as $0.20$ kcal/mol, or a functional quantity such as "below $0.5$ kcal/mol and $10\%$ of the free energy estimate." The user does not need to monitor this information in real-time and can choose to run simulations for fixed duration (either time or number of samples) and run analysis on the data collected thus far. If more samples are needed, the simulations can be resumed, or, started again in different initial conditions. 
 
 Convergence in other alchemical observables should also be monitored to determine if the defined phase space has been sufficiently sampled and enough decorrelated samples have been drawn. These additional observables include, but are not limited to, the variance in $\frac{dU}{d\vec{\lambda}}$ across all $\vec{\lambda}$ values, calculating the variance in free energy using bootstrap analysis, and comparing differences in free energies calculated using different percentages of the simulation in both the forward and reverse directions~\cite{klimovich2015guidelines} (see Fig.~\ref{fig:convergence_forward_reverse}).
@@ -1395,7 +1395,14 @@ where there are $N_k$ samples from each of $K$ states, with $\sum_k N_k=N$ the t
 
 MBAR is probably the lowest variance asymptotically unbiased estimator of the free energy given the energies of the samples~\cite{tan2004likelihood}, which means that BAR is also the lowest variance estimator for the free energy difference between only 2 states, as it is mathematically exactly the same as MBAR in this case. MBAR also provides an uncertainty estimate, derived from standard error propagation methods for implicit functions, which has been shown to be highly accurate as long as there are sufficient samples at each state~\cite{paliwal2011benchmark}.
 
-MBAR can also be thought of as the Zwanzig estimator of the free energy to state $i$ where the sampled distribution is the \textit{mixture distribution} of all the other samples thrown together in one ``pot'', defined by $p_m(\vec{q}) = N^{-1} \sum_k N_k \exp(f_k-u_k\vec{q})$, which is the weighted average of all the individual normalized probability distributions from the simulations that are performed~\cite{shirts2017reweighting}.
+MBAR can also be thought of as the Zwanzig estimator of the free energy to state $i$ from a sampled distribution referred to as the \textit{mixture distribution}, where one throws all the samples from all simulations together in one ``pot''. Mathematically, this is defined by $p_m(\vec{q}) = N^{-1} \sum_k N_k \exp(f_k-u_k\vec{q})$, which is the average, weighted by the number of samples drawn from each distribution, of all the individual normalized probability distributions from the simulations that are performed~\cite{shirts2017reweighting}.
+
+All of the estimators above have uncertainty estimates associated with them.  In the limit of sufficiently large data, perhaps several hundred or thousand independent points, exhaustive analyses of model data has shown that the error estimates of BAR, MBAR, and TI are all quite reliable when there is good overlap between intermediate states. For EXP, the number of samples at which they become reliable is significantly higher, especially if overlap between intermediate states is lower. However, in the limit of moderate or small amounts of data (tens or hundreds of independent samples) these errors become somewhat unreliable, often off by a factor of 2 from what would get if more data was collected. These estimator of uncertainty are all derived from propagation of error formulae from the estimators themselves. However, when the underlying data is noisy, this approximation is not very good.
+
+Some of the authors' experience has shown that significantly more reliable estimators at lower numbers of samples are obtained by performing bootstrap sampling on data that has been uncorrelated. We do not provide a full tutorial of bootstrapping here, but the basic idea is that one takes the $N_{sample}$ data points collected and draws, with replacement, $N_{sample}$ samples.  This means some of the data points will be represented multiple times, and other data points none. This process is then repeated $N_{bootstrap}$ times, where $N$ should generally be at least 50 to up to 200 for good estimates of the standard error of the estimator.  The data is then \textit{treated} as $N_{bootstrap}$ samples from the true distribution, and statistics such as the standard error are computed from this artificial set of $N_{bootstrap}$ experiments.  In the limit of $N_{sample}$ large, it can be shown that the bootstrap estimate of the standard error converges to the true population standard error.  One way this can be seen is that bootstrap estimators of the data are independent samples of the \textit{actual} distribution of the experiment performed, i.e., a bunch of $\delta$ functions at $N_{sample}$ points, rather than being independent samples from the true, usually continuous distribution.  As more and more data is collected, our collection of $\delta$ functions becomes more and more like the true distribution. Another advantage of bootstrap sampling is that one can construct decent estimates of error bounds with arbitrary percentiles, and not just standard errors of the estimates, which assume Gaussian behavior of the underlying error, and that the error results are Gaussian as well.  
+
+One important point is that the bootstrap samples use to estimate the standard error should be decorrelated, or else the bootstrap estimate of the standard error will be artificially small.  More discussion of subsampling and decorrelation is included in section~\ref{sec:decorrelating-samples}. Another alternative to bootstrap sampling of individual points that better captures the correlations in the data is block bootstrapping~\cite{???}.  Block bootstrapping is somewhat more complicated and less common to perform and analyze than bootstrap estimates of the error, so we will not go into details, but it can also provide more reliable estimates of uncertainty than the estimators above.
+
 
 \paragraph{Recommendations}
 \begin{itemize}
@@ -1473,47 +1480,21 @@ Robust estimation of $C_t$ for $t \sim T$ is difficult due to growth in statisti
 
 We recommend using the robust statistical inefficiency computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages.
 
+%Cooment: Finlay, can you add description/citation of RED?
+
 \paragraph{Subsampling data to generate uncorrelated samples}
 Once the statistical inefficiency $g$ has been estimated, it is straightforward to subsample the correlated timeseries simulation data to produce effectively uncorrelated data that can be fed to the free energy estimators.
 Suppose the correlated timeseries is $\{a_t\}_{t=1}^T$; we can form a new timeseries of $N_{\mathrm{eff}} \approx T / g$ effectively uncorrelated samples by selecting a subset of indices $\{ \: t = \mathrm{round}((n-1) \, g) \: | \: n \in \mathrm{range}(1,\ldots ,N) \: \}$ where $\mathrm{round(x)}$ denotes rounding to the nearest integer.
 
-However, samples uncorrelated by this procedure are only approximately
-uncorrelated.  Recent careful investigation has shown that the lowest
-uncertainty results can be obtained by using \textit{all} of the data
-to obtain an estimate of the free energy itself, but using only
-subsampled data to calculate error estimates using the formulas or by
-using bootstrapping.  In fact, one can show that the standard
-deviation of the estimate determined by data that has been subsampled
-is the unbiased estimator of the free energy estimate using all the
-data, but is actually an underestimate of the uncertainty of estimate
+However, samples uncorrelated by this procedure are only approximately uncorrelated.  Recent careful investigation has shown that the lowest uncertainty results can be obtained by using \textit{all} of the data to obtain an estimate of the free energy itself, but using only subsampled data to calculate error estimates using the formulas or by using bootstrapping.  In fact, one can show that the standard deviation of the estimate determined by data that has been subsampled is the unbiased estimator of the free energy estimate using all the data, but is actually an underestimate of the uncertainty of estimate
 using just the subsampled data.
 
-We don't need to use all of the data to recover the remaining
-correlation.  In practice, if one subsamples the data with a
-correlation interval of $g/10$, where $g$ is the correlation
-time. Thus, if $g=3.0$ in units of timesteps, it is best to use all of
-the data.  If $g=100.0$, then one loses essentially no information by
-subsampling with $g=10.0$, and still saves significant time by not
-using all of the now-completely duplicative data.
+We don't need to use all of the data to recover the remaining correlation.  In practice, if one subsamples the data with a
+correlation interval of $g/10$, where $g$ is the correlation time. Thus, if $g=3.0$ in units of timesteps, it is best to use all of the data.  If $g=100.0$, then one loses essentially no information by subsampling with $g=10.0$, and still saves significant time by not using all of the now-completely duplicative data.
 
-If independent simulations at each $\lambda$ are used, the alchemical
-state $\vec{\lambda}$ may have a significant impact on the correlation
-time, and these simulations should be subsampled independently using a
-separate estimate of the statistical inefficiency $g$ for each
-alchemical state. If coupled simulations are used (such as a
-Hamiltonian replica exchange simulation), the replicas should undergo
-equivalent random walks in alchemical space, and the replicas can be
-subsampled with the same $g$ to generate an equal number of
-uncorrelated samples at each alchemical state. Conveniently, the
-approach described above for automated equilibration detection
-produces an appropriate estimate of $g$ over the production region for
-automating this process.
+If independent simulations at each $\lambda$ are used, the alchemical state $\vec{\lambda}$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficiency $g$ for each alchemical state. If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state. Conveniently, the approach described above for automated equilibration detection produces an appropriate estimate of $g$ over the production region for automating this process.
 
-Our overall recommendations are therefore to determine the subsampling
-period $g$, subsample data at $g/10$ (i.e. more frequently than
-specified by $g$) to compute the free energy estimates, and then use
-fully subsampled data (with subsampling interval $g$) to estimate the
-uncertainties of the estimates.
+Our overall recommendations are therefore to determine the subsampling period $g$, subsample data at $g/10$ (i.e. more frequently than specified by $g$) to compute the free energy estimates, and then use fully subsampled data (with subsampling interval $g$) to estimate the uncertainties of the estimates.
 
 \paragraph{Cautions and considerations}
 Reliable estimation of the statistical inefficiency is difficult, and estimates will not generally be as precise (in a relative error sense) as averages.
@@ -1723,7 +1704,7 @@ There are many different software solutions available for the setup, running, an
         \item Make sure your \textlambda-scheduling is  appropriate
         \item Check if your ligands are discharging and decoupling correctly
         \item Set up your restraints correctly
-        \item Make sure you subsample the data in your free energy estimation protocol
+        \item Subsample the data to estimate the variance of your free energy estimation protocol (but not to estimate the values themselves)
         \item Apply the appropriate correction terms
 \end{itemize}
 \end{checklist}
@@ -1736,9 +1717,8 @@ There are many different software solutions available for the setup, running, an
         \item Make sure your molecular transformations are realistic (1-5 heavy atoms for reliable computations)
         \item Generate a perturbation network by your method of choice; check whether you have enough cycle closures to check consistency in the results
         \item Check whether dummy atoms were assigned correctly
-        \item Consider subsampling the data in your free energy estimation protocol
-        \item Apply the 
-        appropriate correction terms
+        \item Subsample the data to estimate the variance of your free energy estimation protocol (but not to estimate the values themselves)
+         \item Apply the appropriate correction terms
 \end{itemize}
 \end{checklist}
 \end{Checklists*}
@@ -1775,6 +1755,7 @@ There are many different software solutions available for the setup, running, an
     \item Make sure you have run enough replicates to ensure statistical reliability (\textgreater3)
     \item Compute both correlation and ranking coefficients and ranking statistics (e.g. r, \textrho, MUE and \texttau)
     \item Include error bars in all your visual analyses
+    \item Consider bootstrapping uncertainties rather than using free energy error estimators
 \end{itemize}
 \end{checklist}
 \end{Checklists*}
