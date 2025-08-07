@@ -78,7 +78,7 @@
 \author[15,16]{William G. Poole}
 \author[6]{Samarjeet Prasad}
 \author[2,7]{Andrea Rizzi}
-\author[1]{Jenke Scheen}
+\author[17]{Jenke Scheen}
 \author[14]{David R. Slochower}
 \author[15]{Oliver J. Melling}
 \author[8*]{Michael R. Shirts}
@@ -102,6 +102,7 @@
 \affil[14]{Vertex Pharmaceuticals, San Diego, CA, USA}
 \affil[15]{School of Chemistry and Chemical Engineering, University of Southampton, Southampton, SO17 1BJ, United Kingdom}
 \affil[16]{Astex Pharmaceuticals, 436 Cambridge Science Park, Milton Road, Cambridge, CB4 0QA, United Kingdom}
+\affil[17]{Open Molecular Software Foundation, Davis, CA 95618, USA}
 
 
 %
@@ -212,12 +213,13 @@ As the field of molecular simulation can now routinely access microsecond timesc
 In the meantime, today's users may find it difficult to get started with these complex calculations whilst also keeping up with the fast pace of change. 
 This Best Practices guide provides current recommendations and tips for users of all experience. Updates and suggestions are welcomed via our GitHub repository at \url{https://github.com/alchemistry/alchemical-best-practices}.    
 
-\begin{figure}
-    \includegraphics[width=0.95\linewidth]{figures/fig1_what_is_alchemy/Figure.pdf}   
-    \caption{\textbf{Illustration of common types of free energies differences that can be calculated using alchemical free energy methods.} \textbf{A}: Change in free energy due to a conformational change of the molecule across a high barrier. \textbf{B}: Partition coefficient such as $\log P$ or $\log D$ depend on a change in free energy between different phases; here, as an example the partition coefficient between methanol and water is shown. \textbf{C}: Free energy difference associated with the insertion of a molecule into a membrane. \textbf{D}: Effect of mutations of protein or host residues on free energies of binding. \textbf{E}: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol, \textbf{F}: absolute free energies of binding of a small molecule to a host (e.g. protein).
-    \label{fig:fig_what_is_alchemy}
+\begin{figure*}
+    \centering\includegraphics[width=0.85\linewidth]{figures/fig1_what_is_alchemy/Figure.pdf}   
+    \caption{\textbf{Illustration of common types of free energies differences that can be calculated using alchemical free energy methods and a typical workflow for executing a relative binding free energy calculation (yellow box).} 
+    \textbf{A}: Partition coefficient such as $\log P$ or $\log D$ depend on a change in free energy between different phases; here, as an example the partition coefficient between methanol and water is shown. \textbf{B}: Change in free energy due to a conformational change of the molecule across a high barrier. \textbf{C}: Absolute free energies of binding of a small molecule to a host (e.g. protein). \textbf{D}: Free energy difference associated with the insertion of a molecule into a membrane. \textbf{E}: Relative free energy of binding of one molecule with respect to another, here toluene and benzyl alcohol. \textbf{F}: Effect of mutations of protein or host residues on free energies of binding. 
+    \textbf{G.1}: the protein structure of the system is \textit{prepared} such that all erroneous patterns are resolved and proper protonation is applied. All query ligands are positioned into the binding site. \textbf{G.2}: $N=6$ compounds are predicted on in this example. \textbf{G.3}: $n=7$ transformations (edges) are chosen in this example. \textbf{G.4}: for each transformation, a $\lambda$ decoupling parameter is applied to guide the transformation. \textbf{G.5}: for each transformation and $\lambda$ window a simulation is run. \textbf{G.6}: for each transformation, the relative binding free energy ($\Delta\Delta$G$_{bind}$) is calculated given $\lambda$. \textbf{G.7}: Each transformation (edge) has a corresponding binding free energy estimation. \textbf{G.8}: a final calculation is done to estimate the absolute binding free energy of each compound using for example a maximum-likelihood estimator. \textbf{G.9}: Absolute binding free energy estimates are ready to be used for prioritization in synthesis. \label{fig:fig_what_is_alchemy}
     }
-\end{figure}
+\end{figure*}
 
 %%%%%%%%%%%%%%%%%%%%
 % Prerequesites    %
