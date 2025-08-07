@@ -848,7 +848,7 @@ To our knowledge, efficiency differences have not been thoroughly explored, thou
 Following the choice of system representation and sampling strategy, it might be required to generate a atom mapping. This is the case especially for system representations using a single coordinate set (Type 1. \& 2), however a dual coordinate set approach could use an atom mapping as well, depending on the sampling method, this will be explained in the next steps.
 Once a single coordinate set approach is selected is selected, a crucial next step is to identify the common atoms which will not be perturbed between the two molecules (respectively end-states).
 Rigorously, this process typically comprises a MCSS search of the molecules involved to identify the common substructure.
-Specifically, with a single coordinate set approach in mind, atom types are allowed to change, so a permissive MCSS search can be done. This however requires either careful implementation of atom mass changes, bond length etc. or accepting the introduction of potential systematic error, that is in many cases negligible due to the cancellation of errors. \cite{ries2024Kartograf}
+Specifically, with a single coordinate set approach in mind, atom types are allowed to change, so a permissive MCSS search can be done. This however requires either careful implementation of atom mass changes, bond length etc. or accepting the introduction of potential systematic error, that is in many cases negligible due to the cancellation of errors. \cite{ries2024kartograf}
 
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig4_mcs/Figure.pdf}
@@ -869,7 +869,7 @@ Tools that can be used to estimate the MCSS this way are contained for example i
 
 In any case, visual inspection prior to simulation is recommended to ensure that the mapping criteria correspond to the expected binding mode. If the mapping protocol returns simulations that correspond to different binding modes of a ligand within a perturbation map, this can cause large hysteresis.
 
-A next step for atom mappings, would be to support multistate methods (e.g. RE-EDS~\cite{sidler2016replica}, A-EDS~\cite{perthold2020toward} or Ladybugs~\cite{robo2022achieving}) with efficient mapping algorithms. There are protoype starting point for solving this problem, but to our knowledge, there is only few published work on this aspect. \cite{petrov2021Perturbation}
+A next step for atom mappings, would be to support multistate methods (e.g. RE-EDS~\cite{sidler2016replica}, A-EDS~\cite{perthold2020toward} or Ladybugs~\cite{robo2023fast}) with efficient mapping algorithms. There are protoype starting point for solving this problem, but to our knowledge, there is only few published work on this aspect. \cite{petrov2021perturbation}
 
 Single coordinate set relative calculations and calculations based on substructure searches only work if in fact the ligands share a common substructure, e.g. are part of a congeneric series, see Fig.~\ref{fig:fig_mcss}.
 If no common substructure is shared, then dual coordinate sets methods like linked-dual or separated topology free energy calculations are needed. One would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
@@ -1640,7 +1640,7 @@ In general, the quantification of different error metrics depends on both data g
 Computating of free energies using TI (Sec.n~\ref{subsec:estimators}) is straightforward and the trapezoidal rule is often recommended. The trapezoid rule easily allows unequal spacing of $\vec{\lambda}$ states, which is often required to minimize the variance in the free energy estimate, but in principle any good numerical integration method can be used if care is taken.  
 Determining of regions of high curvature when estimating the integral is helpful to determine regions of phase space where more sampling and/or more $\vec{\lambda}$ states are necessary to obtain the best approximation of the integral. Plotting $\vec{\lambda}$ with respect to the gradients at each of the $\vec{\lambda}$ values, which can be done automatically with tool such as alchemlyb,  can be a helpful diagnostic. 
 Additionally, computating the overall variance of TI requires the calculation of the overall variance of the integration, rather than each individual $\Delta$G$_{i,i+1}$ and assuming variances add independently. 
-Therefore, $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}w_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$, where the $w_k$ are the integration weights (see Sec~\eref{subsec:estimators} for more discussion of $w_k$).
+Therefore, $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}w_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$, where the $w_k$ are the integration weights (see Sec~\ref{subsec:estimators} for more discussion of $w_k$).
 
 The TIES method~\cite{bhati2017} employs a different scheme to obtain the overall variance of the integral. It assumes that the integrand is a Gaussian random process and hence the principle of stochastic integration must be employed to propagate the uncertainties in this integral. The following equation is used to compute the overall variance of the integral combining variance at each $\lambda$ state. $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}\Delta\lambda_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$. 
 
@@ -1731,7 +1731,7 @@ It is important to carefully examine output data for common problems. Some of th
 
 Alchemical Free Energy (AFE) calculations have primarily been applied to simulate the stoichiometric, non-reversible binding of organic molecules to well-structured proteins. However, several areas of drug discovery involve other classes of binding events. While the underlying theory of alchemical free energy calculations is generally applicable, additional work may be required to develop efficient protocols suited to systems beyond the traditional small molecule–protein complex.
 For example, there is growing interest in identifying small molecules that directly bind to RNA or DNA, with recent preliminary studies showing promising results using specialized simulation protocols.\cite{Abramyan2025,Rasouli2024} In contrast, there has been limited investigation into the applicability of AFE methods to small-molecule ligands targeting intrinsically disordered proteins (IDPs,\cite{Papadourakis2024} or proteins containing intrinsically disordered regions (IDRs) that undergo disorder-to-order transitions upon ligand binding.\cite{MendozaMartinez2022}
-The treatment of covalent binders has also received some attention.\cite{Luo2021,Zhang2019 } However, robust protocols for handling datasets of irreversible covalent binders containing diverse ‘warheads’ have not yet achieved widespread adoption.\cite{Yu2019} A variety of other applications are less traditional and may be possible but raise new practical issues; for example, if multiple copies of a ligand bind at once in the same site, this could pose challenges, as could handling of binding and function prediction for molecular glues and related categories of molecules. 
+The treatment of covalent binders has also received some attention.\cite{luo2021,zhang2019} However, robust protocols for handling datasets of irreversible covalent binders containing diverse ‘warheads’ have not yet achieved widespread adoption.\cite{Yu2019} A variety of other applications are less traditional and may be possible but raise new practical issues; for example, if multiple copies of a ligand bind at once in the same site, this could pose challenges, as could handling of binding and function prediction for molecular glues and related categories of molecules. 
 
 Relative free energy calculations carry with them additional unsettled practices relating to the use and careful treatment of dummy atoms (see ``Dummy Atoms'' in Section~\label{sec:relative-fe-protocol}). In particular, as the work of~\cite{Fleck_2021} highlighted, valence terms for dummy atoms for dummy atoms must be treated far more carefully than previously appreciated in order for dummy atoms' contributions to the free energy to rigorously cancel. Less careful treatments may leave dummy atom terms only approximately canceling, or, worse, introducing uncharacterized errors in relative binding free energies. Indeed, such issues might have impeded previous attempts at reproducing free energy calculations across simulation engines~\cite{loeffler2018reproducibility}. 
 
@@ -1980,7 +1980,7 @@ OJM, WGP, and JWE acknowledge funding from the EPSRC, Astex Pharmaceuticals, and
 
 \section*{Author Information}
 \makeorcid
-\bibliography{alchemical,manual,sb,atm,uq}
+\bibliography{merged}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% APPENDICES
