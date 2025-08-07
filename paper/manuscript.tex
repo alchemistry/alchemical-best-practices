@@ -68,16 +68,19 @@
 \author[3]{Hannah E. Bruce Macdonald}
 \author[3*]{John D. Chodera}
 \author[11, 12, 13]{Peter V. Coveney}
+\author[15]{Jonathan W. Essex}
 \author[9]{Vytautas Gapsys}
 \author[9]{David F. Hahn}
 \author[1,10]{Maximilian Kuhn}
 \author[1]{Julien Michel}
 \author[4*]{David L. Mobley}
 \author[5]{Levi N. Naden}
+\author[15,16]{William G. Poole}
 \author[6]{Samarjeet Prasad}
 \author[2,7]{Andrea Rizzi}
 \author[1]{Jenke Scheen}
 \author[14]{David R. Slochower}
+\author[15]{Oliver J. Melling}
 \author[8*]{Michael R. Shirts}
 \author[9]{Gary Tresadern}
 \author[2]{Huafeng Xu}
@@ -97,6 +100,8 @@
 \affil[12]{Advanced Research Computing Centre, University College London, London WC1H 9BT, United Kingdom}
 \affil[13]{Computational Science Laboratory, Institute for Informatics, Faculty of Science, University of Amsterdam, Amsterdam 1012, The Netherlands}
 \affil[14]{Vertex Pharmaceuticals, San Diego, CA, USA}
+\affil[15]{School of Chemistry and Chemical Engineering, University of Southampton, Southampton, SO17 1BJ, United Kingdom}
+\affil[16]{Astex Pharmaceuticals, 436 Cambridge Science Park, Milton Road, Cambridge, CB4 0QA, United Kingdom}
 
 
 %
@@ -124,6 +129,9 @@
 \orcid{Vytautas Gapsys}{0000-0002-6761-7780}
 \orcid{Agastya P. Bhati}{0000-0003-4539-4819}
 \orcid{Peter V. Coveney}{0000-0002-8787-7256}
+\orcid{William G. Poole}{0009-0003-2441-8794}
+\orcid{Oliver J. Melling}{0000-0001-6243-7433}
+\orcid{Jonathan W. Essex}{0000-0003-2639-2746}
 
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
 
@@ -726,7 +734,22 @@ If the putative binding sites are not apparent, for instance due to significant 
 
 \subsection{Free energies of hydration or partition coefficients}
 \label{subsec:hydration}
-Preliminary considerations necessary for using free energy methods to compute partition coefficients are generally more straightforward. For example, a 3D minimised structure of a solute can be generated with a simple tool such as openBabel and solvated to prepare the input to compute a free energy of hydration~\cite{oboyle2011open}. However, in these cases, a careful choice of forcefield for the organic solvent model, as well as water model is essential. See for example~\cite{bosisio2016blinded,rustenburg2016measuring} for a good discussion of these choices. And, while sampling problems might seem to be a non-issue for small molecules, this is not always the case; e.g. even the hydroxyl orientation on neutral carboxylic acids can occasionally pose a challenge~\cite{klimovich2010predicting, lim2019assessing}.
+Preliminary considerations necessary for using free energy methods to compute partition coefficients are generally more straightforward. For example, a 3D minimised structure of a solute can be generated with a simple tool such as openBabel and solvated to prepare the input to compute a free energy of hydration~\cite{oboyle2011open}. Despite their relative simplicity, care should still be taken when preparing these systems to avoid introducing systematic errors.
+
+\paragraph{The choice of solvent forcefield impacts the calculation}
+A careful choice of forcefield for the organic solvent model, as well as water model is essential. A critical aspect of these calculations is the preparation ahead of simulation. The choice of force field for both the solute and solvents involved is critical. Accurate modeling of the solute's solvation behavior hinges on realistic representations of both water and the organic solvent (for partition coefficient calculations). See for example~\cite{bosisio2016blinded,rustenburg2016measuring} for a good discussion of these choices.  The same level of scrutiny is needed for organic solvents such as octanol, cyclohexane, or others used in partitioning studies, where solvent model parameters may vary substantially between force fields and impact results accordingly. 
+
+\paragraph{Charge models are non-trivial}
+Modeling the partial charges of the solute and solvent molecules is also highly important. In some fixed-charge models, the assigned partial charges depend on the input conformation of the molecule, meaning that poor or inconsistent conformer selection can introduce systematic errors in solvation free energy estimates \cite{jakalian2000, jambeck2003}. This is particularly true for methods such as RESP or AM1-BCC, where the geometry of the molecule at the time of charge derivation can influence the electrostatic potential fit \cite{jakalian2000, basma2001, zhang2011, dupradeau2010, osato2025}.  Conformers with strong intramolecular interactions In these cases, the conformer(s) used for assigning the partial charges should be saved for reproducibility. Ensuring consistency between the charge derivation geometry and the initial simulation structure is therefore recommended, or alternatively, using ensemble-averaged charges or polarizable models where appropriate \cite{ren2002,lemkul2016}.
+
+\paragraph{Conformational sampling can impact solvation and partition free energies}
+Moreover, while sampling challenges are often perceived to be minor for small molecules, they can still be non-trivial. Even subtle degrees of freedom such as hydroxyl group orientations (as in neutral carboxylic acids) or intramolecular hydrogen bonding can influence the calculated free energy difference between two environments\cite{klimovich2010predicting, lim2019assessing}. Molecules with multiple rotatable bonds, internal hydrogen bonds, or conformational flexibility may exhibit environment-dependent populations that are difficult to sample adequately within the timescale of typical molecular dynamics simulations. In some cases, enhanced sampling techniques such as replica exchange or metadynamics may be beneficial, even in hydration or partition coefficient calculations.
+
+In partition coefficient calculations, the situation becomes even more complex, as two distinct environments must be adequately sampled: typically water and a nonpolar organic solvent. These systems not only differ in their dielectric properties and hydrogen bonding behavior but may also yield different dominant solute conformers. The partition free energy is sensitive to the relative population of conformers in each environment, so it is essential to ensure that sampling in each phase is independently converged. Some studies have employed restrained or confining potentials to prevent solutes from drifting to the interface (especially when using periodic systems with both phases present), while others model each phase separately and compute the free energy difference via thermodynamic cycles\cite{turchi2019,bannan2016,petris2021}.
+
+\paragraph{Validation through experimental comparisons}  
+Finally, experimental comparisons in these systems are often more direct than in binding free energies. Hydration and partition coefficients are frequently measured with high precision, enabling rigorous validation of computational protocols. This has led to their prominent use in blind challenges such as SAMPL, where participants predict hydration or partition free energies of small molecules using a variety of force fields, solvent models, and sampling strategies. These exercises have repeatedly shown that small changes in simulation parameters or protocols can result in significant deviations from experimental results, reinforcing the need for careful setup and validation even in seemingly "simple" solvation systems.
+
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 % What simulation protocol should I choose   %
@@ -1889,16 +1912,21 @@ There are many different software solutions available for the setup, running, an
 %%%%%%%%%%%%%%%%
 \textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed Figs.~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, and created Figs.~\ref{fig:fig_what_is_lambda},~\ref{fig:fig_what_is_alchemy},~\ref{fig:overlap},~\ref{fig:pmf} and replotted~\ref{fig:automatic-equilibration-detection} and~\ref{fig:fig_types_of_networks}.\\
 \textbf{BA}: Helped write the uncertainty estimation, stopping conditions, and output analysis sections and created figure ~\ref{fig:convergence_forward_reverse}.\\
+\textbf{APB} Contributed updates to the discussion of uncertainty quantification.\\
 \textbf{HBM} Contributed to Sec.~\ref{sec:plot_data} and Fig.~ \ref{fig:scatterplot_analysis} and helped edit the paper.\\
 \textbf{JDC}: Wrote Sec.~\ref{sec:decorrelating-samples} and~\ref{sec:automatic-equilibration-detection} discussed structure and design of the whole document, suggested Figs.~\ref{fig:fig_what_is_alchemy} and~\ref{fig:fig_sampling_scheme}. \\
+\textbf{PVC} Contributed updates to the discussion of uncertainty quantification.\\
+\textbf{JWE} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
 \textbf{DFH} Contributed to Sec.~\ref{sec:software} and helped edit the paper. \\
 \textbf{MK}: Contributed to Sec.~\ref{sec:data_analysis}, provided the data for figure~\ref{fig:overlap}, compiled the dataset for Sec.~\ref{sec:benchmark} and helped edit the paper.\\
 \textbf{JM}: Contributed to Sec.~\ref{subsec:reproducible},~\ref{sec:prerequisites},~\ref{sec:important_path},~\ref{subsec:estimators},~\ref{subsec:uncertainty}, and~\ref{sec:conclusion}\\
 \textbf{DLM}: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.\\
 \textbf{LNN}: Helped write the simulation length, stopping conditions, and information saving section. Edited and reviewed alchemical path section.\\
+\textbf{WJP} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
 \textbf{SP} Wrote Sec.~\ref{sec:software}. \\
 \textbf{AR}: Created figure~\ref{fig:freeenergytrajectories}, contributed to sections~\ref{sec:theory} and~\ref{sec:simulation_protocol_choice}, and helped edit the paper.\\
 \textbf{JS}: Created Figs.~ \ref{fig:fig_what_is_alchemy},~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, and an initial draft of~\ref{fig:fig_types_of_networks}. Wrote Sec.~\ref{sec:plot_data}, the checklist Sec.~\ref{sec:checklist}, and contributed to general formatting discussions and editing.\\
+\textbf{OJM} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
 \textbf{MRS}: Helped create figure~\ref{fig:fig_what_is_lambda}, wrote Sec.~\ref{sec:important_path} describing choices for alchemical pathways and parts of~\ref{sec:data_analysis} on the analysis for free energy calculations. Reviewed and edited text throughout.\\
 \textbf{GT}: Contributed to Sec.~\ref{sec:intro} and~\ref{sec:drugdiscovery}, and helped edit the paper.\\
 \textbf{HX}: Contributed Sec.~\ref{subsec:accuracy}, to Sec.~\ref{sec:relative-fe-protocol}, and to Sec.~\ref{sec:are-they-good}.
@@ -1932,6 +1960,7 @@ see the GitHub issue tracking and changelog at \githubrepository.
 JM is a current member of the Scientific Advisory Board of Cresset. 
 MK is employed by Cresset who commercially distribute a software for performing alchemical free energy calculations. MRS is a Open Science Fellow and consultant for Silicon Therapeutics.
 JDC is a current member of the Scientific Advisory Board of OpenEye Scientific Software and a consultant to Foresite Laboratories.
+JWE receives research funding from AZ, Astex Pharmaceuticals, Exscientia, GSK, dstl, UCB, Diamond Light Source. Astex Pharmaceuticals part funds WGP., where he is now employed.
 \section*{Funding Information}
 %%%%%%%
 % Authors should acknowledge funding sources here. Reference specific grants.
@@ -1944,6 +1973,8 @@ DLM acknowledges support from the National Institutes of Health (R01GM108889, R0
 JDC acknowledges support from the National Institutes of Health (NIH P30 CA008748, NIH R01 GM121505, R01 GM132386).
 A complete funding history for the Chodera lab can be found at \url{http://choderalab.org/funding}.
 The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
+OJM, WGP, and JWE acknowledge funding from the EPSRC, Astex Pharmaceuticals, and Defence Threat Reduction Agency.
+
 
 \section*{Author Information}
 \makeorcid
