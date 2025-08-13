@@ -65,10 +65,12 @@
 \author[1*]{Antonia S. J. S. Mey}
 \author[2]{Bryce K. Allen}
 \author[11]{Agastya P. Bhati}
+\author[18]{Stefan Boresch}
 \author[3]{Hannah E. Bruce Macdonald}
 \author[3*]{John D. Chodera}
 \author[11, 12, 13]{Peter V. Coveney}
 \author[15]{Jonathan W. Essex}
+\author[19]{Emilio Gallicchio}
 \author[9]{Vytautas Gapsys}
 \author[9]{David F. Hahn}
 \author[1,10]{Maximilian Kuhn}
@@ -103,6 +105,10 @@
 \affil[15]{School of Chemistry and Chemical Engineering, University of Southampton, Southampton, SO17 1BJ, United Kingdom}
 \affil[16]{Astex Pharmaceuticals, 436 Cambridge Science Park, Milton Road, Cambridge, CB4 0QA, United Kingdom}
 \affil[17]{Open Molecular Software Foundation, Davis, CA 95618, USA}
+\affil[18]{University of Vienna, Faculty of Chemistry, Institute of Computational Biological Chemistry, Wahringer Str. 17, A-1090 Vienna}
+\affil[19]{Department of Chemistry and Biochemistry, Brooklyn College of the City University of New York, New York, NY, 11210
+Ph.D. Program in Chemistry, The Graduate Center of the City University of New York, New York, NY, 10016
+Ph.D. Program in Biochemistry, The Graduate Center of the City University of New York, New York, NY, 10016}
 
 
 %
@@ -113,9 +119,11 @@
 
 \orcid{Antonia S. J. S. Mey}{0000-0001-7512-5252}
 \orcid{Bryce Allen}{0000-0002-0804-8127}
+\orcid{Stefan Boresch}{0000-0002-2793-6656}
 \orcid{Hannah E. Bruce Macdonald}{0000-0002-5562-6866}
 \orcid{John D. Chodera}{0000-0003-0542-119X}
 \orcid{Maximilian Kuhn}{0000-0002-2811-3934}
+\orcid{Emilio Gallicchio}{0000-0002-2606-4913}
 \orcid{Julien Michel}{0000-0003-0360-1760}
 \orcid{David L. Mobley}{0000-0002-1083-5533}
 \orcid{Levi N. Naden}{0000-0002-3692-5027}
@@ -266,53 +274,53 @@ Below, we provide a non-exhaustive list of topics we have \emph{not} addressed, 
 \item Free energy calculations using machine learning methods~\cite{rufa2020chemical, scheen2020hybrid, cole2020machine,Schoeller2023}
 \end{itemize}
 
-For convenience we have also compiled a list of common acronyms and common symbols used throughout this paper.
+For convenience we have also compiled a list of common acronyms and common symbols (both in alphabetical order) used throughout this paper.
 \begin{tcolorbox}[title=Acronyms, colback=blue!10!white]
+    {\bf BAR} --- Bennett Acceptance Ratio\\
     {\bf CPU} --- Central Processing Unit\\
-     {\bf BAR} --- Bennett Acceptance Ratio\\
      {\bf FEP} --- Free Energy Perturbation\\
      {\bf GPCR} --- G-Protein Coupled Receptor\\
      {\bf GPU} --- Graphics Processing Unit\\
      {\bf MBAR} --- Multistate Bennett Acceptance Ratio\\
      {\bf MCSS} --- Maximum Common Substructure\\
      {\bf MD} --- Molecular Dynamics\\
-     {\bf RMSE} --- Root Mean Square Error\\
      {\bf MUE} --- Mean Unsigned Error\\
+     {\bf RMSE} --- Root Mean Square Error\\
      {\bf SAR} --- Structure-Activity Relationships\\
      {\bf TI} --- Thermodynamic Integration
 \end{tcolorbox}
 
 
 \begin{tcolorbox}[title=List of Symbols, colback=green!10!white]
-$L$ and $R$ --- generic names for ligand and receptor\\
-$K_b^{\circ}$ --- binding  constant \\
+$A$ --- Helmholtz free energy (free energy in the canonical ensemble) or Helmholtz function, with Helmholtz free energy used in the text.\\
+$b$ --- reduced binding energy function \\
 $C^{\circ}$ --- standard state concentration \\
+$C_t$ --- discrete-time-normalized fluctuation auto-correlation function\\
+$f$ --- reduced (dimensionless) free energy \\
+$G$ --- Gibbs free energy (free energy in the isothermal isobaric ensemble), Gibbs function, or free enthalpy, though the most common term Gibbs free energy is used in the text\\
+$g$ --- statistical inefficiency\\
+$h$ --- Planck's constant \\
+$\vec{h}$ --- a displacement vector in the ATM method
+$k_B$ --- Boltzmann constant \\
+$k_H$ --- Henry's constant \\
+$K_b^{\circ}$ --- binding  constant \\
+$L$ and $R$ --- generic names for ligand and receptor\\
+$\mathcal{O}$ --- overlap matrix\\
 $P^{\circ}$ --- standard pressure \\
+$p$ --- pressure \\
+$\vec{q}$ --- vector of a single configuration, i.e. $x$, $y$, $z$ coordinates of the simulation system\\
+$T$ --- temperature \\
+$t_0$ --- equilibration time \\
 $U$ --- potential energy\\
 $u$ --- reduced (dimensionless) potential describing a thermodynamic state \\
-$G$ --- Gibbs free energy (free energy in the isothermal isobaric ensemble), Gibbs function, or free enthalpy, though the most common term Gibbs free energy is used in the text\\
-$A$ --- Helmholtz free energy (free energy in the canonical ensemble) or Helmholtz function, with Helmholtz free energy used in the text.\\
-$f$ --- reduced (dimensionless) free energy \\
-$\Delta \hat{f}$ --- estimate from an estimator for the reduced free energy difference between two states\\
-$\Gamma$ --- configurational space accessible by simulations \\
-$\vec{q}$ --- vector of a single configuration, i.e. $x$, $y$, $z$ coordinates of the simulation system\\
-$k_B$ --- Boltzmann constant \\
-$Z$ --- partition function \\
-$p$ --- pressure \\
-$\mu$ --- chemical potential (grand canonical ensemble)\\
-$T$ --- temperature \\
-$\beta \equiv (k_B T)^{-1}$ --- inverse thermal energy \\
-$\vec{\lambda}$ --- alchemical progress parameter, which may be multidimensional \\
-$g$ --- statistical inefficiency\\
-$\mathcal{O}$ --- overlap matrix\\
-$C_t$ --- discrete-time-normalized fluctuation auto-correlation function\\
-$\tau _{eq}$ --- integrated auto-correlation time\\
-$t_0$ --- equilibration time \\
-$h$ --- Planck's constant \\
-$k_H$ --- Henry's constant \\
-$b$ --- reduced binding energy function \\
 $w(b, \vec{\lambda})$ --- perturbation energy function \\
-$\vec{h}$ --- a displacement vector in the ATM method
+$Z$ --- partition function \\
+$\beta \equiv (k_B T)^{-1}$ --- inverse thermal energy \\
+$\Gamma$ --- configurational space accessible by simulations \\
+$\Delta \hat{f}$ --- estimate from an estimator for the reduced free energy difference between two states\\
+$\vec{\lambda}$ --- alchemical progress parameter, which may be multidimensional \\
+$\mu$ --- chemical potential (grand canonical ensemble)\\
+$\tau _{eq}$ --- integrated auto-correlation time\\
 \end{tcolorbox}
 
 %%%%%%%%%%%%%%%%%%%%
@@ -637,7 +645,7 @@ Given the need to understand the performance of the system with alchemical free 
 \subsection{How reproducible are alchemical free energy calculations?}
 \label{subsec:reproducible}
 We restrict our analysis here to repetitions of the same calculation performed with precisely the same force field, as different force fields used to describe the same molecule can lead to wide differences in free energies in some cases.  Even within this restriction,
-finite computing resources necessarily limit the generated number of uncorrelated samples of potential energy surfaces, and therefore alchemical free energy calculations only give free energy estimates to within finite precision. An important consideration is how reproducible alchemical free energy calculations are in practice. In simple cases such as absolute hydration free energies of small organic molecules, or relative hydration free energy calculations between structurally similar small organic molecules, it should be possible to obtain highly precise estimates with a given software package, i.e.with a sample standard deviation under 0.01 kcal/mol~\cite{rizzi2019sampl6}.
+finite computing resources necessarily limit the generated number of uncorrelated samples of potential energy surfaces, and therefore alchemical free energy calculations only give free energy estimates to within finite precision. An important consideration is how reproducible alchemical free energy calculations are in practice. In simple cases such as absolute hydration free energies of small organic molecules, or relative hydration free energy calculations between structurally similar small organic molecules, it should be possible to obtain highly precise estimates with a given software package, i.e., with a sample standard deviation under 0.01 kcal/mol~\cite{rizzi2019sampl6}.
 For more complex use cases such as protein-ligand binding free energies the repeatability is often substantially worse~\cite{rizzi2019sampl6}. 
 There is growing literature describing the theoretical underpinning behind such intrinsic non-reproducibility of MD simulation based predictions. Coveney \textit{et al. }~\cite{coveney2016} have noted that, for a complex dynamical system to reach equilibrium, the dynamics must at least be ``mixing'' which is an established result in ergodic theory. A system which is ``mixing'' is also ``ergodic'' by definition but the reverse is not true. This implies that MD trajectories are chaotic, in other words they are extremely sensitive to their starting conditions and hence one-off simulations can never be reproducible. Thus, it is a necessity to perform ensemble simulations in order to perform ensemble averaging to obtain thermodynamic quantities in a reliable manner. Coveney and Wan recently published a book on the probabilistic foundations of MD and how this approach naturally allows for the treatment of uncertainties that arise in the use of the methodology~\cite{MDbook2025}. In practice, in many cases the simplest and most effective way of performing ensemble simulations is to vary only the initial velocities as these yield reproducible (i.e. statistically robust) free energy predictions. Bhati \textit{et al.} developed the TIES method~\cite{bhati2017} which is based on the use of ensemble methods. It produces excellent results for large scale benchmarking datasets for both RBFEs~\cite{bhati2022} and ABFEs~\cite{bhati2025}. It should be noted that the size of ensemble, that is, the number of independent simulations, is an adjustable parameter whose optimal value is system-dependent and will also be affected by the desired level of precision. Further, this method is extremely flexible and adaptive. For example, one can simply add additional ensemble members as necessary or desired, without having to re-run anything done initially. It should also be noted that ensemble simulations are computationally more effective than long simulations. On a large supercomputer, all the sampling can be done concurrently obtaining the statistical results in the time it takes to run a single simulation. Studies have shown that, in general, an ensemble size of 5 and 10 members is a reasonable starting point for alchemical RBFE and ABFE calculations, respectively, but recommendations are provided to adjust them based on some rules of thumb~\cite{bhati2022, bhati2025}. 
 The sample standard deviation will give a crude estimate of the reliability of the estimates, and whether the precision is sufficient for the problem at hand. When practical, a more stringent test is to use different input coordinates for each replica as well as different velocities. 
@@ -1259,6 +1267,7 @@ While this approach has precedent, it is relatively difficult to automate at pre
 Overall, this likely means that relative free energy calculations will be susceptible to problems resulting from uncertainty in ligand binding modes until more robust approaches are available to determine dominant binding modes, or the relative populations of different potential binding modes, in advance.
 
 \subsection{Absolute and Relative Binding Free Energies with Multiple Chemical States}
+\label{sec:multiple-chemical-states}
 
 Consider, as an illustration, the binding equilibrium between a receptor $R$ and a ligand $A$ that exists in solution as a mixture of protonated $AH$ and ionized $A^-$ forms. It is often useful to consider the observed equilibrium binding constant between $R$ and the $A$ mixture 
 \begin{equation}
@@ -1312,6 +1321,7 @@ which involves only quantities obtainable by relative binding free energy calcul
 There are many parameter choices that are common to standard MD simulations. Optimal choices may depend on the simulation package and it is best to consult the manual of each package to make the right choices. One particular parameter we want to draw attention to which is often overlooked is the timestep. The choice of integrator can drastically affect the accuracy of a given calculation depending on the timestep~\cite{leimkuhler2016efficient}. Using a 1.0 fs timestep near the limit of stability without any constraints can lead to non-negligible statistical mechanical errors. However, from various previous free energy studies using 1 fs integration timesteps it is not clear that a significant error would be introduced into a free energy estimate and may warrant some further investigation.  
 
 \subsection{Alchemical Transfer Method for Absolute and Relative Binding Free Energy Calculations}
+\label{sec:atm}
 
 \subsubsection{Introduction}
  
@@ -1611,7 +1621,7 @@ The basic concept is that $\tau_\mathrm{eq}$ corresponds to the single-exponenti
 
 Robust estimation of $C_t$ for $t \sim T$ is difficult due to growth in statistical error, so common estimators of $g$ make use of several additional properties of $C_t$ to provide useful estimates (see \emph{Practical Computation of Statistical Inefficiencies} in~\cite{chodera2016simple} for a detailed discussion).
 
-We recommend using the robust statistical inefficiency computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, though we caution that any such algorithms will underestimate the correlation time with insufficient data. Such approaches also assume that the data doesn't have any long time scale drift over the course of the simulation, which is a clear sign of lack of equilibration.  Generally, most methods will give reasonable correlation times when the simulation lasts 40--50 correlation times,
+We recommend using the robust statistical inefficiency computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, though we caution that any such algorithms will underestimate the correlation time with insufficient data. Such approaches also assume that the data doesn't have any long time scale drift over the course of the simulation, which is a clear sign of lack of equilibration.  Generally, most methods will give reasonable correlation times when the simulation lasts 40--50 correlation times.
 
 
 \paragraph{Subsampling data to generate uncorrelated samples}
@@ -1636,17 +1646,17 @@ To ensure there is sufficient data available for reliable decorrelation and esti
 
 \subsection{Uncertainty estimation}
 \label{subsec:uncertainty}
-It is important to consider the variation in your computed free energies from your equilibrium simulations, in order to obtain an estimate of uncertainty of the obtained value for the free energies of interest. A recent Best Practices paper by Grossfield et al.,~\cite{grossfield2018best} provides substantial detail on how to estimate uncertainties from molecular simulations and is a good starting point for this topic. 
-The uncertainty of a free energy estimate is limited however, as it is only an estimate of the configurations sampled and cannot contain any information from the phase space not sampled during a simulation. As a consequence, the variance in free energy afforded by any estimator will always be an underestimate of the true uncertainty.
-In general, the quantification of different error metrics depends on both data generation and analysis methods used from the ones discussed above. The user may choose best practices based on their need for the calculations carried out. If only few free energies need to be calculated at very high accuracy a different strategy might be employed than if large scale estimates are needed. As such, considering overall computational cost or availability of resources with respect to accuracy desired from computations may influence the choice of sampling and analysis scheme. 
-
+It is important to consider the variation in your computed free energies from your equilibrium simulations, in order to obtain an estimate of uncertainty of the obtained value for the free energies of interest. The Best Practices paper by Grossfield et al.,~\cite{grossfield2018best} provides substantial detail on how to estimate uncertainties from molecular simulations and is a good starting point for this topic. 
+The uncertainty of a free energy estimate is limited, however, as it is only an estimate of the configurations sampled and cannot contain any information from the phase space not sampled during a simulation. As a consequence, the variance in free energy afforded by any estimator will always be an underestimate of the true uncertainty.
+In general, the quantification of different error metrics depends on both data generation and analysis methods used from the ones discussed above. The user may choose best practices based on their need for the calculations carried out. If only few free energies need to be calculated at very high accuracy, a different strategy might be employed than if large-scale estimates are needed. As such, considering overall computational cost or availability of resources with respect to accuracy desired from computations may influence the choice of sampling and analysis scheme. 
+Since sampling all of phase space is prohibitively expensive to satisfy the ergodic theorem, certain considerations are often made to to still assess uncertainties in computed free energy estimates. If a system exhibits a stable strong binding pose a short number of simulation repeats often offer adequate free energy estimates. However, situations with more flexible binding and poses will require more strategic sampling schemes to get estimate uncertainties.  
 
 
 %Statistical mechanics provides a route to calculate macroscopic thermodynamic properties of a system from \textit{ensemble averaging} over microstates. Hitherto, MD practitioners have been applying the ergodic theorem that allows one to equate ensemble averaging to time averaging in the limit of time approaching infinity to predict thermodynamic properties using one-off simulations. However, the problem with this approach is that the simulation time required to satisfy this condition has been conveniently dictated by the extent of simulation time deemed accessible in a reasonable period of wall time on available resources. It is ignored that this limit is on the order of a Poincarè recurrence time, which is truly astronomical and well beyond the reach of today's supercomputers. In more rigorous terms, ergodic theory necessitates that, if a dynamical system is to approach equilibrium, it is not sufficient for it to be "ergodic" but it must also be ``mixing''~\cite{coveney2016, MDbook2025}. Rate processes and equilibration times are a property of the distribution function, not of individual trajectories. Consequently, neighbouring trajectories in the underlying phase space diverge exponentially which means that a single trajectory can never capture the true behaviour of a system. Rather, one must perform true ensemble averaging through running sufficiently large number of replicas, termed ``ensemble simulations''. This is manifest in the numerous published reports where authors have highlighted the non-reproducibility of results obtained from one-off simulations and that single simulations heavily underestimate the true uncertainty in predictions~\cite{wan2020fep+, wan2021uq, vassaux2021, gapsys2020large, wade2022, bhati2017, bhati2022, bhati2025, wan2023eqvsneq, bhati2018, bhati2019}. The uncertainty must be calculated as the standard error of mean for samples obtained from each replica in the ensemble. The ensemble size is a parameter that needs to be determined empirically for the system of interest and may need to be adjusted; however, some general recommendations (for both EQ and NEQ approaches) based on systematic analyses on a large and diverse dataset of protein-ligand complexes are available in a series of papers published by the Coveney group~\cite{bhati2017, bhati2018, bhati2019, bhati2022, wan2023eqvsneq, bhati2025}. Further, ensemble simulations are also necessary in case of enhanced sampling methods~\cite{bhati2018} as well as microsecond long simulations~\cite{bhati2023}. It is the influence of these reports that journals such as \textit{JCIM} and \textit{Communications Biology} have now mandated the use of ensemble simulations in computational studies~\cite{wan2023}. Coveney and Wan have recently published a book entitled \textit{Molecular Dynamics: Probability and Uncertainty}~\cite{MDbook2025} on this very topic. It must also be noted that ``replicas'' within an ensemble simulation are conceptually all members of a continuous distribution which are run concurrently, not in a serial mode. Therefore, the use of term ``repeats'' in this context is misleading and must be avoided.
 
-Computating of free energies using TI (Sec.n~\ref{subsec:estimators}) is straightforward and the trapezoidal rule is often recommended. The trapezoid rule easily allows unequal spacing of $\vec{\lambda}$ states, which is often required to minimize the variance in the free energy estimate, but in principle any good numerical integration method can be used if care is taken.  
-Determining of regions of high curvature when estimating the integral is helpful to determine regions of phase space where more sampling and/or more $\vec{\lambda}$ states are necessary to obtain the best approximation of the integral. Plotting $\vec{\lambda}$ with respect to the gradients at each of the $\vec{\lambda}$ values, which can be done automatically with tool such as alchemlyb,  can be a helpful diagnostic. 
-Additionally, computating the overall variance of TI requires the calculation of the overall variance of the integration, rather than each individual $\Delta$G$_{i,i+1}$ and assuming variances add independently. 
+Computing free energies using TI (Sec.n~\ref{subsec:estimators}) is straightforward and the trapezoidal rule is often recommended. The trapezoid rule easily allows unequal spacing of $\vec{\lambda}$ states, which is often required to minimize the variance in the free energy estimate, but in principle any good numerical integration method can be used if care is taken.  
+Determining of regions of high curvature when estimating the integral is helpful to determine regions of phase space where more sampling and/or more $\vec{\lambda}$ states are necessary to obtain the best approximation of the integral. Plotting $\vec{\lambda}$ with respect to the gradients at each of the $\vec{\lambda}$ values, which can be done automatically with tools such as alchemlyb,  can be a helpful diagnostic. 
+Additionally, computing the overall variance of TI requires the calculation of the overall variance of the integration, rather than each individual $\Delta$G$_{i,i+1}$ and assuming variances add independently. 
 Therefore, $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}w_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$, where the $w_k$ are the integration weights (see Sec~\ref{subsec:estimators} for more discussion of $w_k$).
 
 The TIES method~\cite{bhati2017} employs a different scheme to obtain the overall variance of the integral. It assumes that the integrand is a Gaussian random process and hence the principle of stochastic integration must be employed to propagate the uncertainties in this integral. The following equation is used to compute the overall variance of the integral combining variance at each $\lambda$ state. $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}\Delta\lambda_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$. 
@@ -1719,7 +1729,7 @@ It is important to carefully examine output data for common problems. Some of th
 \item \textbf{Have replicas mixed well?} Poor replica mixing (for replica-exchange) or $\lambda$-space sampling for single-replica methods. If the system is not mixing between states, then the states are insufficiently close for mixing, or else there are bottlenecks in the configurational sampling that limit the accuracy.
 \item \textbf{Behaviour of correlation times:} Correlation time that does not vary relatively smoothly as a function of $\vec{\lambda}$. Discontinuities in correlation time with $\vec{\lambda}$ indicate that the system is sampling significantly different configurations with only small changes to the Hamiltonian changes. This usually indicates sampling problems.
 \item \textbf{Dependence of the free energy on initial configuration of the system.} Ensemble average properties should not depend on the starting point.
-\item \textbf{Torsional sampling} Torsions with multiple low-energy minima where some of these minima are visited rarely or not at all. Which torsions have low energy minima can best be found by comparing to the simulation in the solvent. There should be clear physical reasons that simulation in the complex has different torsional distributions that the ligand in the solvent. 
+\item \textbf{Torsional sampling} Torsions with multiple low-energy minima where some of these minima are visited rarely or not at all. Which torsions have low energy minima can best be found by comparing to the simulation in the solvent. There should be clear physical reasons that simulation in the complex has different torsional distributions than the ligand in the solvent. 
 \item \textbf{Free energy dependence on $\vec{\lambda}$} The free energy difference between states should vary relatively smoothly with $\vec{\lambda}$. If it varies drastically, then either there need to be finer sampling in $\vec{\lambda}$ in this region, or there are sampling problems there.
 \item \textbf{Convergence of free energy} The free energy should clearly converge as a function of simulation time (Fig. ~\ref{fig:convergence_forward_reverse}).
 \item If using non-equilibrium methods, \textbf{is the result independent of the speed at which the non-equilibrium change is performed}? Non-equilibrium methods are in theory independent of the switching time in the limit of good sampling unless the switching time is simply too short. 
@@ -1930,10 +1940,12 @@ There are many different software solutions available for the setup, running, an
 \textbf{ASJSM}: Coordinated the document, contributed to most sections, and co-designed Figs.~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_types_of_networks},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, and created Figs.~\ref{fig:fig_what_is_lambda},~\ref{fig:fig_what_is_alchemy},~\ref{fig:overlap},~\ref{fig:pmf} and replotted~\ref{fig:automatic-equilibration-detection} and~\ref{fig:fig_types_of_networks}.\\
 \textbf{BA}: Helped write the uncertainty estimation, stopping conditions, and output analysis sections and created figure ~\ref{fig:convergence_forward_reverse}.\\
 \textbf{APB} Contributed updates to the discussion of uncertainty quantification.\\
+\textbf{SB} Wrote the sections on topologies and dummy atoms in Sec.~\ref{sec:relative-fe-protocol} and contributed to the discussion and review of many sections, in particular Sec.~\ref{sec:standardstate-restraints}.\\
 \textbf{HBM} Contributed to Sec.~\ref{sec:plot_data} and Fig.~ \ref{fig:scatterplot_analysis} and helped edit the paper.\\
 \textbf{JDC}: Wrote Sec.~\ref{sec:decorrelating-samples} and~\ref{sec:automatic-equilibration-detection} discussed structure and design of the whole document, suggested Figs.~\ref{fig:fig_what_is_alchemy} and~\ref{fig:fig_sampling_scheme}. \\
 \textbf{PVC} Contributed updates to the discussion of uncertainty quantification.\\
 \textbf{JWE} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
+\textbf{EG} Wrote the updated Sec.~\ref{sec:theory} and Sec.~\ref{sec:multiple-chemical-states},  updated Sec.~\ref{sec:standardstate-restraints}, co-wrote Sec.~\ref{sec:atm} with SK, and and contributed to the discussion and review of many sections.\\
 \textbf{DFH} Contributed to Sec.~\ref{sec:software} and helped edit the paper. \\
 \textbf{MK}: Contributed to Sec.~\ref{sec:data_analysis}, provided the data for figure~\ref{fig:overlap}, compiled the dataset for Sec.~\ref{sec:benchmark} and helped edit the paper.\\
 \textbf{JM}: Contributed to Sec.~\ref{subsec:reproducible},~\ref{sec:prerequisites},~\ref{sec:important_path},~\ref{subsec:estimators},~\ref{subsec:uncertainty}, and~\ref{sec:conclusion}\\
@@ -1987,11 +1999,10 @@ MK and JM acknowledge funding through Innovate UK by KTP partnership 011120.
 AR acknowledges partial support from the Tri-Institutional Program in Computational Biology and Medicine and the Sloan Kettering Institute.
 HEBM acknowledges support from a Molecular Sciences Software Institute Investment Fellowship and Relay Therapeutics.
 DLM acknowledges support from the National Institutes of Health (R01GM108889, R01GM124270, and R01GM132386), and the National Science Foundation (CHE 1352608).
-JDC acknowledges support from the National Institutes of Health (NIH P30 CA008748, NIH R01 GM121505, R01 GM132386).
+JDC acknowledges support from the National Institutes of Health (NIH P30 CA008748, NIH R01 GM121505, R01 GM132386), as does EG (NIH 1R15GM151708).
 A complete funding history for the Chodera lab can be found at \url{http://choderalab.org/funding}.
 The content is solely the responsibility of the authors and does not necessarily represent the official views of the National Institutes of Health.
 OJM, WGP, and JWE acknowledge funding from the EPSRC, Astex Pharmaceuticals, and Defence Threat Reduction Agency.
-
 
 \section*{Author Information}
 \makeorcid
