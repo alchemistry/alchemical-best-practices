@@ -889,8 +889,8 @@ To our knowledge, efficiency differences have not been thoroughly explored, thou
 \paragraph{Atom mapping} \label{subsec: Atom Mapping}
 Following the choice of system representation and sampling strategy, it might be required to generate a atom mapping. This is the case especially for system representations using a single coordinate set (Type 1. \& 2), however a dual coordinate set approach could use an atom mapping as well, depending on the sampling method, this will be explained in the next steps.
 Once a single coordinate set approach is selected, a crucial next step is to identify the common atoms which will not be perturbed between the two molecules (respectively end-states).
-Rigorously, this process typically comprises a MCSS search of the molecules involved to identify the common substructure.
-Specifically, with a single coordinate set approach in mind, atom types are allowed to change, so a permissive MCSS search can be done. This however requires either careful implementation of atom mass changes, bond length etc. or accepting the introduction of potential systematic error, that is in many cases negligible due to the cancellation of errors. \cite{ries2024kartograf}
+Rigorously, this process typically comprises a MCSS search of the molecules involved to identify the common substructure.\cite{ries2024kartograf}
+
 
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig4_mcs/Figure.pdf}
