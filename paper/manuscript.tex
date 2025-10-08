@@ -292,8 +292,8 @@ Below, we provide a non-exhaustive list of topics we have \emph{not} addressed, 
 \item Free energy methods that extract the ligand using geometric order parameters and potential of mean force methods~\cite{heinzelmann2017attachpullrelease}
 \item forcefield dependence for protein, ligand, ions, co-solvents, and co-factors. A number of different studies have looked at the influence of force fields and it is assumed the user has made an appropriate choice for the system under study~\cite{loeffler2018reproducibility, vassetti2019assessment, lopes2015current}. 
 \item non-equilibrium free energy calculations~\cite{gapsys2020large}
-\item Free energy calculations using QM/MM methods~\cite{beierlein2011simple,dybeck2016comparison,cave-ayland2015direct,Karwounopoulos2024}.
-\item Free energy calculations using machine learning methods~\cite{rufa2020chemical, scheen2020hybrid, cole2020machine,Schoeller2023}
+\item Free energy calculations using QM/MM methods~\cite{beierlein2011simple,dybeck2016comparison,cave-ayland2015direct,Schoeller2023}.
+\item Free energy calculations using machine learning methods~\cite{rufa2020chemical, scheen2020hybrid, cole2020machine,Karwounopoulos2024}
 \end{itemize}
 
 For convenience we have also compiled a list of common acronyms and common symbols (both in alphabetical order) used throughout this paper.
@@ -1617,8 +1617,7 @@ Here, the goal of the post-processing step is to select the equilibration bounda
 N_{[t_0,T]} &=& \frac{T - t_0}{g_{[t_0,T]}}
 \end{eqnarray}
 where $g_{[t_0,T]}$ is the \emph{statistical inefficiency} of a timeseries $a_t$, described in more detail below.
-Conveniently, this procedure also produces the information necessary to decorrelate the simulation data for estimating the free energy differences, a requisite next step in analysis.
-This approach is implemented within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, and is highly recommended for standard practice.
+This approach is implemented within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, and is highly recommended for standard practice. A very similar approach involves minimising the standard error of the production region~\cite{whiteEffectiveTruncationHeuristic1997, sprattHeuristicsStartupProblem1998, hoadAutomatingWarmupLength2010, clarkRobustAutomatedTruncation2025}.
 
 For additional discussion of working with correlated data and autocorrelation analysis, please refer to the work on Best Practices for Quantification of Uncertainty and Sampling Quality in Molecular Simulations~\cite{grossfield2018best}.
 
@@ -1636,8 +1635,6 @@ For simulations that are simply not long enough to contain a large number of sam
 In such cases, this approach simply selects the final portion of the the simulation, which may be contained in a single substate of configurational space, and may itself lead to biased estimates. 
 This situation can be detected if the equilibration boundary $t_0$ is a significant fraction of the total simulation length $T$, with a good rule of thumb being that $T \gtrsim 20 t_0$.
 If this is not possible, advanced analysis techniques that assume only local equilibrium (rather than global equilibrium) such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate, but are beyond the scope of this paper.
-
-%MRS: Finlay, you can add information about RED here. 
 
 \subsection{Decorrelating samples for analysis}
 \label{sec:decorrelating-samples}
@@ -1675,7 +1672,7 @@ In fact, one can show that the standard deviation of the estimate determined by 
 We don't need to use all of the data to recover the remaining correlation.  In practice, if one subsamples the data with a
 correlation interval of $g/10$, where $g$ is the correlation time, this will recover the missing correlation.  Thus, if $g=3.0$ in units of timesteps, it is best to use all of the data.  If $g=100.0$, then one loses essentially no information by subsampling with $g=10.0$ in estimating the free energies, and still saves significant time by not using all of the now-completely duplicative data.  Note that subsampling with correlation time $g$ should still be used for estimating the uncertainties, perhaps requiring two passes of the simulation analysis code. 
 
-If independent simulations at each $\lambda$ are used, the alchemical state $\vec{\lambda}$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficiency $g$ for each alchemical state. If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state. Conveniently, the approach described above for automated equilibration detection produces an appropriate estimate of $g$ over the production region for automating this process.
+If independent simulations at each $\lambda$ are used, the alchemical state $\vec{\lambda}$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficiency $g$ for each alchemical state. If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state. Conveniently, maximising the effective sample size for automated equilibration detection produces an appropriate estimate of $g$ over the production region for automating this process.
 
 Our overall recommendations are therefore to determine the subsampling period $g$, either use all of the data or subsample with something like $g/10$ (i.e. more frequently than specified by $g$) to compute the free energy estimates, and then use fully subsampled data (with subsampling interval $g$) to estimate the uncertainties of the estimates.  Uncertainties calculated with the full data set will be significant underestimates if $g > 1$.
 
