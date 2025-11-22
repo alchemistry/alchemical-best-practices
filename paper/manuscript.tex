@@ -27,6 +27,7 @@
 \usepackage{enumitem,amssymb}
 \usepackage{textgreek}
 \usepackage{changepage}
+\usepackage{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Added to allow customisation of table of contents
@@ -46,8 +47,6 @@
   {\bfseries{}[EG: }%
   {\textcolor{green}{#1}}{\bfseries{}]}
 }
-
-
 
 \newcommand{\rref}{{\bfseries[REFs]}{}}
 
@@ -345,6 +344,7 @@ $\mu$ --- chemical potential (grand canonical ensemble)\\
 $\tau _{eq}$ --- integrated auto-correlation time\\
 \end{tcolorbox}
 
+
 %%%%%%%%%%%%%%%%%%%%
 % Theory basics    %
 %%%%%%%%%%%%%%%%%%%%
@@ -399,6 +399,8 @@ The standard chemical potential of a solute in an ideally dilute solution is obt
 \end{equation}
 The standard state state of a dilute solution is defined as an ideally dilute solution at concentration $C^\circ$.~\cite{levine2009physicalchemistrybook6ed} Hence, Eq.~(\ref{eq:chemical-potential-standard}) is formally correct for real solutions as well.
 
+Next, we outline the application of the chemical potential statistical mechanics formalism for modeling key biophysical processes: solvation, solvent partitioning, and non-covalent molecular binding. Generally, turning statistical mechanics identities into computable quantities by molecular simulations involves expressing ratios of partition functions in terms of ensemble averages. In the present context, the quantity being averaged often turns out to be the exponential of a perturbation energy function (the \textit{Zwanzig relationship}~\cite{zwanzig1954hightemperature}), which is efficiently evaluated using the stratification algorithms and free energy estimators discussed in Sections \ref{subsec:formulations-abfe-rbfe}, \ref{subsec:numerical-implementations},  and \ref{subsec:estimators} rather than directly. Here we assume that an implementation is well-formed once it is expressed as a combination of exponential averages, assuming they can be evaluated in practice. As in the previous section, we use the solvent potential of mean force to lighten the notation when possible. The solvent degrees of freedom can be restored  in the resulting expressions using Eq.~(\ref{eq:solvent-pmf-def}). 
+
 \subsection{Solvation}\label{sec:theory-solvation}
 
 The standard molar Gibbs free energy of the solvation of a gas species $A$ in a solvent $v$
@@ -410,7 +412,7 @@ is
   \Delta G^\circ_{\mathrm{slv}} = \mu^\circ_{A(v)}  - \mu^\circ_{A(g)} = -k_B T \ln \frac{P^\circ}{C^\circ k_B T} - k_B T \ln \frac{z_{A(v)}}{z_{A(\mathrm{g})}}
   \label{eq:DG0-solvation-def}
 \end{equation}
-where we used Eq.~(\ref{eq:chemical-potential-standard}) for the solution and  Eq.~(\ref{eq:chemical-potential-definition}) for the gas (assumed ideal) at the standard gas concentration $C = P^\circ/k_B T$ where $P^\circ = 1$ bar is the standard pressure, and Eq.~(\ref{eq:intra-qpu-def}) noting that all momentum terms cancel. The first term in Eq.~(\ref{eq:DG0-solvation-def}) is an ideal term $\Delta G^\circ_{\mathrm{slv,ideal}}$ that accounts for the difference of standard states for solution and gases. The second term is the excess solvation free energy $\Delta G_{\mathrm{slv, exc.}}$ that can be evaluated by numerical alchemical calculations (see below). Hence Eq.~(\ref{eq:chemical-potential-standard}) can be used to compare calculated and experimental standard free energies of solvation.
+where we used Eq.~(\ref{eq:chemical-potential-standard}) for the solution and  Eq.~(\ref{eq:chemical-potential-definition}) for the gas (assumed ideal) at the standard gas concentration $C = P^\circ/k_B T$ where $P^\circ = 1$ bar is the standard pressure, and Eq.~(\ref{eq:intra-qpu-def}) noting that all momentum terms cancel. The first term in Eq.~(\ref{eq:DG0-solvation-def}) is an ideal term $\Delta G^\circ_{\mathrm{slv,ideal}}$ that accounts for the difference of standard states for solution and gases. The second term is the excess solvation free energy $\Delta G_{\mathrm{slv, exc.}}$ that can be evaluated by numerical alchemical calculations (see below). Hence Eq.~(\ref{eq:chemical-potential-standard}) can be used to compare calculated and experimental standard free energies of solvation.\cite{thompson2004new}
 
 However, equilibrium experimental gas solvation data is most often available in terms of Henry's constants $k_H$. Setting $\Delta G_{\mathrm{slv}} = 0$ when the gas partial pressure and the solute's concentrations are equal to their equilibrium values $P_A$ and $C_A$, respectively, we obtain
 \begin{equation}
@@ -422,7 +424,7 @@ where
   k_H = k_B T \frac{z_{A(\mathrm{g})}}{z_{A(v)}} \, .
   \label{eq:Henrys-constant}
 \end{equation}
-The relation above is used to connect alchemical calculations to Henry's constant values, often after converting them to the excess free energy scale~\cite{nicholls2008predicting,mobley2014freesolv}
+The relation above is used to connect alchemical calculations to Henry's constant values, often after converting them to the excess free energy scale~\cite{cabani1981group,nicholls2008predicting,mobley2014freesolv}
 \begin{equation}
 \Delta G_{\mathrm{slv, exc.}} = - k_B T \ln \frac{z_{A(v)}}{z_{A(\mathrm{g})}} = k_B T \ln \frac{k_H}{k_B T} \, .
 \label{eq:DG-solvation-excess}
@@ -461,7 +463,7 @@ Combining Eqs.~(\ref{eq:DG-solvation-excess}) and (\ref{eq:zratio-solv-average})
   \Delta G_{\mathrm{slv, exc.}} = - k_B T \ln \langle e^{-\beta \Delta U} \rangle_0 = k_B T \ln \langle e^{\beta \Delta U} \rangle_1
   \label{eq:zratio-solv-dgexc}
 \end{equation}
-The objective of alchemical solvation free energy calculations is to evaluate Eq.~(\ref{eq:zratio-solv-dgexc}), by means of \emph{coupling} or \emph{decoupling} computational protocols discussed in the following sections.
+The objective of alchemical solvation free energy calculations is to implement Eq.~(\ref{eq:zratio-solv-dgexc}), by means of \emph{coupling} or \emph{decoupling} computational protocols and alchemical intermediate states as  discussed in section \ref{subsec:numerical-implementations}.
 
 \subsection{Solvent partitioning}\label{sec:theory-partitioning}
 
@@ -525,7 +527,32 @@ The definition of the bound macrostate of the complex is an essential input of t
 
 Conversely, the value of the binding free energy depends on the chosen structural definition of the bound complex. The relationship between the predictions of this theory and experimental reporters (thermochemical, spectroscopic, inhibition kinetics, and others) of complex formation has been discussed.\cite{gilson1997statisticalthermodynamic,mihailescu2004theory,gallicchio2011recent,simonson2016physical,gallicchio2021comppeptsci} The interpretation of experimental reporters of binding is a complex issue in itself. Still, the consensus is that this theory gives nearly equivalent results when the binding is strong and specific, and the definition of the bound complex covers the major bound poses while excluding obvious unbound configurations. In some cases it is valuable to consider specific definitions of the complex by, for example, restricting the orientation of the ligand to pinpoint the relative contribution of different binding poses.
 
-Eq.~(\ref{eq:DG0-binding-constant-def}) is the basis of a variety of alchemical computational implementations discussed in the following sections that have have been developed to study molecular binding by alchemical means.
+Eq.~(\ref{eq:DG0-binding-constant-def}) is the basis of a variety of alchemical computational implementations that have have been developed to study molecular binding by alchemical means. Some of these are discussed in Section \ref{subsec:formulations-abfe-rbfe}. Generally, to formulate the statistical mechanics expression of the binding constant Eq.~(\ref{eq:DG0-binding-constant-def}) as an ensemble average, we first need to ensure that the configurational integrals in the numerator and denominator are over the same set of degrees of freedom. Note that the intramolecular configurational partition function of the complex, $z_{RL(v)}$, includes six more degrees of freedom--the position and orientation of the ligand relative to the receptor collectively described by the variable $\zeta$--than the product of the intramolecular partition functions, $z_{R(v)} z_{L(v)}$, of the separated receptor and ligand. To correct this discrepancy, we multiply and divide the right-hand side of Eq.~(\ref{eq:DG0-binding-constant-def})  by the quantity
+\begin{equation} \label{eq:Vsite-def}
+    V_{\rm site} \Omega = \int d\zeta I(\zeta) \, ,
+\end{equation}
+which measures the extent of the binding pose macrostate, where $V_{\rm site}$ corresponds to the spatial extent and $\Omega$ the orientational extent. The right-hand side of Eq.~(\ref{eq:Vsite-def}) combined with the integrals $z_{R(v)}$ and $z_{L(v)}$ yields a partition function similar to Eq.~(\ref{eq:intra-zRL-def}) but corresponding to a complex in which ligand and receptor are uncoupled~\cite{gallicchio2011recent} as if they were at infinite distance apart. The result is
+\begin{equation}\label{eq:DG0-binding-constant-def-average}
+  K_b = C^\circ V_{\rm site} \frac{\Omega}{8 \pi^2} \langle e^{-\beta \Delta \Psi}  \rangle_0
+\end{equation}
+where, similarly to Eq.~(\ref{eq:zratio-solv-average}),
+\begin{equation}\label{eq:pert-energy-def}
+  \Delta \Psi(x_R, x_L, \zeta) =  \Psi_v(x_R, x_L, \zeta) - \left[  \Psi_v(x_R) + \Psi(x_L) \right]
+\end{equation}
+is the solvent-averaged binding energy of the complex when receptor and ligands are in intramolecular configurations $x_R$ and $x_L$, the ligand is in position and orientation $\zeta$ relative to the receptor (the uncoupled potential energy does not depend on  the position and orientation of the ligand relative to the receptor), and $\langle \ldots \rangle_0$ represents an ensemble average in the uncoupled ensemble. Finally, note that $\Omega = 8 \pi^2$ when the binding pose indicator function does not depend on the orientation of the ligand and Eq.~(\ref{eq:DG0-binding-constant-def-average}) simplifies to
+\begin{equation}\label{eq:DG0-binding-constant-def-average-noOmega}
+K_b = C^\circ V_{\rm site} \langle e^{-\beta \Delta \Psi}  \rangle_0 
+\end{equation}
+which, expressed in free energy units, yields
+\begin{eqnarray}\label{eq:DG0-def-Vsite}
+  \Delta G^\circ_b &=&  - k_B T \ln K_b = - k_B T \ln C^\circ V_{\rm site} - k_B T \ln \langle e^{-\beta \Delta \Psi}  \rangle_0 \nonumber \\
+{\rm \ }  &=& \Delta G^\circ_{b,{\rm ideal}} + \Delta G_{b,{\rm exc.}}
+\end{eqnarray}
+
+The term $\Delta G^\circ_{b,{\rm ideal}} = - k_B T \ln C^\circ V_{\rm site}$ in Eq.~(\ref{eq:DG0-def-Vsite}) is interpreted as the \emph{ideal} component of the standard binding free energy, the binding free energy that would be observed in the absence of molecular interactions. Conversely, the term $\Delta G_{b,{\rm exc.}} = - k_B T \ln \langle e^{-\beta \Delta \Psi}  \rangle_0 $ is the \emph{excess} component that depends on the specific molecular composition of the system and on the corresponding interactions. The excess component is the target of the alchemical molecular simulations discussed here, in contrast to the ideal term that is generally evaluated analytically~\cite{boresch2003absolute}.
+
+Eq~(\ref{eq:DG0-binding-constant-def-average-noOmega}) instructs to collect samples of the solvent-averaged binding energy $\Delta \Psi$ in the ensemble where ligand and receptor are not interacting. This can be done directly for simple solutes when the solvent is modeled implicitly.\cite{gallicchio2014virtual} However, with explicit solvation specialized techniques are required. We will discuss two: Double-Decoupling and Alchemical Transfer in section \ref{subsec:formulations-abfe-rbfe}.
+
 
 \subsection{Simulating binding events is computationally expensive}
 
@@ -558,30 +585,130 @@ Other methods compute the free energy of binding by building potential of mean f
 
 Similarly, because of the long time-scale of transition events and the need to observe many events to extract probabilities, it would be very difficult to estimate solvation free energies and solvent partition coefficients by simulating explicitly the motion of solutes in and out of solutions.
 
-\subsection{Alchemical free energy calculations yield predictions that do not require direct simulation of binding/unbinding events}
+\subsection{Alchemical Binding Free Energy Methods Formulations}
+\label{subsec:formulations-abfe-rbfe}
 
-In many cases, the quantity of interest is the change in binding affinity between a compound $A$ and a related compound $B$ (e.g., by modifying one of the drug scaffold's substituents, see (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{E})), which, by using Eq.~\ref{eq:binding-free-energy-from-bound-unbound-probability-ratio} and \ref{eq:bound-unbound-probability-ratio} is given by
-\begin{equation}\label{eq:delta-delta-G-physical}
-\begin{split}
-    \Delta \Delta G_{\mathrm{bind}, AB} &= \Delta G_{\mathrm{bind}, B} - \Delta G_{\mathrm{bind}, A} \\
-    &\approx -k_BT \left( \ln \frac{Z(RB)}{Z(R+B)} - \ln \frac{Z(RA)}{Z(R+A)} \right) \, .
-\end{split}
+\subsubsection{Absolute binding free energy (ABFE)}
+
+In the alchemical literature, the term ``absolute binding free energy'' is another name for the standard binding free energy $\Delta G^\circ_b = - k_B T \ln K_b$. Here, we discuss two methods, Double-Decoupling (DDM) and Alchemical Transfer (ATM), used to evaluate it by alchemical computer simulations.
+
+\paragraph{Double Decoupling}
+
+The double-decoupling formula is derived from the statistical mechanics theory
+by inserting the definition of the solvent potential of mean force [Eq.~(\ref{eq:solvent-pmf-def})] in each of the configurational partition functions in  Eq.~(\ref{eq:DG0-binding-constant-def}). For example, after expanding the solvent potential of mean force, the configurational partition function of the complex becomes
+\begin{equation}\label{eq:partfunct-ratio-explsolv-1}
+z_{RL(v)} = \frac{Z_{N_v, RL}}{Z_{N_v}}
 \end{equation}
-Note that the terms involving the standard concentration cancel out when we assume that the volume is identical for $A$ and $B$.
-Predictions of $\Delta \Delta G_{\mathrm{bind}, AB}$ with non-alchemical methods generally require long simulations of both ligands, possibly through different binding pathways.
-Alchemical relative free energy calculations avoid the need to simulate binding and unbinding events by making use of the fact that the free energy is a state function and exploiting the thermodynamic cycle illustrated in Fig.~\ref{fig:fig_binding_thermodynamic_cycle}.
-This is apparent after rewriting Eq.~\ref{eq:delta-delta-G-physical} as
-\begin{equation}\label{eq:delta-delta-G-alchemical}
-\begin{split}
-    \Delta \Delta G_{\mathrm{bind}, AB} &\approx -k_BT \left( \ln \frac{Z(RB)}{Z(RA)} - \ln \frac{Z(R+B)}{Z(R+A)} \right) \\
-    &= -k_BT \left( \ln \frac{Z(RB)}{Z(RA)} - \ln \frac{Z(B)}{Z(A)} \right) \\
-    &= \Delta G_{\mathrm{bound}} - \Delta G_{\mathrm{unbound}} \, ,
-\end{split}
+where
+\begin{equation}\label{eq:partfunct-ratio-explsolv-2}
+Z_{N_v, RL} = \int d\vec{r}_v dx_R dx_L d\zeta I(\zeta) e^{-\beta U(x_R, x_L, \zeta, \vec{r}_v)}
 \end{equation}
-where $\Delta G_{\mathrm{bound/unbound}}$ is the free energy of mutating $A$ to $B$ in the bound/unbound state.
-Eq.~\ref{eq:delta-delta-G-alchemical} and Fig.~\ref{fig:fig_binding_thermodynamic_cycle} tell us that the difference in free energy of binding between toluene ($A$) and benzyl alcohol ($B$) can be computed by running two independent calculations estimating the free energy cost of mutating $A$ into $B$ in the binding pocket ($\Delta G_{\mathrm{bound}}$) and in solvent ($\Delta G_{\mathrm{unbound}}$), saving us the need to simulate the physical binding process of the two compounds.
-In particular, the second line of Eq.~\ref{eq:delta-delta-G-alchemical} is a consequence of $\Delta G_{\mathrm{unbound}}$ being independent of the presence of the receptor in the simulation box as the definition of the unbound state assumes receptor and ligand to be at a sufficient distance for them to have no energetic interactions.
-Note that, when $A$ and $B$ have a different number of atoms, the factors $ \ln \frac{Z(RB)}{Z(RA)}$ and $\ln \frac{Z(B)}{Z(A)}$ in   Eq.~\ref{eq:delta-delta-G-alchemical} appear both to have factors with units of volume in the logarithms, but these factors exactly cancel between the terms.
+is the configurational partition function of the complex in a fixed position and orientation in $N_v$ solvent molecules, and $Z_{N_v}$ is the configurational partition function of the pure solvent. This process leads to an expression for the binding constant in terms of products of ratios of partition functions analogous to those encountered in Section \ref{sec:theory-solvation} to model solvation
+\begin{equation}
+  K_b = \frac{C^\circ}{8 \pi^2} \frac{Z_{N_v,RL}}{Z_{N_v,R} z_{L(g)}} \frac{Z_{N_v} z_{L(g)}}{Z_{N_v,L}}
+  \label{eq:ddm-ratios-1}
+\end{equation}
+where we multiplied and divided by the internal configurational partition function of the ligand in vacuum
+\begin{equation}
+z_{L(g)} = \int dx_L e^{-\beta U(x_L)}
+\end{equation}
+We recognize that the second ratio of partition functions in Eq.~(\ref{eq:ddm-ratios-1}) is the inverse of Eq.~(\ref{eq:zratio-solv-average}), hence it is related to the free energy $\Delta G_1$ of decoupling the ligand from the solvent
+\begin{equation}
+\frac{Z_{N_v} z_{L(g)}}{Z_{N_v,L}} = \langle e^{\beta \Delta U}  \rangle_{L(v)} = e^{-\beta \Delta G_1}
+\end{equation}
+where $\Delta U$ is the coupling energy between the ligand and the solvent and $\langle \ldots \rangle_{L(v)}$ is an average over the ligand solution ensemble [see Eq.~(\ref{eq:zratio-solv-dgexc})].
+The ratio of partition functions in Eq.~(\ref{eq:ddm-ratios-1}) involving the ligand-receptor complex is expressed as an ensemble average by multiplying it and dividing it by Eq.~(\ref{eq:Vsite-def}) in the same way that Eq.~(\ref{eq:DG0-binding-constant-def}) is cast as Eq.~(\ref{eq:DG0-binding-constant-def-average}). The result is the ratio of the partition functions of the complex in solvent, $Z_{N_v,RL}$, and the partition function $Z_{N_v,R + L(g)}$  of the same system when the ligand is decoupled from the
+receptor and the solvent but is restrained into the binding site region ($I(\zeta) = 1$)
+\begin{equation}
+\frac{Z_{N_v,RL}}{Z_{N_v,R+L} z_{L(g)}} = \frac{8 \pi^2 V_{\rm site} Z_{N_v,RL}}{Z_{N_v,R+L(g)}} = 8 \pi^2 V_{\rm site} \langle e^{\beta \Delta U}  \rangle_{RL(v)} = e^{\beta \Delta G_2}
+\end{equation}
+Collecting the terms, the double-decoupling standard binding free energy is finally expressed as
+\begin{equation}\label{eq:ddm-dg1-dg2}
+\Delta G^\circ_b = -k_B T \ln K_b = -k_B T \ln C^\circ V_{\rm site} + (\Delta G_1 - \Delta G_2)
+\end{equation}
+which includes the ideal term [see Eq.~(\ref{eq:DG0-def-Vsite})], and the difference of decoupling free energies of the ligand from the solvent and from the binding site of the receptor in solution. As illustrated in Figure \ref{fig:fig_absolute_thermodynamic_cycle}, the decoupling free energies are commonly computed in separate simulations using the alchemical techniques discussed in the following sections.
+
+\begin{figure}
+    \includegraphics[width=0.95\linewidth]{figures/fig5_thermo_cyc_abs/Figure.png}
+    \caption{\textbf{Thermodynamic cycle for an absolute binding free energy calculation with auxiliary restraints} The fully interacting ligand in water (\textbf{A}), has its charges turned off to pass to (\textbf{B}) followed by turning off van der Waals terms, resulting in a non-interacting ligand in water (\textbf{C}). The receptor-ligand complex (\textbf{D}) is defined by binding site restraints (dotted oval). Auxiliary restraints are often introduced (\textbf{E}) to improve convergence while the charges and van der Waals interactions are turned off (\textbf{F} and \textbf{G}). The free energy cost of releasing the auxiliary restraints (\textbf{G} to \textbf{H}) and transferring the non-interacting ligand from the standard state volume to the binding site (\textbf{C} to \textbf{H}) must be accounted for. The standard binding free energy is computed from this cycle as $\Delta G^{\circ}_{\mathrm{bind}} = (\Delta G^{\mathrm{elec}}_{\mathrm{solv}}+ \Delta G^{\mathrm{VdW}}_{\mathrm{solv}}) + \Delta G^{\circ}_{\mathrm{ideal}} -(\Delta G_{\mathrm{aux.restr.}}+\Delta G^{\mathrm{elec}}_{\mathrm{bound}}+ \Delta G^{\mathrm{VdW}}_{\mathrm{bound}}+\Delta G_{\mathrm{release}})$. Many variations of the route between the free (\textbf{A}) and bound (\textbf{D}) states can be used -- for example, state \textbf{H} is commonly skipped and the free energy cost of moving from \textbf{C} to \textbf{G} is calculated directly.}
+    \label{fig:fig_absolute_thermodynamic_cycle}
+\end{figure}
+
+
+\paragraph{Alchemical Transfer}
+
+In the alchemical transfer approach, the standard binding free energy is obtained by a coordinate translation that brings the ligand from the solvent to the receptor binding site~\cite{wu2021alchemical} rather than by decoupling it from the system, as in the double-decoupling method. The method derives from Eq.~(\ref{eq:DG0-binding-constant-def}) by inserting the solvent degrees of freedom similarly to the double-decoupling method, except that the product $z_{R(v)} z_{L(v)}$ of partition functions of the unbound state is represented collectively as one explicit solvent system in which the ligand is placed in a region spanned by an indicator function $I^\ast(\zeta)$ identical to the one used to define the binding site region but placed at some arbitrarily large distance from the receptor:
+\begin{equation}
+  z_{R(v)} z_{L(v)} =
+  \frac{
+    \int d\vec{r}_v dx_R dx_L d\zeta I^\ast(\zeta) e^{-\beta U(x_R, x_L, \zeta, \vec{r}_v)}
+  }{
+    8 \pi^2 V_{\rm site} Z_{N_v}
+  }
+\end{equation}
+where, as above, we multiplied and divided by the volume of the binding site, assuming for simplicity that the indicator function does not depend on the orientational degrees of freedom of the ligand. Combining this result with Eq.~(\ref{eq:partfunct-ratio-explsolv-1}) for the complex and canceling the common partition function of the pure solvent, leads with Eq.~(\ref{eq:DG0-binding-constant-def})  to an expression for the binding constant in terms of ratios of partition functions in explicit solvent that differ only by the location of the indicator function (in the binding site or in the solvent region):
+\begin{equation}\label{eq:atm-partfunc-ratio}
+  K_b = C^\circ V_{\rm site} \frac{
+    \int d\vec{r}_v dx_R dx_L d\zeta I(\zeta) e^{-\beta U(x_R, x_L, \zeta, \vec{r}_v)}
+  }{
+    \int d\vec{r}_v dx_R dx_L d\zeta I^\ast(\zeta) e^{-\beta U(x_R, x_L, \zeta, \vec{r}_v)}
+  }
+\end{equation}
+The idea of alchemical transfer, illustrated in Figure \ref{fig:atm-illustration}A, is to cast Eq.~(\ref{eq:atm-partfunc-ratio}) as an ensemble average by a change of coordinates noting that $I(\zeta) = I^\ast(\zeta - \vec{h})$ where $\vec{h}$ is the fixed vector distance between the binding site and solvent locations spanned by the two indicator functions. The symbol $\zeta$ represents the position and orientation of the ligand relative to the receptor, so here $\zeta - \vec{h}$ is the operation of shifting the position of the ligand by the displacement $\vec{h}$ without changing its orientation. Hence, by applying the change of variable $\zeta \rightarrow \zeta - \vec{h}$ to the integral in the numerator of Eq.~(\ref{eq:atm-partfunc-ratio}), we arrive at the following expression for the binding constant, equivalent to Eq.~(\ref{eq:DG0-binding-constant-def-average-noOmega}):
+\begin{equation}\label{eq:atm-average-abfe}
+K_b = C^\circ V_{\rm site} \langle e^{-\beta \Delta U} \rangle_0
+\end{equation}
+where
+\begin{equation}\label{eq:atm-deltaU-def}
+\Delta U(x) = U(x_R, x_L, \zeta + \vec{h}, \vec{r}_v) - U(x_R, x_L, \zeta, \vec{r}_v)
+\end{equation}
+is the perturbation energy of the method, and the ensemble average $\langle \ldots \rangle_0$ is over the unbound ensemble when the ligand is limited to the solvent region far away from the receptor. Eq.~(\ref{eq:atm-average-abfe}) instructs to simulate the unbounded system where the ligand is limited to a region in the solvent and to sample the change of potential energy $\Delta U$ resulting from transferring the ligand from the solvent to the receptor binding site by a fixed displacement of the ligand as a whole.
+
+While Eq.~(\ref{eq:atm-average-abfe}) is formally rigorous, it is numerically necessary to divide the alchemical transfer ABFE calculation in explicit solvent into two legs~\cite{wu2021alchemical,azimi2022relative} that connect the unbound and bound states by a suitable alchemical intermediate state. Current implementations use an alchemical intermediate state midway between the bound and unbound states with the symmetric hybrid potential energy function
+\begin{equation}\label{eq:atm-intermediate-pot}
+U_{1/2}(x) = \frac12 [ U(x_R, x_L, \zeta + \vec{h}, \vec{r}_v) + U(x_R, x_L, \zeta, \vec{r}_v)  ] 
+\end{equation}
+To include the alchemical intermediate, Eq.~(\ref{eq:atm-partfunc-ratio}) is multiplied and divided by the partition function of the system with the hybrid potential energy function in Eq.~(\ref{eq:atm-intermediate-pot}), each serving as the sampling state for each leg. The expression for the binding constant becomes a ratio of ensemble averages
+\begin{equation}\label{eq:atm-average-abfe-intermediate}
+  K_b = C^\circ V_{\rm site} \frac{
+    \langle e^{-\beta \Delta U_1} \rangle_{1/2}
+  }{
+    \langle e^{-\beta \Delta U_2} \rangle_{1/2}
+  }
+\end{equation}
+where $\Delta U_1$ and $\Delta U_2$ are the perturbation energies of the bound and unbound states relative to the alchemical intermediate. For example,
+\begin{equation}
+\Delta U_1(x) = U(x_R, x_L, \zeta + \vec{h}, \vec{r}_v) - U_{1/2}(x)
+\end{equation}
+Setting,
+\begin{equation}
+\Delta G_1 = -k_B T \ln \langle e^{-\beta \Delta U_1} \rangle_{1/2}
+\end{equation}
+and similarly for the second leg, we recover Eq.~(\ref{eq:ddm-dg1-dg2}) obtained for double-decoupling. This shows that, while the thermodynamic path and the meaning of the $\Delta G_1$ and $\Delta G_2$ free energy components differ, the double-decoupling and alchemical transfer formulations both connect the unbound and bound states through an auxiliary intermediate state: the ligand decoupled state for double-decoupling, and the symmetric alchemical intermediate for alchemical transfer.~\cite{azimi2025potential} However, alchemical transfer simulates both legs with a single simulation system, while double-decoupling accomplishes them in separate simulations.
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.95\linewidth]
+    {figures_atm/atm_scheme_abfe_rbfe.pdf}
+    \caption{\small Alchemical transfer method illustrated for (\textbf{A}) Absolute Binding Free Energy (ABFE) and (\textbf{B}) Relative Binding Free Energy (RBFE) calculations. In (A), the receptor (blue) is shown with the ligand in bulk solvent being translated to the active site along a vector $+h$. In (B), the RBFE setup is shown with two ligands: one in the binding site and the other in bulk solvent. A vector $h$ separates the ligands, and the perturbation energy is evaluated by virtually swapping their positions at each MD step.}
+    \label{fig:atm-illustration}
+\end{figure}
+
+\subsubsection{Relative binding free energy (RBFE)}
+
+In many cases, the quantity of interest is the change in binding affinity $\Delta \Delta G_b$ between a compound $A$ and a related compound $B$ (e.g., by modifying one of the drug scaffold's substituents, see (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{E})) for the same receptor. If the ligands are sufficiently similar, evaluating the Relative Binding Free Energy (RBFE) is often more convenient than taking the difference of their ABFEs. Formally, these approaches seek to compute the ratio $K_b(B)/K_b(A)$ of the binding constants of the two ligands rather than each binding constant individually. Here we present an RBFE formulation based on the double-decoupling ABFE approach, which we call double-transformation, and the RBFE formulation based on alchemical transfer.
+
+\paragraph{Double Transformation for RBFE estimation}
+
+To derive an RBFE formulation from double-decoupling, we write expressions for the binding constants of $A$ and $B$ using Eq.~(\ref{eq:ddm-ratios-1}) and taking their ratio. While doing so, the standard state, pure solvent, and gas-phase terms cancel, and we obtain
+\begin{equation}\label{eq:double-transformation-Kb-rbfe}
+\frac{K_b(B)}{K_b(A)} = \frac{Z_{N_v,RB}}{Z_{N_v,RA}} \frac{Z_{N_v,A}}{Z_{N_v,B}}
+\end{equation}
+where the first ratio of partition functions involves receptor-ligand complexes and the second only the ligands in solution. Eq.~(\ref{eq:double-transformation-Kb-rbfe}), suggests that the relative binding free energy, $\Delta \Delta G_b$, of $B$ relative to $A$ can be expressed as the difference of the free energies of ``mutating'' ligand $A$ into ligand $B$ in the presence and absence of the receptor (Figure \ref{fig:fig_binding_thermodynamic_cycle}):
+\begin{equation}\label{eq:double-transformation-dg-rbfe}
+\Delta \Delta G_b = -k_B T \ln \frac{Z_{N_v,A}}{Z_{N_v,B}} - (-k_B T \ln \frac{Z_{N_v,B}}{Z_{N_v,A}}) = \Delta G_{\rm bound} - \Delta G_{\rm unbound}
+\end{equation}
+In practice, each ratio of partition functions must first be turned into an ensemble average to evaluate it. Similar to the preceding case, this step requires manipulating the integrals so that they are carried over the same set of degrees of freedom. As discussed in Section \ref{sec:relative-fe-protocol}, this step involves using alchemical topologies capable of describing both ligands. For example, among other features, alchemical topologies include atoms common to both ligands and dummy atoms that exist in one but not in the other ligand (Figure \ref{fig:fig_topology}). In one limit, called dual coordinate dual topology in Section \ref{sec:relative-fe-protocol}, all atoms of both ligands are present, and the partition functions in Eq.~(\ref{eq:double-transformation-dg-rbfe}) differ in which ligand is coupled to the system. A key aspect of constructing a suitable alchemical topology is the requirement that the additional degrees of freedom do not affect the RBFE estimate.
 
 \begin{figure}
     \includegraphics[width=0.95\linewidth]{figures/fig2_therm_cyc/Figure.pdf}
@@ -590,11 +717,46 @@ Note that, when $A$ and $B$ have a different number of atoms, the factors $ \ln 
     \label{fig:fig_binding_thermodynamic_cycle}
 \end{figure}
 
+\paragraph{Alchemical Transfer for RBFE Estimation}
+
+The RBFE alchemical transfer formulation is very similar to the ABFE formulation. The simulation system includes both ligands, one in solution and the other in the binding site, and the coordinate transformation involves displacing them in opposite directions so that they switch places. Formally,~\cite{azimi2022relative} the method derives from Eq.~(\ref{eq:DG0-binding-constant-def}) for each binding constant
+\begin{equation}
+\frac{K_b(B)}{K_b(A)} = \frac{z_{RB(v)} z_{A(v)}}{z_{B(v)} z_{RA(v)}}
+\end{equation}
+and noting that the numerator represents a system with $B$ bound and $A$ unbound, and in the denominator, the roles are switched. Next, the solvent PMF is used to indicate the solvent degrees of freedom explicitly, and the indicator functions $I^\ast(\zeta_A)$ and $I^\ast(\zeta_b)$ are introduced to keep the unbound ligands in the solvent, similarly to Eq.~(\ref{eq:atm-partfunc-ratio}). The result is
+\begin{equation}\label{eq:atm-partfunc-ratio-rbfe-1}
+  \frac{K_b(B)}{K_b(A)} = \frac{
+    \int d\vec{r}_v dx_R dx_A d\zeta_A dx_B d\zeta_B I^\ast(\zeta_A) I(\zeta_B)  e^{-\beta U(x_R, x_A, \zeta_A, x_B, \zeta_B, \vec{r}_v)}
+  }{
+    \int d\vec{r}_v dx_R dx_A d\zeta_A dx_B d\zeta_B I(\zeta_A) I^\ast(\zeta_B)  e^{-\beta U(x_R, x_A, \zeta_A, x_B, \zeta_B, \vec{r}_v)}
+  }
+\end{equation}
+where $x_A$ and $x_B$ are the internal coordinates of the ligands and $\zeta_A$, $\zeta_B$ are their external coordinates relative to the receptor.  Next we apply the change of variables $\zeta_B \rightarrow \zeta_B + \vec{h}$ and $\zeta_A \rightarrow \zeta_A - \vec{h}$ to the partition function in the numerator to obtain
+\begin{equation}\label{eq:atm-partfunc-ratio-rbfe-2}
+  \frac{K_b(B)}{K_b(A)} = \frac{
+    \int d\vec{r}_v dx_R dx_A d\zeta_A dx_B d\zeta_B I(\zeta_A) I^\ast(\zeta_B)  e^{-\beta U(x_R, x_A, \zeta_A + \vec{h}, x_B, \zeta_B - \vec{h}, \vec{r}_v)}
+  }{
+    \int d\vec{r}_v dx_R dx_A d\zeta_A dx_B d\zeta_B I(\zeta_A) I^\ast(\zeta_B)  e^{-\beta U(x_R, x_A, \zeta_A, x_B, \zeta_B, \vec{r}_v)}
+  }
+\end{equation}
+which can be written as an ensemble average
+\begin{equation}\label{eq:atm-partfunc-ratio-rbfe-average}
+\frac{K_b(B)}{K_b(A)} = \langle e^{-\beta \Delta U}\rangle_{RA+B}
+\end{equation}
+where
+\begin{equation}\label{eq:atm-partfunc-ratio-rbfe-pert}
+\Delta U = U(x_R, x_A, \zeta_A + \vec{h}, x_B, \zeta_B - \vec{h}, \vec{r}_v) - U(x_R, x_A, \zeta_A, x_B, \zeta_B, \vec{r}_v)
+\end{equation}
+is the perturbation energy for displacing the two ligands in opposite directions, and the ensemble average $\langle \ldots \rangle_{RA+B}$ is carried out with $A$ bound and $B$ in the solvent. Except for the coordinate displacement, Eq.~(\ref{eq:atm-partfunc-ratio-rbfe-average}) is implemented similarly to the alchemical transfer ABFE protocol, including the use of the symmetric alchemical intermediate as in Eq.~(\ref{eq:atm-average-abfe-intermediate}).
+
+\subsection{Numerical Implementations of Alchemical Transformations}
+\label{subsec:numerical-implementations}
+
 \paragraph{How are alchemical transformations performed in practice?}
 
-In practice, the mutation of $A$ to $B$ is carried out by introducing one or more parameters $\vec{\lambda}$ controlling the potential energy function $U(\vec{q};\vec{\lambda})$ such that the potential of compounds $A$ and $B$ is recovered at two particular values $\vec{\lambda}_A$ and $\vec{\lambda}_B$.
-Briefly, this is achieved by simulating a ``chimeric'' molecule composed of enough atoms to represent both $A$ and $B$.
-A subset of the energetic terms in $U(\vec{q};\vec{\lambda})$ is then modulated by $\vec{\lambda}$ so that at $\vec{\lambda}_A$, the atoms that form molecule $A$ are activated and those belonging exclusively to $B$ are non-interacting ``dummy atoms'', while the opposite occurs at $\vec{\lambda}_B$ (see Sec.~\ref{sec:relative-fe-protocol} for details).
+As discussed below, because of poor ensemble overlap, in most cases of interest, alchemical free energy calculations cannot be carried out directly by ensemble averages collected only at the reference or target states. Instead, in a process called stratification,~\cite{chipot2007free} we take advantage of the state function property of the free energy and break up the transformation into a series of manageable steps, distributed along an alchemical pathway, whose combination is equivalent to the desired transformation (see Section \ref{sec:important_path}). Intermediate alchemical states are typically defined in terms of one or more alchemical progress parameters $\vec{\lambda}$ controlling the potential energy function $U(\vec{q};\vec{\lambda})$ such that the potential energies of the initial and final states are recovered at two particular values $\vec{\lambda}_0$ and $\vec{\lambda}_1$.
+
+In the case of a relative binding free energy calculation, for example, this might be achieved by simulating a ``chimeric'' molecule composed of enough atoms to represent both $A$ and $B$. A subset of the energetic terms in $U(\vec{q};\vec{\lambda})$ is then modulated by $\vec{\lambda}$ so that at $\vec{\lambda}_A$, the atoms that form molecule $A$ are activated and those belonging exclusively to $B$ are non-interacting ``dummy atoms'', while the opposite occurs at $\vec{\lambda}_B$ (see Sec.~\ref{sec:relative-fe-protocol} for details).
 
 We can rigorously account for fluctuations in other thermodynamic parameters such as changes in volume $V$ when simulating at constant pressure $p$ or changes in number of molecules $N_i$ of species $i$ at constant chemical potential $\mu_i$ (e.g., number of waters or ions) by introducing the \textit{reduced potential}~\cite{shirts2008statisticallya}
 \begin{equation}\label{eq:reduced-potential}
@@ -655,7 +817,6 @@ We first note that the accuracy of any free energy calculation method will depen
 Alchemical free energy calculations involving small molecules seem to achieve, in favorable cases, root mean square (RMS) errors relative to experiment around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative. A small selection of example datasets and case studies can be found in Sec.~\ref{sec:benchmark} at the end of this document.
 However, the domain of applicability is a significant concern~\cite{sherborne2016collaborating, cournia2017relative}, especially for relative calculations, which typically require a high quality and usually experimental bound structure of a closely
 related ligand as a starting point. Additional factors such as slow protein or ligand rearrangements, uncertainties in ligand binding mode, or charged ligands can make these calculations far less reliable and more of a research effort.
-
 
 It is worth noting that the accuracy of free energy calculations is highly variable across different protein targets, and likely across different ligand chemotypes as well.
 For instance, FEP+ with OPLS3 achieves an RMSE of 0.62 kcal/mol for a set of 21 compounds binding to JNK1 kinase, but an RMSE of 1.05 kcal/mol for a set of 34 compounds binding to P38$\alpha$ kinase~\cite{harder2016opls3}.
@@ -847,9 +1008,9 @@ While the implementation technically uses two sets of coordinates for the entire
 %The authors refer to this approach as hybrid single-dual topology. While it technically uses two separate sets of coordinates, the constraint that corresponding atoms have identical coordinates makes it effectively a single coordinate method; hence, I consider NAMD’s approach to be a variant of Pearlman’s (single coordinate) dual topology. 
 
 Dual coordinate approaches with chemical topologies encompass a third group of methods, where essentially two absolute free energy calculations are carried out in opposite directions at the same time.
-The so-called ``separated topologies'' (SepTop) method \cite{rocklin2013separated,Baumann_2023} and the ``alchemical transfer method'' (ATM) \cite{Azimi_2022} belong into this category. In SepTop, the two copies are held on top of each other via restraints with respect to the protein/receptor they bind to (as opposed to Restraintmaker, where the molecules are restrained to each other). %In ATM, a restraint is used to keep the bound ligand 1 and the free ligand 2 always some minimum distance apart; during exchange moves, suitable rigid-body rotations/translations are applied to move the free ligand into a position/orientation as similar as possible to the one of the bound ligand.
-In ATM, restraints are used to keep the bound and free ligands at some distance apart and in the same orientation, so that during the translation move the free ligand is placed into a position and orientation as similar as possible to that of the bound ligand. Both copies are present simultaneously, but they do not occupy the same space. Recently, a variant of $\lambda$-dynamics that uses chemical topologies (separate coordinates for each state) has been proposed \cite{Liesen_2024}.
-  
+The so-called ``separated topologies'' (SepTop) method \cite{rocklin2013separated,Baumann_2023} and the ``alchemical transfer method'' (ATM) \cite{azimi2022relative} belong into this category. In SepTop, the two copies are held on top of each other via restraints with respect to the protein/receptor they bind to (as opposed to Restraintmaker, where the molecules are restrained to each other). %In ATM, a restraint is used to keep the bound ligand 1 and the free ligand 2 always some minimum distance apart; during exchange moves, suitable rigid-body rotations/translations are applied to move the free ligand into a position/orientation as similar as possible to the one of the bound ligand.
+In ATM, restraints are used to keep the bound and free ligands at some distance apart and in the same orientation, so that during the translation move the free ligand is placed into a position and orientation as similar as possible to that of the bound ligand. Recently, a variant of $\lambda$-dynamics that uses chemical topologies (separate coordinates for each state) has been proposed \cite{Liesen_2024}.
+
 %Other methodologies also use both end states simultaneously; examples are the Separated Topologies (SepTop) approach [Baumann2023] and the ATM method [Azimi2022]. In the former, the two copies are held on top of each other via restraints with respect to the protein/receptor they bind to. Ries et al. refer to such an approach as “separated dual topology”, whereas they label their approach as “linked dual topology”. In ATM, a restraint is used to keep the bound ligand 1 and the free ligand 2 always some minimum distance apart; during exchange moves, suitable rigid-body rotations/translations are applied to move the free ligand into a position/orientation as similar as possible to the one of the bound ligand. Both copies are present simultaneously, but they do not occupy the same space.
 
 %One final approach, so far in its infancy, has been called ``separated topologies'' and essentially consist of two absolute free energy calculations in opposite directions at the same time, turning one molecule's interactions with the environment off, while turning the other molecule's interaction on~\cite{jiang2019computing, rocklin2013separated}.
@@ -870,7 +1031,7 @@ Unfortunately, during the past years the use of the terms single and dual topolo
 For completeness, we list some additional terminology that has been used: Some studies refer to a ``hybrid'' topology approach to free energy calculations~\cite{gapsys2015pmx, gapsys2016accurate, gapsys2020large}, though in our view these calculations should be classified as single coordinate single topology \sbnote{Check whether this is correct!}. %this term may not yet have achieved widespread use. In this case, "hybrid" seems to indicate that the set up of these free energy calculations involves a hybrid of the two molecules, and much of what is done in these studies uses a single topology approach~\cite{gapsys2020large}.
 Ries et al.\ suggested terminology \cite{Ries_2022} in which single topology corresponds to SCST, hybrid topology to SCDT, and dual topology to DC.
 
-The practical implementation of the approaches to carry out alchemial transformations above leads to additional, often non-trivial differences within each methodology. In the description of DC approaches we already pointed out that the two sets of coordinates can be held on top of each other by constraints \cite{jiang2019computing,lee2023aces} or restraints. In the latter case, the restraints may couple the two set of coordinates directly \cite{Axelsen_1998,Ries_2022}, or the restraints may be defined relative to a common reference frame \cite{rocklin2013separated,Baumann_2023}. Finally, in ATM the two copies of the coordinates are held separate \cite{Azimi_2022}.
+The practical implementation of the approaches to carry out alchemial transformations above leads to additional, often non-trivial differences within each methodology. In the description of DC approaches we already pointed out that the two sets of coordinates can be held on top of each other by constraints \cite{jiang2019computing,lee2023aces} or restraints. In the latter case, the restraints may couple the two set of coordinates directly \cite{Axelsen_1998,Ries_2022}, or the restraints may be defined relative to a common reference frame \cite{rocklin2013separated,Baumann_2023}. Finally, in ATM the two copies of the coordinates are held separate \cite{azimi2022relative}.
 
 Concerning SC approaches, Pearlman’s usage of the term single topology not only meant a chimeric construct as depicted in Fig.~\ref{fig:fig_topology}, but specifically implied that the coupling parameter $\lambda$ was applied to the force field parameters. E.g., a bond stretching energy term changing from C-H to C-C has the functional form $U_{bond}(\lambda)=K(\lambda)(r-r_0(\lambda))^2$. For $\lambda=0$, $K(\lambda)$ and $r_0(\lambda)$ correspond to the values appropriate for a C-H bond, and for $\lambda=1$ to those for a C-C bond. Other force field parameters are treated analogously. The single topology paradigm as just summarized was the default mode of alchemical transformations in AMBER and GROMOS at that time.  More recently, this implementation of single topology has been referred to as parameter interpolation or mixing \cite{Giese_2018}. 
 
@@ -883,6 +1044,8 @@ Any energy mixing approach, whether in a SC or DC context, requires two energy/f
 
 \sbnote{I think this should get its own paragraph/subsection; to be expanded!} Software packages vary in their use of single or dual topology approaches; for example, AMBER TI uses a dual topology approach, while BioSimSpace uses a single topology approach. Please make sure to check what approach is used with your software package of choice, or whether it supports your choice of approach (GROMACS and GROMOS, for example, support both). 
 To our knowledge, efficiency differences have not been thoroughly explored, though conventional wisdom suggests that fewer dummy atoms are better, as introducing or removing atomic sites is usually more difficult, requiring more intermediate steps ~\cite{liu2013lead, mobley2012perspective}.
+
+Because they duplicate the common region, dual coordinate formulations are not generally applicable to small modifications of large molecules, such as single-point mutations of proteins. An exception, and an example of the variety of alchemical approaches, is the Alchemical Transfer with Coordinate Swapping method~\cite{gallicchio2025mutants}, which is a dual coordinate approach with similar convergence characteristics of single- and dual-topology formulations. It works by exchanging the coordinates of the corresponding atoms of the common substructure of the free and bound ligands and displacing the atoms of the variable substituents. The net effect is the switching of the positions of the two ligands (Figure \ref{fig:atm-illustration}\textbf{B}) by the transfer of only their variable regions.
 
 \paragraph{Atom mapping} \label{subsec: Atom Mapping}
 Following the choice of system representation and sampling strategy, it might be required to generate a atom mapping. This is the case especially for system representations using a single coordinate set (Type 1. \& 2), however a dual coordinate set approach could use an atom mapping as well, depending on the sampling method, this will be explained in the next steps.
@@ -913,7 +1076,7 @@ A next step for atom mappings, would be to support multistate methods (e.g. RE-E
 
 Single coordinate set relative calculations and calculations based on substructure searches only work if in fact the ligands share a common substructure, e.g. are part of a congeneric series, see Fig.~\ref{fig:fig_mcss}.
 If no common substructure is shared, then dual coordinate sets methods like linked-dual or separated topology free energy calculations are needed. One would co-localize a pair of compounds in a binding site, exclude their interactions with one another, and compute the relative binding free energy by turning one molecule on from being dummy atoms while turning the other off.
-For such approaches it is crucial to find a good set of restraints, that keep the ligands colocalized over the time of the simulation . This problem is similar to the required restraints in ABFE Calculations (see \ref{sec:ABFE-standard-state} ). Few descriptions of possible approaches in RBFE calculations can be found for such approaches like the one suggested by \textit{Baumann et al.}~\cite{baumann2023broadening} based on Boresch style restraints~\cite{boresch2003absolute}, with an elaborate automatic atom selection approach, for the seperated topology approach, or Restraintmaker~\cite{ries2022restraintmaker} for the linked-DCDT approaches, which finds a small set of atoms to be linked via distance restraints, with a small distance to each other. 
+For such approaches it is crucial to find a good set of restraints, that keep the ligands colocalized over the time of the simulation . This problem is similar to the required restraints in ABFE Calculations (see \ref{sec:standardstate-restraints} ). Few descriptions of possible approaches in RBFE calculations can be found for such approaches like the one suggested by \textit{Baumann et al.}~\cite{baumann2023broadening} based on Boresch style restraints~\cite{boresch2003absolute}, with an elaborate automatic atom selection approach, for the seperated topology approach, or Restraintmaker~\cite{ries2022restraintmaker} for the linked-DCDT approaches, which finds a small set of atoms to be linked via distance restraints, with a small distance to each other. 
 However the implementation and testing of an fully automatized dual-topology pipeline for RBFE dual topology approaches is still to our knowledge a remaining research problem and was only tested with small datasets. \cite{jespers2019qligfep, rieder2022lev}
 
 \paragraph{Dummy atoms} \label{subsec: Dummy Atoms}
@@ -924,7 +1087,7 @@ The need for and role of dummy atoms is clearly visible in Fig.~\ref{fig:fig_top
 
 While some early work on the correct treatment of dummy atoms, i.e., how to treat them so that their contribution to the partition function factors, has been available for years \cite{Boresch_2002,Shobana_2000,Wang_2012}, most workers seem to mostly turn off nonbonded interactions for dummy atoms, but leaving all bonded interactions intact \sbnote{To all: While I am quite sure that this is what most of us have been doing most of the time, I wonder whether this has been epxlicitly described anywhere?}. Since current force fields use multiple angle and torsion terms for each atom, there are often a large number of bonded energy terms connecting dummy atoms to the physical molecule. However, as already described in the early studies and repeated in a more recent study focusing on the correct treatment of dummy atoms \cite{Fleck_2021}, the desired factorization can only be guaranteed if any dummy atom connected to the physical molecule is held by exactly three (non-redundant) degrees of freedom. Naive application of the three-degree-of-freedom per dummy atom rule (for dummy atoms having at least one joint bonded term with the physical molecule), however, can result in simulations where the dummy part adopts unphysical configurations/conformations; Fleck et al.\ referred to this as “flapping”. Thus, depending on the details of the physical molecule -- dummy atom(s) junction, the three degree of freedoms need to be selected with care, or a carefully chosen additional redundant degree of freedom may be needed. In the latter case, the factorization of the partition function is not exact, but the overall error can still be made arbitrarily small. For the full details, we refer the reader to Ref.~\cite{Fleck_2021}. 
 
-One situation involving dummy atoms that needs to be avoided is the creation of a cyclic structure involving dummy atoms, i.e., whenever the (group of) dummy atom(s) is attached to two different parts of the physical molecule. In this case, the factorization of the partition function is never possible \cite{Shobana_2000}. It follows that ring opening or closing is extremely challenging to carry out using SCST approaches \cite{liu2015ring}; these difficulties have in part motivated the development and adoption of dual coordinate approaches. For more on ring opening/closing, see also below. Nevertheless, DC approaches are susceptible to exactly this type of problem: to keep the noninteracting molecule on top of the interacting one, typically multiple bonded restraints (e.g. harmonic bonds) are used \cite{Axelsen_1998,Ries_2022}. These effectively, are equivalent to the formation of cyclic structures with potential erroneous contributions to the double free energy difference of interest. The type of restraints used in SepTop \cite{rocklin2013separated,Baumann_2023} and ATM \cite{Azimi_2022} avoid this problem.
+One situation involving dummy atoms that needs to be avoided is the creation of a cyclic structure involving dummy atoms, i.e., whenever the (group of) dummy atom(s) is attached to two different parts of the physical molecule. In this case, the factorization of the partition function is never possible \cite{Shobana_2000}. It follows that ring opening or closing is extremely challenging to carry out using SCST approaches \cite{liu2015ring}; these difficulties have in part motivated the development and adoption of dual coordinate approaches. For more on ring opening/closing, see also below. Nevertheless, DC approaches are susceptible to exactly this type of problem: to keep the noninteracting molecule on top of the interacting one, typically multiple bonded restraints (e.g. harmonic bonds) are used \cite{Axelsen_1998,Ries_2022}. These effectively, are equivalent to the formation of cyclic structures with potential erroneous contributions to the double free energy difference of interest. The type of restraints used in SepTop \cite{rocklin2013separated,Baumann_2023} and ATM \cite{azimi2022relative} avoid this problem.
 Additionally, SCDT approaches, such as TIES~\cite{bhati2017}, circumvent this issue by design as they do not need any restraints to hold MCSS together between the two end-points.
 
 The influence from an incorrect treatment of dummy atoms (e.g., leaving all bonded terms intact) is difficult to estimate, though it may be small in many cases \cite{Fleck_2021}. Nevertheless, some guidelines should be followed:
@@ -952,14 +1115,8 @@ At present the most general solution to this problem is simply to avoid the use 
 \subsubsection{Absolute free energy calculations must handle the standard state and use binding site restraints}
 \label{sec:standardstate-restraints}
 
-
-\begin{figure}
-    \includegraphics[width=0.95\linewidth]{figures/fig5_thermo_cyc_abs/Figure.png}
-    \caption{\textbf{Thermodynamic cycle for an absolute binding free energy calculation with auxiliary restraints} The fully interacting ligand in water (\textbf{A}), has its charges turned off to pass to (\textbf{B}) followed by turning off van der Waals terms, resulting in a non-interacting ligand in water (\textbf{C}). The receptor-ligand complex (\textbf{D}) is defined by binding site restraints (dotted oval). Auxiliary restraints are often introduced (\textbf{E}) to improve convergence while the charges and van der Waals interactions are turned off (\textbf{F} and \textbf{G}). The free energy cost of releasing the auxiliary restraints (\textbf{G} to \textbf{H}) and transferring the non-interacting ligand from the standard state volume to the binding site (\textbf{C} to \textbf{H}) must be accounted for. The standard binding free energy is computed from this cycle as $\Delta G^{\circ}_{\mathrm{bind}} = (\Delta G^{\mathrm{elec}}_{\mathrm{solv}}+ \Delta G^{\mathrm{VdW}}_{\mathrm{solv}}) + \Delta G^{\circ}_{\mathrm{ideal}} -(\Delta G_{\mathrm{aux.restr.}}+\Delta G^{\mathrm{elec}}_{\mathrm{bound}}+ \Delta G^{\mathrm{VdW}}_{\mathrm{bound}}+\Delta G_{\mathrm{release}})$. Many variations of the route between the free (\textbf{A}) and bound (\textbf{D}) states can be used -- for example, state \textbf{H} is commonly skipped and the free energy cost of moving from \textbf{C} to \textbf{G} is calculated directly.}
-    \label{fig:fig_absolute_thermodynamic_cycle}
-\end{figure}
-
-
+%this was moved to the theory section, keeping it for now for reference
+\begin{comment}
 An absolute binding free energy calculation yields the standard free energy of formation of the molecular complex from the separated receptor and ligand species. Hence, as discussed in \ref{sec:non-covalent-molecular-binding}, it must depend on the standard state concentration $C^\circ$ (here $1 \, {\rm M} = 1 \, {\rm molecule}/1660$~\r{A}$^3$) and on the definition of the complex, that is on the specific binding pose for which the binding free energy is requested. Omitting the standard state concentration would yield an undefined result that would vary with the choice of concentration units. A similar vague estimate would result from omitting the binding pose definition that, for example, could equally describe binding to a specific site of the receptor or unspecific binding throughout the receptor surface depending on the extent of conformational sampling (see Sec.~\ref{sec:weak-binders}).
 
 In the statistical mechanics formulation of Gilson et al.~\cite{gilson1997statisticalthermodynamic}, described in Section \ref{sec:non-covalent-molecular-binding}, the standard state concentration appears explicitly in Eq.~(\ref{eq:DG0-binding-constant-def}) and the binding pose is defined by the indicator function $I(\zeta)$ that characterizes the partition function of the complex; Eq.~(\ref{eq:intra-zRL-def}).  The role of the standard state and binding site definitions are particularly evident when expressing Eq.~(\ref{eq:DG0-binding-constant-def}) in terms of an ensemble average. To do so, we express the integrals in the numerator and denominator of Eq.~(\ref{eq:DG0-binding-constant-def}) over the same set of degrees of freedom. Note that the intramolecular configurational partition function of the complex, $z_{RL(v)}$, includes six more degrees of freedom--the position and orientation of the ligand relative to the receptor collectively described by the variable $\zeta$--than the product of the intramolecular partition functions, $z_{R(v)} z_{L(v)}$, of the separated receptor and ligand. To correct this discrepancy, we multiply and divide the right-hand side of Eq.~(\ref{eq:DG0-binding-constant-def})  by the quantity
@@ -989,15 +1146,17 @@ which, expressed in free energy units, yields
 The term $\Delta G^\circ_{b,{\rm ideal}} = - k_B T \ln C^\circ V_{\rm site}$ in Eq.~(\ref{eq:DG0-def-Vsite}) is interpreted as the \emph{ideal} component of the standard binding free energy, that is the binding free energy that would be measured in the absence of ligand-receptor interactions ($\Delta \Psi = 0$) and when the ligand's concentration is $C^\circ$. The ideal term is responsible for the dependence of the standard binding free energy on the standard state concentration. The arguably inappropriate term ``standard state correction'' is sometimes used in the literature to refer to $\Delta G^\circ_{b,{\rm ideal}}$. As seen above, the ideal term is a fundamental aspect of the statistical mechanics theory of molecular binding rather than a mere correction to an inexact formulation. 
 
 Conversely, the term $\Delta G_{b,{\rm exc.}} = - k_B T \ln \langle e^{-\beta \Delta \Psi}  \rangle_0 $ is the \emph{excess} component of the standard free energy of binding, which is the term that depends on intermolecular interactions and the specific chemical composition of the system. The excess component is the target of the alchemical molecular simulations discussed here, in contrast to the ideal term that is generally evaluated analytically~\cite{boresch2003absolute}.
+\end{comment}
 
-\paragraph{Handling the standard state in free energy calculations.} \label{sec:ABFE-standard-state}
 As discussed in Sections \ref{sec:theory-solvation} and \ref{sec:theory-partitioning}, the handling of the standard state in solvation and solvent partitioning free energy calculations is typically straightforward. Eq.~(\ref{eq:DG0-solvation-def}) identifies the ideal and excess components of the standard solvation free energy in terms of the standard gas pressure $P^\circ$, standard solution concentration $C^\circ$, and ensemble averages typically evaluated by alchemical free energy simulations. These relations provide simple recipes to relate computational estimates to experimental values obtained under different conditions. Moreover, typical experimental reporters (Henry's constants and partitioning coefficients) directly probe the excess term calculated by molecular simulations, which is independent of the standard state.
 
 As discussed above, the situation for binding is more complex and requires special care. The first important aspect is that binding free energy calculations must be performed with binding site restraints that implement the binding site indicator function $I(\zeta)$ by forcing the ligand to occupy the binding site even when it is decoupled from the receptor. Doing otherwise would fail to specify the bound macrostate of the complex and return undefined binding free energy estimates. However, in practice, calculations lacking binding site restraints often return reliable binding free energy estimates due to the kinetic trapping of the ligand in the binding site region during the relatively short molecular dynamics sampling typical of alchemical binding free energy simulations. Nevertheless, longer calculations could display persistent drift of the estimate as new regions of conformational space are sampled. A more serious consequence of neglecting binding site restraints is the possibility of the ligand leaving the binding site when it is not coupled to the receptor. Such occurrence indicates a serious violation of the theory. Alchemical binding free energy simulations where the ligand leaves the binding site are not set up correctly and can return grossly inaccurate binding free energy estimates.
 
 Because it is a discontinuous function of the position and orientation of the ligand relative to the receptor, molecular dynamics implementations often approximate the indicator function by means of flat-bottom restraints~\cite{chen2007can, wu2021alchemical} (see below). Harmonic restraints are not as suitable in this respect because they favor a specific microstate at the bottom of the harmonic potential rather than specifying a region of conformational space.
 
-Note that $\Delta G^\circ_{b,{\rm ideal}}$ is independent of the chemical nature of the binding partners, and it is the same for all complexes sharing similar binding site definitions. The latter is the reason that the ideal term cancels out when taking the difference of absolute binding free energies when estimating relative binding free energies (RBFEs). However, while it does not appear explicitly in the definition, $\Delta G_{b,{\rm exc.}}$ depends implicitly on the definition of the binding site through the ensemble average in the uncoupled ensemble, which includes only ``bound'' configurations according to the definition of the indicator function $I(\zeta)$. Varying the binding site definition affects both the ideal and excess binding free energy terms such that their sum (the standard binding free energy) is often only weakly dependent on the binding site definition~\cite{gilson1997statisticalthermodynamic,gallicchio2011recent}. Conversely, great care should be exercised when comparing calculated excess binding free energy values corresponding to different binding site definitions. Similarly, the outcome of a binding free energy calculation conducted without a binding site definition, i.e.\ without binding site restraints, is, in principle, undefined. The latter is also true for relative binding free energies because while the ideal term cancels out, the difference in excess binding free energies depends on the binding pose definition. 
+Note that the ideal binding free energy term $\Delta G^\circ_{b,{\rm ideal}}$ in Eq.~(\ref{eq:DG0-def-Vsite}) is independent of the chemical nature of the binding partners, and it is the same for all complexes sharing binding site definitions. The latter is why the ideal term cancels out when taking the difference of absolute binding free energies when estimating relative binding free energies (RBFEs). However, while it does not appear explicitly in its definition in Eq.~(\ref{eq:DG0-def-Vsite}), the excess component of the binding free energy $\Delta G_{b,{\rm exc.}}$ depends implicitly on the definition of the binding site through the ensemble average in the uncoupled ensemble, which includes only ``bound'' configurations according to the definition of the indicator function $I(\zeta)$. Varying the binding site definition affects both the ideal and excess binding free energy terms such that their sum (the standard binding free energy) is often only weakly dependent on the binding site definition~\cite{gilson1997statisticalthermodynamic,gallicchio2011recent}. Conversely, great care should be exercised when comparing calculated excess binding free energy values corresponding to different binding site definitions. Similarly, the outcome of a binding free energy calculation conducted without a binding site definition, i.e.\ without binding site restraints, is, in principle, undefined. The latter is also true for relative binding free energies because while the ideal term cancels out, the difference in excess binding free energies depends on the binding pose definition. 
+
+
 
 \paragraph{Several choices of restraints are possible in binding free energy calculations.}
 A variety of restraint types are commonly used in alchemical binding free energy calculations. Before going into their characteristics, we must acknowledge an important and often unrecognized distinction between the binding site restraints corresponding to the indicator function $I(\zeta)$ necessary for the implementation of the theory and optional auxiliary restraints and biasing potentials sometimes used to speed up the convergence of free energy calculations. Binding site restraints are an integral part of the molecular complex definition and are typically maintained throughout the alchemical process. In particular, they must be present unchanged at the unbound and bound states. In contrast, unless thermodynamic reweighting is applied in post-processing, auxiliary restraints cannot be present at the endstates to avoid affecting their free energies. Hence, typically the free energy cost of turning them on is computed at the uncoupled state, and the free energy gain of releasing them is calculated near the bound state. In the alchemical binding free energy literature, often harmonic restraint potentials imposed in an initial stage and removed in a final stage are described as implementing binding sites restraints. However, because they utilize harmonic potentials that cannot correctly describe the binding pose macrostate (see above) and because they are turned on and then off, these are instead auxiliary restraints introduced to enhance convergence without affecting, in principle, binding free energy estimates.
@@ -1039,7 +1198,9 @@ Lattice summation methods (e.g. PME) effectively neutralize the simulation box b
 
 There are two main classes of approaches to address artefacts introduced by changes in net charge during alchemical free energy calculations: (1) avoiding changing the net charge altogether and (2) post-processing approaches to correct for artefacts using continuum electrostatics.
 Many relative free energy planning tools have been set up to avoid changing the net charge of the systems considered, including LOMAP~\cite{liu2013lead} and Schr\"{o}dinger's FEP+~\cite{wang2015accurate}. In absolute free energy calculations, it is often difficult to avoid a change in the net charge. One way to avoid charge changes is to ensure that, as a charged ligand is removed, a charged counterion of opposite sign is also removed, or one of the same sign is inserted. This is sometimes referred to as a “co-alchemical ion” approach to deal with the required charge change. This approach is easily supported in most free energy calculating programs, as it merely involves an additional simultaneous modification.
-There are special flavours of the co-alchemical ion approach such as proposed by Gapsys et al.~\cite{gapsys2015calculation}, which uses a double-system/single-box setup. Here, the two branches of a thermodynamic cycle as used in relative free energy calculations are placed in one simulation box, effectively circumventing a change in the overall net charge during a perturbation. Note that the co-alchemical approaches only avoid finite-size effects with lattice-sum methods such as PME.
+There are special flavours of the co-alchemical ion approach, such as proposed by Gapsys et al.~\cite{gapsys2015calculation}, which uses a double-system/single-box setup. Here, the two branches of a thermodynamic cycle used in relative free energy calculations are placed in one simulation box, effectively circumventing a change in the overall net charge during a perturbation. 
+Note that the co-alchemical approaches only avoid finite-size effects with lattice-sum methods such as PME.
+The Alchemical Transfer approach,\cite{wu2021alchemical,azimi2022relative} discussed in Section \ref{subsec:formulations-abfe-rbfe}, is naturally free of charge-changing artefacts because it encodes alchemical binding processes by coordinate transformations that conserve the system's net charge.
 
 Charge-change correction schemes have been explored and offer potentially viable solutions for the problem~\cite{mey2018impact}, where artifacts introduced by finite-size effects are corrected a posteriori from Poisson-Boltzmann calculations ~\cite{chen2018accurate, ohlknecht2020correcting, rocklin2013calculating,Reif2014chargecorrection}. However, application of such corrections is typically inconvenient and computationally demanding. High grid resolutions for the Poisson-Boltzmann calculations are required to avoid numerical artifacts, and it may be necessary to average over multiple representative configurations to obtain reliable results. Furthermore, they rely on continuum electrostatic models, which cannot fully capture phenomena arising from discrete solvent effects. These effects can be quantified in the orientational-disorder limit such that analytical correction terms for this effect exist for solvent models with a single van der Waals interaction site. Readers interested in these conceptual and technical limitations are referred to detailed analyses by Hünenberger and co-workers~\cite{kastenholz2006solvfe, rocklin2013calculating}.
 Alternatively, Reif and Oostenbrink demonstrated in a proof-of-concept study that on-the-fly corrections to the physical forces can be effectively used to eliminate finite-size and approximate electrostatic artifacts~\cite{Reif2015onthefly}.
@@ -1113,13 +1274,14 @@ A common process in single topology relative calculations is, as noted above, to
 Other schemes, such as simultaneously changing electrostatic and Lennard-Jones interactions with electrostatic soft-core potentials~\cite{steinbrecher2007nonlinear}, as already discussed above, may be implemented with fewer intermediate states but could require fine-tuning of electrostatic and Lennard-Jones soft-core parameters to avoid numerical instabilities~\cite{Tsai_JChemTheoryComput_2023_v19_p640}. 
 At the time of writing, there has not been conclusive evidence to suggest the separate or simultaneous approach is in general better than the other, all factors considered, so discretion should be left up to the user as to what is viable from both hardware resources, and what the simulation software supports.
 
+The pathway implemented for the Alchemical Transfer Method (ATM)~\cite{pal2019perturbation,khuttan2021alchemical,wu2021alchemical,azimi2022relative} is an example of an alternative alchemical formulation for binding that does not require soft-core pair potentials and the splitting of electrostatic and non-electrostatic contributions. ATM employs an optimized softplus alchemical potential energy function~\cite{pal2019perturbation} and a soft-core binding energy function that smooths the variations of the perturbation energy $u(\vec{q}) = U_1(\vec{q}) - U_0(\vec{q})$ rather than each pair interaction.\cite{khuttan2021alchemical} The advantage of this approach is that it does not require modifications of the energy routines of the MD engine to implement soft-core pair potentials. Moreover, it has been shown to be applicable without electrostatic/LJ splitting to the transfer of molecules, equivalent to the disappearance and introduction of atoms in conventional single- and dual-topology methods.\cite{khuttan2021alchemical}
+
 A key additional consideration in choosing the alchemical pathway is the choice of spacing of intermediate states.
 The spacing depends to some extent on the choice of analysis method, though states should essentially be spaced equidistant in the relevant thermodynamic length~\cite{crooks2007measuring, sivak2012thermodynamic}.
 For BAR/MBAR techniques this means that states should be spaced so that the statistical uncertainties between neighboring states be approximately equal~\cite{pham2012optimal, shenfeld2009minimizing}, where "approximately" is roughly within 30-50\% in magnitude. 
 Some schemes to adaptively optimize the spacing of intermediate states based on initial exploratory simulations have been proposed~\cite{hayes2017adaptive}. For molecules changing in dense solvent, then the best path is roughly independent of molecule size and shape, so what works for one molecular transformation is likely to be relatively efficient for another~\cite{monroe2014converging}.
 
-
-Some approaches have attempted to find alternative pathways to improve efficiency or find paths of low thermodynamic length~\cite{naden2014linear,naden2015linear,pham2012optimal}. For example, the enveloping distribution sampling (EDS) approach, and its multiple-replica and accelerated variant, works to improve efficiency by creating a single artificial intermediate state which simultaneously samples all end state phase spaces~\cite{perthold2018accelerated,sidler2017efficient, christ2007enveloping}. When this can be done, it provides an extremely efficient way to calculate the relative free energy difference between multiple ligands from a single simulation. However, it can often fail whenever the simulation of this intermediate state ends up trapped in configurations characteristic of only one end state. Thus, successful use of EDS can require system-dependent tuning, making it difficult to implement in an automated and reliable way. However, when successful, it can be very efficient.
+Additional approaches have attempted to find alternative pathways to improve efficiency or find paths of low thermodynamic length~\cite{naden2014linear,naden2015linear,pham2012optimal}. For example, the enveloping distribution sampling (EDS) approach, and its multiple-replica and accelerated variant, works to improve efficiency by creating a single artificial intermediate state which simultaneously samples all end state phase spaces~\cite{perthold2018accelerated,sidler2017efficient, christ2007enveloping}. When this can be done, it provides an extremely efficient way to calculate the relative free energy difference between multiple ligands from a single simulation. However, it can often fail whenever the simulation of this intermediate state ends up trapped in configurations characteristic of only one end state. Thus, successful use of EDS can require system-dependent tuning, making it difficult to implement in an automated and reliable way. However, when successful, it can be very efficient.
 
 In our view, there is still some room for further exploration of how to best choose transformation pathways, especially for relative binding calculations or more complex molecules, as most existing studies focus on smaller molecules. As we have stressed, in principle, any pathway that connects the desired end states is rigorously correct, but as discussed above, different paths may differ dramatically in thermodynamic length and therefore efficiency. Additionally, some paths simply may not converge due to issues noted above such as those encountered without soft core potentials. However, the recommendations above are reasonable, reliable, and are likely not that much less efficient than potentially more optimal choices~\cite{naden2014linear,naden2015linear,pham2012optimal}, as the real problems with the efficiency of calculating free energies are lack of sampling of slow conformational modes, rather than the lack of efficiency of the transformations. 
 
@@ -1135,7 +1297,7 @@ Similarly, Fig.~\ref{fig:configurational_sampling}\textbf{C} highlights the impo
 
 \begin{figure}
     % Figure to be updated
-    \includegraphics[width=0.88\columnwidth]{paper/figures/fig_configurational_sampling/FES_scenarios_path.pdf}
+    \includegraphics[width=0.88\columnwidth]{figures/fig_configurational_sampling/FES_scenarios_path.pdf}
     \caption{\textbf{Different scenarios of free energy surfaces.} In scenario \textbf{A}, the free energy barrier present at $\lambda=0$ is absent at other $\lambda$ states, so the system can go around the barrier by alternating sampling between alchemical and configurational space, e.g. via the path shown as the dashed line. In contrast, in scenario \textbf{B}, the free energy barrier extending all alchemical states prevents the system from sampling both metastable states at $\lambda=0$. In scenario \textbf{C}, the free energy basin extending in both alchemical and configurational directions can trap the system.}
     \label{fig:configurational_sampling}
 \end{figure} 
@@ -1157,7 +1319,7 @@ These challenges are magnified in binding free energy calculations, where sampli
 \subsubsection{What $\lambda$-sampling schemes are available?}
 \label{sec:sampling_schemes}
 Though all alchemical simulations must sample from multiple $\vec{\lambda}$ states, different approaches can be used to achieve this. Fig.~\ref{fig:fig_sampling_scheme} illustrates the four most common schemes. The simplest approach involves running an independent simulation at each of the predefined $\vec{\lambda}$ values (see Fig.~\ref{fig:fig_sampling_scheme}\textbf{A}). This type of scheme is currently used for some AMBER TI calculations~\cite{song2019using} and for Sire as implemented in BioSimSpace~\cite{hedges2019biosimspace}. However, if these simulations can be run simultaneously with communication between them, a simple extension allows mixing between these replicas. In this approach, the simulation at each $\vec{\lambda}$ can undergo periodic exchanges with neighboring $\vec{\lambda}$ values. This form of replica exchange, called Hamiltonian replica exchange, is based on ideas developed from Monte Carlo simulations of spin glasses by Swendsen and Wang~\cite{swendsen1986replica}. With the Metropolis-Hastings acceptance criterion for exchanges, the generated ensemble of all replicas still samples from the Boltzmann distribution for each replica. This approach has been used in many different contexts for molecular simulations~\cite{sugita2000multidimensional,sugita1999replicaexchange, woods2003development, jiang2010free}. The basic idea of the replica exchange scheme is shown in Fig.~\ref{fig:fig_sampling_scheme}\textbf{B}. It is supported in various software packages that provide alchemical implementations, such as GROMACS~\cite{aldeghi2015accurate}, GROMOS~\cite{hritz2008hamiltonian,hritz2007optimization},
-AMBER~\cite{Lee_JChemInfModel_2020_v60_p5595}, FEP+~\cite{wang2015accurate}, and NAMD~\cite{jiang2019computing}.
+AMBER~\cite{Lee_JChemInfModel_2020_v60_p5595}, FEP+~\cite{wang2015accurate}, NAMD~\cite{jiang2019computing}, and OpenMM~\cite{rufa2020chemical,azimi2022relative}.
 A specific variant of Hamiltonian replica exchange is FEP/REST2~\cite{rest2, feprest} that involves ``heating'' a small portion of the protein-ligand system to enhance the sampling within the binding pocket. It has been promoted as a great way to enhance sampling and is employed by default in Schr\"{o}dinger's FEP+ package. However, it should be noted that several studies have questioned its reliability and reported that it degrades the quality of free energy predictions as compared to those based on standard MD simulations without any enhanced sampling~\cite{wan2020fep+, bhati2022}. Therefore, a blind application of this sampling scheme is not recommended and it must be used with caution if at all. A variant of this method that overcomes some of the reported issues with FEP/REST2 is called alchemical enhanced sampling (ACES)~\cite{lee2023aces}. ACES creates localized targeted "enhanced sampling states" that are connected to the real state end-points through HREMD.  The method leverages the dual topology framework to produce a concerted “counter-diffusion” of alchemical states that leads to minimal rearrangement of the environment along the alchemical path~\cite{York_ACSPhysChemAu_2023_v3_p478}. The computational overhead of the method is negligible relative to more conventional alchemical free energy simulations with HREMD.
 
 A third approach borrows ideas from simulated tempering~\cite{marinari1992simulated}. In this scheme a single replica rapidly explores all of $\vec{\lambda}$ space by working out optimal weights that allow switching between different intermediate $\vec{\lambda}$ values, as seen in Fig.~\ref{fig:fig_sampling_scheme}\textbf{C} . This approach is also referred to as self-adjusted mixture sampling~\cite{lyubartsev1992new, li2007simulated, tan2017optimally} and while promising, has so far only been supported in OpenMM Tools~\cite{andrearizzi2019choderalab} and GROMACS.  Although this approach allows multiple states to be simulated in a single simulation, the weights do not always converge to the proper equilibrium distribution, and care must be taken that the final results are converged. 
@@ -1243,10 +1405,8 @@ The potential derivative required for TI should generally be calculated during t
 If that option is unavailable, you can estimate it through finite difference (if sufficient information is collected), but this will introduce significant error, and is generally not a best practice. The BAR estimator may be a better, and simpler choice at that point as you will have at least the same level of information. 
 
 The potential energy differences required for EXP, BAR, MBAR, and WHAM can be calculated either during the simulation or in post-processing. It is recommended to calculate the potential differences in code when possible to avoid extra overhead and possible errors produced by evaluating the energy of the configuration twice, and to reduce the amount of stored information. 
-Although potential energy derivatives must usually be calculated in code there is one condition under which they can be easily computed in post-simulation analysis. 
-If the alchemical path you have chosen is a linear alchemical path, then $\frac{du}{d\vec{\lambda}} = u_0(\vec{q}) - u_1(\vec{q})$, which is the difference between the initial and final states, which are already calculated by the simulation and can be recorded easily without additional computational expense. 
-However, because of the problems with linear paths already discussed in this paper, this simplification is rarely that useful.
-
+Although potential energy derivatives must usually be calculated in code, they can sometimes be easily computed in post-simulation analysis. 
+For example, if the alchemical path you have chosen is a linear alchemical path, then $\frac{du}{d\vec{\lambda}} = u_1(\vec{q}) - u_0(\vec{q}) = u(\vec{q})$, which is the perturbation energy $u$--the potential energy difference between the initial and final states. These values are already calculated by the simulation and can be recorded easily without additional computational expense. As discussed earlier, linear paths are inefficient. However, methods such as EDS and ATM, based on optimized non-linear energy interpolation alchemical energy functions $W_\lambda(u)$ that depend on atomic coordinates only through the perturbation function,~\cite{konig2021efficient,azimi2022relative} can achieve high computational efficiency by sampling and storing only perturbation energy values. The stored values can then be analyzed in post-processing to, for example, evaluate algebraically the $\Delta u_{k,j}$ quantities needed by multistate analysis (see above). 
 
 Free energy information should generally be saved more frequently than coordinate data, approximately at the rate that uncorrelated samples are produced.  
 The on-disk size of the data for free energy estimation is often significantly smaller than full atomic coordinates, so the information can easily be collected frequently. 
@@ -1359,141 +1519,6 @@ There are many parameter choices that are common to standard MD simulations. Opt
 
 \subsubsection{Charge models are non-trivial}
 Modeling the partial charges of the solute and solvent molecules is also highly important. In some fixed-charge models, the assigned partial charges depend on the input conformation of the molecule, meaning that poor or inconsistent conformer selection can introduce systematic errors in solvation free energy estimates \cite{jakalian2000, jambeck2003}. This is particularly true for methods such as Restrained Electrostatic Potential (RESP)\cite{bayly1993resp} or AM1 population charges with bond-charge correction (AM1-BCC)\cite{jakalian2000}, where the geometry of the molecule at the time of charge derivation can influence the electrostatic potential fit \cite{basma2001, zhang2011, dupradeau2010, osato2025}. In these cases, the conformer(s) used for assigning the partial charges should be saved for reproducibility. Ensuring consistency between the charge derivation geometry and the initial simulation structure is therefore recommended, or alternatively, using ensemble-averaged charges or polarizable models where appropriate \cite{ren2002,lemkul2016}.
-
-\subsection{Alchemical Transfer Method for Absolute and Relative Binding Free Energy Calculations}
-\label{sec:atm}
-
-\subsubsection{Introduction}
- 
-The Alchemical Transfer Method (ATM)~\cite{wu2021alchemical,azimi2022relative} is an alchemical framework for estimating binding free energies that targets generality with a rigorous and straightforward implementation, with as few additions as possible to standard non-alchemical models of molecular systems. Additionally, the method targets complex ligand transformations in drug design, involving scaffold-hopping and charge-changing transformations that are not well supported by traditional algorithms. ATM's overarching philosophy is to deploy robust and rigorous free energy estimation algorithms with the simplest possible procedures for developers and end users. One critical design principle is the seamless support for advanced molecular potential energy functions, such as quantum-mechanical, polarizable, and neural network potentials, in free energy-based drug discovery applications. 
-
-To reach its objectives, ATM represents the alchemical potential energy function through a coordinate transformation~\cite{azimi2022application,azimi2022relative}. Unlike traditional alchemical approaches that rely on parameter interpolation of interaction potentials, ATM employs an energy interpolation alchemical energy function~\cite{konig2021efficient} where the target potential is expressed as the reference potential after the ligand is translated from the solvent to the binding site (Figure~\ref{fig:atm-illustration}). The binding free energy calculation is performed directly, without solution and receptor legs, as well as electrostatic and non-electrostatic steps. The simulation system consists of a single solvent box prepared with conventional setup tools and without pairwise soft-core potentials.  The leveraging of the natural capabilities of MD engines to apply coordinate transformations is a distinguishing feature of ATM. Alchemical transformations for binding implemented through coordinate transformations are computationally straightforward and applicable with any potential energy function, requiring only the evaluation of energy and derivatives before and after the coordinate transformation. Conversely, because it recalculates the potential energy and its gradients twice at each time-step, ATM's strategy suffers from the downside that it is as much as twice as slow per time-step as conventional parameter interpolation alchemical approaches.
-
-%mentions parameter vs. energy interpolation 
-%@article{konig2021efficient,
-%  title={Efficient Alchemical Intermediate States in Free Energy Calculations Using $\lambda$-Enveloping Distribution Sampling},
-%  author={K\"{o}nig, Gerhard and Ries, Benjamin and H\"{u}nenberger, Philippe H and Riniker, Sereina},
-%  journal={Journal of Chemical Theory and Computation},
-%  volume={17},
-%  number={9},
-%  pages={5805--5815},
-%  year={2021},
-%  publisher={ACS Publications}
-%}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.95\linewidth]
-    {paper/figures_atm/atm_scheme_abfe_rbfe.pdf}
-    \caption{\small Alchemical transfer method illustrated for (\textbf{A}) Absolute Binding Free Energy (ABFE) and (\textbf{B}) Relative Binding Free Energy (RBFE) calculations. In (A), the receptor (blue) is shown with the ligand in bulk solvent being translated to the active site along a vector $+h$. In (B), the RBFE setup is shown with two ligands: one in the binding site and the other in bulk solvent. A vector $h$ separates the ligands, and the perturbation energy is evaluated by virtually swapping their positions at each MD step.}
-    \label{fig:atm-illustration}
-\end{figure}
-
-\subsubsection{Methodology}
-
-Using the notation in Eq.~(\ref{eq:reduced-potential}), if $u(\vec{q})$ is the physical ($\lambda$-independent) reduced potential of the system when the ligand is at a location in the solvent away from the receptor and $\vec{h}$ is a displacement vector that brings the ligand atoms from the position in the solvent to the receptor binding site (Figure~\ref{fig:atm-illustration}), the ATM \emph{reduced binding energy function}
-\begin{equation}\label{eq:ATM-binding-energy}
-b(\vec{q}) = u(\vec{q}+\vec{h}) - u(\vec{q})
-\end{equation}
-is the change in the system's potential energy when the ligand is rigidly moved from the solvent to the receptor binding site. The ATM alchemical reduced potential is then written as
-\begin{equation}\label{eq:ATM-alchemical-potential}
-    u(\vec{q}; \vec{\lambda}) = u(\vec{q}) + w[b(\vec{q});\vec{\lambda}]
-\end{equation}
-where $w(b,\vec{\lambda})$ is the \emph{perturbation energy function}. The perturbation energy function can be any function as long as it is zero at the $\lambda$-state corresponding to the unbound state and it is equal to the binding energy $b(\vec{q})$ at the bound state:
-\begin{eqnarray}
-    w[b(\vec{q});\vec{\lambda}_{\rm U}] = 0           & \quad & \vec{\lambda}_{\rm U}: {\rm Unbound\ State} \\
-    w[b(\vec{q});\vec{\lambda}_{\rm B}] = b(\vec{q})  & \quad & \vec{\lambda}_{\rm B}: {\rm Bound\ State}
-\end{eqnarray}
-
-Current ATM implementations (see below) employ the softplus perturbation energy function\cite{pal2019perturbation}
-\begin{equation}\label{eq:ATM-softplus}
-w(b;\vec{\lambda}) = w[b_{\rm sc}(b);\vec{\lambda}] =  \frac{\lambda_2 - \lambda_1}{\alpha} \ln\left\{ 1 + e^{-\alpha [b_{\rm sc} - b_0]} \right\} + \lambda_2 b_{\rm sc}
-\end{equation}
-where the parameters ($\lambda_1>=0$, $\lambda_2>=0$, $\alpha>0$, and $b_0$) are functions of the $\lambda$-state, $\vec{\lambda}$. The softplus non-linear perturbation function satisfies the correct limits when $\lambda_1 = \lambda_2 = 0$ at the unbound state and $\lambda_1 = \lambda_2 = 1$ at the bound state. The quantity $b_{\rm sc}$ in Eq.~(\ref{eq:ATM-softplus}) is the soft-core binding energy function
-\begin{equation}
-  b_{\rm sc}(b)=
-\begin{cases}
-b & b \le b_c \\
-(b_{\rm max} - b_c ) f_{\rm sc}\left[\frac{b-b_c}{b_{\rm max}-b_c}\right] + b_c & b > b_c
-\end{cases}
-\label{eq:ATM-soft-core-general}
-\end{equation}
-with
-\begin{equation}
-f_{\rm sc}(y) = \frac{z(y)^{a}-1}{z(y)^{a}+1} \label{eq:rat-sc} \, ,
-\end{equation}
-and
-\begin{equation}
-    z(y)=1+2 y/a + 2 (y/a)^2
-    \label{eq:end-of-softplus}
-\end{equation}
-The soft-core perturbation energy function is designed to avoid singularities near the initial state of the alchemical transformation.\cite{pal2019perturbation,khuttan2021alchemical} The parameters $b_{\rm max}$, $b_c$, and $a$ are set to smoothly cap the perturbation energy to a maximum positive value without affecting it away from the singularity. 
-The softplus function has the nice property that is linear for $b<<b_0$ and $b>>b_0$ but with different slopes,  $\lambda_1$ and $\lambda_2$, in these two regimes. The bilinear property of the softplus function allows for greater flexibility in creating smoother and more connected alchemical paths that lead to faster convergence~\cite{pal2019perturbation, khuttan2021alchemical}.
-
-The values of the binding energies sampled at regular intervals at each $\lambda$-state during the ATM alchemical simulation are the inputs for binding free energy estimation (see Section \label{sec:data_analysis}) through multi-state thermodynamic reweighting algorithms such as MBAR and UWHAM~\cite{shirts2008statistically,Tan2012}. One requirement for these algorithms is the evaluation of the perturbation energy $w(b,\vec{\lambda})$ for each sample $b$ at all $\lambda$-states.  The analytical relationships Eq.~(\ref{eq:ATM-softplus})--(\ref{eq:end-of-softplus}) between the binding energy and the perturbation energy make this step straightforward with ATM. In contrast, conventional free energy perturbation methods that employ soft-core pair potentials lack analytical perturbation energy functions and require a more complex process involving calling the molecular dynamics engine to rescore simulation trajectories. The more straightforward free energy estimation process afforded by ATM saves computing and storage costs, and, since it is based solely on binding energies, allows for changing the perturbation energy function $w(b;\vec{\lambda})$ without running new simulations. The simplification of the free energy estimation process fits the general ATM philosophy of streamlining and generalizing alchemical binding free energy calculations as much as possible.
-
-{\bf The ATM Alchemical Intermediate.} Due to atomic clashes with the receptor, the reference potential $u(\vec{q})$ for the unbound state becomes ill-defined near the bound state. On the other hand, taking the bound state as the reference leads to numerical instabilities near the unbound state due to clashes with solvent atoms. The solution to this conundrum is to split the alchemical binding process into two legs that connect the unbound and bound states to the same alchemical intermediate state midway between the two end states (Figure~\ref{fig:atm_alchemical_intermediate})~\cite{wu2021alchemical,azimi2022relative}. In the alchemical leg (Leg 2) that connects the unbound state to the alchemical intermediate, the unbound potential is used as a reference potential. The reference potential for the leg connecting the bound state and the alchemical intermediate (Leg 1) is instead the potential energy function of the bound state. The transition from one alchemical potential function to another occurs transparently to the user in the ATM replica exchange implementations (see below). According to the ATM thermodynamic scheme (Figure~\ref{fig:atm_alchemical_intermediate}), the excess binding free energy is obtained as the difference between the free energy changes of the two legs:
-\begin{equation}
-\Delta G_{b, \text{exc.}} = \Delta G_{\text{Leg2}} - \Delta G_{\text{Leg1}}
-\end{equation}
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.95\linewidth]
-    {paper/figures_atm/atm_alchemical_intermediate.pdf}
-    \caption{Illustration of ATM's thermodynamic path. At the thermodynamic intermediate (top, center), the ligand interacts at half the strength with the receptor and half strength with the solvent. The unbound state (bottom, right) is converted to the alchemical intermediate during Leg 2. Similarly, the bound state (bottom, left) is converted to the alchemical intermediate during Leg 1. The binding free energy is recovered by taking the difference between the free energies of Leg 2 and Leg 1. The receptor is depicted in blue, and the ligand is shown in gray. The faint gray color of the ligand in the alchemical intermediate represents its 50\% interaction strength with the receptor and the bulk of the solvent.}
-    \label{fig:atm_alchemical_intermediate}
-\end{figure}
-
-
-\subsubsection{ATM Applications: ABFE, RBFE, Relative Binding Selectivity, Macromolecular Binding}
-
-The method described so far, involving the translation of the ligand to the receptor binding site, calculates the standard, or absolute binding free energy (ABFE)~\cite{wu2021alchemical,azimi2022application}. A straightforward generalization of ATM's ligand translation transformation enables the calculation of the relative binding free energy of two ligands for the same receptor (RBFE) using a dual-coordinate approach~\cite{azimi2022relative}. In ATM's RBFE approach, one ligand is initially placed in the solvent, and the other is placed in the binding site. The alchemical potential is then expressed similarly to Eq.~(\ref{eq:ATM-alchemical-potential}) except that, as one ligand is translated into the binding site as in the ABFE protocol, the other ligand is translated in the opposite direction such that the position of the two ligands is swapped. Hence, ATM's ABFE and RBFE protocols differ only in the coordinate transformation: ligand translation for ABFE and ligand swapping for RBFE.
-
-ATM's RBFE protocol has recently been extended to the swapping of ligand positions between two receptors~\cite{azimi2024selectivity}. The resulting free energy measures the relative selectivity of the two ligands for the two receptors, that is, by how much the selectivity of a ligand for one receptor over another is affected by transforming it into the other. This information is critical for the design of drugs that are highly specific and not only strong binders of the target receptor.
-
-The types of coordinate transformations that can be implemented with ATM are not limited to translations. For example, coordinates swapping, where the coordinates of an atom are replaced with those of another, has been used to accelerate the RBFE convergence rate between congeneric ligands and to extend ATM to the study of the influence of residue mutations on the binding affinities of protein-peptide and protein-protein complexes~\cite{gallicchio2025mutants}.   
-
-
-\subsubsection{ATM System Setup and Best Practices}
-
-Since it does not require alchemical topologies, preparing molecular complex systems for ATM is the same as for standard molecular dynamics. While we described the ABFE protocol in the binding direction, in practice, it is often more convenient to set up the system with the ligand bound to the receptor rather than placed in the solvent. If so, the ABFE alchemical calculation is performed in the dissociation direction by essentially reversing the two ATM legs in Figure~(\ref{fig:atm_alchemical_intermediate}). To prepare a system for RBFE, one ligand is placed in the binding site and another in the solvent, ensuring their distance is approximately equal to the displacement vector. In practice, the two ligands are prepared as superimposed in the binding site, and one of them is translated by the displacement vector to reach the desired location in the solvent.
-
-The ligand displacement vector, illustrated in Figure~\ref{fig:atm-illustration}, is a necessary input for ATM as it determines the ligands' positions in the solvent to represent their unbound states.
-While the dependence of ATM's predictions on this aspect of the method has not been studied systematically, in principle, it should not matter where a ligand is placed in the solvent as long as it is sufficiently far away from the receptor to call the resulting configuration \emph{unbound}. Three layers of water molecules, or approximately $10$ \AA, is probably the minimum distance between any two pairs of ligand and receptor atoms to ensure a reasonable degree of decorrelation between the two. In practice, the choice of the displacement vector is a trade-off between ensuring that the ligand is sufficiently removed from the receptor when unbound and the size of the solvent box required to contain the receptor and the displaced ligand. Some ATM implementations have automated this aspect of the system's setup.
-
-The receptor binding region is typically specified by a flat-bottom harmonic potential restraint between the centroids of a set of receptor and ligand atoms as outlined in Section \ref{sec:standardstate-restraints}. For RBFE, a second binding region restraint, identical to the first but displaced into the solvent, restrains the position of the second ligand. Although alignment restraints (see below) are more commonly used for this purpose.  Similarly to other alchemical approaches, orientational restraints can be further deployed to specify the binding pose more precisely~\cite{khuttan2023taming}.
-
-As is common in dual-coordinate alchemical binding implementations~\cite{Ries_2022}, ATM RBFE calculations typically employ optional restraints to maintain the two ligands in approximate alignment. ATM's implementation consists of positional and orientational restraints between the internal coordinate frames of the two ligands defined by three reference atoms (Figure~\ref{fig:atm_lig_alignment})~\cite{azimi2022application}. A positional restraint keeps the origins of the two frames at a separation approximately equal to the displacement vector, and the axes of the frames are used to impose orientational restraints. The objective is to keep the unbound ligand in a position and orientation such that the translation into the binding site places its atoms near the corresponding atoms of the bound ligand. Robust alignment is ensured by selecting reference atoms from the rigid, common cores of the ligands. The first reference atoms are generally located near the center of the rigid core to define the origin of the coordinate frame. The second reference atoms are selected as far as possible from the first, still within the rigid core, to establish an axis that represents the core's orientation. Corresponding atoms in the second ligand are identified along the same axis and aligned by ATM, even if perfect overlap is not possible. The third reference atoms define a plane with the first two atoms, ensuring consistent rotational alignment (roll) of the rigid cores. These are chosen such that they remain approximately coplanar, facilitating close ligand alignment.
-
-\begin{figure}[h!]
-    \centering
-    \includegraphics[width=0.95\linewidth]{paper/figures_atm/atm_lig_alignment.pdf}
-    \caption{Illustrative example of the selection of the reference atoms for ATM's ligand alignment restraints between two ligands \textbf{A} and \textbf{B}. Atoms \textbf{$1_A$} and \textbf{$1_B$} are selected as the first reference points, positioned near the center of the rigid common core. These atoms define the origin of the coordinate frames, ensuring that both ligands remain at a fixed distance. Atoms \textbf{$2_A$} and \textbf{$2_B$} are chosen from within the common rigid core, positioned as far as possible from the first reference atom. The axis defined by $2_A$ and $2_B$ is kept approximately collinear. Finally, atoms \textbf{$3_A$} and \textbf{$3_B$} are chosen to maintain the planar alignment of the rigid cores, preserving the roll of the common structural framework. Reference atoms are preferably not selected from flexible regions of the ligands, as changes in these regions could alter the relative orientation between the ligands.
-    }
-    \label{fig:atm_lig_alignment}
-\end{figure}
-
-Additional optional restraints are often used in ATM to limit the conformational space to be sampled to improve convergence and reproducibility of binding free energy estimates. For example, the AToM-OpenMM~\cite{atom-openmm-github2025} protocol applies by default weak flat-bottom harmonic positional restraints to the C\textsubscript{$\alpha$} atoms of structurally rigid regions of the protein receptor backbone. Flexible loops near the binding site that undergo induced fit conformational reorganization are not usually restrained in this way to allow for receptor conformational reorganization.
-
-
-\subsubsection{ATM Implementations} 
-
-There are now various ATM implementations~\cite{atom-openmm-github2025,femto-github2025,atm-acellera-github2025}. To our knowledge, currently they are all based on the ATMForce feature of the OpenMM molecular simulation package~\cite{eastman2023openmm}. ATMForce implements the ATM alchemical potential through two GPU contexts: the first evaluates the reference potential energy $u(\vec{q})$, and the second calculates the perturbed potential energy after the coordinate transformation. ATMForce retrieves energy and forces from each context and merges them into the alchemical potential energy function according to Eqs.~(\ref{eq:ATM-alchemical-potential})--(\ref{eq:end-of-softplus}). ATMForce is usually set up to consider only the potential energy terms that change upon the coordinate transformation, such as the non-bonded term for standard fixed charge force fields. Covalent terms (bond stretches, angle bending, and torsions) are typically unaffected by rigid translations of whole molecules and can be ignored when evaluating perturbation energies.
-
-The AToM-OpenMM Python package~\cite{atom-openmm-github2025,atom-openmm-documentation2025} is considered the reference ATM implementation. AToM-OpenMM provides a toolkit to prepare and run alchemical binding free energy calculations by interfacing AToMForce with the user's input. It supports systems with fixed charge force fields (Amber, CHARMM, OpenFF, and Espaloma) and implicit solvent models (HCT, OBC, AGBNP) supported by OpenMM on GPU (CUDA, HIP, OpenCL) and CPU platforms. It provides enhanced parallel conformational sampling with Asynchronous Hamiltonian replica exchange~\cite{Gallicchio2008,gallicchio2015asynchronous} over any number of local GPUs, as well as support for advanced features such as metadynamics, relative selectivity calculations with ligand swapping, and macromolecular RBFEs with coordinate swapping~\cite{gallicchio2025mutants}.
-
-The femto package\cite{femto-github2025}, developed by Psivant, offers a lightweight and highly automated interface for high-throughput execution and rapid prototyping of ATM ABFE and RBFE workflows. Additionally, Acellera's ATM implementation for the Quantumbind package~\cite{quantumbind-acellera-github2025} provides a commercially supported solution with graphical user interfaces and extended documentation, as well as support for neural-network quantum-mechanical potentials~\cite{sabanes2024enhancing}, enabling both novice and expert users to leverage ATM for routine and advanced free energy calculations. A CHARMM-GUI ATM module~\cite{zhang2024ligand} provides support for membrane-bound receptors such as GPCRs. Support for ATM is also available from the OpenBioSim infrastructure~\cite{openbiosim-diary-ATM2025}. These tools collectively enhance the scalability, usability, and reproducibility of ATM-based simulations.
-
-\subsubsection{ATM Validation Studies and Deployments}
-
-ATM has undergone rigorous early validation through the SAMPL (Statistical Assessment of Modeling of Proteins and Ligands) series of community blind challenges, which were designed to objectively assess computational methods for molecular solvation and binding. Notably, ATM was benchmarked in the SAMPL6, SAMPL8, and SAMPL9 blind challenges, consistently ranking among the top-performing methods for both absolute and relative binding free energy calculations \cite{wu2021alchemical,azimi2022application,khuttan2023taming}. Notably, ATM yielded SAMPL8 ABFE estimates in close agreement with the rigorous non-alchemical Potential of Mean Force implementation in GROMACS~\cite{azimi2022application}. Further large-scale validation studies were conducted in collaboration with leading drug discovery technology companies, including Psivant and Acellera, which focused on refining the method for relative binding free energy calculations using FEP benchmark systems~\cite{chen2024performance,sabanes2023validation}.
-
-Recent advancements have expanded the scope and capabilities of ATM. ATM has been integrated with metadynamics (metaD) in OpenMM, enabling it to support an arbitrary set of potentials without modifying the core molecular dynamics energy routines. For ligands that undergo substantial conformational reorganization upon binding, metadynamics-based sampling of internal degrees of freedom reduces the variance of free energy closure estimates for improving the robustness of RBFE estimates~\cite{khuttan2024make}. The AToM-OpenMM framework includes dedicated functionality to load external metadynamics potentials and apply reweighting or unbiasing schemes, enabling statistically rigorous recovery of free energy estimates from biased simulations.
-
-ATM has been evaluated for protein–ligand binding affinity prediction using hybrid neural network potentials and molecular mechanics (NNP/MM), showing improved accuracy over conventional force fields such as GAFF2 \cite{sabanes2024enhancing}. These models have been integrated into the ATM framework via the OpenMM-ML plugin and Acellera's implementation, enabling the use of advanced NNPs, such as ANI and AceForce, within standard ATM workflows. These implementations rely on PyTorch-based architectures for efficient GPU-accelerated evaluation of neural network potentials during simulation. In addition, ATM has been extended to enable receptor hopping and receptor swapping protocols for computing ligand selectivity between receptors. In receptor swapping, one ligand is transferred between two receptors while a second ligand moves in the opposite direction \cite{azimi2024selectivity}. Finally, the Alchemical Transfer Method with Coordinate Swapping (ATS) has been developed to compute relative binding free energies for large congeneric ligands and single-point mutant peptides within the ATM framework~\cite{gallicchio2025mutants}.
-
-These extensive efforts have firmly established ATM as a reliable and versatile tool, capable of addressing a broad spectrum of modeling modalities.  Ongoing work by a growing community of developers and practitioners in academia and industry is increasing the robustness and expanding its range of applicability in computer-aided drug discovery and other fields.  
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %  Data Analysis               %
@@ -1698,7 +1723,7 @@ Therefore, $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}w_{k}^2 \mathrm{var}(\frac
 
 %The TIES method~\cite{bhati2017} employs a different scheme to obtain the overall variance of the integral. It assumes that the integrand is a Gaussian random process and hence the thermodynamic integral can be viewed as a so-called stochastic integral, which forms the basis of uncertainty propagation in this integral. The following equation is used to compute the overall variance of the integral combining variance at each $\lambda$ state. $\mathrm{var}$($\Delta$f) = $\sum_{i=1}^{K}\Delta\lambda_{k}^2 \mathrm{var}(\frac{du}{d\vec{\lambda}})_{k}$. 
 
-Beyond thermodynamic integration, the TIES method\cite{bhati2017} uses an Ito integral with Iso isomoetry for error propagation.
+Beyond thermodynamic integration, the TIES method\cite{bhati2017} uses an Ito integral with Iso isomoetry for error propogation.
 
 For alchemical changes that result in smooth, low curvature sets of $\expect{\frac{dU}{d\vec{\lambda}}}$, a relatively small number of $\vec{\lambda}$ states is necessary for sufficient accuracy and low variance in the free energy estimate. 
 Depending on the difficulty of the perturbation, the bias introduced by discretization of the integral can become large due to increased curvature, and more $\vec{\lambda}$ intermediate states become necessary to reduce error.
@@ -1793,7 +1818,7 @@ Alchemical Free Energy (AFE) calculations have primarily been applied to simulat
 For example, there is growing interest in identifying small molecules that directly bind to RNA or DNA, with recent preliminary studies showing promising results using specialized simulation protocols.\cite{Abramyan2025,Rasouli2024} In contrast, there has been limited investigation into the applicability of AFE methods to small-molecule ligands targeting intrinsically disordered proteins (IDPs,\cite{Papadourakis2024} or proteins containing intrinsically disordered regions (IDRs) that undergo disorder-to-order transitions upon ligand binding.\cite{MendozaMartinez2022}
 The treatment of covalent binders has also received some attention.\cite{luo2021,zhang2019} However, robust protocols for handling datasets of irreversible covalent binders containing diverse ‘warheads’ have not yet achieved widespread adoption.\cite{Yu2019} A variety of other applications are less traditional and may be possible but raise new practical issues; for example, if multiple copies of a ligand bind at once in the same site, this could pose challenges, as could handling of binding and function prediction for molecular glues and related categories of molecules. 
 
-Relative free energy calculations carry with them additional unsettled practices relating to the use and careful treatment of dummy atoms (see ``Dummy Atoms'' in Section~\label{sec:relative-fe-protocol}). In particular, as the work of~\cite{Fleck_2021} highlighted, valence terms for dummy atoms for dummy atoms must be treated far more carefully than previously appreciated in order for dummy atoms' contributions to the free energy to rigorously cancel. Less careful treatments may leave dummy atom terms only approximately canceling, or, worse, introducing uncharacterized errors in relative binding free energies. Indeed, such issues might have impeded previous attempts at reproducing free energy calculations across simulation engines~\cite{loeffler2018reproducibility}. 
+Relative free energy calculations carry with them additional unsettled practices relating to the use and careful treatment of dummy atoms (see ``Dummy Atoms'' in Section~\ref{sec:relative-fe-protocol}). In particular, as the work of~\cite{Fleck_2021} highlighted, valence terms for dummy atoms for dummy atoms must be treated far more carefully than previously appreciated in order for dummy atoms' contributions to the free energy to rigorously cancel. Less careful treatments may leave dummy atom terms only approximately canceling, or, worse, introducing uncharacterized errors in relative binding free energies. Indeed, such issues might have impeded previous attempts at reproducing free energy calculations across simulation engines~\cite{loeffler2018reproducibility}. 
 
 While solutions to dummy atom challenges may in principle be known, most are not yet implemented in setup tools and free energy pipelines and have not yet been thoroughly characterized, so it seems likely that considerable science and engineering remains to be done in this space. 
 
@@ -1997,11 +2022,11 @@ There are many different software solutions available for the setup, running, an
 \textbf{FC}: Coordinated the v2.0 updates to the article (TODO: be more specific?/ mention ABFE updates?). \\
 \textbf{PVC} Contributed updates to the discussion of uncertainty quantification.\\
 \textbf{JWE} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
-\textbf{EG} Wrote the updated Sec.~\ref{sec:theory} and Sec.~\ref{sec:multiple-chemical-states},  updated Sec.~\ref{sec:standardstate-restraints}, co-wrote Sec.~\ref{sec:atm} with SK, and and contributed to the discussion and review of many sections.\\
+\textbf{EG} Wrote the updated Sec.~\ref{sec:theory} and Sec.~\ref{sec:multiple-chemical-states},  updated Sec.~\ref{sec:standardstate-restraints}, and contributed to the discussion and review of many sections.\\
 \textbf{MG} Contributed to ``Changes in net charge can be challenging/problematic'' in Sec. \ref{subsec:net charge}. \\
 \textbf{DFH} Contributed to Sec.~\ref{sec:software} and helped edit the paper. \\
 \textbf{W-TH}: Wrote Sec.~\ref{sec:configurational_sampling}, updated Sec.~\ref{sec:prerequisites},~\ref{sec:unsettled}, and~\ref{sec:checklist}, and created Fig. ~\ref{fig:configurational_sampling}.\\
-\textbf{SK}: Contributed to Sec. \ref{sec:atm}.\\
+\textbf{SK}: Contributed to Sec. \ref{sec:theory} and \ref{sec:standardstate-restraints}  \\
 \textbf{MK}: Contributed to Sec.~\ref{sec:data_analysis}, provided the data for figure~\ref{fig:overlap}, compiled the dataset for Sec.~\ref{sec:benchmark} and helped edit the paper.\\
 \textbf{JM}: Contributed to Sec.~\ref{subsec:reproducible},~\ref{sec:prerequisites},~\ref{sec:important_path},~\ref{subsec:estimators},~\ref{subsec:uncertainty}, and~\ref{sec:conclusion}\\
 \textbf{DLM}: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.\\
