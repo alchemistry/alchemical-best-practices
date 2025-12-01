@@ -362,7 +362,7 @@ The chemical potential of a solute $u$ in an ideally diluted solution in a solve
   \mu_u = -k_B T \ln \frac{q'_u}{C_u \Lambda_u^3}
   \label{eq:chemical-potential-definition}
 \end{equation}
-where $k_B$ is Boltzmann's constant, $T$ is the absolute temperature, $C_u = N_u/V$ is the number concentration of the solute, $\Lambda_u = h/\sqrt{2 \pi M_u k_B T}$ is the thermal De-Broglie wavelength of the solute, where $h$ is Planck's constant and $M_u$ is the solute's total mass. The quantity $q'_u$ in Eq.~(\ref{eq:chemical-potential-definition}) is the molecular partition function of the solute at rest in the solvent
+where $k_B$ is Boltzmann's constant, $T$ is the absolute temperature, $C_u = N_u/V$ is the number concentration of the solute, $\Lambda_u = h/\sqrt{2 \pi M_u k_B T}$ is the thermal De Broglie wavelength of the solute, where $h$ is Planck's constant and $M_u$ is the solute's total mass. The quantity $q'_u$ in Eq.~(\ref{eq:chemical-potential-definition}) is the molecular partition function of the solute at rest in the solvent
 \begin{equation}
   q'_u = \frac{\Lambda_u^3}{\prod_i \lambda_i^3} 8 \pi^2 z_u
   \label{eq:intra-qpu-def}
@@ -377,7 +377,7 @@ where $x_u$ represents the collection of internal degrees of freedom of the solu
   e^{-\beta \Psi_v(x_u)} = \frac{1}{Z_{N_v}} \int d\vec{r}_v e^{-\beta U(x_u, \vec{r}_v)}
   \label{eq:solvent-pmf-def}
 \end{equation}
-where $\vec{r}_v$ represents the collection of Cartesian coordinates of the atoms of $N_v$ solvent molecules, $U(x_u, \vec{r}_v)$ is the potential energy of the solvent with one solute molecule in conformation $x_u$ placed in an arbitrary position in a volume $V$. When the potential energy function of the solution is separable into an intramolecular potential energy of the solute $U(x_u)$ and a solute-solvent non-bonded interaction energy, the potential of mean force can be written as the sum $\Psi_u(x_u) = U(x_u) + W_v(x_u)$ where $W_u(x_u)$ is the solvent potential of mean force, the solvation free energy of the solute fixed in configuration $x_u$.\cite{gilson2007calculation} However, the potential of mean force definition Eq.~(\ref{eq:solvent-pmf-def}) is valid in general. Finally, $Z_{N_v}$ is the configurational partition function of the pure solvent
+where $\vec{r}_v$ represents the collection of Cartesian coordinates of the atoms of $N_v$ solvent molecules, $U(x_u, \vec{r}_v)$ is the potential energy of the solvent with one solute molecule in conformation $x_u$ placed in an arbitrary position in a volume $V$. When the potential energy function of the solution is separable into an intramolecular potential energy of the solute $U(x_u)$ and a solute-solvent non-bonded interaction energy, the potential of mean force can be written as the sum $\Psi_v(x_u) = U(x_u) + W_v(x_u)$ where $W_u(x_u)$ is the solvent potential of mean force, the solvation free energy of the solute fixed in configuration $x_u$.\cite{gilson2007calculation} However, the potential of mean force definition Eq.~(\ref{eq:solvent-pmf-def}) is valid in general. Finally, $Z_{N_v}$ is the configurational partition function of the pure solvent
 \begin{equation}
   Z_{N_v} = \int d\vec{r}_v e^{-\beta U(\vec{r}_v)} \, .
   \label{eq:Z-pure-solvent}
@@ -397,7 +397,7 @@ The standard chemical potential of a solute in an ideally dilute solution is obt
   \mu_u^\circ = -k_B T \ln \frac{q'_u}{C^\circ \Lambda_u^3} \, .
   \label{eq:chemical-potential-standard}
 \end{equation}
-The standard state state of a dilute solution is defined as an ideally dilute solution at concentration $C^\circ$.~\cite{levine2009physicalchemistrybook6ed} Hence, Eq.~(\ref{eq:chemical-potential-standard}) is formally correct for real solutions as well.
+The standard state of a dilute solution is defined as an ideally dilute solution at concentration $C^\circ$.~\cite{levine2009physicalchemistrybook6ed} Hence, Eq.~(\ref{eq:chemical-potential-standard}) is formally correct for real solutions as well.
 
 Next, we outline the application of the chemical potential statistical mechanics formalism for modeling key biophysical processes: solvation, solvent partitioning, and non-covalent molecular binding. Generally, turning statistical mechanics identities into computable quantities by molecular simulations involves expressing ratios of partition functions in terms of ensemble averages. In the present context, the quantity being averaged often turns out to be the exponential of a perturbation energy function (the \textit{Zwanzig relationship}~\cite{zwanzig1954hightemperature}), which is efficiently evaluated using the stratification algorithms and free energy estimators discussed in Sections \ref{subsec:formulations-abfe-rbfe}, \ref{subsec:numerical-implementations},  and \ref{subsec:estimators} rather than directly. Here we assume that an implementation is well-formed once it is expressed as a combination of exponential averages, assuming they can be evaluated in practice. As in the previous section, we use the solvent potential of mean force to lighten the notation when possible. The solvent degrees of freedom can be restored  in the resulting expressions using Eq.~(\ref{eq:solvent-pmf-def}). 
 
