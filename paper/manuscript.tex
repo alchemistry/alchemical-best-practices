@@ -272,9 +272,9 @@ Instead this guide aims to answer the following questions:
      \item How should I analyze my data and report uncertainties? 
 \end{itemize}
 
-Notably, this document---version 2.0 of the original guide--focuses specifically on best practices on single alchemical free energy calculations. A companion guide, Best Practices for Multiple Alchemical Free Energy Calculations, covers the considerations involved in high-throughput or large-scale campaigns, such as automation, perturbation network design, and campaign-level data management and analysis. Readers aiming to scale up to multiple calculations may find that guide more relevant to those aspects. 
+Notably, this document---version 2.0 of the original guide---focuses specifically on best practices on single alchemical free energy calculations. A companion guide, Best Practices for Multiple Alchemical Free Energy Calculations, covers the considerations involved in high-throughput or large-scale campaigns, such as automation, perturbation network design, and campaign-level data management and analysis. Readers aiming to scale up to multiple calculations may find that guide more relevant to those aspects. 
 
-In this guide, some other background information may be needed depending on the nature of the alchemical project. For example, often, if binding poses are not known, docking calculations or co-folding models can be used to generate an initial small molecule binding pose to start alchemical simulations. This will require some basic familiarity on how to perform docking or using generative models. to generate reasonable simulation starting points~\cite{grinter2014challenges}. 
+In this guide, some other background information may be needed depending on the nature of the alchemical project. For example, often, if binding poses are not known, docking calculations or co-folding models can be used to generate an initial small molecule binding pose to start alchemical simulations\cite{scheen2025leveraging, thaler2025boltz}. This will require some basic familiarity on how to perform docking or using generative models. to generate reasonable simulation starting points~\cite{grinter2014challenges}. 
 
 As some of the theoretical background can seem daunting, we do, however, provide a guide to the essential theory behind alchemical free energy calculations in Sec.~\ref{sec:theory}.
 In the remainder of this paper, we will cover topics that are key to the preparation (Sec.~\ref{sec:prerequisites}), choice and use of correct protocols (Sec.~\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used in the analysis of alchemical calculations (Sec.~\ref{sec:data_analysis}). 
@@ -839,7 +839,7 @@ The differences in free energies between different research groups, due to diffe
 
 A different situation is the amount of reproducibility researchers should expect when performing repeated simulations of their own systems, perhaps with the same starting point. In simple cases, such as absolute hydration free energies of small organic molecules, or relative hydration free energy calculations between structurally similar small organic molecules, it should be possible to obtain highly precise estimates with a given software package, i.e., with a sample standard deviation under 0.01 kcal/mol possible~\cite{rizzi2019sampl6}, and agreement under 0.05 kcal/mol routine for simulations lasting 10's of ns~\cite{paliwal2011benchmark} {\color{red}This could use some more citations here from other studies.} However, for complex systems, the reproducibility can be signficantly worse, as two simulation of the same system can explore very different configurational ensembles.  If the timescales of the slow scales of motion are comparable to or longer than the timescales of the simulation, then differences of up to multiple kcal/mol can be possible for absolute and even relative free energy calculations. 
 
-In fact, the amount of reproducibility between repeated calculations is an important measure of whether a particular choices of simulation methods and approaches are appropriate.  Large differences between results carried out with different initial velocities, or better yet started from points along a single initial long simulations can indicate that the sampling of the system is particularly hard and will require additional simulation and/or advances sampling methods.  In fact, journals such as the Journal of Chemical Information and Modeling require that any results be confirmed by simulations run in at least triplicate. The question of how to combine results from ensembles of simulations for lowest bias and best reporting of statistical uncertainty are discussed in section~\ref{subsec:uncertainty}.
+In fact, the amount of reproducibility between repeated calculations is an important measure of whether a particular choices of simulation methods and approaches are appropriate.  Large differences between results carried out with different initial velocities, or better yet started from points along a single initial long simulations can indicate that the sampling of the system is particularly hard and will require additional simulation and/or advances sampling methods.  In fact, journals such as the Journal of Chemical Information and Modeling require that any results be confirmed by simulations run in at least triplicate~\cite{soares2023guidelines}. The question of how to combine results from ensembles of simulations for lowest bias and best reporting of statistical uncertainty are discussed in section~\ref{subsec:uncertainty}.
 
 %MRS: some good points here below, but this isn't the right place, since this is explicitly talking about reproducibility between simulations, i.e. if you run a simulation, how different do you expect it to be. This MOTIVATES a discusion of ensemble averaging in some other section for robustness, but should be  separate sections discussing ensembles vs. simgle trajectories, putting all these differences in the same place, rather than sprinkled throughout.  Also, some of the claims are too broad as stated, and it included information about free energy calculation methods that doesn't fit here. 
 
@@ -970,11 +970,9 @@ If the binding site location is uncertain but the structure of the receptor is w
 If the putative binding sites are not apparent, for instance due to significant induced-fit effects, it may be challenging to obtain meaningful free energies of binding. One may have to account for the free energy cost of forming a binding site in the target receptor which may not be feasible on alchemical simulation timescales.
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-% What simulation protocol should I choose   %
+% Choice of simulation protocol and implementation of alchemical transformations   %
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-%\section{What simulation protocol should I choose?}
 \section{Choice of simulation protocol and implementation of alchemical transformations}
-  \sbnote{Emilio suggested to make the title more general; this is my suggestion!}
 \label{sec:simulation_protocol_choice}
 Alchemical free energy calculations can be grouped into two main categories, ``absolute'' (see Fig.~\ref{fig:fig_absolute_thermodynamic_cycle}) and ``relative''\footnote{The distinction is a bit of a misnomer, since both compute ratios of partition functions relative to another state and in that sense are relative, while neither computes an absolute free energy.} (see Fig.~\ref{fig:fig_binding_thermodynamic_cycle}), which differ in whether they compute properties for a single molecule (absolute) or compare properties of different, usually closely related, molecules (relative).
 To use binding as a concrete example, in absolute binding free energy calculations, we compute the binding free energy of a ligand to an individual receptor relative to a standard reference concentration. In contrast, in relative binding free energy calculations, we compare the binding free energy of two related ligands to determine the potency difference.
@@ -1508,7 +1506,7 @@ where
   K_b(AH) = C^\circ \frac{[RAH]}{[R][AH]}
   \label{eqn:observed-binding-constant-prot}
 \end{equation}
-is the specific equilibrium binding constant between the receptor and the protonated form of the ligand, and similarly for $K_b(A^-)$. The specific $K_b$'s are the binding constants that would be obtained from ABFE calculations for those species. Eq.~(\ref{eqn:observed-binding-constant-prot}) states that the observed binding constant is an average of the specific binding constants weighted by the populations, $p_0(AH)$ and  $p_0(A^-)$ of each ligand's chemical form in solution. In this specific example, if the $pKa$ of $AH$ is known and $\alpha = [A^-]/[AH] = 10^{pH-pKa} $ is the ionization ratio of $A$ at a a given $pH$, the populations of the ionized and protonated forms are $p_0(A^-) = \alpha/(\alpha+1)$ and $p_0(AH) = 1/(\alpha+1)$, respectively.\cite{champion2024multistate,azimi2022application}
+is the specific equilibrium binding constant between the receptor and the protonated form of the ligand, and similarly the unprotonated form for $K_b(A^-)$. The specific $K_b$'s are the binding constants that would be obtained from ABFE calculations for those species. Eq.~(\ref{eqn:observed-binding-constant-prot}) states that the observed binding constant is an average of the specific binding constants weighted by the populations, $p_0(AH)$ and  $p_0(A^-)$ of each ligand's chemical form in solution. In this specific example, if the $pKa$ of $AH$ is known and $\alpha = [A^-]/[AH] = 10^{pH-pKa} $ is the ionization ratio of $A$ at a a given $pH$, the populations of the ionized and protonated forms are $p_0(A^-) = \alpha/(\alpha+1)$ and $p_0(AH) = 1/(\alpha+1)$, respectively.\cite{champion2024multistate,azimi2022application}
 
 Eq.~(\ref{eqn:observed-binding-constant-split}) is a particular case of a fundamental result that extends to an arbitrary number of chemical forms of a ligand in solution. In general, the observed binding constant of a ligand present in solution in multiple forms $A_i$ (protomers, tautomers, rotamers, etc.) with populations $p_0(A_i)$ is\cite{khuttan2023taming}
 \begin{equation}
@@ -1733,6 +1731,71 @@ Our overall recommendations are therefore to determine the subsampling period $g
 Reliable estimation of the statistical inefficiency is difficult, and estimates will not generally be as precise (in a relative error sense) as averages.
 To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_{\mathrm{eff}} \ge  \sim 50$ if the BAR or MBAR estimators (discussed below in sec~\ref{subsec:estimators}) are used; the number may need to be much higher with alternate estimators.
 
+
+\subsection{Uncertainty estimation v2}
+
+%% Being edited on Nov 30. 2025
+
+%% MS: This is a very loose proposal of how one might address some of the issues on uncertainty quantification.  It is only meant to help get the ball rolling, per the discussion in https://github.com/alchemistry/alchemical-best-practices/issues/150#issuecomment-3567254644. Otherwise, it can be mostly discarded. The important points in my view are:
+%
+% 1. clearly expressing the dependence of the density as a function (t, x_0), and what assumptions are made about its behavior; without this, I see no way of making statements about uncertainty quantification, as these all require some statistical theorem, like a Law of Large Numbers, or a Central Limit Theorem. 
+% 2. a definition of an ensemble
+%
+% and to a lesser extent
+%
+% - expression for the sample variance in the case of i.i.d. or (conditionally iid) random variables,
+% - expectation of the sample variance in the case of correlated samples
+% - some definition of the asymptotic error
+% - some discussion about the two central limit theorems being used: the one for (c)iid RVs (e.g., Lindeberg CLT) and a temporal CLT for Markov processes. In the latter case, we would expect the error to decay like 1/sqrt(# timesteps), but this does not occur. I think we should highlight this. 
+
+Consider a molecular dynamics trajectory $Z (t ; z_0)$ started at some initial configuration $z_0 = (x_0, v_0)$, where $x_0 \in \mathbb{R}^{3 N}$ denotes the initial positions of the system and $v_0 \in \mathbb{R}^{3 N}$ its initial velocities. If $z = (x_0, v_0)$ is drawn from some initial density $\rho_0 (z)$, the density time $t$ will be
+\begin{equation}
+  \rho_t (z' | z_0) = \int_{\mathbb{R}^{3 N} \times \mathbb{R}^{3 N}}
+  \rho_0 (\mathrm{d} z) P_t (z' | z) .
+\end{equation}
+Here, $P_t$ denotes the transition kernel, determined by the molecular dynamics integrator. The distribution of the velocities is usually ignored, since in the presence of a thermostat they are kept distributed roughly according to a Maxwell-Boltzmann distribution, so we only consider the $x$ component. In practice, the initial distribution $\rho_0 (x) \mathrm{d} x$ is seldom more than a Dirac-$\delta$, $\delta_{\{ x_0 \}} (\mathrm{d} x)$, or a mixture thereof, e.g. $\sum_{i = 1}^n \delta_{\{ x_i \}} / n$. Any "better" initial density would require some knowledge about the system at hand. We henceforth consider only the density at time $t$ starting at, denoted $\rho_t(x | x_0)$.
+
+It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein, it may be possible to identify clear "plateaus'' of convergence" \footnote{The plateau can be mathematically defined as a quasi-stationary distribution, but should we say this? Could cite Art Voter at Los Alamos, maybe even Freidlin-Wentzell for the original quasipotential.}, i.e. intervals $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 \in B$ in some appropriate "starting domain". Consider, for instance, the estimation of free energies of hydration for small molecules [cite Shirts paper on free energies of hydration]. In this case, the free energy estimates behave in accordance with classical statistical theory, and the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
+
+%  MS: The above paragraph is too vague, but some kind of discussion to this effect might be necessary to make sense of why some free energy calculations, such as solvation free energy calculations or computation of free energy landscapes for small molecules, have different statistical properties than more complicated calculations, like absolute binding free energy calculations. 
+
+One should not confuse a plateau in such coordinates with having explored the entirety of the configuration space $\Omega$; most biomolecular systems, even ones involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Importantly, there is no that $\rho_t (x | x_0)$ converges as $t \rightarrow \infty$ to some unique invariant distribution $\propto \exp (-\beta H (x))$, nor that $p_t (x | x_0)$ is invariant to $x_0$.
+
+% The following footnote feels out of place, but might address some comments by A. Bhati re: the Poincaré recurrence theorem.
+% \footnote{(Luckily, it is not necessary for simulations to visit every configuration $x \in \Omega$ in order to exhibit a regime of convergence. For instance, two configurations $x$ and $x'$ may be considered equivalent if they differ only by the permutation of water molecules. Nature too faces the same difficulty that not all states are accessible on timescales we can observe -- it will take an astronomically long time before all the gas particles in a room happen to be on one half-side of it -- but this does not prevent us from measuring the temperature of (most) rooms.)}
+
+For systems involving a protein-ligand complex, it is usually the case that $\rho_t (x | x_0)$ is sensitive to $x_0$ and additionally may not exhibit a clear plateau on any accessible time $T > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?}
+
+
+In this section, we explore the various possible types of error analysis which can be performed, starting from the simplest, with end hope of making "$\rho_t (x | x_0)$ should not vary much'' a little more precise. We start with the following definition.
+
+%% MS: I'm not tied to any particular definition of ensemble, but we should probably make a concrete one:
+% - common x_0 ? 
+% - v ~ MaxwellBoltzmann(Temperature) 
+% - what are the individual trajectories called? "replicates" ? 
+We define an \textbf{ensemble} to be a set of $R \geqslant 1$ trajectories, all started at the same configuration $x_0$, with $v_0$ drawn from the Maxwell-Boltzmann distribution at the appropriate temperature, and run for a chemical time $T$.
+
+\subsubsection{Ensemble error estimates}
+The simplest  and most robust way of obtaining error bars on free energy estimates is by simulating an ensemble $\{ X^{(1)}, \ldots, X^{(R)} \}$ of $R$ molecular dynamics trajectories started at $x_0$ and producing trajectories of free energy differences $\{ \Delta G^{(1)}, \ldots, \Delta G^{(R)} \}$. The trajectories $\Delta
+G^{(i)} (\cdot)$ are identically distributed and conditionally independent given some $x_0$. For time $t > 0$, the variance of any $\Delta G^{(i)} (t)$ can be estimated with the sample variance $S^2_{(R - 1)} (t)$,
+\begin{equation}
+  S^2_R (t) = \frac{1}{R - 1} \sum_{i = 1}^R (\Delta G^{(i)} (t) -
+  \overline{\Delta G (t)})^2, \qquad \overline{\Delta G (t)} = \frac{1}{R}
+  \sum_{i = 1}^R \Delta G^{(i)} (t) .
+\end{equation}
+Note that, conditionally on $x_0$, we have
+\begin{equation}
+    \mathbb{E}_{x_0}[S_R^2(t)] = \mathrm{Var}_{x_0}(\Delta G^{(1)}(t))
+\end{equation}
+The above equation says that $S_R^2(t)$ is an unbiased estimator for the variance. As $R \rightarrow \infty$, we have $S^2_R (t) \rightarrow \mathrm{Var} _{x_0}(\Delta
+G^{(1)} (t)) = \sigma^2 (t ; x_0)$.
+
+The standard error
+\begin{equation}
+  \mathrm{SE}_R (t ; x_0) = \frac{S_R^2 (t)}{\sqrt{R}}
+\end{equation}
+is the gold standard for reporting the error of a set of free energies obtained from trajectories started from a common $x_0$. Note that $\mathrm{SE}_R
+(t ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ no matter what $S_R^2 (t)$, so long as it is finite, which is true if the $\overline{\Delta G}$ are, say, bounded.
 
 \subsection{Uncertainty estimation}
 \label{subsec:uncertainty}
@@ -2062,16 +2125,16 @@ There are many different software solutions available for the setup, running, an
 \textbf{JM}: Contributed to Sec.~\ref{subsec:reproducible},~\ref{sec:prerequisites},~\ref{sec:important_path},~\ref{subsec:estimators},~\ref{subsec:uncertainty}, and~\ref{sec:conclusion}\\
 \textbf{DLM}: Contributed to the outline, drafted some of the sections, gave ideas on figures, and helped edit the paper.\\
 \textbf{LNN}: Helped write the simulation length, stopping conditions, and information saving section. Edited and reviewed alchemical path section.\\
+\textbf{MO} Contributed to Section \ref{subsec:hydration}.\\
+\textbf{CO} Contributed to ``Changes in net charge can be challenging/problematic'' in Sec. \ref{subsec:net charge}. \\
 \textbf{WJP} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
 \textbf{SP} Wrote Sec.~\ref{sec:software}. \\
 \textbf{BR}: Updated Section \ref{subsec: Atom Mapping}, \ref{subsec: Dummy Atoms}, \ref{subsec: Ring breaking and forming} and supported reviewing for Topologies.\\
 \textbf{AR}: Created figure~\ref{fig:freeenergytrajectories}, contributed to sections~\ref{sec:theory} and~\ref{sec:simulation_protocol_choice}, and helped edit the paper.\\
-\textbf{CO} Contributed to ``Changes in net charge can be challenging/problematic'' in Sec. \ref{subsec:net charge}. \\
 \textbf{JS}: Created Figs.~ \ref{fig:fig_what_is_alchemy},~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss},~\ref{fig:fig_absolute_thermodynamic_cycle},~\ref{fig:scatterplot_analysis}, and an initial draft of~\ref{fig:fig_types_of_networks}. Wrote Sec.~\ref{sec:plot_data}, the checklist Sec.~\ref{sec:checklist}, and contributed to general formatting discussions and editing.\\
 \textbf{OJM} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
 \textbf{MRS}: Helped create figure~\ref{fig:fig_what_is_lambda}, wrote Sec.~\ref{sec:important_path} describing choices for alchemical pathways and parts of~\ref{sec:data_analysis} on the analysis for free energy calculations. Reviewed and edited text throughout.\\
 \textbf{GT}: Contributed to Sec.~\ref{sec:intro} and~\ref{sec:drugdiscovery}, and helped edit the paper.\\
-\textbf{MO} Contributed to Section \ref{subsec:hydration}
 \textbf{HX}: Contributed Sec.~\ref{subsec:accuracy}, to Sec.~\ref{sec:relative-fe-protocol}, and to Sec.~\ref{sec:are-they-good}.
 % We suggest you preserve this comment:
 For a more detailed description of author contributions,

@@ -14469,3 +14469,53 @@ year = {2004}
   abstract = {Quantities calculated from molecular simulations are often subject to an initial bias due to unrepresentative starting configurations. Initial data are usually discarded to reduce bias. Chodera's method for automated truncation point selection [J. Chem. Theory Comput. 2016, 12, 4, 1799--1805] is popular but has not been thoroughly assessed. We reformulate White's marginal standard error rule to provide a spectrum of truncation point selection heuristics that differ in their treatment of autocorrelation. These include a method effectively equivalent to Chodera's. We test these methods on ensembles of synthetic time series modeled on free energy change estimates from long absolute binding free energy calculations. Methods that more thoroughly account for autocorrelation often show late and variable truncation times, while methods that less thoroughly account for autocorrelation often show early truncation, relative to the optimal truncation point. This increases variance and bias, respectively. We recommend a method that achieves robust performance across our test sets by balancing these two extremes. None of the methods reliably detected insufficient sampling. All heuristics tested are implemented in the open-source Python package RED (github.com/fjclark/red).},
   file = {/Users/nfc78/Zotero/storage/FFQKKDJF/Clark et al. - 2025 - Robust Automated Truncation Point Selection for Molecular Simulations.pdf}
 }
+
+@misc{scheen2025leveraging,
+  title = {Leveraging {{Alchemical Free Energy Calculations}} with {{Accurate Protein Structure Prediction}}},
+  author = {Scheen, Jenke and Rianjongdee, Francesco and Macdonald, Hannah Bruce and Gowers, Richard and Degorce, Seb and Green, Adam and Scully, Conor and Duffy, Tom and Howes, Jen and Cordery, Charlotte and Bucher, Alwin and Aithani, Laksh and Doma{\'n}ski, Jan},
+  year = 2025,
+  month = mar,
+  publisher = {ChemRxiv},
+  doi = {10.26434/chemrxiv-2025-wv6z9-v2},
+  urldate = {2025-11-26},
+  abstract = {Small-molecule lead optimisation in early-stage drug discovery is broadly supported by computational chemistry approaches throughout industry. Over the last decade, Free Energy Perturbation (FEP) has grown into a mature physics-based tool that prospectively guides medicinal chemistry decision-making by accurately predicting ligand potencies at the level of precision that is required for the granular nature of the lead optimisation stage. Machine-learned ligand-protein co-folding models are at the forefront of accurate protein structure prediction and well-positioned to support early-stage drug discovery campaigns. This study investigates a hybrid framework that combines machine-learned ligand-protein co-folding models with FEP. By leveraging accurate pose and protein prediction, the method bypasses traditional, error-prone and time-consuming docking approaches, improving the reliability and scalability of FEP calculations. Benchmarking studies on a public kinase target (PFKFB3) and an internal target (target A) demonstrate that the hybrid framework achieves state-of-the-art accuracy while substantially lowering computational expense compared to more traditional FEP approaches. This approach integrates the machine learning and physical approach to affinity prediction, and represents a significant advancement in computational lead optimisation support, poising it to aid in accelerating the discovery of novel therapeutics.},
+  archiveprefix = {ChemRxiv},
+  langid = {english},
+  keywords = {Alchemical Free Energy Calculations,Drug Discovery,Free Energy Perturbation,Ligand-Protein Co-folding},
+  file = {/Users/nfc78/Zotero/storage/LD7GGGT3/Scheen et al. - 2025 - Leveraging Alchemical Free Energy Calculations with Accurate Protein Structure Prediction.pdf}
+}
+
+@misc{thaler2025boltz,
+  title = {Boltz-{{ABFE}}: {{Free Energy Perturbation}} without {{Crystal Structures}}},
+  shorttitle = {Boltz-{{ABFE}}},
+  author = {Thaler, Stephan and Wu, Zhiyi and Glass, William G. and Bradshaw, Richard T. and Tossou, Prudencio and Wood, Geoffrey P. F.},
+  year = 2025,
+  month = aug,
+  number = {arXiv:2508.19385},
+  eprint = {2508.19385},
+  primaryclass = {physics},
+  publisher = {arXiv},
+  doi = {10.48550/arXiv.2508.19385},
+  urldate = {2025-11-26},
+  abstract = {Free energy perturbation (FEP) is considered the gold-standard simulation method for estimating small molecule binding affinity, a quantity of vital importance to drug discovery. The accuracy of FEP critically depends on an accurate model of the protein-ligand complex as an initial condition for the underlying molecular dynamics simulation. This requirement has limited the impact of FEP in earlier stages of the discovery process, where appropriate experimental crystal structures are rarely available. The latest generation of structure prediction models, such as Boltz-2, promise to overcome this limitation by predicting protein-ligand complex structures. In this work, we combine Boltz-2 with our own absolute FEP protocol to build Boltz-ABFE, a robust pipeline for estimating the absolute binding free energies (ABFE) in the absence of experimental crystal structures. We investigate the quality of the structures predicted by Boltz-2, propose automated approaches to improve structures for use in molecular dynamics simulations, and demonstrate the effectiveness of the Boltz-ABFE pipeline for four protein targets from the FEP+ benchmark set. Demonstrating the feasibility of absolute FEP simulations without experimental crystal structures, Boltz-ABFE significantly expands the domain of applicability of FEP, paving the way towards accelerated early-stage drug discovery via accurate, structure-based affinity estimation.},
+  archiveprefix = {arXiv},
+  keywords = {Physics - Computational Physics},
+  file = {/Users/nfc78/Zotero/storage/W5BKWCJ6/Thaler et al. - 2025 - Boltz-ABFE Free Energy Perturbation without Crystal Structures.pdf;/Users/nfc78/Zotero/storage/CMN7AJHR/2508.html}
+}
+
+@article{soares2023guidelines,
+  title = {Guidelines for {{Reporting Molecular Dynamics Simulations}} in {{JCIM Publications}}},
+  author = {Soares, Thereza A. and Cournia, Zoe and Naidoo, Kevin and Amaro, Rommie and Wahab, Habibah and Merz, Kenneth M. Jr.},
+  year = 2023,
+  month = jun,
+  journal = {Journal of Chemical Information and Modeling},
+  volume = {63},
+  number = {11},
+  pages = {3227--3229},
+  publisher = {American Chemical Society},
+  issn = {1549-9596},
+  doi = {10.1021/acs.jcim.3c00599},
+  urldate = {2025-11-26},
+  file = {/Users/nfc78/Zotero/storage/E2TBKNV5/Soares et al. - 2023 - Guidelines for Reporting Molecular Dynamics Simulations in JCIM Publications.pdf}
+}
+
