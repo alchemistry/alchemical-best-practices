@@ -1734,8 +1734,6 @@ To ensure there is sufficient data available for reliable decorrelation and esti
 
 \subsection{Uncertainty estimation v2}
 
-%% Being edited on Nov 30. 2025
-
 %% MS: This is a very loose proposal of how one might address some of the issues on uncertainty quantification.  It is only meant to help get the ball rolling, per the discussion in https://github.com/alchemistry/alchemical-best-practices/issues/150#issuecomment-3567254644. Otherwise, it can be mostly discarded. The important points in my view are:
 %
 % 1. clearly expressing the dependence of the density as a function (t, x_0), and what assumptions are made about its behavior; without this, I see no way of making statements about uncertainty quantification, as these all require some statistical theorem, like a Law of Large Numbers, or a Central Limit Theorem. 
@@ -1748,26 +1746,26 @@ To ensure there is sufficient data available for reliable decorrelation and esti
 % - some definition of the asymptotic error
 % - some discussion about the two central limit theorems being used: the one for (c)iid RVs (e.g., Lindeberg CLT) and a temporal CLT for Markov processes. In the latter case, we would expect the error to decay like 1/sqrt(# timesteps), but this does not occur. I think we should highlight this. 
 
-Consider a molecular dynamics trajectory $Z (t ; z_0)$ started at some initial configuration $z_0 = (x_0, v_0)$, where $x_0 \in \mathbb{R}^{3 N}$ denotes the initial positions of the system and $v_0 \in \mathbb{R}^{3 N}$ its initial velocities. If $z = (x_0, v_0)$ is drawn from some initial density $\rho_0 (z)$, the density time $t$ will be
+Consider a molecular dynamics trajectory started at some initial configuration $z_0 = (x_0, v_0)$, where $x_0 \in \mathbb{R}^{3 N}$ denotes the initial positions of the system and $v_0 \in \mathbb{R}^{3 N}$ its initial velocities. If $z = (x_0, v_0)$ is drawn from some initial density $\rho_0 (z)$, the density time $t$ will be
 \begin{equation}
   \rho_t (z' | z_0) = \int_{\mathbb{R}^{3 N} \times \mathbb{R}^{3 N}}
   \rho_0 (\mathrm{d} z) P_t (z' | z) .
 \end{equation}
 Here, $P_t$ denotes the transition kernel, determined by the molecular dynamics integrator. The distribution of the velocities is usually ignored, since in the presence of a thermostat they are kept distributed roughly according to a Maxwell-Boltzmann distribution, so we only consider the $x$ component. In practice, the initial distribution $\rho_0 (x) \mathrm{d} x$ is seldom more than a Dirac-$\delta$, $\delta_{\{ x_0 \}} (\mathrm{d} x)$, or a mixture thereof, e.g. $\sum_{i = 1}^n \delta_{\{ x_i \}} / n$. Any "better" initial density would require some knowledge about the system at hand. We henceforth consider only the density at time $t$ starting at, denoted $\rho_t(x | x_0)$.
 
-It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein, it may be possible to identify clear "plateaus'' of convergence" \footnote{The plateau can be mathematically defined as a quasi-stationary distribution, but should we say this? Could cite Art Voter at Los Alamos, maybe even Freidlin-Wentzell for the original quasipotential.}, i.e. intervals $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 \in B$ in some appropriate "starting domain". Consider, for instance, the estimation of free energies of hydration for small molecules [cite Shirts paper on free energies of hydration]. In this case, the free energy estimates behave in accordance with classical statistical theory, and the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
+It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein, it may be possible to identify clear "plateaus'' of convergence \footnote{The relevant mathematical object here is a quasi-stationary distribution, but should we say this? Could cite Art Voter at Los Alamos, maybe even Freidlin-Wentzell for the original quasipotential.}, i.e. intervals $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 \in B$ in some appropriate "starting domain". Consider, for instance, the estimation of free energies of hydration for small molecules [cite Shirts paper on free energies of hydration]. In this case, the free energy estimates behave in accordance with classical statistical theory, and the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
 
 %  MS: The above paragraph is too vague, but some kind of discussion to this effect might be necessary to make sense of why some free energy calculations, such as solvation free energy calculations or computation of free energy landscapes for small molecules, have different statistical properties than more complicated calculations, like absolute binding free energy calculations. 
 
-One should not confuse a plateau in such coordinates with having explored the entirety of the configuration space $\Omega$; most biomolecular systems, even ones involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Importantly, there is no that $\rho_t (x | x_0)$ converges as $t \rightarrow \infty$ to some unique invariant distribution $\propto \exp (-\beta H (x))$, nor that $p_t (x | x_0)$ is invariant to $x_0$.
+One should not confuse a plateau in such coordinates with having explored the entirety of the configuration space $\Omega \subset \mathbb{R}^{3N}$; most biomolecular systems, even ones involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Importantly, there is no claim that $\rho_t(x|x_0)$ must always converge to some unique density $\propto \exp(-\beta H(x))$, nor that the behavior of $\rho_t (x|x_0)$ is invariant to $x_0$.
+% Of course, it _could_ be the case for some systems, but in general we will have a so-called quasi-stationary distribution; i.e. we will consider the distribution conditional on not having exceeded an escape time. 
 
-% The following footnote feels out of place, but might address some comments by A. Bhati re: the Poincaré recurrence theorem.
-% \footnote{(Luckily, it is not necessary for simulations to visit every configuration $x \in \Omega$ in order to exhibit a regime of convergence. For instance, two configurations $x$ and $x'$ may be considered equivalent if they differ only by the permutation of water molecules. Nature too faces the same difficulty that not all states are accessible on timescales we can observe -- it will take an astronomically long time before all the gas particles in a room happen to be on one half-side of it -- but this does not prevent us from measuring the temperature of (most) rooms.)}
+% The following footnote feels out of place, but might address some comments by A. Bhati re: the Poincaré recurrence times.
+% \footnote{(Luckily, it is not necessary for simulations to visit every configuration $x \in \Omega$ in order to exhibit a regime of convergence for the free energy estimates. For instance, two configurations $x$ and $x'$ may be considered equivalent for free energy estimation if they differ only by the permutation of water molecules. Nature too faces the same difficulty that not all states are accessible on timescales we can observe -- it will take an astronomically long time before all the gas particles in a room happen to be on one half-side of it -- but this does not prevent us from measuring the temperature of (most) rooms.)}
 
-For systems involving a protein-ligand complex, it is usually the case that $\rho_t (x | x_0)$ is sensitive to $x_0$ and additionally may not exhibit a clear plateau on any accessible time $T > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?}
+For systems involving a protein-ligand complex, $\rho_t (x | x_0)$ is usually sensitive to $x_0$ and additionally may not exhibit a clear plateau on any computationally feasible time $t > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?}
 
-
-In this section, we explore the various possible types of error analysis which can be performed, starting from the simplest, with end hope of making "$\rho_t (x | x_0)$ should not vary much'' a little more precise. We start with the following definition.
+In this section, we explore the various possible types of error analysis which can be performed, depending on the behavior of $\rho_t$. We begin with a definition.
 
 %% MS: I'm not tied to any particular definition of ensemble, but we should probably make a concrete one:
 % - common x_0 ? 
@@ -1787,15 +1785,33 @@ Note that, conditionally on $x_0$, we have
 \begin{equation}
     \mathbb{E}_{x_0}[S_R^2(t)] = \mathrm{Var}_{x_0}(\Delta G^{(1)}(t))
 \end{equation}
-The above equation says that $S_R^2(t)$ is an unbiased estimator for the variance. As $R \rightarrow \infty$, we have $S^2_R (t) \rightarrow \mathrm{Var} _{x_0}(\Delta
-G^{(1)} (t)) = \sigma^2 (t ; x_0)$.
+The above equation says that $S_R^2(t)$ is an unbiased estimator for the variance. By a law of large numbers, as $R \rightarrow \infty$, we have $S^2_R (t) \rightarrow \mathrm{Var} _{x_0}(\Delta
+G^{(1)} (t)) = \sigma^2 (t ; x_0)$. 
+%% Should we say what kind of LLN (weak/strong) ? Do we provide a reference (standard: Durrett or Chung)? 
 
 The standard error
 \begin{equation}
   \mathrm{SE}_R (t ; x_0) = \frac{S_R^2 (t)}{\sqrt{R}}
 \end{equation}
 is the gold standard for reporting the error of a set of free energies obtained from trajectories started from a common $x_0$. Note that $\mathrm{SE}_R
-(t ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ no matter what $S_R^2 (t)$, so long as it is finite, which is true if the $\overline{\Delta G}$ are, say, bounded.
+(t ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ no matter what $S_R^2 (t)$, so long as it is finite, which is true if the $\overline{\Delta G}$ are, say, bounded. Consequently, we can estimate the variance of the estimate to essentially arbitrary precision. Note, however, that $\Delta G^{(i)}(t)$ will not in general be normally distributed, and the variance may not be a good statistic to capture the error, as the distribution may be multi-modal and heavy-tailed.
+%% MS: The error estimation may further be compounded by a rare event problem, in which case simulating even R = 100 replicates may not be "enough", depending on the purposes. 
+%% Should we also state the central limit theorem? 
+
+\subsubsection{Per-replicate error estimates}
+
+In the preceding case, we used minimal assumptions on the distribution of $\Delta G^{(i)}(t)$ to obtain estimates on $\sigma^2(t;x_0)$ by simulating conditionally independent replicates and using the sample variance. In this section, we impose much stricter assumptions on the distribution of $\Delta G^{(i)}(t)$, namely that they satisfy a (temporal) Central Limit Theorem (CLT):
+$$ \sqrt{t} ( \Delta G^{(i)}(t) - \Delta G^\star) \Rightarrow N(0, \sigma^2_{\mathrm{asym}}(x_0))$$
+where $\Delta G^\star$ denotes the true free energy difference, $\sigma_{\mathrm{asym}}^2(x_0)>0$ denotes the so-called "asymptotic variance", and $\Rightarrow$ denotes convergence in distribution. %% Should we define this? Might be a little too technical for the audience. Again, Durrett is one of the standard references. 
+The CLT assumption implies that 
+$$\sigma^2(t;x_0)=\frac{\sigma^2_{\mathrm{asym}}(x_0)}{t}.$$
+In practice, it may not be the case that $\sigma^2(t;x_0)\propto t^{-1}$, nor even that $\sigma^2(t;x_0)$ is monotonically decreasing with $t>0$. In such a case, we are not in a regime where the CLT is satisfied. 
+
+%% Here we can discuss time-blocking estimators, such as the batch-means estimator. Subsampling would also fit in nicely here. Finally, we could relate the sample variance at time $t$ to the mean of per-replicate errors at time $t$; the two should agree -- and they do for some simulations -- but in general the mean of the per-replicate errors is less than the empirical error obtained from the sample variance.
+
+%% We should also discuss the dependence on x_0. 
+
+
 
 \subsection{Uncertainty estimation}
 \label{subsec:uncertainty}
