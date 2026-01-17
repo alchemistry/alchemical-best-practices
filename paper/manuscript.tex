@@ -93,6 +93,7 @@
 \author[8*]{Michael R. Shirts}
 \author[9]{Gary Tresadern}
 \author[2]{Huafeng Xu}
+\author[]{Michael Snarski}
 
 %
 \affil[1]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
@@ -161,6 +162,7 @@ Ph.D. Program in Biochemistry, The Graduate Center of the City University of New
 \orcid{Irfan Alibay}{0000-0001-5787-9130}
 \orcid{Sheenam Khuttan}{0000-0002-8873-6359}
 \orcid{Finlay Clark}{0000-0003-0474-5475}
+\orcid{Michael Snarski}{0000-0002-8041-2210}
 
 
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
@@ -825,7 +827,7 @@ related ligand as a starting point. Additional factors such as slow protein or l
 
 It is worth noting that the accuracy of free energy calculations is highly variable across different protein targets, and likely across different ligand chemotypes as well.
 For instance, FEP+ with OPLS3 achieves an RMSE of 0.62 kcal/mol for a set of 21 compounds binding to JNK1 kinase, but an RMSE of 1.05 kcal/mol for a set of 34 compounds binding to P38$\alpha$ kinase~\cite{harder2016opls3}.
-Furthermore, perturbations for the same chemotype in different pockets of the BACE enzyme gave varied errors~\cite{keranen2017acylguanidine}. Here the errors refer to the difference in $\Delta G$ derived from calculated $\Delta \Delta G$'s while fitting a constant offset to best reproduce the experimental binding free energies for known compounds~\cite{wang2015accurate}. Each $\Delta \Delta G$ is associated with a particular free energy calculation or transformation, which can be thought of as an edge in the graph spanning the compound series.  For a more complete description of analyzing the accuracy of large sets of ree energy calculations, see an example in Fig. X of [ref]~\ref{fig:fig_types_of_networks}.
+Furthermore, perturbations for the same chemotype in different pockets of the BACE enzyme gave varied errors~\cite{keranen2017acylguanidine}. Here the errors refer to the difference in $\Delta G$ derived from calculated $\Delta \Delta G$'s while fitting a constant offset to best reproduce the experimental binding free energies for known compounds~\cite{wang2015accurate}. Each $\Delta \Delta G$ is associated with a particular free energy calculation or transformation, which can be thought of as an edge in the graph spanning the compound series.  For a more complete description of analyzing the accuracy of large sets of free energy calculations, see an example in Fig. X of [ref]~\ref{fig:fig_types_of_networks}.
 
 The fact that we can analyze both $\Delta G$ values and $\Delta \Delta G$ values raises an important question about analysis---which calculated values should we assess? It is important to be clear on what error to report: $\Delta G$ after shifting by a constant to minimize the RMSE, unshifted $\Delta G$, $\Delta \Delta G$ of computed edges, or $\Delta \Delta G$ of all edges. (See recommendations for reporting best practices, Sec.~\ref{sec:plot_data}.) Additionally, as it is possible to perform calculations on a set of ligands using different pairwise comparisons of molecules, the performance of the method may be biased based on which pairs of comparisons are performed. Additionally, it is possible that the error associated with the relative free energy between a two ligands that was not directly computed,  but can be deduced using one or more thermodynamic paths involving other ligands will likely be more uncertain.
 Given the need to understand the performance of the system with alchemical free energy calculations, we recommend that retrospective studies for a particular target and a particular chemical series be performed for each application case.
@@ -1745,7 +1747,7 @@ Reliable estimation of the statistical inefficiency is difficult, and estimates 
 To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_{\mathrm{eff}} \ge  \sim 50$ if the BAR or MBAR estimators (discussed below in sec~\ref{subsec:estimators}) are used; the number may need to be much higher with alternate estimators.
 
 
-\subsection{Uncertainty estimation v2}
+                        \subsection{Uncertainty estimation v2}
 
 %% MS: This is a very loose proposal of how one might address some of the issues on uncertainty quantification.  It is only meant to help get the ball rolling, per the discussion in https://github.com/alchemistry/alchemical-best-practices/issues/150#issuecomment-3567254644. Otherwise, it can be mostly discarded. The important points in my view are:
 %
@@ -1764,32 +1766,33 @@ Consider a molecular dynamics trajectory started at some initial configuration $
   \rho_t (z' | z_0) = \int_{\mathbb{R}^{3 N} \times \mathbb{R}^{3 N}}
   \rho_0 (\mathrm{d} z) P_t (z' | z) .
 \end{equation}
-Here, $P_t$ denotes the transition kernel, determined by the molecular dynamics integrator. The distribution of the velocities is usually ignored, since in the presence of a thermostat they are kept distributed roughly according to a Maxwell-Boltzmann distribution, so we only consider the $x$ component. In practice, the initial distribution $\rho_0 (x) \mathrm{d} x$ is seldom more than a Dirac-$\delta$, $\delta_{\{ x_0 \}} (\mathrm{d} x)$, or a mixture thereof, e.g. $\sum_{i = 1}^n \delta_{\{ x_i \}} / n$. Any "better" initial density would require some knowledge about the system at hand. We henceforth consider only the density at time $t$ starting at, denoted $\rho_t(x | x_0)$.
+Here, $P_t$ denotes the transition kernel, determined by the molecular dynamics integrator. The distribution of the velocities is usually ignored, since in the presence of a thermostat they are kept distributed roughly according to a Maxwell-Boltzmann distribution, so we only consider the $x$ component. In practice, the initial distribution $\rho_0 (x) \mathrm{d} x$ is seldom more than a Dirac-$\delta$, $\delta_{\{ x_0 \}} (\mathrm{d} x)$, or a mixture thereof: $\rho_0(x) \mathrm{d}x = \sum_{i = 1}^n \delta_{\{ x_i \}}(\mathrm{d}x) / n$; any "better" initial density would require some knowledge about the system at hand. 
 
-It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein, it may be possible to identify clear "plateaus'' of convergence \footnote{The relevant mathematical object here is a quasi-stationary distribution, but should we say this? Could cite Art Voter at Los Alamos, maybe even Freidlin-Wentzell for the original quasipotential.}, i.e. intervals $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 \in B$ in some appropriate "starting domain". Consider, for instance, the estimation of free energies of hydration for small molecules [cite Shirts paper on free energies of hydration]. In this case, the free energy estimates behave in accordance with classical statistical theory, and the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
+It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein, it may be possible to identify clear "plateaus'' of convergence \footnote{The relevant mathematical object here is a quasi-stationary distribution, but should we say this? Could cite Art Voter at Los Alamos, maybe even Freidlin-Wentzell for the original quasipotential.}, i.e. intervals $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 \in B$ in some appropriate "starting domain". Consider, for instance, the estimation of free energies of hydration for small molecules [cite Shirts paper on free energies of hydration]~\cite{paliwal2011benchmark}. In this case, the free energy estimates behave in accordance with classical statistical theory, and the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
 
 %  MS: The above paragraph is too vague, but some kind of discussion to this effect might be necessary to make sense of why some free energy calculations, such as solvation free energy calculations or computation of free energy landscapes for small molecules, have different statistical properties than more complicated calculations, like absolute binding free energy calculations. 
 
-One should not confuse a plateau in such coordinates with having explored the entirety of the configuration space $\Omega \subset \mathbb{R}^{3N}$; most biomolecular systems, even ones involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Importantly, there is no claim that $\rho_t(x|x_0)$ must always converge to some unique density $\propto \exp(-\beta H(x))$, nor that the behavior of $\rho_t (x|x_0)$ is invariant to $x_0$.
-% Of course, it _could_ be the case for some systems, but in general we will have a so-called quasi-stationary distribution; i.e. we will consider the distribution conditional on not having exceeded an escape time. 
+One should not confuse a plateau in such coordinates with having explored the entirety of the configuration space $\Omega \subset \mathbb{R}^{3N}$; most bio-molecular systems, even those involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Consequently, the estimated error of the free energy estimate will typically be an underestimate of the true uncertainty.
+
+% Of course, it _could_ be the case for some systems that \rho_t(x | x_0) is independent of x_0, and that the empirical distribution of any replicate is a good approximation for \rho_t (x|x_0). In general, however, we will only have access to a so-called quasi-stationary distribution; i.e. we will consider the distribution conditional on not having exceeded an escape time, and this distribution will only equilibrate in some degrees of freedom. 
 
 % The following footnote feels out of place, but might address some comments by A. Bhati re: the Poincaré recurrence times.
 % \footnote{(Luckily, it is not necessary for simulations to visit every configuration $x \in \Omega$ in order to exhibit a regime of convergence for the free energy estimates. For instance, two configurations $x$ and $x'$ may be considered equivalent for free energy estimation if they differ only by the permutation of water molecules. Nature too faces the same difficulty that not all states are accessible on timescales we can observe -- it will take an astronomically long time before all the gas particles in a room happen to be on one half-side of it -- but this does not prevent us from measuring the temperature of (most) rooms.)}
 
 For systems involving a protein-ligand complex, $\rho_t (x | x_0)$ is usually sensitive to $x_0$ and additionally may not exhibit a clear plateau on any computationally feasible time $t > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?}
 
-In this section, we explore the various possible types of error analysis which can be performed, depending on the behavior of $\rho_t$. We begin with a definition.
+In this section, we explore the various possible types of error analysis that can be performed, depending on the behavior of $\rho_t$. We begin with a definition.
 
 %% MS: I'm not tied to any particular definition of ensemble, but we should probably make a concrete one:
 % - common x_0 ? 
 % - v ~ MaxwellBoltzmann(Temperature) 
 % - what are the individual trajectories called? "replicates" ? 
-We define an \textbf{ensemble} to be a set of $R \geqslant 1$ trajectories, all started at the same configuration $x_0$, with $v_0$ drawn from the Maxwell-Boltzmann distribution at the appropriate temperature, and run for a chemical time $T$.
+We define an \textbf{ensemble} to be a set of $R \geqslant 1$ trajectories, all started at the same configuration $x_0$, with $v_0$ drawn from the Maxwell-Boltzmann distribution at the appropriate temperature and run for a chemical time $T$.
 
 \subsubsection{Ensemble error estimates}
-The simplest  and most robust way of obtaining error bars on free energy estimates is by simulating an ensemble $\{ X^{(1)}, \ldots, X^{(R)} \}$ of $R$ molecular dynamics trajectories started at $x_0$ and producing trajectories of free energy differences $\{ \Delta G^{(1)}, \ldots, \Delta G^{(R)} \}$. The trajectories $\Delta
+The simplest  and most robust way to obtain error bars on free energy estimates is by simulating an ensemble $\{ X^{(1)}, \ldots, X^{(R)} \}$ of $R$ molecular dynamics trajectories started at $x_0$ and producing trajectories of free energy differences $\{ \Delta G^{(1)}, \ldots, \Delta G^{(R)} \}$. Trajectories $\Delta
 G^{(i)} (\cdot)$ are identically distributed and conditionally independent given some $x_0$. For time $t > 0$, the variance of any $\Delta G^{(i)} (t)$ can be estimated with the sample variance $S^2_{(R - 1)} (t)$,
-\begin{equation}
+\begin{equation}\label{eq:sample-variance-definition}
   S^2_R (t) = \frac{1}{R - 1} \sum_{i = 1}^R (\Delta G^{(i)} (t) -
   \overline{\Delta G (t)})^2, \qquad \overline{\Delta G (t)} = \frac{1}{R}
   \sum_{i = 1}^R \Delta G^{(i)} (t) .
@@ -1798,7 +1801,7 @@ Note that, conditionally on $x_0$, we have
 \begin{equation}
     \mathbb{E}_{x_0}[S_R^2(t)] = \mathrm{Var}_{x_0}(\Delta G^{(1)}(t))
 \end{equation}
-The above equation says that $S_R^2(t)$ is an unbiased estimator for the variance. By a law of large numbers, as $R \rightarrow \infty$, we have $S^2_R (t) \rightarrow \mathrm{Var} _{x_0}(\Delta
+The above equation says that $S_R^2(t)$ is an unbiased estimator of the variance. By a law of large numbers, as $R \rightarrow \infty$, we have $S^2_R (t) \rightarrow \mathrm{Var} _{x_0}(\Delta
 G^{(1)} (t)) = \sigma^2 (t ; x_0)$. 
 %% Should we say what kind of LLN (weak/strong) ? Do we provide a reference (standard: Durrett or Chung)? 
 
@@ -1807,23 +1810,50 @@ The standard error
   \mathrm{SE}_R (t ; x_0) = \frac{S_R^2 (t)}{\sqrt{R}}
 \end{equation}
 is the gold standard for reporting the error of a set of free energies obtained from trajectories started from a common $x_0$. Note that $\mathrm{SE}_R
-(t ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ no matter what $S_R^2 (t)$, so long as it is finite, which is true if the $\overline{\Delta G}$ are, say, bounded. Consequently, we can estimate the variance of the estimate to essentially arbitrary precision. Note, however, that $\Delta G^{(i)}(t)$ will not in general be normally distributed, and the variance may not be a good statistic to capture the error, as the distribution may be multi-modal and heavy-tailed.
+(t ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ so long as $S_R^2 (t)$ is finite, which is true if the $\overline{\Delta G}$ are, say, bounded. Consequently, we can estimate the variance of the estimate to essentially arbitrary precision. Note, however, that $\Delta G^{(i)}(t)$ will not in general be normally distributed, and the variance may not be a good statistic to capture the error, as the distribution may be multi-modal and heavy-tailed.
 %% MS: The error estimation may further be compounded by a rare event problem, in which case simulating even R = 100 replicates may not be "enough", depending on the purposes. 
 %% Should we also state the central limit theorem? 
 
 \subsubsection{Per-replicate error estimates}
 
-In the preceding case, we used minimal assumptions on the distribution of $\Delta G^{(i)}(t)$ to obtain estimates on $\sigma^2(t;x_0)$ by simulating conditionally independent replicates and using the sample variance. In this section, we impose much stricter assumptions on the distribution of $\Delta G^{(i)}(t)$, namely that they satisfy a (temporal) Central Limit Theorem (CLT):
+In the preceding case, we used minimal assumptions on the distribution of $\Delta G^{(i)}(t)$ to obtain estimates on $\sigma^2(t;x_0)$ by simulating conditionally independent replicates and using the sample variance. To obtain per-replicate error estimates, we impose much stricter assumptions on the distribution of $\Delta G^{(i)}(t)$, namely that they satisfy a Central Limit Theorem (CLT) as $t\rightarrow \infty$:
 $$ \sqrt{t} ( \Delta G^{(i)}(t) - \Delta G^\star) \Rightarrow N(0, \sigma^2_{\mathrm{asym}}(x_0))$$
 where $\Delta G^\star$ denotes the true free energy difference, $\sigma_{\mathrm{asym}}^2(x_0)>0$ denotes the so-called "asymptotic variance", and $\Rightarrow$ denotes convergence in distribution. %% Should we define this? Might be a little too technical for the audience. Again, Durrett is one of the standard references. 
 The CLT assumption implies that 
 $$\sigma^2(t;x_0)=\frac{\sigma^2_{\mathrm{asym}}(x_0)}{t}.$$
-In practice, it may not be the case that $\sigma^2(t;x_0)\propto t^{-1}$, nor even that $\sigma^2(t;x_0)$ is monotonically decreasing with $t>0$. In such a case, we are not in a regime where the CLT is satisfied. 
+In practice, it may not be the case that $\sigma^2(t;x_0)\propto t^{-1}$, nor even that $\sigma^2(t;x_0)$ is monotonically decreasing with $t>0$. In such a case, we are not in a regime where the CLT is satisfied and the remainder of this subsection does not apply.
+
+The simplest generalization of \eqref{eq:sample-variance-definition} to the case of time-correlated samples is the non-overlapping batch means estimator.  Consider any discretization  $\{t_0, \dots, t_{N-1}\}$ of $[0,T]$, so that $t_0=0, t_{N-1}=T$ -- we relegate the choice of discretization width $t_{i+1} - t_i$ and initial time $t_0$ to the following section -- and partition the $N$ times into $B$ batches of length $M$, so that $N = BM$. Let $\Delta G(t_i : t_{i+M})$ denote the the estimate obtained using only the samples $X(t_i),\dots, X(t_{i+M-1})$. The non-overlapping batch means estimator is then
+
+$$ \hat\sigma^2_B(T ; x_0) = \frac{1}{B(B -1)}\sum_{k=0}^{B -1} \left(\Delta G(t_{k M} : t_{(k+1)M}) - \frac{1}{B} \sum_{k=0}^{B-1} \Delta G(t_{kM} : t_{(k+1)M})\right)^2$$
+
+This estimator may look complicated, but it is just the application of the sample variance to the estimates on  $B$ non-overlapping time blocks of length $M$, which gives the variance using $M$ samples, with an additional normalization by the number of blocks $B$, to get the variance using all $N=BM$ samples. 
+
+If the final time $T=t_{N-1}$ and the block length $M$ are well-chosen, then with enough replicates $R\geqslant 1$, we should find that
+$$ \hat\sigma_B^2(T; x_0) \approx S_R^2(T ; x_0) .$$
+When this relationship holds, we may surmise the replicates are exploring roughly the same regions of configuration space, at least in those degrees of freedom that are relevant to the free energy estimate. 
+
+It is also useful to note that the variance $\sigma^2(t;x_0)$ can be written as
+$$\sigma^2(t;x_0) =  \sigma_0^2(t;x_0) \tau_{\mathrm{int}},$$
+where $\tau_{\mathrm{int}}$ is the so-called integrated autocorrelation time of the free energy estimate. Loosely speaking, $\tau_{\mathrm{int}}$ is the number of time indices required to obtain an "independent" sample. It is also sometimes referred to as the statistical inefficiency.
 
 %% Here we can discuss time-blocking estimators, such as the batch-means estimator. Subsampling would also fit in nicely here. Finally, we could relate the sample variance at time $t$ to the mean of per-replicate errors at time $t$; the two should agree -- and they do for some simulations -- but in general the mean of the per-replicate errors is less than the empirical error obtained from the sample variance.
 
 %% We should also discuss the dependence on x_0. 
 
+\subsubsection{Per-replicate errors and subsampling}
+
+% How should one sub-sample? I believe this section can be short:
+
+- One is always de-facto sub-sampling, unless a sample is stored every molecular dynamics timestep. This is typically infeasible.
+- Sub-sampling the actual saved trajectory is never necessary, especially not for single trajectories
+- If the statistical inefficiency (aka integrated autocorrelation time) is (say) 100, subsampling every 10 steps is probably not going to hurt much; could be useful for slow programs
+- Computing error bars using multiple trajectories is sometimes simplified by subsampling
+
+
+\subsubsection{{Per-replicate errors and burn-in times}}
+
+\subsubsection{Allocation of sampling resources between replicates and simulation time}
 
 
 \subsection{Uncertainty estimation}
@@ -2166,6 +2196,7 @@ There are many different software solutions available for the setup, running, an
 \textbf{MRS}: Helped create figure~\ref{fig:fig_what_is_lambda}, wrote Sec.~\ref{sec:important_path} describing choices for alchemical pathways and parts of~\ref{sec:data_analysis} on the analysis for free energy calculations. Reviewed and edited text throughout.\\
 \textbf{GT}: Contributed to Sec.~\ref{sec:intro} and~\ref{sec:drugdiscovery}, and helped edit the paper.\\
 \textbf{HX}: Contributed Sec.~\ref{subsec:accuracy}, to Sec.~\ref{sec:relative-fe-protocol}, and to Sec.~\ref{sec:are-they-good}.
+\textbf{MS:} Proof read some of the mathematical material in the section on uncertainty quantification and added some details. 
 % We suggest you preserve this comment:
 For a more detailed description of author contributions,
 see the GitHub issue tracking and changelog at \githubrepository.
@@ -2199,6 +2230,7 @@ SK is employed by SandboxAQ.
 MK is employed by Cresset who commercially distribute a software for performing alchemical free energy calculations. MRS is a Open Science Fellow and consultant for Silicon Therapeutics.
 JDC is a current member of the Scientific Advisory Board of OpenEye Scientific Software and a consultant to Foresite Laboratories.
 JWE receives research funding from AZ, Astex Pharmaceuticals, Exscientia, GSK, dstl, UCB, Diamond Light Source. Astex Pharmaceuticals part funds WGP., where he is now employed.
+MS is currently employed by D. E. Shaw Research. Any contributions do not represent those of the company. 
 \section*{Funding Information}
 %%%%%%%
 % Authors should acknowledge funding sources here. Reference specific grants.
