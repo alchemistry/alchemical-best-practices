@@ -840,7 +840,7 @@ Simulations carried out with molecular dynamics or Monte Carlo techniques are fu
 
 There are two types of reproducibility that are important to examine.  One is reproducibility between different research groups attempting to reproduce the same results. This situation is most relevant when new users might be trying to see how well their calculations match with published calculations. The second situation reproducibility when one researcher runs the same calculation multiple times, differing only in starting configurations.  This can be particularly relevant in determining the statistical uncertainty of the calculation, as discussed in Sec~\ref{subsec:uncertainty}.
 
-%Even within this restriction, finite computing resources necessarily limit the generated number of uncorrelated samples of potential energy surfaces, and therefore alchemical free energy calculations only give free energy estimates to within finite precision. 
+%Even within this restriction, finite computing resources necessarily limit the generated number of uncorrelated samples of potential energy surfaces, and therefore alchemical free energy calculations only give free energy estimates to within finite precision.
 
 The differences in free energies between different research groups, due to differences in choices of simulation parameters, simulation packages, and analysis treatments can be significant. Issues of reproducibility of free energy calculations across different simulation packages have recently attracted attention ~\cite{loeffler2018reproducibility,rizzi2019sampl6, wade2022, herz2025modular}. Greater variability is expected between simulations carried out between packages, as opposed to ones carried out with the same package, due to methodological differences such as integrators, thermostats, barostats, treatment of long-range electrostatics, and potentially other factors. For absolute and relative hydration free energies of small organic molecules a variability of approximately 0.2 kcal/mol between popular simulation packages has been reported~\cite{loeffler2018reproducibility}. In the recent SAMPL6 SAMPLing challenge a larger variability of 0.3 to 1.0 kcal/mol was noted in the computed absolute binding free energies of host/guest systems, even though the study sought to use identical input and simulation parameters~\cite{rizzi2019sampl6}. This variability in free energy calculations occurred even when the energies of individual fraes were identical or nearly so.  For more complex use cases, such as protein-ligand binding free energies, the repeatability is often substantially worse~\cite{rizzi2019sampl6}.   For benchmark simulations of some relative binding free energies, differences of {\color{red}Can we put some more citations and discussions of studies here?} 
 
@@ -1659,48 +1659,48 @@ One important point is that the bootstrap samples use to estimate the standard e
 \item Other variants, especially ones that adaptively determine the free energies can be useful in certain circumstances but beyond the scope of a Best Practices article.
 \end{itemize}
 
-\subsection{Detecting the boundary between equilibrated and production regions}
-\label{sec:automatic-equilibration-detection}
-Much of the infrastructure for analyzing alchemical free energy calculations relies on the concept of asymptotically unbiased estimators, which produce unbiased estimates of the free energy when fed very long simulations~\cite{shirts2005comparison}.
-In reality, free energy calculations are often initiated from highly atypical initial conditions (such as a protein-ligand geometry obtained from docking and subjected to a heuristic solvent placement scheme), and simulations are of a finite length dictated by available computational resources and computing demands.
-As a result, these estimators can produce significantly biased estimates if fed the entirety of simulation data generated without further processing~\cite{chodera2016simple}.
-\begin{figure}
-    \centering
-    \includegraphics[width=0.95\linewidth]{figures/fig11_equib_detection/Figure.pdf}
-    \caption{{\bf Automatic partitioning into equilibration and production regions.}
-    (\textbf{A}) The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient change before relaxing to the true average potential energy (\textbf{B}). A cumulative average (red) of the entire simulation data demonstrates simulation bias not seen when initial simulation data is omitted (blue). Using an automated approach to detect equilibration of the boundary $t_0$ using statistical inefficiency $g$ (\textbf{C})  for an effective simulation interval (\textbf{D}). (\textbf{E}) The optimal equilibration boundary $t_0$ is selected to maximize the number of uncorrelated samples.
-    \emph{Figure adapted from~\cite{chodera2016simple}.}
-    }
-    \label{fig:automatic-equilibration-detection}
-\end{figure}
+% \subsection{Detecting the boundary between equilibrated and production regions}
+% \label{sec:automatic-equilibration-detection}
+% Much of the infrastructure for analyzing alchemical free energy calculations relies on the concept of asymptotically unbiased estimators, which produce unbiased estimates of the free energy when fed very long simulations~\cite{shirts2005comparison}.
+% In reality, free energy calculations are often initiated from highly atypical initial conditions (such as a protein-ligand geometry obtained from docking and subjected to a heuristic solvent placement scheme), and simulations are of a finite length dictated by available computational resources and computing demands.
+% As a result, these estimators can produce significantly biased estimates if fed the entirety of simulation data generated without further processing~\cite{chodera2016simple}.
+% \begin{figure}
+%     \centering
+%     \includegraphics[width=0.95\linewidth]{figures/fig11_equib_detection/Figure.pdf}
+%     \caption{{\bf Automatic partitioning into equilibration and production regions.}
+%     (\textbf{A}) The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient change before relaxing to the true average potential energy (\textbf{B}). A cumulative average (red) of the entire simulation data demonstrates simulation bias not seen when initial simulation data is omitted (blue). Using an automated approach to detect equilibration of the boundary $t_0$ using statistical inefficiency $g$ (\textbf{C})  for an effective simulation interval (\textbf{D}). (\textbf{E}) The optimal equilibration boundary $t_0$ is selected to maximize the number of uncorrelated samples.
+%     \emph{Figure adapted from~\cite{chodera2016simple}.}
+%     }
+%     \label{fig:automatic-equilibration-detection}
+% \end{figure}
 
-To minimize this effect, an initial portion of the simulation that is determined to be  \emph{equilibration}~\cite{braun2019best} should be omitted, with the idea of removing the most heavily biased initial portion of simulation data, but retaining the unbiased \emph{production} region that represents a stationary Markov chain process sampling from the desired equilibrium target distribution.
-Because the simulation time required for the atypical initial sampler state to relax toward equilibrium is a property of the specific system being simulated and the specific initial conditions selected, it is simplest to collect data for the whole process and use an automated algorithm to select how much data should be discarded to equilibration in a post-processing step, rather than attempting to figure out beforehand how long equilibration will take. 
+% To minimize this effect, an initial portion of the simulation that is determined to be  \emph{equilibration}~\cite{braun2019best} should be omitted, with the idea of removing the most heavily biased initial portion of simulation data, but retaining the unbiased \emph{production} region that represents a stationary Markov chain process sampling from the desired equilibrium target distribution.
+% Because the simulation time required for the atypical initial sampler state to relax toward equilibrium is a property of the specific system being simulated and the specific initial conditions selected, it is simplest to collect data for the whole process and use an automated algorithm to select how much data should be discarded to equilibration in a post-processing step, rather than attempting to figure out beforehand how long equilibration will take. 
 
-A simple approach to automatically partitioning simulation data into equilibration and production regions is described in~\cite{chodera2016simple} (illustrated in Fig.~\ref{fig:automatic-equilibration-detection}).
-Suppose we have a simulation of length $T$ consisting of correlated data.
-Here, the goal of the post-processing step is to select the equilibration boundary $t_0 \in [0, T]$ so as to \emph{maximize} the number of effectively uncorrelated samples remaining in the production region $N_{[t_0,T]}$, which is defined as
-\begin{eqnarray}
-N_{[t_0,T]} &=& \frac{T - t_0}{g_{[t_0,T]}}
-\end{eqnarray}
-where $g_{[t_0,T]}$ is the \emph{statistical inefficiency} of a timeseries $a_t$, described in more detail below.
-This approach is implemented within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, and is highly recommended for standard practice. A very similar approach involves minimizing the standard error of the production region~\cite{whiteEffectiveTruncationHeuristic1997, sprattHeuristicsStartupProblem1998, hoadAutomatingWarmupLength2010, clarkRobustAutomatedTruncation2025}.
+% A simple approach to automatically partitioning simulation data into equilibration and production regions is described in~\cite{chodera2016simple} (illustrated in Fig.~\ref{fig:automatic-equilibration-detection}).
+% Suppose we have a simulation of length $T$ consisting of correlated data.
+% Here, the goal of the post-processing step is to select the equilibration boundary $t_0 \in [0, T]$ so as to \emph{maximize} the number of effectively uncorrelated samples remaining in the production region $N_{[t_0,T]}$, which is defined as
+% \begin{eqnarray}
+% N_{[t_0,T]} &=& \frac{T - t_0}{g_{[t_0,T]}}
+% \end{eqnarray}
+% where $g_{[t_0,T]}$ is the \emph{statistical inefficiency} of a timeseries $a_t$, described in more detail below.
+% This approach is implemented within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, and is highly recommended for standard practice. A very similar approach involves minimizing the standard error of the production region~\cite{whiteEffectiveTruncationHeuristic1997, sprattHeuristicsStartupProblem1998, hoadAutomatingWarmupLength2010, clarkRobustAutomatedTruncation2025}.
 
-For additional discussion of working with correlated data and autocorrelation analysis, please refer to the work on Best Practices for Quantification of Uncertainty and Sampling Quality in Molecular Simulations~\cite{grossfield2018best}.
+% For additional discussion of working with correlated data and autocorrelation analysis, please refer to the work on Best Practices for Quantification of Uncertainty and Sampling Quality in Molecular Simulations~\cite{grossfield2018best}.
 
-\paragraph{Computing the timeseries for equilibration detection}
-Typically, the timeseries of note $a_t$ analyzed in automated equilibration detection is the negative logarithm of the probability density ($\pi(x_t; \vec{\lambda}$)) sampled by the MCMC algorithm (up to an irrelevant additive constant).
-For simple independent simulations that sample $x_t \sim \pi(x ; \vec{\lambda})$, this is given by the reduced potential
-\begin{eqnarray}
-a_t &\equiv& - \ln \pi(x_t; \vec{\lambda}) + c = u(x_t; \vec{\lambda}) .
-\end{eqnarray}
+% \paragraph{Computing the timeseries for equilibration detection}
+% Typically, the timeseries of note $a_t$ analyzed in automated equilibration detection is the negative logarithm of the probability density ($\pi(x_t; \vec{\lambda}$)) sampled by the MCMC algorithm (up to an irrelevant additive constant).
+% For simple independent simulations that sample $x_t \sim \pi(x ; \vec{\lambda})$, this is given by the reduced potential
+% \begin{eqnarray}
+% a_t &\equiv& - \ln \pi(x_t; \vec{\lambda}) + c = u(x_t; \vec{\lambda}) .
+% \end{eqnarray}
 
-Note that the use of the effective reduced potential is not guaranteed to detect all slow relaxation processes that may be coupled to the alchemical free energy, but the simplicity of its computation means it is generally appropriate for most cases.
+% Note that the use of the effective reduced potential is not guaranteed to detect all slow relaxation processes that may be coupled to the alchemical free energy, but the simplicity of its computation means it is generally appropriate for most cases.
 
-\paragraph{Cautions in automating equilibration detection}
-Procedures like those described above can fail to remove bias if the simulations are simply not long enough to contain a large number of samples from true equilibrium either because they are very short, or because one is simulating slow processes. In such cases, this approach often simply selects a small final portion of the simulation, which may be contained in a single substate of configurational space, which may itself lead to biased estimates. 
-This situation can be detected if the equilibration boundary $t_0$ is a significant fraction of the total simulation length $T$, with a good rule of thumb being that under well-sampled situations $T \gtrsim 20 t_0$.
-If identifying an equilibration time that is only a fraction of the total time is not possible, advanced analysis techniques that assume only local equilibrium within kinetically separated metastable states, rather than global equilibrium over the entire phase space, such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate, but are beyond the scope of this paper.
+% \paragraph{Cautions in automating equilibration detection}
+% Procedures like those described above can fail to remove bias if the simulations are simply not long enough to contain a large number of samples from true equilibrium either because they are very short, or because one is simulating slow processes. In such cases, this approach often simply selects a small final portion of the simulation, which may be contained in a single substate of configurational space, which may itself lead to biased estimates. 
+% This situation can be detected if the equilibration boundary $t_0$ is a significant fraction of the total simulation length $T$, with a good rule of thumb being that under well-sampled situations $T \gtrsim 20 t_0$.
+% If identifying an equilibration time that is only a fraction of the total time is not possible, advanced analysis techniques that assume only local equilibrium within kinetically separated metastable states, rather than global equilibrium over the entire phase space, such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate, but are beyond the scope of this paper.
 
 \subsection{Decorrelating samples for analysis}
 \label{sec:decorrelating-samples}
@@ -1727,27 +1727,41 @@ Robust estimation of $C_t$ for $t \sim T$ is difficult due to growth in statisti
 We recommend using the robust statistical inefficiency computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, though we caution that any such algorithms will underestimate the correlation time with insufficient data. Such approaches also assume that the data doesn't have any long time scale drift over the course of the simulation, which is a clear sign of lack of equilibration.  Generally, most methods will give reasonable correlation times when the simulation lasts 40--50 correlation times.
 
 
-\paragraph{Subsampling data to generate uncorrelated samples}
-Once the statistical inefficiency $g$ has been estimated, it is straightforward to subsample the correlated timeseries simulation data to produce effectively uncorrelated data that can be fed to the free energy estimators.
-Suppose the correlated timeseries is $\{a_t\}_{t=1}^T$; we can form a new timeseries of $N_{\mathrm{eff}} \approx T / g$ effectively uncorrelated samples by selecting a subset of indices $\{ \: t = \mathrm{round}((n-1) \, g) \: | \: n \in \mathrm{range}(1,\ldots ,N) \: \}$ where $\mathrm{round(x)}$ denotes rounding to the nearest integer.
+% \paragraph{Subsampling data to generate uncorrelated samples}
+% Once the statistical inefficiency $g$ has been estimated, it is straightforward to subsample the correlated timeseries simulation data to produce effectively uncorrelated data that can be fed to the free energy estimators.
+% Suppose the correlated timeseries is $\{a_t\}_{t=1}^T$; we can form a new timeseries of $N_{\mathrm{eff}} \approx T / g$ effectively uncorrelated samples by selecting a subset of indices $\{ \: t = \mathrm{round}((n-1) \, g) \: | \: n \in \mathrm{range}(1,\ldots ,N) \: \}$ where $\mathrm{round(x)}$ denotes rounding to the nearest integer.
 
-However, samples uncorrelated by this procedure are only approximately uncorrelated.  Recent careful investigation has shown that the lowest uncertainty results can be obtained by using \textit{all} of the data to obtain an estimate of the free energy itself, but using only subsampled data to calculate error estimates using the formulas or by using bootstrapping.
-In fact, one can show that the standard deviation of the estimate determined by data that has been subsampled is the unbiased estimator of the free energy estimate using all the data, but is actually an underestimate of the uncertainty of estimate using just the subsampled data.
-%MRS: Finlay, is there a citation for the mathematical analysis you showed in the issue tracker?  This would be a good place to it. 
+% However, samples uncorrelated by this procedure are only approximately uncorrelated.  Recent careful investigation has shown that the lowest uncertainty results can be obtained by using \textit{all} of the data to obtain an estimate of the free energy itself, but using only subsampled data to calculate error estimates using the formulas or by using bootstrapping.
+% In fact, one can show that the standard deviation of the estimate determined by data that has been subsampled is the unbiased estimator of the free energy estimate using all the data, but is actually an underestimate of the uncertainty of estimate using just the subsampled data.
+% %MRS: Finlay, is there a citation for the mathematical analysis you showed in the issue tracker?  This would be a good place to it. 
 
-We don't need to use all of the data to recover the remaining correlation.  In practice, if one subsamples the data with a
-correlation interval of $g/10$, where $g$ is the correlation time, this will recover the missing correlation.  Thus, if $g=3.0$ in units of timesteps, it is best to use all of the data.  If $g=100.0$, then one loses essentially no information by subsampling with $g=10.0$ in estimating the free energies, and still saves significant time by not using all of the now-completely duplicative data.  Note that subsampling with correlation time $g$ should still be used for estimating the uncertainties, perhaps requiring two passes of the simulation analysis code. 
+% We don't need to use all of the data to recover the remaining correlation.  In practice, if one subsamples the data with a
+% correlation interval of $g/10$, where $g$ is the correlation time, this will recover the missing correlation.  Thus, if $g=3.0$ in units of timesteps, it is best to use all of the data.  If $g=100.0$, then one loses essentially no information by subsampling with $g=10.0$ in estimating the free energies, and still saves significant time by not using all of the now-completely duplicative data.  Note that subsampling with correlation time $g$ should still be used for estimating the uncertainties, perhaps requiring two passes of the simulation analysis code. 
 
-If independent simulations at each $\lambda$ are used, the alchemical state $\vec{\lambda}$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficiency $g$ for each alchemical state. If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state. Conveniently, maximizing the effective sample size for automated equilibration detection produces an appropriate estimate of $g$ over the production region for automating this process.
+% If independent simulations at each $\lambda$ are used, the alchemical state $\vec{\lambda}$ may have a significant impact on the correlation time, and these simulations should be subsampled independently using a separate estimate of the statistical inefficiency $g$ for each alchemical state. If coupled simulations are used (such as a Hamiltonian replica exchange simulation), the replicas should undergo equivalent random walks in alchemical space, and the replicas can be subsampled with the same $g$ to generate an equal number of uncorrelated samples at each alchemical state. Conveniently, maximizing the effective sample size for automated equilibration detection produces an appropriate estimate of $g$ over the production region for automating this process.
 
-Our overall recommendations are therefore to determine the subsampling period $g$, either use all of the data or subsample with something like $g/10$ (i.e. more frequently than specified by $g$) to compute the free energy estimates, and then use fully subsampled data (with subsampling interval $g$) to estimate the uncertainties of the estimates.  Uncertainties calculated with the full data set will be significant underestimates if $g > 1$.
+% Our overall recommendations are therefore to determine the subsampling period $g$, either use all of the data or subsample with something like $g/10$ (i.e. more frequently than specified by $g$) to compute the free energy estimates, and then use fully subsampled data (with subsampling interval $g$) to estimate the uncertainties of the estimates.  Uncertainties calculated with the full data set will be significant underestimates if $g > 1$.
 
-\paragraph{Cautions and considerations}
-Reliable estimation of the statistical inefficiency is difficult, and estimates will not generally be as precise (in a relative error sense) as averages.
-To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_{\mathrm{eff}} \ge  \sim 50$ if the BAR or MBAR estimators (discussed below in sec~\ref{subsec:estimators}) are used; the number may need to be much higher with alternate estimators.
+% \paragraph{Cautions and considerations}
+% Reliable estimation of the statistical inefficiency is difficult, and estimates will not generally be as precise (in a relative error sense) as averages.
+% To ensure there is sufficient data available for reliable decorrelation and estimation of free energy differences, it is recommended that the effective number of uncorrelated samples $N_{\mathrm{eff}} \ge  \sim 50$ if the BAR or MBAR estimators (discussed below in sec~\ref{subsec:estimators}) are used; the number may need to be much higher with alternate estimators.
 
 
-                        \subsection{Uncertainty estimation v2}
+\subsection{Uncertainty estimation v2}
+
+This section outlines the basic principles of uncertainty estimation. The theory is developed using the theory of Markov processes and it is usually assumed that the underlying process is "mixing", which loosely means that the simulations explore the configuration space well enough. As many practitioners have noted [cite], this assumption is not always satisfied. The result is a consistent pattern: when a simulation is well behaved, most reasonable error estimates tend to agree; conversely, when different estimation methods yield substantially different results—which is often the case—it typically indicates that the simulation itself is not well behaved. In such situations, all standard error estimates should be expected to underestimate the true uncertainty.
+
+In this section we will tend not to make definitive statements, and we shall simply provide "best practices" that most practitioners will agree on. In the following subsection, we give a brief explanation of the difficulty. %MS: It may be worthwhile to note that various groups may advocate for different statistical procedures, highlighting the value of many individual trials ("replicates") over one long simulation. This same discussion has played out many times within the Markov Chain Monte Carlo community.; see e.g. https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2011.00131.x
+
+The free energy estimate can be viewed as an empirical average, like the one that arises in thermodynamic integration: if $\{Z_0, \dots, Z_{N-1}\}$ are samples drawn from an ergodic Markov process with stationary density $p(z)$ then for $N$ sufficiently large we expect 
+\begin{equation}
+    \int_\Omega f(z) p(z) \mathrm{d}z\approx \frac{1}{N}\sum_{i=0}^{N-1} f(Z_i), \label{eqn:empirical-average}
+\end{equation}
+where $\Omega$ denotes the state space. Even though not all estimators can be written in the form \eqref{eqn:empirical-average}, it will be sufficient to consider this case to get the main idea. The key object of study in this section is an estimator of 
+\begin{equation}
+    \mathrm{Var}_{Z_0 \sim \rho_0}\left(\frac{1}{N}\sum_{i=0}^{N-1} f(Z_i)\right)
+\end{equation}
+where $\rho_0(z)$ is the initial density for $Z_0$.
 
 %% MS: This is a very loose proposal of how one might address some of the issues on uncertainty quantification.  It is only meant to help get the ball rolling, per the discussion in https://github.com/alchemistry/alchemical-best-practices/issues/150#issuecomment-3567254644. Otherwise, it can be mostly discarded. The important points in my view are:
 %
@@ -1760,6 +1774,9 @@ To ensure there is sufficient data available for reliable decorrelation and esti
 % - expectation of the sample variance in the case of correlated samples
 % - some definition of the asymptotic error
 % - some discussion about the two central limit theorems being used: the one for (c)iid RVs (e.g., Lindeberg CLT) and a temporal CLT for Markov processes. In the latter case, we would expect the error to decay like 1/sqrt(# timesteps), but this does not occur. I think we should highlight this. 
+
+
+\subsubsection{Central difficulty: timescales}\label{sec:timescales}
 
 Consider a molecular dynamics trajectory started at some initial configuration $z_0 = (x_0, v_0)$, where $x_0 \in \mathbb{R}^{3 N}$ denotes the initial positions of the system and $v_0 \in \mathbb{R}^{3 N}$ its initial velocities. If $z = (x_0, v_0)$ is drawn from some initial density $\rho_0 (z)$, the density time $t$ will be
 \begin{equation}
@@ -1779,79 +1796,164 @@ One should not confuse a plateau in such coordinates with having explored the en
 % The following footnote feels out of place, but might address some comments by A. Bhati re: the Poincaré recurrence times.
 % \footnote{(Luckily, it is not necessary for simulations to visit every configuration $x \in \Omega$ in order to exhibit a regime of convergence for the free energy estimates. For instance, two configurations $x$ and $x'$ may be considered equivalent for free energy estimation if they differ only by the permutation of water molecules. Nature too faces the same difficulty that not all states are accessible on timescales we can observe -- it will take an astronomically long time before all the gas particles in a room happen to be on one half-side of it -- but this does not prevent us from measuring the temperature of (most) rooms.)}
 
-For systems involving a protein-ligand complex, $\rho_t (x | x_0)$ is usually sensitive to $x_0$ and additionally may not exhibit a clear plateau on any computationally feasible time $t > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?}
-
-In this section, we explore the various possible types of error analysis that can be performed, depending on the behavior of $\rho_t$. We begin with a definition.
+For systems involving a protein-ligand complex, $\rho_t (x | x_0)$ is usually sensitive to $x_0$ and additionally may not exhibit a clear plateau on any computationally feasible time $t > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$ and all $x_0$  in some explicitly definable subset of $\Omega$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?} In this section, we explore the various possible types of error analysis that can be performed, depending on the behavior of $\rho_t$. 
 
 %% MS: I'm not tied to any particular definition of ensemble, but we should probably make a concrete one:
 % - common x_0 ? 
 % - v ~ MaxwellBoltzmann(Temperature) 
 % - what are the individual trajectories called? "replicates" ? 
-We define an \textbf{ensemble} to be a set of $R \geqslant 1$ trajectories, all started at the same configuration $x_0$, with $v_0$ drawn from the Maxwell-Boltzmann distribution at the appropriate temperature and run for a chemical time $T$.
+
+\textbf{Definition}:
+We define an \textbf{ensemble} to be a set of $R \geqslant 1$ trajectories, all started at the same initial configuration $x_0$, with initial velocity $v_0$ independently drawn from the Maxwell-Boltzmann distribution at the appropriate temperature and run for a chemical time $T$. We emphasize that, with this definition, all ensemble-based estimates are inherently tied to the choice of $x_0$; pathological choices  -- for example, an unbound protein–ligand configuration -- can render the resulting estimates meaningless.
 
 \subsubsection{Ensemble error estimates}
+
 The simplest  and most robust way to obtain error bars on free energy estimates is by simulating an ensemble $\{ X^{(1)}, \ldots, X^{(R)} \}$ of $R$ molecular dynamics trajectories started at $x_0$ and producing trajectories of free energy differences $\{ \Delta G^{(1)}, \ldots, \Delta G^{(R)} \}$. Trajectories $\Delta
-G^{(i)} (\cdot)$ are identically distributed and conditionally independent given some $x_0$. For time $t > 0$, the variance of any $\Delta G^{(i)} (t)$ can be estimated with the sample variance $S^2_{(R - 1)} (t)$,
+G^{(i)} (\cdot)$ are identically distributed and conditionally independent given some $x_0$. For any time $T > 0$, the variance of any $\Delta G^{(i)} (T)$ can be estimated with the sample variance $S^2_{(R - 1)} (T)$,
 \begin{equation}\label{eq:sample-variance-definition}
-  S^2_R (t) = \frac{1}{R - 1} \sum_{i = 1}^R (\Delta G^{(i)} (t) -
-  \overline{\Delta G (t)})^2, \qquad \overline{\Delta G (t)} = \frac{1}{R}
-  \sum_{i = 1}^R \Delta G^{(i)} (t) .
+  S^2_R (T) = \frac{1}{R - 1} \sum_{i = 1}^R (\Delta G^{(i)} (T) -
+  \overline{\Delta G (T)})^2, \qquad \overline{\Delta G (T)} = \frac{1}{R}
+  \sum_{i = 1}^R \Delta G^{(i)} (T) .
 \end{equation}
-Note that, conditionally on $x_0$, we have
+In the notation of \eqref{eqn:empirical-average}, $Z_i = \Delta G^{(i)}(T)$; conditioned on $x_0$, the $Z_i$ are independent and identically distributed and are trivially a Markov process, with stationary distribution given by the distribution of $\Delta G^{(1)}(T)$. By direct calculation, we have (conditionally on $x_0$)
 \begin{equation}
-    \mathbb{E}_{x_0}[S_R^2(t)] = \mathrm{Var}_{x_0}(\Delta G^{(1)}(t))
+    \mathbb{E}_{x_0}[S_R^2(T)] = \mathrm{Var}_{x_0}(\Delta G^{(1)}(T))
 \end{equation}
-The above equation says that $S_R^2(t)$ is an unbiased estimator of the variance. By a law of large numbers, as $R \rightarrow \infty$, we have $S^2_R (t) \rightarrow \mathrm{Var} _{x_0}(\Delta
-G^{(1)} (t)) = \sigma^2 (t ; x_0)$. 
+The above equation says that $S_R^2(T)$ is an unbiased estimator of the variance. By the Law of Large Numbers, as $R \rightarrow \infty$, we have $S^2_R (T) \rightarrow \mathrm{Var} _{x_0}(\Delta
+G^{(1)} (T)) = \sigma^2 (T ; x_0)$ and hence
+\begin{equation}\label{eqn:variance-of-empirical-mean}
+\mathrm{Var}_{x_0}(\overline{\Delta G(T)}) = \frac{\mathrm{Var}_{x_0}(\Delta G^{(1)}(T))}{R}.
+\end{equation}
 %% Should we say what kind of LLN (weak/strong) ? Do we provide a reference (standard: Durrett or Chung)? 
 
 The standard error
 \begin{equation}
-  \mathrm{SE}_R (t ; x_0) = \frac{S_R^2 (t)}{\sqrt{R}}
+  \mathrm{SE}_R (T ; x_0) = \sqrt{\frac{S_R^2 (T)}{R}}
 \end{equation}
-is the gold standard for reporting the error of a set of free energies obtained from trajectories started from a common $x_0$. Note that $\mathrm{SE}_R
-(t ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ so long as $S_R^2 (t)$ is finite, which is true if the $\overline{\Delta G}$ are, say, bounded. Consequently, we can estimate the variance of the estimate to essentially arbitrary precision. Note, however, that $\Delta G^{(i)}(t)$ will not in general be normally distributed, and the variance may not be a good statistic to capture the error, as the distribution may be multi-modal and heavy-tailed.
+is the gold standard for reporting the error of a free energy estimate $\overline{\Delta G (T)} $. Note that$\mathrm{SE}_R
+(T ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ so long as $\mathrm{Var}_{x_0}(\Delta G^{(1)}(T))$ is finite, which is true if the $\Delta G^{(1)}(T)$ are (say) bounded. 
+Consequently, we can estimate the variance of the estimate to essentially arbitrary precision. Note, however, that $\Delta G^{(1)}(T)$ will not in general be normally distributed, and the variance may not be a good statistic to capture the error, as the distribution may be multi-modal and heavy-tailed.
 %% MS: The error estimation may further be compounded by a rare event problem, in which case simulating even R = 100 replicates may not be "enough", depending on the purposes. 
 %% Should we also state the central limit theorem? 
+In principle, the most robust error estimates can be obtained by drawing the initial condition $x_0$ from a suitable initial density $\rho_0(x)$ and computing means and standard errors, but as mentioned in Section \ref{sec:timescales}, the value of this approach is limited by the user's ability to choose $\rho_0(x)$.
 
 \subsubsection{Per-replicate error estimates}
 
-In the preceding case, we used minimal assumptions on the distribution of $\Delta G^{(i)}(t)$ to obtain estimates on $\sigma^2(t;x_0)$ by simulating conditionally independent replicates and using the sample variance. To obtain per-replicate error estimates, we impose much stricter assumptions on the distribution of $\Delta G^{(i)}(t)$, namely that they satisfy a Central Limit Theorem (CLT) as $t\rightarrow \infty$:
-$$ \sqrt{t} ( \Delta G^{(i)}(t) - \Delta G^\star) \Rightarrow N(0, \sigma^2_{\mathrm{asym}}(x_0))$$
+In the preceding case, we used minimal assumptions on the distribution of $\Delta G^{(i)}(T)$ to obtain estimates on $\sigma^2(T;x_0)$ by simulating conditionally independent replicates and using the sample variance \eqref{eq:sample-variance-definition}. To obtain per-replicate error estimates, we impose much stricter assumptions on the distribution of $\Delta G^{(i)}(T)$, namely that they satisfy a Central Limit Theorem (CLT) as $T\rightarrow \infty$:
+$$ \sqrt{T} ( \Delta G^{(i)}(T) - \Delta G^\star) \Rightarrow N(0, \sigma^2_{\mathrm{asym}}(x_0))$$
 where $\Delta G^\star$ denotes the true free energy difference, $\sigma_{\mathrm{asym}}^2(x_0)>0$ denotes the so-called "asymptotic variance", and $\Rightarrow$ denotes convergence in distribution. %% Should we define this? Might be a little too technical for the audience. Again, Durrett is one of the standard references. 
 The CLT assumption implies that 
-$$\sigma^2(t;x_0)=\frac{\sigma^2_{\mathrm{asym}}(x_0)}{t}.$$
-In practice, it may not be the case that $\sigma^2(t;x_0)\propto t^{-1}$, nor even that $\sigma^2(t;x_0)$ is monotonically decreasing with $t>0$. In such a case, we are not in a regime where the CLT is satisfied and the remainder of this subsection does not apply.
+$$\sigma^2(T;x_0)=\frac{\sigma^2_{\mathrm{asym}}(x_0)}{T}.$$
+In practice, it may not be the case that $\sigma^2(T;x_0)\propto T^{-1}$, nor even that $\sigma^2(T;x_0)$ is monotonically decreasing with $T$. In such a case, we are not in a regime where the CLT is satisfied and the remainder of this subsection does not apply.
 
-The simplest generalization of \eqref{eq:sample-variance-definition} to the case of time-correlated samples is the non-overlapping batch means estimator.  Consider any discretization  $\{t_0, \dots, t_{N-1}\}$ of $[0,T]$, so that $t_0=0, t_{N-1}=T$ -- we relegate the choice of discretization width $t_{i+1} - t_i$ and initial time $t_0$ to the following section -- and partition the $N$ times into $B$ batches of length $M$, so that $N = BM$. Let $\Delta G(t_i : t_{i+M})$ denote the the estimate obtained using only the samples $X(t_i),\dots, X(t_{i+M-1})$. The non-overlapping batch means estimator is then
+The simplest generalization of \eqref{eq:sample-variance-definition} to the case of time-correlated samples is the non-overlapping batch means estimator. Let $\{t_0,\dots,t_{N-1}\}$ be a discretization of $[0,T]$ with $t_0=0$ and $t_{N-1}=T$;  we discuss the choices of discretization width $t_{i+1} - t_i$ and initial time $t_0$ in later subsections. 
 
-$$ \hat\sigma^2_B(T ; x_0) = \frac{1}{B(B -1)}\sum_{k=0}^{B -1} \left(\Delta G(t_{k M} : t_{(k+1)M}) - \frac{1}{B} \sum_{k=0}^{B-1} \Delta G(t_{kM} : t_{(k+1)M})\right)^2$$
-
+Partition the $N$ samples into $B$ consecutive batches of equal size $M$, so that $N = BM$. Batch $k$ consists of the samples $\{X(t_{kM}),\dots,X(t_{(k+1)M-1})\}, k=0,\dots,B-1.$ Let
+\[
+\Delta G_k = \Delta G(t_{kM}:t_{(k+1)M})
+\]
+denote the estimator obtained using only the samples in batch $k$, and define the batch mean
+\[
+\overline{\Delta G} \equiv \frac{1}{B}\sum_{k=0}^{B-1} \Delta G_k .
+\]
+The non-overlapping batch means estimator is then
+\[
+\hat\sigma_B^2(T;x_0)
+= \frac{1}{B(B-1)}\sum_{k=0}^{B-1}
+\left(\Delta G_k - \overline{\Delta G}\right)^2 .
+\]
 This estimator may look complicated, but it is just the application of the sample variance to the estimates on  $B$ non-overlapping time blocks of length $M$, which gives the variance using $M$ samples, with an additional normalization by the number of blocks $B$, to get the variance using all $N=BM$ samples. 
 
 If the final time $T=t_{N-1}$ and the block length $M$ are well-chosen, then with enough replicates $R\geqslant 1$, we should find that
 $$ \hat\sigma_B^2(T; x_0) \approx S_R^2(T ; x_0) .$$
 When this relationship holds, we may surmise the replicates are exploring roughly the same regions of configuration space, at least in those degrees of freedom that are relevant to the free energy estimate. 
 
-It is also useful to note that the variance $\sigma^2(t;x_0)$ can be written as
-$$\sigma^2(t;x_0) =  \sigma_0^2(t;x_0) \tau_{\mathrm{int}},$$
-where $\tau_{\mathrm{int}}$ is the so-called integrated autocorrelation time of the free energy estimate. Loosely speaking, $\tau_{\mathrm{int}}$ is the number of time indices required to obtain an "independent" sample. It is also sometimes referred to as the statistical inefficiency.
+It is also useful to recall the empirical mean \eqref{eqn:empirical-average} introduced at the beginning of the section. We recall in this notation that $t_{N-1} = T$, and so
+\begin{equation}
+    \sigma^2(T; x_0) \approx \mathrm{Var}_{x_0}\!\left(\frac{1}{N}\sum_{i=0}^{N-1} Z_i\right),
+\end{equation}
+where $Z_i = f(X(t_i))$ for a suitable observable $f$. When the process has reached stationarity, the marginal distribution of each $Z_i$ is given by the equilibrium measure $\pi$, and we denote
+\[
+\sigma_0^2 \equiv \mathrm{Var}_{Z \sim \pi}(Z)
+\]
+as the equilibrium variance of a single sample. If the $Z_i$ were independent, we would have $\sigma^2(T;x_0) \approx \sigma_0^2/N$. In practice, however, successive samples are correlated, and this increases the variance of the empirical mean. A standard way to account for this is to write
+\[
+\sigma^2(T;x_0) \approx \frac{\sigma_0^2}{N}\,\tau_{\mathrm{int}},
+\]
+where $\tau_{\mathrm{int}}$ is the integrated autocorrelation time of the sequence $\{Z_i\}$. Loosely speaking, $\tau_{\mathrm{int}}$ measures the number of indices $i$ between roughly independent samples, and is therefore sometimes referred to as the statistical inefficiency. The role of estimators such as non-overlapping batch means is precisely to estimate $\sigma^2(T;x_0)$ directly from correlated data, which is roughly equivalent to estimating $\tau_{\mathrm{int}}$. There exist much more sophisticated estimators for both $\tau_{\mathrm{int}}$ and $\sigma^2(T;x_0) $, but they are beyond the scope of this article; see (cite)
 
 %% Here we can discuss time-blocking estimators, such as the batch-means estimator. Subsampling would also fit in nicely here. Finally, we could relate the sample variance at time $t$ to the mean of per-replicate errors at time $t$; the two should agree -- and they do for some simulations -- but in general the mean of the per-replicate errors is less than the empirical error obtained from the sample variance.
 
-%% We should also discuss the dependence on x_0. 
 
-\subsubsection{Per-replicate errors and subsampling}
+
+\subsubsection{Subsampling trajectories}
 
 % How should one sub-sample? I believe this section can be short:
+In the preceding section we considered a discretization   $\{t_0, \dots, t_{N-1}\}$ of $[0,T]$, so that $t_0=0, t_{N-1}=T$ . In this section we briefly explain how the choice of discretization affects the estimates of the free energy and that of its error. 
 
-- One is always de-facto sub-sampling, unless a sample is stored every molecular dynamics timestep. This is typically infeasible.
-- Sub-sampling the actual saved trajectory is never necessary, especially not for single trajectories
-- If the statistical inefficiency (aka integrated autocorrelation time) is (say) 100, subsampling every 10 steps is probably not going to hurt much; could be useful for slow programs
-- Computing error bars using multiple trajectories is sometimes simplified by subsampling
+First, the finest discretization one can take for $t_{i+1} - t_i$ is the molecular dynamics simulation timestep $\Delta t_{\mathrm{MD}}$, usually on the order of a few femtoseconds. One rarely stores the trajectory data so finely, because 
+\begin{itemize}
+    \item the writing and storage of data every timestep is likely to greatly slow down simulation speed
+    \item time correlation between timesteps is too great, and the configurations a time $\Delta t$ apart are almost identical. In general $\Delta t = t_{i+1} - t_i \gg \Delta t_{\mathrm{MD}}$
+\end{itemize}
+
+An order of magnitude heuristic on $\Delta t =t_{i+1} - t_i$ is $\Delta t \gtrsim 0.1 \mathrm{ps}$ and is more typically on the order of $1 \mathrm{ps}$ or more,  but we stress these numbers are only meant to give the novice practitioner a general idea. We also note that only the energies (and not the full molecular configurations) need to be saved in order to compute the free energy estimates and their errors. 
+
+The best estimators will always be able to make use of all the data, and subsampling can never improve the statistical efficiency of an estimator (so long as it is being correctly used)  \cite{LinkEaton2012,maceachern1994subsampling,geyer1992practical}; sometimes users use the sample variance \eqref{eq:sample-variance-definition} with time-correlated processes, and find that subsampling produces a more representative error estimate -- this is an incorrect use of the sample variance. Subsampling can be useful to balance computational cost or simplify estimation procedures, as might be the case when combining estimates from different replicates or even different ensembles. 
+
+Given a process $\{Z_i\}_{i=0}^{N-1}$ with integrated autocorrelation time $\tau_{\mathrm{int}}$ (or statistical inefficiency), one may form an approximately uncorrelated subsample by retaining every $\tau_{\mathrm{int}}$-th observation. This yields an effective sample size $N_{\mathrm{eff}} \approx N / \tau_{\mathrm{int}}$, corresponding to the number of effectively independent samples. The error 
+
+In many cases, the variance of the free energy estimate is negligibly increased if we only use, say, every $\tau_{\mathrm{int}}/10$ samples. In practice, care should be taken in performing such subsampling, since in general the estimate of $\tau_{\mathrm{int}}$ is poor. 
+
+When simulations are performed independently at each alchemical state $\lambda$, the correlation time may vary significantly across states, and subsampling should be performed separately using a state-specific estimate of $\tau_{\mathrm{int}}$. For coupled simulations, such as Hamiltonian replica exchange, replicas typically undergo similar random walks in alchemical space, and a common subsampling interval may be used across states. Automated equilibration detection methods that maximize the effective sample size often provide a practical estimate of $\tau_{\mathrm{int}}$ over the production region.
+
+\paragraph{Cautions and practical guidance}
+Reliable estimation of the statistical inefficiency is itself a nontrivial task, and estimates of $g$ are typically much noisier (in relative terms) than estimates of means. To ensure stable decorrelation and reliable free energy estimates, it is recommended that the effective number of uncorrelated samples satisfy $N_{\mathrm{eff}} \gtrsim 50$ when using BAR or MBAR estimators (Section~\ref{subsec:estimators}); substantially more samples may be required for alternative estimators.
 
 
-\subsubsection{{Per-replicate errors and burn-in times}}
+\subsubsection{Detecting the boundary between equilibrated and production regions}
+\label{sec:automatic-equilibration-detection}
+% Much of the infrastructure for analyzing alchemical free energy calculations relies on the concept of asymptotically unbiased estimators, which produce unbiased estimates of the free energy when fed very long simulations~\cite{shirts2005comparison}.
+The importance of choosing the time  $t_0\geqslant 0$ at which we start using samples for estimation depends on the quality the initial condition of $x_0$.  Simulations for free energy calculations are often initiated from highly atypical initial conditions (such as a protein-ligand geometry obtained from docking and subjected to a heuristic solvent placement scheme), and simulations are of a finite length dictated by available computational resources and computing demands. As a result, these estimators can produce significantly biased estimates if fed the entirety of simulation data generated without further processing~\cite{chodera2016simple}.
+\begin{figure}
+    \centering
+    \includegraphics[width=0.95\linewidth]{figures/fig11_equib_detection/Figure.pdf}
+    \caption{{\bf Automatic partitioning into equilibration and production regions.}
+    (\textbf{A}) The average (black line) standard deviation (shaded region) of the reduced potential $u^*$ over many independent replicate simulations started from the same initial conditions show a significant initial transient change before relaxing to the true average potential energy (\textbf{B}). A cumulative average (red) of the entire simulation data demonstrates simulation bias not seen when initial simulation data is omitted (blue). Using an automated approach to detect equilibration of the boundary $t_0$ using statistical inefficiency $g$ (\textbf{C})  for an effective simulation interval (\textbf{D}). (\textbf{E}) The optimal equilibration boundary $t_0$ is selected to maximize the number of uncorrelated samples.
+    \emph{Figure adapted from~\cite{chodera2016simple}.}
+    }
+    \label{fig:automatic-equilibration-detection}
+\end{figure}
+
+To minimize this effect, an initial portion of the simulation that is determined to be  \emph{equilibration}~\cite{braun2019best} should be omitted, with the idea of removing the most heavily biased initial portion of simulation data, but retaining the unbiased \emph{production} region that represents a stationary Markov chain process sampling from the desired equilibrium target distribution. This is often called the burn-in time. 
+
+Because the simulation time required for the atypical initial sampler state to relax toward equilibrium is a property of the specific system being simulated and the specific initial conditions selected, it is simplest to collect data for the whole process and use an automated algorithm to select how much data should be discarded to equilibration in a post-processing step, rather than attempting to figure out beforehand how long equilibration will take. 
+
+A simple approach to automatically partitioning simulation data into equilibration and production regions is described in~\cite{chodera2016simple} (illustrated in Fig.~\ref{fig:automatic-equilibration-detection}).
+Suppose we have a simulation of length $T$ consisting of correlated data.
+Here, the goal of the post-processing step is to select the equilibration boundary $t_0 \in [0, T]$ so as to \emph{maximize} the number of effectively uncorrelated samples remaining in the production region $N_{[t_0,T]}$, which is defined as
+\begin{eqnarray}
+N_{[t_0,T]} &=& \frac{T - t_0}{g_{[t_0,T]}}
+\end{eqnarray}
+where $g_{[t_0,T]}$ is the \emph{statistical inefficiency} of a timeseries $a_t$, described in more detail below.
+This approach is implemented within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, and is highly recommended for standard practice. A very similar approach involves minimizing the standard error of the production region~\cite{whiteEffectiveTruncationHeuristic1997, sprattHeuristicsStartupProblem1998, hoadAutomatingWarmupLength2010, clarkRobustAutomatedTruncation2025}.
+
+For additional discussion of working with correlated data and autocorrelation analysis, please refer to the work on Best Practices for Quantification of Uncertainty and Sampling Quality in Molecular Simulations~\cite{grossfield2018best}.
+
+
+\paragraph{Computing the timeseries for equilibration detection}
+Typically, the timeseries of note $a_t$ analyzed in automated equilibration detection is the negative logarithm of the probability density ($\pi(x_t; \vec{\lambda}$)) sampled by the MCMC algorithm (up to an irrelevant additive constant).
+For simple independent simulations that sample $x_t \sim \pi(x ; \vec{\lambda})$, this is given by the reduced potential
+\begin{eqnarray}
+a_t &\equiv& - \ln \pi(x_t; \vec{\lambda}) + c = u(x_t; \vec{\lambda}) .
+\end{eqnarray}
+
+Note that the use of the effective reduced potential is not guaranteed to detect all slow relaxation processes that may be coupled to the alchemical free energy, but the simplicity of its computation means it is generally appropriate for most cases.
+
+\paragraph{Cautions in automating equilibration detection}
+Procedures like those described above can fail to remove bias if the simulations are simply not long enough to contain a large number of samples from true equilibrium either because they are very short, or because one is simulating slow processes. In such cases, this approach often simply selects a small final portion of the simulation, which may be contained in a single substate of configurational space, which may itself lead to biased estimates. 
+This situation can be detected if the equilibration boundary $t_0$ is a significant fraction of the total simulation length $T$, with a good rule of thumb being that under well-sampled situations $T \gtrsim 20 t_0$.
+If identifying an equilibration time that is only a fraction of the total time is not possible, advanced analysis techniques that assume only local equilibrium within kinetically separated metastable states, rather than global equilibrium over the entire phase space, such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate, but are beyond the scope of this paper.
 
 \subsubsection{Allocation of sampling resources between replicates and simulation time}
 
