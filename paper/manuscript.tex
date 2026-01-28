@@ -1708,23 +1708,23 @@ One important point is that the bootstrap samples use to estimate the standard e
 Replicas in ensemble simulations are initialized with velocities drawn independently from the Maxwell–Boltzmann distribution and hence generate decorrelated samples by default. When only one simulation is available, the procedures described below provide a lower-bound estimate of the uncertainty.
 
 Most estimators require an uncorrelated set of samples from the equilibrium distribution to produce (relatively) unbiased estimates of the statistical uncertainty, as most estimates of the uncertainty are derived assuming unbiased samples.
-To do this, the production region of the simulation is generally \emph{subsampled} with an interval approximately equal to or greater than the \emph{statistical inefficiency} $g \ge 1$ to produce a set of uncorrelated samples that can be fed to the estimator machinery~\cite{chodera2016simple},
-\begin{eqnarray}
-g &\equiv& 1 + 2 \tau_\mathrm{eq} \label{eq:statistical-inefficiency-definition}
-\end{eqnarray}
-where $\tau_\mathrm{eq}$ is the integrated autocorrelation time, formally defined as
-\begin{eqnarray}
-\tau_\mathrm{eq} &\equiv& \sum_{t=1}^{T-1} \left(1 - \frac{t}{T}\right) C_t \label{eq:integrated-autocorrelation-time-definition} , 
-\end{eqnarray}
-with the discrete-time normalized fluctuation autocorrelation function $C_t$ defined as
-\begin{eqnarray}
-C_t &\equiv& \frac{\expect{a_n a_{n+t}} - \expect{a_n}^2}{\expect{a_n^2} - \expect{a_n}^2} . \label{equation:autocorrelation-definition}
-\end{eqnarray}
-The basic concept is that $\tau_\mathrm{eq}$ corresponds to the single-exponential decay time for the autocorrelation process that generates samples, so the statistical inefficiency $g$ measures the approximate temporal separation between two effectively uncorrelated samples (where two exponential relaxation times are presumed to be sufficient).
+% To do this, the production region of the simulation is generally \emph{subsampled} with an interval approximately equal to or greater than the \emph{statistical inefficiency} $g \ge 1$ to produce a set of uncorrelated samples that can be fed to the estimator machinery~\cite{chodera2016simple},
+% \begin{eqnarray}
+% g &\equiv& 1 + 2 \tau_\mathrm{eq} \label{eq:statistical-inefficiency-definition}
+% \end{eqnarray}
+% where $\tau_\mathrm{eq}$ is the integrated autocorrelation time, formally defined as
+% \begin{eqnarray}
+% \tau_\mathrm{eq} &\equiv& \sum_{t=1}^{T-1} \left(1 - \frac{t}{T}\right) C_t \label{eq:integrated-autocorrelation-time-definition} , 
+% \end{eqnarray}
+% with the discrete-time normalized fluctuation autocorrelation function $C_t$ defined as
+% \begin{eqnarray}
+% C_t &\equiv& \frac{\expect{a_n a_{n+t}} - \expect{a_n}^2}{\expect{a_n^2} - \expect{a_n}^2} . \label{equation:autocorrelation-definition}
+% \end{eqnarray}
+% The basic concept is that $\tau_\mathrm{eq}$ corresponds to the single-exponential decay time for the autocorrelation process that generates samples, so the statistical inefficiency $g$ measures the approximate temporal separation between two effectively uncorrelated samples (where two exponential relaxation times are presumed to be sufficient).
 
-Robust estimation of $C_t$ for $t \sim T$ is difficult due to growth in statistical error, so common estimators of $g$ make use of several additional properties of $C_t$ to provide useful estimates (see \emph{Practical Computation of Statistical Inefficiencies} in~\cite{chodera2016simple} for a detailed discussion).
+% Robust estimation of $C_t$ for $t \sim T$ is difficult due to growth in statistical error, so common estimators of $g$ make use of several additional properties of $C_t$ to provide useful estimates (see \emph{Practical Computation of Statistical Inefficiencies} in~\cite{chodera2016simple} for a detailed discussion).
 
-We recommend using the robust statistical inefficiency computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, though we caution that any such algorithms will underestimate the correlation time with insufficient data. Such approaches also assume that the data doesn't have any long time scale drift over the course of the simulation, which is a clear sign of lack of equilibration.  Generally, most methods will give reasonable correlation times when the simulation lasts 40--50 correlation times.
+% We recommend using the robust statistical inefficiency computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, though we caution that any such algorithms will underestimate the correlation time with insufficient data. Such approaches also assume that the data doesn't have any long time scale drift over the course of the simulation, which is a clear sign of lack of equilibration.  Generally, most methods will give reasonable correlation times when the simulation lasts 40--50 correlation times.
 
 
 % \paragraph{Subsampling data to generate uncorrelated samples}
@@ -1749,15 +1749,16 @@ We recommend using the robust statistical inefficiency computation routines avai
 
 \subsection{Uncertainty estimation v2}
 
-This section outlines the basic principles of uncertainty estimation. The theory is developed using the theory of Markov processes and it is usually assumed that the underlying process is "mixing", which loosely means that the simulations explore the configuration space well enough. As many practitioners have noted [cite], this assumption is not always satisfied. The result is a consistent pattern: when a simulation is well behaved, most reasonable error estimates tend to agree; conversely, when different estimation methods yield substantially different results—which is often the case—it typically indicates that the simulation itself is not well behaved. In such situations, all standard error estimates should be expected to underestimate the true uncertainty.
 
-In this section we will tend not to make definitive statements, and we shall simply provide "best practices" that most practitioners will agree on. In the following subsection, we give a brief explanation of the difficulty. %MS: It may be worthwhile to note that various groups may advocate for different statistical procedures, highlighting the value of many individual trials ("replicates") over one long simulation. This same discussion has played out many times within the Markov Chain Monte Carlo community.; see e.g. https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2011.00131.x
+This section outlines the basic principles of uncertainty estimation. The theoretical framework is based on Markov process theory and typically assumes that the underlying dynamics are sufficiently mixing, in the sense that the simulation explores configuration space effectively. As has been widely noted in the literature [\textbf{cite}], this assumption is not always satisfied in practice. A consistent empirical pattern emerges: when a simulation is well behaved, most reasonable uncertainty estimates tend to agree, and the specific choice of estimator is of limited consequence. In contrast, when a simulation is poorly behaved—an outcome that is common in biomolecular systems—different error estimation methods can yield substantially different results, and more sophisticated statistical analysis alone is unlikely to resolve the discrepancy. In such cases, all available uncertainty estimates should be expected to underestimate the true statistical error. The determination of when a simulation is or isn't "well-behaved" is an active research problem. %MS: It may be worthwhile to note that various groups may advocate for different statistical procedures, highlighting the value of many individual trials ("replicates") over one long simulation. This same discussion has played out many times within the Markov Chain Monte Carlo community.; see e.g. https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2011.00131.x
+
+In this section we will tend not to make definitive statements, and we shall simply provide "best practices" that most practitioners will agree on. In the following subsection, we give a brief explanation of the difficulty. We first introduce the key objects under consideration, which will be used to guide the exposition.
 
 The free energy estimate can be viewed as an empirical average, like the one that arises in thermodynamic integration: if $\{Z_0, \dots, Z_{N-1}\}$ are samples drawn from an ergodic Markov process with stationary density $p(z)$ then for $N$ sufficiently large we expect 
 \begin{equation}
     \int_\Omega f(z) p(z) \mathrm{d}z\approx \frac{1}{N}\sum_{i=0}^{N-1} f(Z_i), \label{eqn:empirical-average}
 \end{equation}
-where $\Omega$ denotes the state space. Even though not all estimators can be written in the form \eqref{eqn:empirical-average}, it will be sufficient to consider this case to get the main idea. The key object of study in this section is an estimator of 
+where $\Omega$ denotes the state space and $f : \Omega \rightarrow \mathbb{R}$ is a sufficiently nice function. Even though not all estimators can be written in the form \eqref{eqn:empirical-average}, it will be sufficient to consider this case to get the main idea. The key object of study in this section is an estimator of 
 \begin{equation}
     \mathrm{Var}_{Z_0 \sim \rho_0}\left(\frac{1}{N}\sum_{i=0}^{N-1} f(Z_i)\right)
 \end{equation}
@@ -1785,18 +1786,18 @@ Consider a molecular dynamics trajectory started at some initial configuration $
 \end{equation}
 Here, $P_t$ denotes the transition kernel, determined by the molecular dynamics integrator. The distribution of the velocities is usually ignored, since in the presence of a thermostat they are kept distributed roughly according to a Maxwell-Boltzmann distribution, so we only consider the $x$ component. In practice, the initial distribution $\rho_0 (x) \mathrm{d} x$ is seldom more than a Dirac-$\delta$, $\delta_{\{ x_0 \}} (\mathrm{d} x)$, or a mixture thereof: $\rho_0(x) \mathrm{d}x = \sum_{i = 1}^n \delta_{\{ x_i \}}(\mathrm{d}x) / n$; any "better" initial density would require some knowledge about the system at hand. 
 
-It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein, it may be possible to identify clear "plateaus'' of convergence \footnote{The relevant mathematical object here is a quasi-stationary distribution, but should we say this? Could cite Art Voter at Los Alamos, maybe even Freidlin-Wentzell for the original quasipotential.}, i.e. intervals $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 \in B$ in some appropriate "starting domain". Consider, for instance, the estimation of free energies of hydration for small molecules [cite Shirts paper on free energies of hydration]~\cite{paliwal2011benchmark}. In this case, the free energy estimates behave in accordance with classical statistical theory, and the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
+It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein, it may be possible to identify clear "plateaus'' of convergence \footnote{The relevant mathematical object here is a quasi-stationary distribution, but should we say this? Could cite Art Voter at Los Alamos, maybe even Freidlin-Wentzell for the original quasipotential.}, i.e. intervals of time $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 $ in some appropriate "starting domain". Consider, for instance, the estimation of free energies of hydration for small molecules ~\cite{paliwal2011benchmark}. In this case, the free energy estimates behave in accordance with classical statistical theory, and for sufficiently large $t$ and most $x_0$ the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
 
 %  MS: The above paragraph is too vague, but some kind of discussion to this effect might be necessary to make sense of why some free energy calculations, such as solvation free energy calculations or computation of free energy landscapes for small molecules, have different statistical properties than more complicated calculations, like absolute binding free energy calculations. 
 
-One should not confuse a plateau in such coordinates with having explored the entirety of the configuration space $\Omega \subset \mathbb{R}^{3N}$; most bio-molecular systems, even those involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Consequently, the estimated error of the free energy estimate will typically be an underestimate of the true uncertainty.
+Importantly, one should not confuse a plateau in such coordinates with having explored the entirety of the configuration space $\Omega \subset \mathbb{R}^{3N}$; most bio-molecular systems, even those involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Consequently, the estimated error of the free energy estimate will typically be an underestimate of the true uncertainty.
 
 % Of course, it _could_ be the case for some systems that \rho_t(x | x_0) is independent of x_0, and that the empirical distribution of any replicate is a good approximation for \rho_t (x|x_0). In general, however, we will only have access to a so-called quasi-stationary distribution; i.e. we will consider the distribution conditional on not having exceeded an escape time, and this distribution will only equilibrate in some degrees of freedom. 
 
 % The following footnote feels out of place, but might address some comments by A. Bhati re: the Poincaré recurrence times.
 % \footnote{(Luckily, it is not necessary for simulations to visit every configuration $x \in \Omega$ in order to exhibit a regime of convergence for the free energy estimates. For instance, two configurations $x$ and $x'$ may be considered equivalent for free energy estimation if they differ only by the permutation of water molecules. Nature too faces the same difficulty that not all states are accessible on timescales we can observe -- it will take an astronomically long time before all the gas particles in a room happen to be on one half-side of it -- but this does not prevent us from measuring the temperature of (most) rooms.)}
 
-For systems involving a protein-ligand complex, $\rho_t (x | x_0)$ is usually sensitive to $x_0$ and additionally may not exhibit a clear plateau on any computationally feasible time $t > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$ and all $x_0$  in some explicitly definable subset of $\Omega$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?} In this section, we explore the various possible types of error analysis that can be performed, depending on the behavior of $\rho_t$. 
+For systems involving a protein, $\rho_t (x | x_0)$ is usually sensitive to $x_0$ and additionally may not exhibit a clear plateau on any computationally feasible time $t > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$ and all $x_0$  in some explicitly definable subset of $\Omega$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?} In this section, we explore the various possible types of error analysis that can be performed, depending on the behavior of $\rho_t$. 
 
 %% MS: I'm not tied to any particular definition of ensemble, but we should probably make a concrete one:
 % - common x_0 ? 
@@ -1808,8 +1809,8 @@ We define an \textbf{ensemble} to be a set of $R \geqslant 1$ trajectories, all 
 
 \subsubsection{Ensemble error estimates}
 
-The simplest  and most robust way to obtain error bars on free energy estimates is by simulating an ensemble $\{ X^{(1)}, \ldots, X^{(R)} \}$ of $R$ molecular dynamics trajectories started at $x_0$ and producing trajectories of free energy differences $\{ \Delta G^{(1)}, \ldots, \Delta G^{(R)} \}$. Trajectories $\Delta
-G^{(i)} (\cdot)$ are identically distributed and conditionally independent given some $x_0$. For any time $T > 0$, the variance of any $\Delta G^{(i)} (T)$ can be estimated with the sample variance $S^2_{(R - 1)} (T)$,
+This section describes the simplest and, in many cases, most robust procedure for estimating uncertainties in free energy calculations. For most practical applications, we recommend this approach when reporting statistical error bars. The method consists of simulating an ensemble $\{X^{(1)},\ldots,X^{(R)}\}$ of $R$ molecular dynamics trajectories initialized at $x_0$, and using the resulting free energy estimates $\{\Delta G^{(1)},\ldots,\Delta G^{(R)}\}$ to quantify uncertainty. The trajectories $\Delta
+G^{(i)} (\cdot)$ are identically distributed and conditionally independent given $x_0$. For any time $T > 0$, the variance of any $\Delta G^{(i)} (T)$ can be estimated with the sample variance $S^2_{(R - 1)} (T)$,
 \begin{equation}\label{eq:sample-variance-definition}
   S^2_R (T) = \frac{1}{R - 1} \sum_{i = 1}^R (\Delta G^{(i)} (T) -
   \overline{\Delta G (T)})^2, \qquad \overline{\Delta G (T)} = \frac{1}{R}
@@ -1819,18 +1820,17 @@ In the notation of \eqref{eqn:empirical-average}, $Z_i = \Delta G^{(i)}(T)$; con
 \begin{equation}
     \mathbb{E}_{x_0}[S_R^2(T)] = \mathrm{Var}_{x_0}(\Delta G^{(1)}(T))
 \end{equation}
-The above equation says that $S_R^2(T)$ is an unbiased estimator of the variance. By the Law of Large Numbers, as $R \rightarrow \infty$, we have $S^2_R (T) \rightarrow \mathrm{Var} _{x_0}(\Delta
-G^{(1)} (T)) = \sigma^2 (T ; x_0)$ and hence
+The above equation says that $S_R^2(T)$ is an unbiased estimator of the variance of $\Delta G^{(1)}(T)$, conditioned on $x_0$. By the Law of Large Numbers, as $R \rightarrow \infty$, we have $S^2_R (T) \rightarrow \mathrm{Var} _{x_0}(\Delta
+G^{(1)} (T)) = \sigma^2 (T ; x_0)$. Furthermore, by conditional independence of the $\Delta G^{(i)}(T)$, for sufficiently large $R$ and any $T>0$ for which the variance is finite, we have
 \begin{equation}\label{eqn:variance-of-empirical-mean}
-\mathrm{Var}_{x_0}(\overline{\Delta G(T)}) = \frac{\mathrm{Var}_{x_0}(\Delta G^{(1)}(T))}{R}.
+\mathrm{Var}_{x_0}(\overline{\Delta G(T)}) = \frac{\mathrm{Var}_{x_0}(\Delta G^{(1)}(T))}{R} \approx \frac{S_R^2(T)}{R}
 \end{equation}
 %% Should we say what kind of LLN (weak/strong) ? Do we provide a reference (standard: Durrett or Chung)? 
-
-The standard error
+Taking square roots, we obtain the standard error
 \begin{equation}
-  \mathrm{SE}_R (T ; x_0) = \sqrt{\frac{S_R^2 (T)}{R}}
+  \mathrm{SE}_R (T ; x_0) = \sqrt{\frac{S_R^2(T)}{R}},
 \end{equation}
-is the gold standard for reporting the error of a free energy estimate $\overline{\Delta G (T)} $. Note that$\mathrm{SE}_R
+which is the gold standard for reporting the error of a free energy estimate $\overline{\Delta G (T)} $. Note that $\mathrm{SE}_R
 (T ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ so long as $\mathrm{Var}_{x_0}(\Delta G^{(1)}(T))$ is finite, which is true if the $\Delta G^{(1)}(T)$ are (say) bounded. 
 Consequently, we can estimate the variance of the estimate to essentially arbitrary precision. Note, however, that $\Delta G^{(1)}(T)$ will not in general be normally distributed, and the variance may not be a good statistic to capture the error, as the distribution may be multi-modal and heavy-tailed.
 %% MS: The error estimation may further be compounded by a rare event problem, in which case simulating even R = 100 replicates may not be "enough", depending on the purposes. 
@@ -1839,16 +1839,35 @@ In principle, the most robust error estimates can be obtained by drawing the ini
 
 \subsubsection{Per-replicate error estimates}
 
-In the preceding case, we used minimal assumptions on the distribution of $\Delta G^{(i)}(T)$ to obtain estimates on $\sigma^2(T;x_0)$ by simulating conditionally independent replicates and using the sample variance \eqref{eq:sample-variance-definition}. To obtain per-replicate error estimates, we impose much stricter assumptions on the distribution of $\Delta G^{(i)}(T)$, namely that they satisfy a Central Limit Theorem (CLT) as $T\rightarrow \infty$:
+In the preceding case, we used minimal assumptions on the distribution of $\Delta G^{(i)}(T)$ to obtain estimates on $\sigma^2(T;x_0)$ by simulating conditionally independent replicates and using the sample variance \eqref{eq:sample-variance-definition}. To obtain per-replicate (i.e., per-$i$) error estimates, we impose much stricter assumptions on the distribution of $\Delta G^{(i)}(T)$,  namely that they satisfy a Central Limit Theorem (CLT) as $T\rightarrow \infty$, and for each $i=1,\dots,R$:
 $$ \sqrt{T} ( \Delta G^{(i)}(T) - \Delta G^\star) \Rightarrow N(0, \sigma^2_{\mathrm{asym}}(x_0))$$
 where $\Delta G^\star$ denotes the true free energy difference, $\sigma_{\mathrm{asym}}^2(x_0)>0$ denotes the so-called "asymptotic variance", and $\Rightarrow$ denotes convergence in distribution. %% Should we define this? Might be a little too technical for the audience. Again, Durrett is one of the standard references. 
 The CLT assumption implies that 
-$$\sigma^2(T;x_0)=\frac{\sigma^2_{\mathrm{asym}}(x_0)}{T}.$$
+$$\sigma^2(T;x_0)\approx\frac{\sigma^2_{\mathrm{asym}}(x_0)}{T}.$$
 In practice, it may not be the case that $\sigma^2(T;x_0)\propto T^{-1}$, nor even that $\sigma^2(T;x_0)$ is monotonically decreasing with $T$. In such a case, we are not in a regime where the CLT is satisfied and the remainder of this subsection does not apply.
 
-The simplest generalization of \eqref{eq:sample-variance-definition} to the case of time-correlated samples is the non-overlapping batch means estimator. Let $\{t_0,\dots,t_{N-1}\}$ be a discretization of $[0,T]$ with $t_0=0$ and $t_{N-1}=T$;  we discuss the choices of discretization width $t_{i+1} - t_i$ and initial time $t_0$ in later subsections. 
+To understand the difficulty of estimating $\mathrm{Var}_{x_0}(\Delta G^{(i)}(T))$ using only samples from replicate $i$, it is helpful to recall the empirical mean \eqref{eqn:empirical-average} as the canonical estimator. Suppose that $\{Z_i\}_{i\ge 0}$ is an ergodic Markov chain with stationary distribution $\pi$, that $Z_0 \sim \pi$, and that $t_{N-1}=T$. Let $f$ be a fixed observable. 
+\begin{align}
+\sigma^2(T;x_0) &= \mathrm{Var}_{\pi}\!\left(\frac{1}{N}\sum_{i=0}^{N-1} f(Z_i) \right) \\
+&= \frac{1}{N^2}\sum_{i,j=0}^{N-1}
+\mathrm{Cov}_{\pi}\!\bigl(f(Z_i), f(Z_j)\bigr) \\
+&= \frac{1}{N^2}\left(
+N\,\sigma_0^2
++ 2\sum_{i=1}^{N-1} (N-i)\,
+\mathrm{Cov}_{\pi}\!\bigl(f(Z_0), f(Z_i)\bigr)
+\right),
+\end{align}
+where
+\[
+\sigma_0^2 \equiv \mathrm{Var}_{Z\sim \pi}\!\bigl(f(Z)\bigr)
+= \mathrm{Var}_{\pi}\!\bigl(f(Z_0)\bigr).
+\]
+The expression for the variance contains cross-terms which would vanish if $Z_0$ and $Z_i$ were independent; these additional cross terms add long-range temporal dependence, making the error estimation difficult. 
 
-Partition the $N$ samples into $B$ consecutive batches of equal size $M$, so that $N = BM$. Batch $k$ consists of the samples $\{X(t_{kM}),\dots,X(t_{(k+1)M-1})\}, k=0,\dots,B-1.$ Let
+%% should we describe the atch means estiamtor? maybe not...
+For the remainder of the section we focus on a single replicate. The simplest generalization of \eqref{eq:sample-variance-definition} to the case of time-correlated samples is the non-overlapping batch means estimator. Let $\{t_0,\dots,t_{N-1}\}$ be a discretization of $[0,T]$ with $t_0=0$ and $t_{N-1}=T$;  we discuss the choices of discretization width $t_{i+1} - t_i$ and initial time $t_0$ in later subsections. 
+
+Partition the $N$ sequential samples of this single replicate into $B$ consecutive batches of equal size $M$, so that $N = BM$. Batch $k$ consists of the samples $\{X(t_{kM}),\dots,X(t_{(k+1)M-1})\}, k=0,\dots,B-1$, with $X(t_0) = x_0$. Let
 \[
 \Delta G_k = \Delta G(t_{kM}:t_{(k+1)M})
 \]
@@ -1862,36 +1881,60 @@ The non-overlapping batch means estimator is then
 = \frac{1}{B(B-1)}\sum_{k=0}^{B-1}
 \left(\Delta G_k - \overline{\Delta G}\right)^2 .
 \]
-This estimator may look complicated, but it is just the application of the sample variance to the estimates on  $B$ non-overlapping time blocks of length $M$, which gives the variance using $M$ samples, with an additional normalization by the number of blocks $B$, to get the variance using all $N=BM$ samples. 
+This estimator may look complicated, but it is just the application of the sample variance to the estimates on  $B$ non-overlapping time blocks of length $M$, which gives the variance using $M$ samples. The sample variance across $\Delta G_k$ estimates $\mathrm{Var}_{x_0}(\Delta G_k)$, and the additional factor of $1/B$ yields an estimate of $\mathrm{Var}_{x_0}(\overline{\Delta G})$.
 
 If the final time $T=t_{N-1}$ and the block length $M$ are well-chosen, then with enough replicates $R\geqslant 1$, we should find that
 $$ \hat\sigma_B^2(T; x_0) \approx S_R^2(T ; x_0) .$$
 When this relationship holds, we may surmise the replicates are exploring roughly the same regions of configuration space, at least in those degrees of freedom that are relevant to the free energy estimate. 
 
-It is also useful to recall the empirical mean \eqref{eqn:empirical-average} introduced at the beginning of the section. We recall in this notation that $t_{N-1} = T$, and so
+\paragraph{Integrated autocorrelation times}
+
+Define the autocorrelation function 
 \begin{equation}
-    \sigma^2(T; x_0) \approx \mathrm{Var}_{x_0}\!\left(\frac{1}{N}\sum_{i=0}^{N-1} Z_i\right),
+C_i \equiv
+\frac{\mathrm{Cov}_{\pi}\!\bigl(f(Z_0), f(Z_i)\bigr)}{\sigma_0^2}.
+\label{equation:autocorrelation-definition}
 \end{equation}
-where $Z_i = f(X(t_i))$ for a suitable observable $f$. When the process has reached stationarity, the marginal distribution of each $Z_i$ is given by the equilibrium measure $\pi$, and we denote
+Substituting this definition into the expression for the variance of an empirical mean of a Markov chain yields the exact finite-sample identity
+\begin{equation}
+\mathrm{Var}_{\pi}\!\left(\frac{1}{N}\sum_{i=0}^{N-1} f(Z_i) \right)
+=
+\frac{\sigma_0^2}{N}
+\left(
+1 + 2\sum_{i=1}^{N-1}\left(1-\frac{i}{N}\right) C_i
+\right).
+\end{equation}
+This motivates the definition of the integrated autocorrelation time
+\begin{equation}
+\tau_{\mathrm{int}}(N)
+\;\equiv\;
+\sum_{i=1}^{N-1}\left(1-\frac{i}{N}\right) C_i,
+\label{eq:integrated-autocorrelation-time-definition}
+\end{equation}
+so that
 \[
-\sigma_0^2 \equiv \mathrm{Var}_{Z \sim \pi}(Z)
+\mathrm{Var}_{\pi}\!\left(\frac{1}{N}\sum_{i=0}^{N-1} f(Z_i) \right)
+= \frac{\sigma_0^2}{N}\bigl(1+2\tau_{\mathrm{int}}(N)\bigr).
 \]
-as the equilibrium variance of a single sample. If the $Z_i$ were independent, we would have $\sigma^2(T;x_0) \approx \sigma_0^2/N$. In practice, however, successive samples are correlated, and this increases the variance of the empirical mean. A standard way to account for this is to write
-\[
-\sigma^2(T;x_0) \approx \frac{\sigma_0^2}{N}\,\tau_{\mathrm{int}},
-\]
-where $\tau_{\mathrm{int}}$ is the integrated autocorrelation time of the sequence $\{Z_i\}$. Loosely speaking, $\tau_{\mathrm{int}}$ measures the number of indices $i$ between roughly independent samples, and is therefore sometimes referred to as the statistical inefficiency. The role of estimators such as non-overlapping batch means is precisely to estimate $\sigma^2(T;x_0)$ directly from correlated data, which is roughly equivalent to estimating $\tau_{\mathrm{int}}$. There exist much more sophisticated estimators for both $\tau_{\mathrm{int}}$ and $\sigma^2(T;x_0) $, but they are beyond the scope of this article; see (cite)
+The quantity 
+
+\begin{eqnarray}
+g &\equiv& 1 + 2 \tau_\mathrm{eq} \approx  \frac{\sigma^2(T;x_0)}{\sigma_0^2} N \label{eq:statistical-inefficiency-definition} 
+\end{eqnarray}
+is referred to as the \textit{statistical inefficiency}. Loosely speaking, $g$ measures the number of indices $i$ between roughly independent samples, and is therefore sometimes referred to as the statistical inefficiency. The role of estimators such as non-overlapping batch means is precisely to estimate $\sigma^2(T;x_0)$ directly from correlated data, which is roughly equivalent to estimating $g. 
+
+Robust estimation of $C_i$ for $i$ on the order of $N$ is difficult due to growth in statistical error, so common estimators of $g$ make use of several additional properties of $C_i$ to provide useful estimates (see \emph{Practical Computation of Statistical Inefficiencies} in~\cite{chodera2016simple} for a detailed discussion).
+
+We recommend using the robust statistical inefficiency computation routines available within the MBAR~\cite{kylebeauchamp2019choderalab} and alchemlyb~\cite{daviddotson2019alchemistry} packages, though we caution that any such algorithms will underestimate the correlation time with insufficient data. Such approaches also assume that the data doesn't have any long time scale drift over the course of the simulation, which is a clear sign of lack of equilibration.  Generally, most methods will give reasonable correlation times when the simulation lasts 40--50 correlation times.
 
 %% Here we can discuss time-blocking estimators, such as the batch-means estimator. Subsampling would also fit in nicely here. Finally, we could relate the sample variance at time $t$ to the mean of per-replicate errors at time $t$; the two should agree -- and they do for some simulations -- but in general the mean of the per-replicate errors is less than the empirical error obtained from the sample variance.
-
-
 
 \subsubsection{Subsampling trajectories}
 
 % How should one sub-sample? I believe this section can be short:
 In the preceding section we considered a discretization   $\{t_0, \dots, t_{N-1}\}$ of $[0,T]$, so that $t_0=0, t_{N-1}=T$ . In this section we briefly explain how the choice of discretization affects the estimates of the free energy and that of its error. 
 
-First, the finest discretization one can take for $t_{i+1} - t_i$ is the molecular dynamics simulation timestep $\Delta t_{\mathrm{MD}}$, usually on the order of a few femtoseconds. One rarely stores the trajectory data so finely, because 
+By definition, the finest discretization one can take for $t_{i+1} - t_i$ is the molecular dynamics simulation timestep $\Delta t_{\mathrm{MD}}$, usually on the order of a few femtoseconds. One rarely stores the trajectory data so finely, because 
 \begin{itemize}
     \item the writing and storage of data every timestep is likely to greatly slow down simulation speed
     \item time correlation between timesteps is too great, and the configurations a time $\Delta t$ apart are almost identical. In general $\Delta t = t_{i+1} - t_i \gg \Delta t_{\mathrm{MD}}$
@@ -1899,13 +1942,11 @@ First, the finest discretization one can take for $t_{i+1} - t_i$ is the molecul
 
 An order of magnitude heuristic on $\Delta t =t_{i+1} - t_i$ is $\Delta t \gtrsim 0.1 \mathrm{ps}$ and is more typically on the order of $1 \mathrm{ps}$ or more,  but we stress these numbers are only meant to give the novice practitioner a general idea. We also note that only the energies (and not the full molecular configurations) need to be saved in order to compute the free energy estimates and their errors. 
 
-The best estimators will always be able to make use of all the data, and subsampling can never improve the statistical efficiency of an estimator (so long as it is being correctly used)  \cite{LinkEaton2012,maceachern1994subsampling,geyer1992practical}; sometimes users use the sample variance \eqref{eq:sample-variance-definition} with time-correlated processes, and find that subsampling produces a more representative error estimate -- this is an incorrect use of the sample variance. Subsampling can be useful to balance computational cost or simplify estimation procedures, as might be the case when combining estimates from different replicates or even different ensembles. 
+Subsampling can never improve the statistical efficiency of an estimator (so long as it is being correctly used)  \cite{LinkEaton2012,maceachern1994subsampling,geyer1992practical}, and the best estimators will always be able to make use of all the data. Sometimes users use the sample variance \eqref{eq:sample-variance-definition} with time-correlated processes, and find that subsampling produces a more representative error estimate -- this is an incorrect use of the sample variance because it misses the cross-terms. Subsampling can be useful to balance computational cost or simplify estimation procedures, as might be the case when combining estimates from different replicates or even different ensembles. 
 
-Given a process $\{Z_i\}_{i=0}^{N-1}$ with integrated autocorrelation time $\tau_{\mathrm{int}}$ (or statistical inefficiency), one may form an approximately uncorrelated subsample by retaining every $\tau_{\mathrm{int}}$-th observation. This yields an effective sample size $N_{\mathrm{eff}} \approx N / \tau_{\mathrm{int}}$, corresponding to the number of effectively independent samples. The error 
+Given a process $\{Z_i\}_{i=0}^{N-1}$ with statistical inefficiency $g$, one may form an approximately uncorrelated subsample by retaining every $g$-th observation. This yields an effective sample size $N_{\mathrm{eff}} \approx N / g$, corresponding to the number of effectively independent samples. In many cases, the variance of the free energy estimate is negligibly increased if we only use, say, every $g/10$ samples. In practice, care should be taken in performing such subsampling, since in general the estimate of $g$ is poor. 
 
-In many cases, the variance of the free energy estimate is negligibly increased if we only use, say, every $\tau_{\mathrm{int}}/10$ samples. In practice, care should be taken in performing such subsampling, since in general the estimate of $\tau_{\mathrm{int}}$ is poor. 
-
-When simulations are performed independently at each alchemical state $\lambda$, the correlation time may vary significantly across states, and subsampling should be performed separately using a state-specific estimate of $\tau_{\mathrm{int}}$. For coupled simulations, such as Hamiltonian replica exchange, replicas typically undergo similar random walks in alchemical space, and a common subsampling interval may be used across states. Automated equilibration detection methods that maximize the effective sample size often provide a practical estimate of $\tau_{\mathrm{int}}$ over the production region.
+When simulations are performed independently at each alchemical state $\lambda$, the correlation time may vary significantly across states, and subsampling should be performed separately using a state-specific estimate of $g$. For coupled simulations, such as Hamiltonian replica exchange, replicas typically undergo similar random walks in alchemical space, and a common subsampling interval may be used across states. Automated equilibration detection methods that maximize the effective sample size often provide a practical estimate of $g$ over the production region.
 
 \paragraph{Cautions and practical guidance}
 Reliable estimation of the statistical inefficiency is itself a nontrivial task, and estimates of $g$ are typically much noisier (in relative terms) than estimates of means. To ensure stable decorrelation and reliable free energy estimates, it is recommended that the effective number of uncorrelated samples satisfy $N_{\mathrm{eff}} \gtrsim 50$ when using BAR or MBAR estimators (Section~\ref{subsec:estimators}); substantially more samples may be required for alternative estimators.
@@ -1942,7 +1983,7 @@ For additional discussion of working with correlated data and autocorrelation an
 
 
 \paragraph{Computing the timeseries for equilibration detection}
-Typically, the timeseries of note $a_t$ analyzed in automated equilibration detection is the negative logarithm of the probability density ($\pi(x_t; \vec{\lambda}$)) sampled by the MCMC algorithm (up to an irrelevant additive constant).
+Typically, the timeseries of note $a_t$ analyzed in automated equilibration detection is the negative logarithm of the probability density ($\pi(X_t; \vec{\lambda}$)) sampled by the MCMC algorithm (up to an irrelevant additive constant).
 For simple independent simulations that sample $x_t \sim \pi(x ; \vec{\lambda})$, this is given by the reduced potential
 \begin{eqnarray}
 a_t &\equiv& - \ln \pi(x_t; \vec{\lambda}) + c = u(x_t; \vec{\lambda}) .
@@ -1957,12 +1998,33 @@ If identifying an equilibration time that is only a fraction of the total time i
 
 \subsubsection{Allocation of sampling resources between replicates and simulation time}
 
+A related practical question concerns how a fixed computational budget should be allocated between the number of independent replicates $R$ and the length of each trajectory $T$. This question is inherently problem dependent, as it presumes some knowledge of how statistical error evolves with simulation time. 
 
-\subsection{Uncertainty estimation}
-\label{subsec:uncertainty}
-It is important to consider the variation in your computed free energies from your equilibrium simulations, in order to obtain an estimate of uncertainty of the obtained value for the free energies of interest. The Best Practices paper by Grossfield et al.,~\cite{grossfield2018best} provides substantial detail on how to estimate uncertainties from molecular simulations and is a good starting point for this topic. 
-The uncertainty of a free energy estimate is limited, however, as it is only an estimate of the configurations sampled and cannot contain any information from the phase space not sampled during a simulation. As a consequence, the variance in free energy afforded by any estimator will always be an underestimate of the true uncertainty.
-In general, the quantification of different error metrics depends on both data generation and analysis methods used from the ones discussed above. The user may choose best practices based on their need for the calculations carried out. If only few free energies need to be calculated at very high accuracy, a different strategy might be employed than if large-scale estimates are needed. As such, considering overall computational cost or availability of resources with respect to accuracy desired from computations may influence the choice of sampling and analysis scheme. 
+Let $\Delta G^{(i)}(t)$ denote the free energy estimate obtained from replicate $i$ after simulation time $t$, and suppose that, for fixed $t$, the conditional variance 
+\[
+E(t)^2 \;\equiv\; \mathrm{Var}_{x_0}\!\bigl(\Delta G^{(i)}(t)\bigr)
+\]
+is finite. While one might hope for the asymptotic scaling $E(t)\sim t^{-1/2}$, such behavior is rarely observed at practically accessible timescales. Nevertheless, conditioned on their initial states, the estimates $\{\Delta G^{(i)}(t)\}_{i=1}^R$ obtained from different replicates are independent and identically distributed. Consequently, the conditional variance of the averaged estimator
+\[
+\frac{1}{R}\sum_{i=1}^R \Delta G^{(i)}(t)
+\]
+scales as $E(t)^2/R$, and the corresponding conditional error scales as $E(t)/\sqrt{R}$.
+
+Given a fixed computational budget $B$, we may consider simple allocation schemes in which $B = RT$, where $R$ replicates are each run for time $T$. Under this constraint, the conditional error scales as
+\[
+\frac{E(T)}{\sqrt{R}}
+= \frac{E(T)}{\sqrt{B/T}}
+= \frac{\sqrt{T}\,E(T)}{\sqrt{B}}
+\;\equiv\; \frac{J(T)}{\sqrt{B}}.
+\]
+The function $J(T)$ thus quantifies the tradeoff between trajectory length and the number of replicates. In practice, we frequently observe that $J(T)$ is minimized at small values of $T$. 
+
+
+% \subsection{Uncertainty estimation}
+% \label{subsec:uncertainty}
+% It is important to consider the variation in your computed free energies from your equilibrium simulations, in order to obtain an estimate of uncertainty of the obtained value for the free energies of interest. The Best Practices paper by Grossfield et al.,~\cite{grossfield2018best} provides substantial detail on how to estimate uncertainties from molecular simulations and is a good starting point for this topic. 
+% The uncertainty of a free energy estimate is limited, however, as it is only an estimate of the configurations sampled and cannot contain any information from the phase space not sampled during a simulation. As a consequence, the variance in free energy afforded by any estimator will always be an underestimate of the true uncertainty.
+% In general, the quantification of different error metrics depends on both data generation and analysis methods used from the ones discussed above. The user may choose best practices based on their need for the calculations carried out. If only few free energies need to be calculated at very high accuracy, a different strategy might be employed than if large-scale estimates are needed. As such, considering overall computational cost or availability of resources with respect to accuracy desired from computations may influence the choice of sampling and analysis scheme. 
 %Since sampling all of phase space is prohibitively expensive to satisfy the ergodic theorem, certain considerations are often made to still assess uncertainties in computed free energy estimates. If a system exhibits a stable strong binding pose a short number of simulation repeats, sometimes termed ensemble approaches (e.g. TIES~\cite{bhati2017}) often offer adequate free energy estimates. However, situations with more flexible binding and poses will require more strategic sampling schemes to get estimate uncertainties.  
 
 
