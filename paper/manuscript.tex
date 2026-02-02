@@ -30,6 +30,27 @@
 \usepackage{verbatim}
 
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%%% Tweaks to formatting of title page
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+%% Move the title up
+\makeatletter
+\renewcommand{\maketitle}{%
+  \vskip6pt%  % Reduced from 36pt
+  {\color{LiveCoMSDarkBlue}\raggedright\bfseries\fontsize{22}{27}\selectfont \@title\par}%
+  \vskip16pt
+  {\@author\par}
+  \vskip8pt
+}
+
+%% Shrink author and affiliation text
+\makeatletter
+\renewcommand{\Authfont}{\bfseries\small\raggedright}  % Authors smaller and not bold
+\renewcommand{\Affilfont}{\mdseries\small\raggedright}  % Affiliations smaller
+\setlength{\affilsep}{8pt}  % Reduce spacing between author and affiliations
+\makeatother
+
+
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Added to allow customisation of table of contents
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \usepackage{tocloft}
@@ -89,11 +110,11 @@
 \author[21,22]{Benjamin Ries}
 \author[2,7]{Andrea Rizzi}
 \author[17]{Jenke Scheen}
+\author[]{Michael Snarski}
 \author[14]{David R. Slochower}
 \author[8*]{Michael R. Shirts}
 \author[9]{Gary Tresadern}
 \author[2]{Huafeng Xu}
-\author[]{Michael Snarski}
 
 %
 \affil[1]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
@@ -183,9 +204,12 @@ Ph.D. Program in Biochemistry, The Graduate Center of the City University of New
 %%% ARTICLE START
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 \begin{document}
-
 \begin{frontmatter}
+
+%% Expand title, authors, and affilitations sideways to keep title and abstract on first page
+\begin{adjustwidth}{-4cm}{}
 \maketitle
+\end{adjustwidth}
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
 %%% Abstract
 %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
