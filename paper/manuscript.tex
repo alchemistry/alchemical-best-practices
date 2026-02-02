@@ -1702,12 +1702,12 @@ One important point is that the bootstrap samples use to estimate the standard e
 % This situation can be detected if the equilibration boundary $t_0$ is a significant fraction of the total simulation length $T$, with a good rule of thumb being that under well-sampled situations $T \gtrsim 20 t_0$.
 % If identifying an equilibration time that is only a fraction of the total time is not possible, advanced analysis techniques that assume only local equilibrium within kinetically separated metastable states, rather than global equilibrium over the entire phase space, such as the TRAM estimators~\cite{mey2014xtram,wu2016multiensemble,nuske2017markov} may be more appropriate, but are beyond the scope of this paper.
 
-\subsection{Decorrelating samples for analysis}
-\label{sec:decorrelating-samples}
-\paragraph{Computing the statistical inefficiency}
-Replicas in ensemble simulations are initialized with velocities drawn independently from the Maxwell–Boltzmann distribution and hence generate decorrelated samples by default. When only one simulation is available, the procedures described below provide a lower-bound estimate of the uncertainty.
+% \subsection{Decorrelating samples for analysis}
+% \label{sec:decorrelating-samples}
+% \paragraph{Computing the statistical inefficiency}
+% Replicas in ensemble simulations are initialized with velocities drawn independently from the Maxwell–Boltzmann distribution and hence generate decorrelated samples by default. When only one simulation is available, the procedures described below provide a lower-bound estimate of the uncertainty.
 
-Most estimators require an uncorrelated set of samples from the equilibrium distribution to produce (relatively) unbiased estimates of the statistical uncertainty, as most estimates of the uncertainty are derived assuming unbiased samples.
+% Most estimators require an uncorrelated set of samples from the equilibrium distribution to produce (relatively) unbiased estimates of the statistical uncertainty, as most estimates of the uncertainty are derived assuming unbiased samples.
 % To do this, the production region of the simulation is generally \emph{subsampled} with an interval approximately equal to or greater than the \emph{statistical inefficiency} $g \ge 1$ to produce a set of uncorrelated samples that can be fed to the estimator machinery~\cite{chodera2016simple},
 % \begin{eqnarray}
 % g &\equiv& 1 + 2 \tau_\mathrm{eq} \label{eq:statistical-inefficiency-definition}
@@ -1749,8 +1749,9 @@ Most estimators require an uncorrelated set of samples from the equilibrium dist
 
 \subsection{Uncertainty estimation v2}
 
+% this first paragraph needs work -- I basically I want to say that, for the most part, when replicates are well-behaved, it doesn't matter much what one does to estimate errors (so long as it's sane); when they're not -- which is the usual case -- no amount of statistical sophistication will save you. 
 
-This section outlines the basic principles of uncertainty estimation. The theoretical framework is based on Markov process theory and typically assumes that the underlying dynamics are sufficiently mixing, in the sense that the simulation explores configuration space effectively. As has been widely noted in the literature [\textbf{cite}], this assumption is not always satisfied in practice. A consistent empirical pattern emerges: when a simulation is well behaved, most reasonable uncertainty estimates tend to agree, and the specific choice of estimator is of limited consequence. In contrast, when a simulation is poorly behaved—an outcome that is common in biomolecular systems—different error estimation methods can yield substantially different results, and more sophisticated statistical analysis alone is unlikely to resolve the discrepancy. In such cases, all available uncertainty estimates should be expected to underestimate the true statistical error. The determination of when a simulation is or isn't "well-behaved" is an active research problem. %MS: It may be worthwhile to note that various groups may advocate for different statistical procedures, highlighting the value of many individual trials ("replicates") over one long simulation. This same discussion has played out many times within the Markov Chain Monte Carlo community.; see e.g. https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2011.00131.x
+This section outlines the basic principles of uncertainty estimation. The theoretical framework is based on Markov process theory and typically assumes that the underlying dynamics are sufficiently mixing, in the sense that the simulation explores configuration space effectively. As has been widely noted in the literature [\textbf{cite}], this assumption is not always satisfied in practice. A consistent empirical pattern emerges: when a simulation is well behaved, most reasonable uncertainty estimates tend to agree, and the specific choice of estimator is of limited consequence. In contrast, when a simulation is poorly behaved—a situation that is common in biomolecular systems—different error estimation methods can yield substantially different results, and more sophisticated statistical analysis alone is unlikely to resolve the discrepancy. In such cases, all available uncertainty estimates should be expected to underestimate the true statistical error. The determination of when a simulation is or isn't "well-behaved" is an active research problem. %MS: It may be worthwhile to note that various groups may advocate for different statistical procedures, highlighting the value of many individual trials ("replicates") over one long simulation. This same discussion has played out many times within the Markov Chain Monte Carlo community.; see e.g. https://besjournals.onlinelibrary.wiley.com/doi/10.1111/j.2041-210X.2011.00131.x
 
 In this section we will tend not to make definitive statements, and we shall simply provide "best practices" that most practitioners will agree on. In the following subsection, we give a brief explanation of the difficulty. We first introduce the key objects under consideration, which will be used to guide the exposition.
 
@@ -1758,11 +1759,11 @@ The free energy estimate can be viewed as an empirical average, like the one tha
 \begin{equation}
     \int_\Omega f(z) p(z) \mathrm{d}z\approx \frac{1}{N}\sum_{i=0}^{N-1} f(Z_i), \label{eqn:empirical-average}
 \end{equation}
-where $\Omega$ denotes the state space and $f : \Omega \rightarrow \mathbb{R}$ is a sufficiently nice function. Even though not all estimators can be written in the form \eqref{eqn:empirical-average}, it will be sufficient to consider this case to get the main idea. The key object of study in this section is an estimator of 
+where $\Omega$ denotes the state space and $f : \Omega \rightarrow \mathbb{R}$ is an observable. Even though not all estimators can be written in the exact form \eqref{eqn:empirical-average}, it will be sufficient to consider this case to get the main idea. The key object of study in this section is an estimator of 
 \begin{equation}
     \mathrm{Var}_{Z_0 \sim \rho_0}\left(\frac{1}{N}\sum_{i=0}^{N-1} f(Z_i)\right)
 \end{equation}
-where $\rho_0(z)$ is the initial density for $Z_0$.
+where $\rho_0(z)$ is the initial density for $Z_0$, that is, the probability distribution of starting configurations.
 
 %% MS: This is a very loose proposal of how one might address some of the issues on uncertainty quantification.  It is only meant to help get the ball rolling, per the discussion in https://github.com/alchemistry/alchemical-best-practices/issues/150#issuecomment-3567254644. Otherwise, it can be mostly discarded. The important points in my view are:
 %
@@ -1779,25 +1780,20 @@ where $\rho_0(z)$ is the initial density for $Z_0$.
 
 \subsubsection{Central difficulty: timescales}\label{sec:timescales}
 
-Consider a molecular dynamics trajectory started at some initial configuration $z_0 = (x_0, v_0)$, where $x_0 \in \mathbb{R}^{3 N}$ denotes the initial positions of the system and $v_0 \in \mathbb{R}^{3 N}$ its initial velocities. If $z = (x_0, v_0)$ is drawn from some initial density $\rho_0 (z)$, the density time $t$ will be
-\begin{equation}
-  \rho_t (z' | z_0) = \int_{\mathbb{R}^{3 N} \times \mathbb{R}^{3 N}}
-  \rho_0 (\mathrm{d} z) P_t (z' | z) .
-\end{equation}
-Here, $P_t$ denotes the transition kernel, determined by the molecular dynamics integrator. The distribution of the velocities is usually ignored, since in the presence of a thermostat they are kept distributed roughly according to a Maxwell-Boltzmann distribution, so we only consider the $x$ component. In practice, the initial distribution $\rho_0 (x) \mathrm{d} x$ is seldom more than a Dirac-$\delta$, $\delta_{\{ x_0 \}} (\mathrm{d} x)$, or a mixture thereof: $\rho_0(x) \mathrm{d}x = \sum_{i = 1}^n \delta_{\{ x_i \}}(\mathrm{d}x) / n$; any "better" initial density would require some knowledge about the system at hand. 
+Consider a molecular dynamics trajectory started at some initial configuration $z_0 = (x_0, v_0)$, where $x_0 \in \mathbb{R}^{3 N}$ denotes the initial positions of the system and $v_0 \in \mathbb{R}^{3 N}$ its initial velocities, and denote the density at time $t$ by $\rho_t(z|z_0)$. This transition density is determined by the molecular dynamics integrator. The distribution of the velocities is usually ignored, since in the presence of a thermostat they are kept distributed roughly according to a Maxwell-Boltzmann distribution, so we only consider the $x$ component. In principle one could consider the initial condition $x_0$ to be drawn from a more complicated initial distribution $\rho_0(x) \mathrm{d}x$, like a mixture of Dirac densities $\rho_0(x) \mathrm{d}x = \sum_{i = 1}^n \delta_{\{ x_i \}}(\mathrm{d}x) / n$, but any such "better" initial density would require some knowledge about the system at hand, such as the distribution of binding modes. 
 
-It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein, it may be possible to identify clear "plateaus'' of convergence \footnote{The relevant mathematical object here is a quasi-stationary distribution, but should we say this? Could cite Art Voter at Los Alamos, maybe even Freidlin-Wentzell for the original quasipotential.}, i.e. intervals of time $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 $ in some appropriate "starting domain". Consider, for instance, the estimation of free energies of hydration for small molecules ~\cite{paliwal2011benchmark}. In this case, the free energy estimates behave in accordance with classical statistical theory, and for sufficiently large $t$ and most $x_0$ the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
+It is difficult to make general statements about the behavior of $\rho_t (x | x_0)$. For systems not involving a protein or otherwise having a smaller number of degrees of freedom, it may be possible to identify clear "plateaus'' of convergence, i.e. intervals of time $[T_a, T_b]$, $T_a \ll T_b$, within which $\rho_t (x | x_0)$ does not vary much for $t \in [T_a, T_b]$, and is roughly invariant to $x_0 $ in some appropriate starting domain. Consider, for instance, the estimation of free energies of hydration for small molecules ~\cite{paliwal2011benchmark}. In this case, the free energy estimates behave in accordance with classical statistical theory, and for sufficiently large $t$ and most $x_0$ the density $\rho_t (x | x_0)$ should not vary much along coordinates relevant to the free energy estimates.
 
 %  MS: The above paragraph is too vague, but some kind of discussion to this effect might be necessary to make sense of why some free energy calculations, such as solvation free energy calculations or computation of free energy landscapes for small molecules, have different statistical properties than more complicated calculations, like absolute binding free energy calculations. 
 
-Importantly, one should not confuse a plateau in such coordinates with having explored the entirety of the configuration space $\Omega \subset \mathbb{R}^{3N}$; most bio-molecular systems, even those involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Consequently, the estimated error of the free energy estimate will typically be an underestimate of the true uncertainty.
+Importantly, one should not confuse a plateau in the density with having explored the entirety of the configuration space $\Omega \subset \mathbb{R}^{3N}$; most bio-molecular systems, even those involving only a single ligand, possess a whole hierarchy of timescales, the longest of which can easily exceed achievable simulation times. Consequently, the estimated error of the free energy estimate will typically be an underestimate of the true uncertainty.
 
 % Of course, it _could_ be the case for some systems that \rho_t(x | x_0) is independent of x_0, and that the empirical distribution of any replicate is a good approximation for \rho_t (x|x_0). In general, however, we will only have access to a so-called quasi-stationary distribution; i.e. we will consider the distribution conditional on not having exceeded an escape time, and this distribution will only equilibrate in some degrees of freedom. 
 
 % The following footnote feels out of place, but might address some comments by A. Bhati re: the Poincaré recurrence times.
 % \footnote{(Luckily, it is not necessary for simulations to visit every configuration $x \in \Omega$ in order to exhibit a regime of convergence for the free energy estimates. For instance, two configurations $x$ and $x'$ may be considered equivalent for free energy estimation if they differ only by the permutation of water molecules. Nature too faces the same difficulty that not all states are accessible on timescales we can observe -- it will take an astronomically long time before all the gas particles in a room happen to be on one half-side of it -- but this does not prevent us from measuring the temperature of (most) rooms.)}
 
-For systems involving a protein, $\rho_t (x | x_0)$ is usually sensitive to $x_0$ and additionally may not exhibit a clear plateau on any computationally feasible time $t > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$ and all $x_0$  in some explicitly definable subset of $\Omega$.\footnote{Should one define the mixing time of a Markov process? Cite Peres Markov Chains and Mixing Times, which is freely available?} In this section, we explore the various possible types of error analysis that can be performed, depending on the behavior of $\rho_t$. 
+For  larger biomolecular systems, such as those involving a protein, $\rho_t (x | x_0)$ is usually sensitive to $x_0$ and additionally may not exhibit a clear plateau on any computationally feasible time $t > 0$ for "most" $x_0$. In such a case, we can still draw independent samples from $\rho_t (\cdot | x_0)$ by simulating a trajectory up to time $t$ and taking the last frame, but this is much less valuable than knowing that $\rho_t (\cdot | x_0) \approx \rho_T (\cdot | x_0)$ for all $t \in [T_{\min}, T]$ and all $x_0$  in some explicitly definable subset of $\Omega$. In this section, we explore the various possible types of error analysis that can be performed, depending on the behavior of $\rho_t$. 
 
 %% MS: I'm not tied to any particular definition of ensemble, but we should probably make a concrete one:
 % - common x_0 ? 
@@ -1805,12 +1801,12 @@ For systems involving a protein, $\rho_t (x | x_0)$ is usually sensitive to $x_0
 % - what are the individual trajectories called? "replicates" ? 
 
 \textbf{Definition}:
-We define an \textbf{ensemble} to be a set of $R \geqslant 1$ trajectories, all started at the same initial configuration $x_0$, with initial velocity $v_0$ independently drawn from the Maxwell-Boltzmann distribution at the appropriate temperature and run for a chemical time $T$. We emphasize that, with this definition, all ensemble-based estimates are inherently tied to the choice of $x_0$; pathological choices  -- for example, an unbound protein–ligand configuration -- can render the resulting estimates meaningless.
+We define an \textbf{ensemble} to be a set of $R \geqslant 1$ trajectories, all started at the same initial configuration $x_0$, with initial velocity $v_0$ independently drawn from the Maxwell-Boltzmann distribution at the appropriate temperature and run for a chemical time $T$. We emphasize that, with this definition, all ensemble-based estimates are inherently tied to the choice of $x_0$; pathological choices  -- for example, a protein–ligand configuration that may quickly unbind -- can render the resulting estimates meaningless.
 
 \subsubsection{Ensemble error estimates}
 
-This section describes the simplest and, in many cases, most robust procedure for estimating uncertainties in free energy calculations. For most practical applications, we recommend this approach when reporting statistical error bars. The method consists of simulating an ensemble $\{X^{(1)},\ldots,X^{(R)}\}$ of $R$ molecular dynamics trajectories initialized at $x_0$, and using the resulting free energy estimates $\{\Delta G^{(1)},\ldots,\Delta G^{(R)}\}$ to quantify uncertainty. The trajectories $\Delta
-G^{(i)} (\cdot)$ are identically distributed and conditionally independent given $x_0$. For any time $T > 0$, the variance of any $\Delta G^{(i)} (T)$ can be estimated with the sample variance $S^2_{(R - 1)} (T)$,
+This section describes the simplest and, in many cases, the most robust procedure for estimating uncertainties in free energy calculations. For most practical applications, we recommend this approach when reporting statistical error bars. The procedure consists of simulating an ensemble $\{X^{(1)},\ldots,X^{(R)}\}$ of $R$ molecular dynamics trajectories initialized at $x_0$, and using the resulting free energy estimates $\{\Delta G^{(1)},\ldots,\Delta G^{(R)}\}$ to quantify uncertainty. The trajectories $\Delta
+G^{(i)} (\cdot)$ are identically distributed and conditionally independent given $x_0$. For any time $T > 0$, the variance of any $\Delta G^{(i)} (T)$ can be estimated with the sample variance $S^2_{R} (T)$,
 \begin{equation}\label{eq:sample-variance-definition}
   S^2_R (T) = \frac{1}{R - 1} \sum_{i = 1}^R (\Delta G^{(i)} (T) -
   \overline{\Delta G (T)})^2, \qquad \overline{\Delta G (T)} = \frac{1}{R}
@@ -1830,12 +1826,11 @@ Taking square roots, we obtain the standard error
 \begin{equation}
   \mathrm{SE}_R (T ; x_0) = \sqrt{\frac{S_R^2(T)}{R}},
 \end{equation}
-which is the gold standard for reporting the error of a free energy estimate $\overline{\Delta G (T)} $. Note that $\mathrm{SE}_R
-(T ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ so long as $\mathrm{Var}_{x_0}(\Delta G^{(1)}(T))$ is finite, which is true if the $\Delta G^{(1)}(T)$ are (say) bounded. 
-Consequently, we can estimate the variance of the estimate to essentially arbitrary precision. Note, however, that $\Delta G^{(1)}(T)$ will not in general be normally distributed, and the variance may not be a good statistic to capture the error, as the distribution may be multi-modal and heavy-tailed.
-%% MS: The error estimation may further be compounded by a rare event problem, in which case simulating even R = 100 replicates may not be "enough", depending on the purposes. 
+which is the gold standard for reporting the error of a free energy estimate $\overline{\Delta G (T)} $ when a single initial condition $x_0$ is used. Note that $\mathrm{SE}_R
+(T ; x_0) \rightarrow 0$ as $R \rightarrow \infty$ so long as $\mathrm{Var}_{x_0}(\Delta G^{(1)}(T))$ is finite, which is true if the $\Delta G^{(1)}(T)$ are bounded. Thus the variance can be made arbitrarily small simply by running enough replicates, but we note critically this does \textit{not} mean that we will have estimated the free energy to arbitrary precision: $\Delta G^{(1)}(T)$ in general will not be normally distributed, its value may vary greatly with both $T$ and $x_0$, and the variance may not be a good statistic to capture the error, as the distribution may be multi-modal, heavy-tailed and be sensitive to rare events. For example, one replicate out of many might explore a different mode of an important torsional angle, leading to a drastically different free energy estimate. 
+%% MS: The rare event problem is a serious one, simulating even R = 100 replicates may not be "enough", depending on the purposes. Should we say this?
 %% Should we also state the central limit theorem? 
-In principle, the most robust error estimates can be obtained by drawing the initial condition $x_0$ from a suitable initial density $\rho_0(x)$ and computing means and standard errors, but as mentioned in Section \ref{sec:timescales}, the value of this approach is limited by the user's ability to choose $\rho_0(x)$.
+In principle, the most robust error estimates can be obtained by starting from many different initial conditions $x_0, x_1, \dots$, and computing means and standard errors, but as mentioned in Section \ref{sec:timescales}, the value of this approach is limited by the user's ability to choose a suitable initial density $\rho_0(x)$.
 
 \subsubsection{Per-replicate error estimates}
 
@@ -2004,20 +1999,23 @@ Let $\Delta G^{(i)}(t)$ denote the free energy estimate obtained from replicate 
 \[
 E(t)^2 \;\equiv\; \mathrm{Var}_{x_0}\!\bigl(\Delta G^{(i)}(t)\bigr)
 \]
-is finite. While one might hope for the asymptotic scaling $E(t)\sim t^{-1/2}$, such behavior is rarely observed at practically accessible timescales. Nevertheless, conditioned on their initial states, the estimates $\{\Delta G^{(i)}(t)\}_{i=1}^R$ obtained from different replicates are independent and identically distributed. Consequently, the conditional variance of the averaged estimator
-\[
-\frac{1}{R}\sum_{i=1}^R \Delta G^{(i)}(t)
-\]
-scales as $E(t)^2/R$, and the corresponding conditional error scales as $E(t)/\sqrt{R}$.
-
-Given a fixed computational budget $B$, we may consider simple allocation schemes in which $B = RT$, where $R$ replicates are each run for time $T$. Under this constraint, the conditional error scales as
+is finite. Given a fixed computational budget $B$, we may consider simple allocation schemes in which $B = RT$, where $R$ replicates are each run for time $T$. Under this constraint, the conditional error scales as
 \[
 \frac{E(T)}{\sqrt{R}}
 = \frac{E(T)}{\sqrt{B/T}}
 = \frac{\sqrt{T}\,E(T)}{\sqrt{B}}
 \;\equiv\; \frac{J(T)}{\sqrt{B}}.
 \]
-The function $J(T)$ thus quantifies the tradeoff between trajectory length and the number of replicates. In practice, we frequently observe that $J(T)$ is minimized at small values of $T$. 
+The function $J(T)$ thus quantifies the tradeoff between trajectory length and the number of replicates. In practice, one might observe that $J(T)$ is minimized at very small values of $T$. If $T$ is very small -- say, less than 1 ns -- the finding is questionable and suggests the error is not being properly estimated. 
+
+
+% While one might hope for the asymptotic scaling $E(t)\sim t^{-1/2}$, such behavior is rarely observed at practically accessible timescales. Nevertheless, conditioned on their initial states, the estimates $\{\Delta G^{(i)}(t)\}_{i=1}^R$ obtained from different replicates are conditionally independent and identically distributed. Consequently, the conditional variance of the averaged estimator
+% \[
+% \frac{1}{R}\sum_{i=1}^R \Delta G^{(i)}(t)
+% \]
+% scales as $E(t)^2/R$, and the corresponding conditional error scales as $E(t)/\sqrt{R}$.
+
+
 
 
 % \subsection{Uncertainty estimation}
