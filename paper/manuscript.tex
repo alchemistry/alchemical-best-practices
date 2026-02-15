@@ -2201,7 +2201,6 @@ There are many different software solutions available for the setup, running, an
 	\begin{itemize}
     \item \href{https://ambermd.org/}{AMBER}, including its GPU-accelerated free energy engine~\cite{Lee_JChemTheoryComput_2017_v13_p3077,Giese_JChemTheoryComput_2018_v14_p1564,Lee_JChemInfModel_2018_v58_p2043} that supports a wide range of alchemical free energy methods~\cite{Tsai_JChemTheoryComput_2023_v19_p640,lee2023aces,Zhang_JChemTheoryComput_2024_v20_p3935},
 	\item \href{https://www.charmm.org/}{CHARMM} has a variety of tools developed over the years. The PERT module can be used to define initial and final states and define the intermediate lambda points. FREN and BAR modules can be used to analyse the data after the MD run. Lambda-dynamics-based free energy calculation can be carried out using the BLOCK module. GPU optimized implementation of CHARMM's lambda dynamics is also implemented in the new package BLaDE \cite{hayes2021blade}. A number of energy interpolation schemes have been implemented in the new GPU package apoCHARMM \cite{prasad2025apocharmm}.      workflows~\cite{Ganguly_JChemInfModel_2022_v62_p6069} and analysis tools~\cite{Giese_JChemInfModel_2025_v65_p5273,Case_JChemInfModel_2023_v63_p6183}. 
-	\item \href{http://www.gromos.net/}{GROMOS} offers an extensive and flexible molecular dynamics and simulations analysis suites with free energy calculation functionalities including customizable alchemical paths and various sampling protocols~\cite{schmid2012architecture, kunz2012new, eichenberger2011gromos}.
 	\end{itemize}
 \item [] \textbf{Simulation software: Open Source}
 	\begin{itemize}
@@ -2209,13 +2208,14 @@ There are many different software solutions available for the setup, running, an
     \item \href{https://biosimspace.org/}{BioSimSpace} is a multiscale molecular simulation framework, written to allow computational modellers to quickly prototype and develop new algorithms for molecular simulation and molecular design~\cite{hedges2019biosimspace, hedges2023suite}.
 \item \href{https://github.com/Psivant/femto/tree/main}{Femto} is a Python package for running conventional MD and free energy simulations. Notably it implements tooling for Separated Topologies\cite{baumann2023broadening} and the Alchemical Transfer Method\cite{azimi2022relative,wu2021alchemical,gallicchio2008,gallicchio2025mutants}.
     \item 	\href{http://www.gromacs.org/}{GROMACS} is a molecular simulation package with a significant number of free energy methods implementations. The LiveCOMS GROMACS tutorial includes an example free energy calculation~\cite{lemkul2018From}.
+	\item \href{http://www.gromos.net/}{GROMOS} offers an extensive and flexible molecular dynamics and simulations analysis suites with free energy calculation functionalities including customizable alchemical paths and various sampling protocols~\cite{schmid2012architecture, kunz2012new, eichenberger2011gromos}.
     \item     \href{https://openfree.energy/}{Open Free Energy} is a platform which offers and allows the creations of alchemical simulation workflows for both absolute and relative binding free energies. Current offerings, notably includes a \href{https://github.com/choderalab/perses/tree/main/perses}{Perses-based} hybrid topology method using OpenMM \cite{alibay_2025_17258732}.
     \item \href{https://github.com/choderalab/openmmtools}{OpenMMTools} provides tooling for creating alchemical simulations using OpenMM. These include tools for alchemically modifying OpenMM Systems, running multistate simulations and adding alchemical restraints \cite{john_chodera_2025_17238654}.
 	\item \href{https://www.plumed.org/}{PLUMED} is a tool which enables the usage of a variety of MD engines. It is designed as a plugin for MD packages such that it analyzes the trajectory on the fly. It also offers a VMD based plugin for the computation of collective variables~\cite{bonomi2019promoting}. 
 	\item \href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}, an add-on to GROMACS, offers a mutation free energy calculation module~\cite{abraham2015gromacs}.
 	\item \href{https://github.com/qusers/Q6}{Q} is MD code for performing FEP calculations using a variety of force fields~\cite{aaquist2017q6}. 
 	\item \href{https://siremol.org/}{Sire} is a multiscale, molecular simulation framework that provides several applications, including SOMD, an MD/MC code for performing FEP calculations via an interface to OpenMM~\cite{woods2024sire}. 
-    \item \href{http://www.ties-service.org}{TIES} enables the usage of NAMD and OpenMM for setting up alchemical free energy ensemble simulations \url{https://github.com/UCL-CCS/TIES_MD} \cite{bieniek2023}.
+    \item \href{http://www.ties-service.org}{TIES} settings up, running, and analyzing alchemical free energy simulations using NAMD and OpenMM \url{https://github.com/UCL-CCS/TIES_MD} \cite{bieniek2023}.
 	\end{itemize}
 \item[] \textbf{Setup tools:}
 \begin{itemize}
@@ -2228,7 +2228,6 @@ There are many different software solutions available for the setup, running, an
     \item \href{https://github.com/OpenFreeEnergy/Lomap}{Lomap/Lomap2} : Relative alchemical transformation graph planning for setting up perturbation networks~\cite{liu2013lead}.
 	\item \href{http://pmx.mpibpc.mpg.de/instructions.html}{PMX}: Setup of perturbation maps, perturbed topologies and input coordinates for GROMACS simulations at \url{https://github.com/deGrootLab/pmx}.
 	\item \href{https://github.com/qusers/qligfep}{QligFEP} offers robust and fast setup of FEP calculations for the software package Q~\cite{jespers2019qligfep}.
-    \item \href{http://www.ties-service.org}{TIES} allows the setup of perturbation maps, hybrid topologies and structures as well as simulation-ready models for NAMD and OpenMM \url{https://github.com/UCL-CCS/TIES} \cite{bieniek2023}.
     \href{https://github.com/cbc-univie/transformato}{transformato} is a package for setting up single topology alchemical transformations to be run using CHARMM or OpenMM \cite{karwounopoulos2022relative, karwounopoulos2023calculations, wieder2022alchemical}.
 	\end{itemize}
 \item []\textbf{Analysis tools:}
@@ -2240,7 +2239,6 @@ There are many different software solutions available for the setup, running, an
 	\url{https://github.com/choderalab/pymbar} \cite{shirts2008statisticallya}.
 	\item \href{https://github.com/OpenFreeEnergy/cinnabar}{Cinnabar}: Standardising alchemical free energy analysis. Includes tools for calculating network-wide analyses and deriving absolute free energies using a maximum-likelihood estimator \cite{richard_gowers_2025_15678719}.
     \item \href{https://gitlab.com/RutgersLBSR/fe-toolkit}{FE-Toolkit}: collection of packages for free energy analysis, including network-wide MBAR analysis~\cite{giese2025fe}.
-    \item \href{http://www.ties-service.org}{TIES}: Perform statistical analysis of the output of alchemical ensemble simulations and report reliable predictions along with statistical uncertainties for a variety of free energy estimators \url{https://github.com/UCL-CCS/TIES_MD} \cite{bieniek2023}.
 	\end{itemize}
 \item[] Generally, commercial software will offer more complete pipelines in which standalone analysis applications are not necessarily needed; free and open source packages often require manual analysis but allow more flexibility and modification.
 \end{itemize}
