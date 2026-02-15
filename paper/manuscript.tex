@@ -115,6 +115,7 @@
 \author[8*]{Michael R. Shirts}
 \author[9]{Gary Tresadern}
 \author[2]{Huafeng Xu}
+\author[27]{Darrin M. York}
 
 %
 \affil[1]{EaStCHEM School of Chemistry, David Brewster Road, Joseph Black Building, The King's Buildings, Edinburgh, EH9 3FJ, UK}
@@ -145,6 +146,8 @@ Ph.D. Program in Biochemistry, The Graduate Center of the City University of New
 \affil[24]{Christian Doppler Laboratory for Molecular Informatics in the Biosciences, BOKU University, 1190 Vienna, Austria}
 \affil[25]{SandboxAQ, Palo Alto, California 94301, United States}
 \affil[26]{School of Natural and Environmental Sciences, Newcastle University, Newcastle upon Tyne NE1 7RU, United Kingdom}
+\affil[27]{Laboratory for Biomolecular Simulation Research, Institute for Quantitative Biomedicine, and Department of Chemistry and Chemical Biology, Rutgers University, Piscataway New Jersey, 08854}
+
 
 \corr{antonia.mey@ed.ac.uk}{ASJSM}
 \corr{john.chodera@choderalab.org}{JDC}
@@ -184,6 +187,7 @@ Ph.D. Program in Biochemistry, The Graduate Center of the City University of New
 \orcid{Sheenam Khuttan}{0000-0002-8873-6359}
 \orcid{Finlay Clark}{0000-0003-0474-5475}
 \orcid{Michael Snarski}{0000-0002-8041-2210}
+\orcid{Darrin M. York}{0000-0002-9193-7055}
 
 
 \blurb{This LiveCoMS document is maintained online on GitHub at \githubrepository; to provide feedback, suggestions, or help improve it, please visit the GitHub repository and participate via the issue tracker.}
@@ -1049,7 +1053,8 @@ While the implementation technically uses two sets of coordinates for the entire
 %The authors refer to this approach as hybrid single-dual topology. While it technically uses two separate sets of coordinates, the constraint that corresponding atoms have identical coordinates makes it effectively a single coordinate method; hence, I consider NAMD’s approach to be a variant of Pearlman’s (single coordinate) dual topology. 
 
 Dual coordinate approaches with chemical topologies encompass a third group of approaches, where essentially two absolute free energy calculations are carried out in opposite directions at the same time.
-The so-called ``separated topologies'' (SepTop) method \cite{rocklin2013separated,Baumann_2023} and the ``alchemical transfer method'' (ATM) \cite{azimi2022relative} belong into this category. In SepTop, the two copies are held on top of each other via restraints with respect to the protein/receptor they bind to (as opposed to Restraintmaker, where the molecules are restrained to each other). %In ATM, a restraint is used to keep the bound ligand 1 and the free ligand 2 always some minimum distance apart; during exchange moves, suitable rigid-body rotations/translations are applied to move the free ligand into a position/orientation as similar as possible to the one of the bound ligand.
+The so-called ``separated topologies'' (SepTop) method \cite{rocklin2013separated,Baumann_2023}, the "core-hopping" binding free energy (CBFE) method \cite{Tsai_JChemInfModel_ASAP} and the ``alchemical transfer method'' (ATM) \cite{azimi2022relative} belong into this category. In SepTop, the two copies are held on top of each other via restraints with respect to the protein/receptor they bind to (as opposed to Restraintmaker, where the molecules are restrained to each other). %In ATM, a restraint is used to keep the bound ligand 1 and the free ligand 2 always some minimum distance apart; during exchange moves, suitable rigid-body rotations/translations are applied to move the free ligand into a position/orientation as similar as possible to the one of the bound ligand.
+The CBFE approach is conceptually similar to the SepTop method, although differences lie in the form of the alchemical transformation pathway\cite{Tsai_JChemTheoryComput_2023_v19_p640}, underlying enhanced sampling methods\cite{lee2023aces,Tsai_JChemInfModel_2024_v64_p7046,Zhang_JChemTheoryComput_2024_v20_p3935} and other details of their implementation. 
 In ATM, restraints are used to keep the bound and free ligands at some distance apart and in the same orientation, so that during the translation move the free ligand is placed into a position and orientation as similar as possible to that of the bound ligand. Recently, a variant of $\lambda$-dynamics that uses chemical topologies (separate coordinates for each state) has been proposed \cite{Liesen_2024}.
 
 %Other methodologies also use both end states simultaneously; examples are the Separated Topologies (SepTop) approach [Baumann2023] and the ATM method [Azimi2022]. In the former, the two copies are held on top of each other via restraints with respect to the protein/receptor they bind to. Ries et al. refer to such an approach as “separated dual topology”, whereas they label their approach as “linked dual topology”. In ATM, a restraint is used to keep the bound ligand 1 and the free ligand 2 always some minimum distance apart; during exchange moves, suitable rigid-body rotations/translations are applied to move the free ligand into a position/orientation as similar as possible to the one of the bound ligand. Both copies are present simultaneously, but they do not occupy the same space.
