@@ -223,7 +223,7 @@ Alchemical free energy calculations are a useful tool for predicting free energy
 The hallmark of these methods is the use of ``bridging'' potential energy functions representing \emph{alchemical} intermediate states that cannot exist as real chemical species. The data collected from these bridging alchemical thermodynamic states allows the efficient computation of transfer free energies (or differences in transfer free energies) with orders of magnitude less simulation time than simulating the transfer process directly. 
 While these methods are highly flexible, significant care must be taken in avoiding common pitfalls to ensure that computed free energy differences can be robust and reproducible for the chosen force field, and that appropriate corrections are included to permit direct comparison with experimental data.
 
-In this paper, we review current best practices for several popular application domains of  alchemical free energy calculations, with a particular focus on the intricacies and challenges of relative and absolute free energy calculations of the binding of small molecules to biomolecular targets. We focus on ``single calculations'' where the quantity of interest is a single free energy difference; best practices for large-scale free energy calculations are discussed in an upcoming companion article~\cite{mey_largescale_inprep}.
+In this paper, we review current best practices for several popular application domains of  alchemical free energy calculations, with a particular focus on the intricacies and challenges of relative and absolute free energy calculations of the binding of small molecules to biomolecular targets. We focus on ``single calculations'' where the quantity of interest is a single free energy difference (or difference of differences); best practices for large-scale free energy calculations are discussed in an upcoming companion article~\cite{mey_largescale_inprep}.
 
 \end{abstract}
 \end{frontmatter}
@@ -247,16 +247,16 @@ Fig.~\ref{fig:fig_what_is_alchemy} illustrates common free energy changes that m
 In alchemical simulations, the introduction of intermediate \textit{alchemical states} that bridge the high-probability regions of configuration space between two physical endstates of interest permits the robust computation of free energy for large transformations.
 Alchemical calculations can be used in a variety of scenarios, such as: 
 \begin{itemize}
-\item computing the free energy of a conformational change for a molecule with a high barrier to interconversion (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{B});
-\item computing partition ($\log P$) or distribution ($\log D$) coefficients of a molecule moving between different environments (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{A})~\cite{rustenburg2016measuring, bosisio2016blinded} 
-\item determining the free energy of partitioning between compartments into membranes (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{D})~\cite{corey2019insights}. 
+\item Computing the free energy of a conformational change for a molecule with a high barrier to interconversion (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{B});
+\item Computing partition ($\log P$) or distribution ($\log D$) coefficients of a molecule moving between different environments (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{A})~\cite{rustenburg2016measuring, bosisio2016blinded} 
+\item Determining the free energy of partitioning between compartments into membranes (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{D})~\cite{corey2019insights}. 
 \end{itemize}
 
 Furthermore, alchemical calculations are frequently used to estimate changes in free energies upon modifying a ligand or protein. Specifically:
 \begin{itemize}
-\item a protein residue can be alchemically mutated to probe the impact on binding affinity (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{F})\cite{hauser2018predicting,aldeghi2018accurate} or changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}; 
-\item the entire ligand can be alchemically transferred from protein to solvent in an absolute binding free energy calculation (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{C})~\cite{mobley2007predicting,aldeghi2015accurate,aldeghi2017predictions}; 
-\item small alchemical modifications can be made between chemically related ligands to estimate relative differences in binding free energies (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{E})~\cite{wang2015accurate,mey2016blinded,song2019using,gapsys2020large,kuhn2020assessment}.
+\item A protein residue can be alchemically mutated to probe the impact on binding affinity (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{F})\cite{hauser2018predicting,aldeghi2018accurate} or changes in protein thermostability~\cite{seeliger2010protein,gapsys2016insights,gapsys2016accurate,aldeghi2019accurate}; 
+\item The entire ligand can be alchemically transferred from protein to solvent in an absolute binding free energy calculation (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{C})~\cite{mobley2007predicting,aldeghi2015accurate,aldeghi2017predictions}; 
+\item Small alchemical modifications can be made between chemically related ligands to estimate relative differences in binding free energies (Fig.~\ref{fig:fig_what_is_alchemy}\textbf{E})~\cite{wang2015accurate,mey2016blinded,song2019using,gapsys2020large,kuhn2020assessment}.
 \end{itemize}
 
 
@@ -288,39 +288,40 @@ This ``Best Practices'' guide aims to provide current recommendations and tips f
 
 This ``Best Practices'' guide focuses on providing a good starting point for new practitioners and a reference for experienced practitioners. 
 For this purpose we provide a convenient checklist (Sec.~\ref{sec:checklist}) to help ensure all calculations can take advantage of currently-understood best practices for alchemical simulation and analysis. Where the best practices are currently not certain, we highlight areas where further research is needed to identify an unambiguous recommendation.
-This guide can also serve as a set of best practices to ensure simulation robustness and reproducibility which reviewers may wish to consider as they evaluate papers including alchemical free energy calculations.
+This guide can also serve as a set of best practices to ensure simulation robustness and reproducibility which reviewers may wish to consider.
 
-In this document, we assume that novice practitioners have at least moderate experience with molecular simulation concepts and use of simulation packages. 
+We assume that novice practitioners have at least moderate experience with molecular simulation concepts and use of simulation packages. 
 We also assume a basic familiarity with the principles of molecular mechanics, molecular dynamics simulations, statistical mechanics, and the biophysics of protein-ligand association. If you feel unfamiliar with some of these concepts, good starting points can be found in these references~\cite{braun2019best, grossfield2018best, klimovich2015guidelines, shirts2012best}. 
 
  While reading this ``Best Practices'' guide, it is important to bear in mind \emph{this is not a review} of all free energy calculation methods at the cutting edge of current research.
 Instead this guide aims to answer the following questions:
 \begin{itemize}
-    \item Is my problem suitable for an alchemical calculation? 
-     \item How do I prepare my system to carry out an alchemical calculation?
-     \item How do I select an appropriate simulation protocol? 
-     \item What software tools are available to perform alchemical calculations? 
-     \item How should I analyze my data and report uncertainties? 
+    \item Is my problem suitable for an alchemical calculation (Sec.~\ref{sec:step0})? 
+     \item How do I prepare my system to carry out an alchemical calculation (Sec.~\ref{sec:prerequisites})?
+     \item How do I select an appropriate simulation protocol (Sec.~\ref{sec:sec:simulation_protocol_choice})? 
+     \item What software tools are available to perform alchemical calculations (Sec.~\ref{sec:software})? 
+     \item How should I analyze my data and report uncertainties (Sec.~\ref{sec:data_analysis})?
+     \item What are the unsettled practices and current limitations of alchemical methods (Sec.~\ref{sec:unsettled})?
 \end{itemize}
 
-Notably, this document---version 2.0 of the original guide---focuses specifically on best practices on single alchemical free energy calculations. A companion guide, \textit{Best Practices for Multiple Alchemical Free Energy Calculations}~\cite{mey_largescale_inprep}, covers the considerations involved in high-throughput or large-scale campaigns, such as automation, perturbation network design, and campaign-level data management and analysis. Readers aiming to scale up to multiple calculations will find many important suggestions and ideas relevant to those problems in that document.
+Notably, this document---version 2.0 of the original guide---focuses specifically on best practices on ``single'' alchemical free energy calculations where the quantity of interest is a single free energy difference (or difference of differences). A companion guide, \textit{Best Practices for Multiple Alchemical Free Energy Calculations}~\cite{mey_largescale_inprep}, covers the considerations involved in high-throughput or large-scale campaigns, such as automation, perturbation network design, and campaign-level data management and analysis. Readers aiming to scale up to multiple calculations will find many important suggestions and ideas relevant to those problems in that document.
 
 In this guide, some additional background information may be needed depending on the nature of the alchemical project. For example, if binding poses are not known, docking calculations or co-folding models can be used to generate an initial small molecule binding pose to start alchemical simulations\cite{scheen2025leveraging, thaler2025boltz}. This will require some basic familiarity with how to perform docking or use generative models to generate reasonable simulation starting points~\cite{grinter2014challenges}. 
 As some of the theoretical background can be daunting to beginners, we do, however, provide a guide to the essential theory behind alchemical free energy calculations in Sec.~\ref{sec:theory}.
 
 In the remainder of this paper, we will cover topics that are key to the preparation (Sec.~\ref{sec:prerequisites}), choice and use of correct protocols (Sec.~\ref{sec:simulation_protocol_choice}), and finally the best practices that should be used in the analysis of alchemical calculations (Sec.~\ref{sec:data_analysis}). 
-We will give particular focus to aspects of the molecular simulations which are unique to alchemical calculations---these include the calculation of transfer free energies (hydration free energies, partition coefficients, etc.), and binding free energies (absolute and relative). 
+We will give particular focus to aspects of the molecular simulations which are unique to alchemical calculations---in particular, the calculation of transfer free energies (hydration free energies, partition coefficients, etc.), and binding free energies (absolute and relative). 
 
 
 While we try to address as many methods and practices as possible, the field of free energy calculations is broad, and there are many advanced topics that are left to future ``Best Practices documents'' focusing on specific issues. 
 Below, we provide a non-exhaustive list of topics we have \emph{not} addressed, along with some references to provide starting points on these more advanced topics:
 \begin{itemize}
-\item covalent inhibition~\cite{lameira2019predicting}
-\item free energies of mutation of protein side chains~\cite{gapsys2016accurate,aldeghi2018accurate}
-\item nonspecific binding or multiple binding sites~\cite{gill2018binding}
-\item approximate and often less accurate endpoint free energy methods such as MM-PBSA~\cite{genheden2015mm} and LIE~\cite{gutierrez-de-teran2012linear}
+\item Covalent inhibition~\cite{lameira2019predicting}
+\item Free energies of mutation of protein side chains~\cite{gapsys2016accurate,aldeghi2018accurate}
+\item Nonspecific binding or multiple binding sites~\cite{gill2018binding}
+\item Approximate and often less accurate endpoint free energy methods such as MM-PBSA~\cite{genheden2015mm} and LIE~\cite{gutierrez-de-teran2012linear}
 \item Free energy methods that extract the ligand using geometric order parameters and potential of mean force methods~\cite{heinzelmann2017attachpullrelease}
-\item Forcefield dependence for protein, ligand, ions, co-solvents, and co-factors. A number of different studies have looked at the influence of force fields and it is assumed the user has made an appropriate choice for the system under study~\cite{loeffler2018reproducibility, vassetti2019assessment, lopes2015current}. 
+\item Forcefield dependence for protein, ligand, ions, co-solvents, and co-factors. A number of different studies have looked at the influence of force fields and it is assumed the user has made an appropriate choice for the system under study~\cite{loeffler2018reproducibility, vassetti2019assessment, lopes2015current, hahn2024current}. 
 \item Free energy calculations using QM/MM methods~\cite{beierlein2011simple,dybeck2016comparison,cave-ayland2015direct,Schoeller2023}.
 \item Free energy calculations using machine learning methods~\cite{rufa2020chemical, scheen2020hybrid, cole2020machine,Karwounopoulos2024}
 \end{itemize}
