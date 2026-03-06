@@ -1,0 +1,12 @@
+*.icloud
+.ipynb_checkpoints
+*.blg
+*.suppinfo
+*.synctex.gz
+*.aux
+*.log
+*.bbl
+*.tar.gz
+.DS_Store
+*.out
+*.tdo

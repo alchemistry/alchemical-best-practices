@@ -1,0 +1,1 @@
+thermo_cycle_abs.svg can be edited with Inkscape.
