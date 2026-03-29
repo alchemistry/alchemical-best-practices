@@ -307,6 +307,19 @@
 % section/subsection/paragraph set-up
 % Updated for LiveComs
 % \setcounter{secnumdepth}{0}
+\setcounter{secnumdepth}{3}  % paragraphs stay unnumbered
+
+\newcounter{subsubsubsection}[subsubsection]
+\renewcommand{\thesubsubsubsection}{%
+  \thesubsubsection.\arabic{subsubsubsection}%
+}
+
+\newcommand{\subsubsubsection}[1]{%
+  \refstepcounter{subsubsubsection}%
+  {\vspace{1ex}\noindent\large\raggedright\color{LiveCoMSMediumGrey}%
+   \thesubsubsubsection\quad #1\par}%
+  \vspace{0.5ex}%
+}
 \RequirePackage[explicit]{titlesec}
 \titleformat{\section}
   {\LARGE\bfseries\raggedright}
