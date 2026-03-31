@@ -113,6 +113,7 @@
 \author[]{Michael Snarski}
 \author[14]{David R. Slochower}
 \author[8*]{Michael R. Shirts}
+\author[29,30]{Sara Tkaczyk}
 \author[9]{Gary Tresadern}
 \author[2]{Huafeng Xu}
 \author[27]{Darrin M. York}
@@ -148,6 +149,8 @@ Ph.D. Program in Biochemistry, The Graduate Center of the City University of New
 \affil[26]{School of Natural and Environmental Sciences, Newcastle University, Newcastle upon Tyne NE1 7RU, United Kingdom}
 \affil[27]{Laboratory for Biomolecular Simulation Research, Institute for Quantitative Biomedicine, and Department of Chemistry and Chemical Biology, Rutgers University, Piscataway New Jersey, 08854}
 \affil[28]{Wadhwani School of Data Science and Artificial Intelligence, Indian Institute of Technology Madras, Chennai, Tamil Nadu, India 600 036}
+\affil[29]{Department of Pharmaceutical Sciences, Pharmaceutical Chemistry Division, Josef-Holaubek-Platz 2, University of Vienna, 1090 Vienna, Austria}
+\affil[30]{Vienna Doctoral School of Pharmaceutical, Nutritional and Sport Sciences (PhaNuSpo), University of Vienna, 1090 Vienna, Austria}
 
 
 \corr{antonia.mey@ed.ac.uk}{ASJSM}
@@ -156,38 +159,39 @@ Ph.D. Program in Biochemistry, The Graduate Center of the City University of New
 \corr{michael.shirts@colorado.edu}{MRS}
 
 \orcid{Antonia S. J. S. Mey}{0000-0001-7512-5252}
+\orcid{Irfan Alibay}{0000-0001-5787-9130}
 \orcid{Bryce Allen}{0000-0002-0804-8127}
+\orcid{Agastya P. Bhati}{0000-0003-4539-4819}
 \orcid{Stefan Boresch}{0000-0002-2793-6656}
-\orcid{Hannah E. Bruce Macdonald}{0000-0002-5562-6866}
+\orcid{Michael Caspary}{0000-0001-8081-6373}
 \orcid{John D. Chodera}{0000-0003-0542-119X}
-\orcid{Maximilian Kuhn}{0000-0002-2811-3934}
+\orcid{Finlay Clark}{0000-0003-0474-5475}
+\orcid{Peter V. Coveney}{0000-0002-8787-7256}
+\orcid{Jonathan W. Essex}{0000-0003-2639-2746}
 \orcid{Emilio Gallicchio}{0000-0002-2606-4913}
+\orcid{Vytautas Gapsys}{0000-0002-6761-7780}
+\orcid{David F. Hahn}{0000-0003-2830-6880}
+\orcid{Wei-Tse Hsu}{0000-0001-6167-5480}
+\orcid{Sheenam Khuttan}{0000-0002-8873-6359}
+\orcid{Maximilian Kuhn}{0000-0002-2811-3934}
+\orcid{Hannah E. Bruce Macdonald}{0000-0002-5562-6866}
+\orcid{Oliver J. Melling}{0000-0001-6243-7433}
 \orcid{Julien Michel}{0000-0003-0360-1760}
 \orcid{David L. Mobley}{0000-0002-1083-5533}
 \orcid{Levi N. Naden}{0000-0002-3692-5027}
+\orcid{Chris Oostenbrink}{0000-0002-4232-2556}
+\orcid{Meghan Osato}{0000-0002-2732-457X}
+\orcid{William G. Poole}{0009-0003-2441-8794}
 \orcid{Samarjeet Prasad}{0000-0001-8320-6482}
+\orcid{Benjamin Ries}{0000-0002-0945-8304}
 \orcid{Andrea Rizzi}{0000-0001-7693-2013}
 \orcid{Jenke Scheen}{0000-0001-9781-0445}
-\orcid{David R. Slochower}{0000-0003-3928-5050}
 \orcid{Michael R. Shirts}{0000-0003-3249-1097}
+\orcid{David R. Slochower}{0000-0003-3928-5050}
+\orcid{Michael Snarski}{0000-0002-8041-2210}
+\orcid{Sara Tkaczyk}{0000-0002-8322-1700}
 \orcid{Gary Tresadern}{0000-0002-4801-1644}
 \orcid{Huafeng Xu}{0000-0001-5447-0452}
-\orcid{David F. Hahn}{0000-0003-2830-6880}
-\orcid{Vytautas Gapsys}{0000-0002-6761-7780}
-\orcid{Agastya P. Bhati}{0000-0003-4539-4819}
-\orcid{Peter V. Coveney}{0000-0002-8787-7256}
-\orcid{William G. Poole}{0009-0003-2441-8794}
-\orcid{Oliver J. Melling}{0000-0001-6243-7433}
-\orcid{Jonathan W. Essex}{0000-0003-2639-2746}
-\orcid{Wei-Tse Hsu}{0000-0001-6167-5480}
-\orcid{Benjamin Ries}{0000-0002-0945-8304}
-\orcid{Meghan Osato}{0000-0002-2732-457X}
-\orcid{Michael Caspary}{0000-0001-8081-6373}
-\orcid{Chris Oostenbrink}{0000-0002-4232-2556}
-\orcid{Irfan Alibay}{0000-0001-5787-9130}
-\orcid{Sheenam Khuttan}{0000-0002-8873-6359}
-\orcid{Finlay Clark}{0000-0003-0474-5475}
-\orcid{Michael Snarski}{0000-0002-8041-2210}
 \orcid{Darrin M. York}{0000-0002-9193-7055}
 
 
@@ -1047,7 +1051,7 @@ In single topology calculations, the overall transformation is set up to involve
     \includegraphics[width=0.95\columnwidth]{figures/fig3_topol/Figure.pdf}
     \caption{\textbf{Strategies for alchemical calculations: single coordinate single and dual topology vs.\ dual coordinate dual topology.} \textbf{Left}: A single coordinate single topology converts from one type of atom to another. Dummy atoms (Du) are used when there is no corresponding maximum common substructure match between the two molecules for certain atoms, using a soft-core interaction to improve overlap between the dummy atoms and the "real" atoms. At intermediate states, 'mixed' atoms (M) are present, either interpolating between physical atoms, e.g., a hydrogen to a carbon, or between physical and dummy atoms.  \textbf{Middle}: The single coordinate dual topology does not convert one species to another, but only converts between Du atoms and an interacting species, typically using soft-core potentials for this. Here, 'mixed' intermediate atoms (M) always interpolate between physical and dummy atoms. Thus, 'mixed' atoms are used in both single coordinate approaches (single and dual topology), but the way the transformation occurs and the end states differ.
       %Following the arrow along the left and right illustrate the differences.
-\textbf{Right}: In the dual coordinate dual topology approach both end states are present as separate molecules simultaneously.  Initially, benzyl alcohol is not interacting with the environment, at intermediate states the environment sees a mixture of the interactions of the two solutes, and, finally, benzene is not interacting with the environment. The two solutes are kept on top of each other by suitable restraints, indicated by the black ``spring'', and  the two molecules never see each other.  Figure adapted from the one used in V1 of this manuscript; adapted and extended by Sara Tkaczyk.
+\textbf{Right}: In the dual coordinate dual topology approach both end states are present as separate molecules simultaneously.  Initially, benzyl alcohol is not interacting with the environment, at intermediate states the environment sees a mixture of the interactions of the two solutes, and, finally, benzene is not interacting with the environment. The two solutes are kept on top of each other by suitable restraints, indicated by the black ``spring'', and  the two molecules never see each other.  
       % \url{http://www.alchemistry.org/wiki/Constructing_a_Pathway_of_Intermediate_States}
     }
     \label{fig:fig_topology}
@@ -2451,7 +2455,8 @@ There are many different software solutions available for the setup, running, an
 \textbf{PVC} Contributed updates to the discussion of uncertainty quantification.\\
 \textbf{JWE} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
 \textbf{EG} Wrote the updated Sec.~\ref{sec:theory} and Sec.~\ref{sec:multiple-chemical-states},  updated Sec.~\ref{sec:standardstate-restraints}, and contributed to the discussion and review of many sections.\\
-\textbf{DFH} Contributed to Sec.~\ref{sec:software} and helped edit the paper. \\
+\textbf{VG} Updated the discussion of non-equilibrium switching throughout the article, and reviewed Sec.~\ref{subsec:net charge}.\\
+\textbf{DFH} Contributed to Sec.~\ref{sec:software}, reviewed the discussion of non-equilibrium switching, and helped edit the paper.\\
 \textbf{W-TH}: Wrote Sec.~\ref{sec:configurational_sampling}, updated Sec.~\ref{sec:prerequisites},~\ref{sec:unsettled}, and~\ref{sec:checklist}, and created Fig. ~\ref{fig:configurational_sampling}.\\
 \textbf{SK}: Contributed to Sec. \ref{sec:theory} and \ref{sec:standardstate-restraints}  \\
 \textbf{MK}: Contributed to Sec.~\ref{sec:data_analysis}, provided the data for figure~\ref{fig:overlap}, and helped edit the paper.\\
@@ -2467,6 +2472,7 @@ There are many different software solutions available for the setup, running, an
 \textbf{JS}: Created Figs.~ \ref{fig:fig_what_is_alchemy},~\ref{fig:fig_binding_thermodynamic_cycle},~\ref{fig:fig_topology},~\ref{fig:fig_mcss}, and ~\ref{fig:fig_absolute_thermodynamic_cycle}. Wrote the checklist Sec.~\ref{sec:checklist}, and contributed to general formatting discussions and editing.\\
 \textbf{OJM} Contributed to ``Conserved binding site waters can play an important role in binding free energies'' and ``Handling poorly sampled water networks'' in Sec. ~\ref{subsec:binding}.\\
 \textbf{MRS}: Helped create figure~\ref{fig:fig_what_is_lambda}, wrote Sec.~\ref{sec:important_path} describing choices for alchemical pathways and parts of~\ref{sec:data_analysis} on the analysis for free energy calculations. Reviewed and edited text throughout.\\
+\textbf{ST}: Created Fig.~\ref{fig:fig_topology} (based on an earlier version by JS).\\
 \textbf{GT}: Contributed to Sec.~\ref{sec:intro} and helped edit the paper.\\
 \textbf{HX}: Contributed to Sec.~\ref{sec:relative-fe-protocol}, and to Sec.~\ref{sec:are-they-good}.\\
 \textbf{MS:} Proof read some of the mathematical material in the section on uncertainty quantification and added some details. \\
@@ -2486,8 +2492,7 @@ see the GitHub issue tracking and changelog at \githubrepository.
 % more information on deciding on authorship and author order.
 %%%%%%%%%%%%%%%
 Julia E. Rice participated in the original discussion of the document at the Best Practices in Molecular Simulation Workshop Hosted by at NIST, Gaithersburg, MD, August 24th-25th, 2017.
-Marieke Schor proofread the manuscript. 
-We thank Sara Tkaczyk for creating Figure 3 (based on the earlier version by Jenke Scheen).
+Marieke Schor proofread the manuscript.
 We thank Lester O. Hedges for clarifying details of the RBFE implementation in BioSimSpace, and we thank Mateusz K. Bieniek for explaining details of TIES.
 
 
