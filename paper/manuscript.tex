@@ -866,9 +866,9 @@ be worth it in terms of human and computational cost?
 \label{subsec:expectation}
 We first note that the accuracy of any free energy calculation method will depend on the quality of the underlying force field.  Therefore, any description of the force field for the molecules under study must be carefully checked to be sufficiently accurate to experiment. In particular, one must make sure that if using automatically generated molecular descriptions from either one's own workflow or some other computational chemistry program, there are no obvious problems in these files either through errors in the workflow, or lack of chemical coverage in the data used to construct the molecular description. Torsional parameters, in particular can be misassigned or improperly parameterized. 
 
-Alchemical free energy calculations involving small molecules seem to achieve, in favorable cases, root mean square (RMS) errors relative to experiment around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative. Example datasets and case studies are available in the companion article on best practices for large-scale alchemical free energy calculations~\cite{mey_largescale_inprep}.
+Alchemical free energy calculations involving small molecules seem to achieve, for common benchmark systems, root mean square (RMS) errors relative to experiment around 1-2 kcal/mol depending on force field, system, and a variety of other factors such as simulation time, sampling method, and whether the calculations employed are absolute or relative~\cite{baumann2025largescale, fuMetaAnalysisRevealsThat2022}. Example datasets and case studies are available in the companion article on best practices for large-scale alchemical free energy calculations~\cite{mey_largescale_inprep}.
 However, the domain of applicability is a significant concern~\cite{sherborne2016collaborating, cournia2017relative}, especially for relative calculations, which typically require a high quality and usually experimental bound structure of a closely
-related ligand as a starting point. Additional factors such as slow protein or ligand rearrangements, uncertainties in ligand binding mode, or charged ligands can make these calculations far less reliable and more of a research effort.
+related ligand as a starting point. Additional factors such as slow protein or ligand rearrangements, uncertainties in ligand binding mode, or charged ligands can make these calculations far less reliable and more of a research effort. A recent study from Open Free Energy showed that the accuracy obtained across a set of private industrial targets (weighted RMSE 1.7 [1.5, 2.0] kcal mol$^{-1}$) was substantially larger than that obtained for common benchmark systems (weighted RMSE 2.4 [1.9, 3.1] kcal mol$^{-1}$), highlighting the increased challenge of real-world application of these methods~\cite{baumann2025largescale}.
 
 It is worth noting that the accuracy of free energy calculations is highly variable across different protein targets, and likely across different ligand chemotypes as well.
 For instance, FEP+ with OPLS3 achieves an RMSE of 0.62 kcal/mol for a set of 21 compounds binding to JNK1 kinase, but an RMSE of 1.05 kcal/mol for a set of 34 compounds binding to P38$\alpha$ kinase~\cite{harder2016opls3}.
@@ -1530,7 +1530,7 @@ Binding modes also tend to be particularly variable in the case of fragments, wh
 Absolute free energy calculations for dissimilar ligands can have particular challenges because the (potentially incorrect) assumption of consistent binding modes across a series of similar ligands is likely to be even less robust than in the case of relative calculations.
 This means that researchers performing absolute binding free energy calculations will have to pay particular attention to generating reasonable putative binding modes.
 
-In some cases, it is tempting to simply use docking techniques to generate initial bound structures for starting molecular dynamics simulations. Docking techniques are good at identifying sterically reasonable potential binding modes, but still perform relatively poorly at identifying which of several binding allowable modes is the most dominant binding mode \emph{a priori}. Such allowable binding modes often represent metastable states.  The timescales for binding mode interconversion between metastable binding states are usually slow compared to MD/free energy timescales, meaning that simulations started from different potential binding modes are likely to yield disparate computed binding free energies~\cite{mobley2006use, palma2012computation, mobley2012perspective, gill2018binding}. 
+In some cases, it is tempting to simply use docking techniques to generate initial bound structures for starting molecular dynamics simulations. Docking techniques are good at identifying sterically reasonable potential binding modes, but still perform relatively poorly at identifying which of several allowable binding modes is the most dominant \emph{a priori}~\cite{macdermott-opeskinComputationalCommunityBlind2026}. Such allowable binding modes often represent metastable states. The timescales for binding mode interconversion between metastable binding states are usually slow compared to MD/free energy timescales, meaning that simulations started from different potential binding modes are likely to yield disparate computed binding free energies~\cite{mobley2006use, palma2012computation, mobley2012perspective, gill2018binding}. 
 
 
 It is worth highlighting a SAMPL blind challenge on HIV integrase as an illustration of the difficulty of performing reliable free energy calculations without clear knowledge of the binding site. 
@@ -2386,7 +2386,7 @@ There are many different software solutions available for the setup, running, an
     \item Set up your restraints correctly
     \item Subsample the data to estimate the variance of your free energy estimation protocol (but not to estimate the values themselves)
     \item Apply the appropriate standard state terms
-    \item Apply the appropriate correction terms (for example for multiple chemical species)
+    \item Apply the appropriate correction terms (for example for multiple chemical states)
     \item Ensure sufficient configurational sampling for slow degrees of freedom (e.g., check for kinetic trapping in metastable states).
 \end{itemize}
 \end{checklist}
@@ -2397,7 +2397,7 @@ There are many different software solutions available for the setup, running, an
     \item Make sure your $\lambda$-scheduling is set correctly
     \item Make sure your molecular transformations are realistic (1-5 heavy atoms for reliable computations)
     \item Check whether dummy atoms were assigned correctly
-     \item Apply the appropriate correction terms (for example for multiple chemical species)
+     \item Apply the appropriate correction terms (for example for multiple chemical states)
      \item Ensure sufficient configurational sampling for slow degrees of freedom (e.g., check for kinetic trapping in metastable states)
 \end{itemize}
 \end{checklist}
