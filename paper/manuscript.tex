@@ -1541,13 +1541,13 @@ Routes to handle multiple potential binding modes differ depending on whether ab
 
 \paragraph{Handling multiple potential binding modes within absolute binding free energy calculations.}
 When performing absolute binding free energy calculations, multiple potential binding modes can be handled by two main strategies: Considering each binding mode separately (a separation of states strategy) or sampling all binding modes within a single simulation~\cite{mobley2012perspective}.
-This choice also couples to the choice of restraints selected, as some types of restraints will allow transitions between binding modes and even binding sites (Sec.~\ref{sec:standardstate-restraints}), and others do not.
+This choice also affects the choice of restraints selected, as some types of restraints will allow transitions between binding modes and even binding sites (Sec.~\ref{sec:standardstate-restraints}), and others do not.
 
-Sampling all potential ligand binding modes within a single free energy calculation is usually impractical without some form of enhanced sampling or at least Hamiltonian replica exchange~\cite{wang2013identifying} because barriers for binding mode interconversion result in kinetics which are generally too slow compared to simulation timescales~\cite{mobley2006use, palma2012computation,mobley2012perspective, gill2018binding}.
+Sampling all potential ligand binding modes within a single free energy calculation is usually impractical without some form of enhanced sampling such as Hamiltonian replica exchange~\cite{wang2013identifying} because barriers for binding mode interconversion result in kinetics which are generally too slow compared to simulation timescales~\cite{mobley2006use, palma2012computation,mobley2012perspective, gill2018binding}.
 Hamiltonian exchange, coupled with appropriate restraints, can allow the ligand to relatively rapidly exchange between potential binding modes when non-interacting, accelerating sampling of binding modes~\cite{wang2013identifying}. However, it is not always clear that this is desirable, since this also increases the size of the configuration space which must be sampled even if the binding mode is known.
 
-The ``separation of states" approach provides a simple though potentially expensive alternative.  In this approach, each stable binding mode is considered separately with a binding free energy calculation restricted to that binding mode, and then (as long as the binding modes are non-overlapping) the resulting component binding free energies can be combined into a total complex free energy~\cite{mobley2006use, mobley2012perspective}.
-This approach necessitates a separate binding free energy calculation for each potential binding mode, however, so it can be computationally quite costly.
+The ``separation of states" approach provides a simple, though potentially expensive, alternative.  In this approach, each stable binding mode is considered separately with a binding free energy calculation restricted to that binding mode, and then, as long as the binding modes are non-overlapping, the resulting component binding free energies can be combined into a total complex free energy~\cite{mobley2006use, mobley2012perspective}.
+This approach requires a separate binding free energy calculation for each potential binding mode, however, so it can be computationally quite costly.
 If relative populations of different stable binding modes were available from some other technique, it could make this separation of states approach considerably more efficient~\cite{mobley2012perspective, gill2018binding}.
 
 \paragraph{Handling multiple potential binding modes within relative binding free energy calculations.}
@@ -1555,8 +1555,8 @@ Multiple potential binding modes pose particular problems for relative free ener
 
 To deal with this, some practitioners have actually computed relative binding free energies of different binding modes of the same ligand~\cite{palma2012computation}.
 For example, a perturbation which adds a methyl to an aromatic ring of a larger ligand might yield one result if the methyl points in one direction, and a different value if it points in the other due to slow ring motions~\cite{lincoff2016comparing, sasmal2020sampling}.
-One could compute the free energy of turning off the methyl group in one orientation and turning it back on in the other orientation to obtain the free energy difference between the two potential binding modes.
-While this approach has precedent and has been used prospectively for molecular design, it is relatively difficult to automate at present and requires considerable care.
+For example, one could compute the free energy of turning off the methyl group in one orientation, and then turning it back on in the other orientation to obtain the free energy difference between the two potential binding modes.
+While this approach has precedent and has been used prospectively for molecular design~\cite{desimone2019}, it is relatively difficult to automate at present and requires considerable care.
 
 Overall, means that relative free energy binding calculations will often be susceptible to problems resulting from uncertainty in ligand binding modes unless more robust approaches are available to determine dominant binding modes, or the relative populations of different potential binding modes, in advance.
 
